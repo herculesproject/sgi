@@ -5,11 +5,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogCommonComponent } from '@core/component/dialog-common.component';
 import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
 import { EstadoValidacionIPService } from '@core/services/csp/estado-validacion-ip/estado-validacion-ip.service';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
+import { LanguageService } from '@core/services/language.service';
+import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { catchError, map } from 'rxjs/operators';
-import { LanguageService } from '@core/services/language.service';
 
 
 export interface IHistoricoIpModalData {

@@ -5,7 +5,7 @@ import { environment } from '@env';
 import {
   CreateCtor, FindByIdCtor, mixinCreate,
   mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { IModuladorRequest } from './modulador-request';
 import { MODULADOR_REQUEST_CONVERTER } from './modulador-request.converter';
 import { IModuladorResponse } from './modulador-response';

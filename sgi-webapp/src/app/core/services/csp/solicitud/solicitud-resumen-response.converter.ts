@@ -1,5 +1,5 @@
 import { ISolicitud } from '@core/models/csp/solicitud';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudResumenResponse } from './solicitud-resumen-response';
 
 class SolicitudResumenResponseConverter

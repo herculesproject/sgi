@@ -2,7 +2,7 @@ import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudHitoRequest } from './solicitud-hito-request';
 
 class SolicitudHitoRequestConverter extends SgiBaseConverter<ISolicitudHitoRequest, ISolicitudHito> {

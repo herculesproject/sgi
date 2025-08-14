@@ -14,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IFuenteFinanciacionRequest } from './fuente-financiacion-request';
 import { FUENTE_FINANCIACION_REQUEST_CONVERTER } from './fuente-financiacion-request.converter';

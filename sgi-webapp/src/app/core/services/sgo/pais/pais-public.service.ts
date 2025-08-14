@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPais } from '@core/models/sgo/pais';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@herculesproject/framework/http';
 
 // tslint:disable-next-line: variable-name
 const _PaisServiceMixinBase:

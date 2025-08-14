@@ -1,6 +1,6 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requerimiento-justificacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGastoRequerimientoJustificacionRequest } from './gasto-requerimiento-justificacion-request';
 
 class GastoRequerimientoJustificacionRequestConverter

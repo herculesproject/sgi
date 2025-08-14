@@ -1,5 +1,5 @@
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IUnidadGestionRequest } from './unidad-gestion-request';
 
 class UnidadGestionRequestConverter

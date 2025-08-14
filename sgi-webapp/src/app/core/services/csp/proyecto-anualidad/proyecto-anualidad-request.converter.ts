@@ -1,10 +1,10 @@
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoAnualidadRequest } from './proyecto-anualidad-request';
 
-class ProyectoAnualidadRequestConverter extends SgiBaseConverter<IProyectoAnualidadRequest, IProyectoAnualidad>{
+class ProyectoAnualidadRequestConverter extends SgiBaseConverter<IProyectoAnualidadRequest, IProyectoAnualidad> {
   toTarget(value: IProyectoAnualidadRequest): IProyectoAnualidad {
     if (!value) {
       return value as unknown as IProyectoAnualidad;

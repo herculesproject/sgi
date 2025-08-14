@@ -1,6 +1,6 @@
-import { NgxMatDatetimeInput } from '@angular-material-components/datetime-picker';
 import { AfterViewInit, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatInput } from '@angular/material/input';
+import { NgxMatDatetimeInput } from '@herculesproject/datetime-picker';
 import { ɵdefineHiddenProp as defineHiddenProp } from '@ngx-formly/core';
 import { FieldType } from '@ngx-formly/material/form-field';
 

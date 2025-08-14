@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConceptoGastoResponse } from './concepto-gasto-response';
 
 class ConceptoGastoResponseConverter extends SgiBaseConverter<IConceptoGastoResponse, IConceptoGasto> {

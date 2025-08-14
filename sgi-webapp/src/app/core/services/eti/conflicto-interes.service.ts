@@ -4,7 +4,7 @@ import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
 import { IConflictoInteresResponse } from '@core/services/eti/conflicto-intereses/conflicto-intereses-response';
 import { CONFLICTO_INTERESES_RESPONSE_CONVERTER } from '@core/services/eti/conflicto-intereses/conflicto-intereses-response.converter';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 const _ConflictoInteresesServiceMixinBase:

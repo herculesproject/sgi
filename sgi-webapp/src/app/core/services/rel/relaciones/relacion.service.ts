@@ -7,7 +7,7 @@ import {
   mixinCreate, mixinFindAll, mixinFindById,
   mixinUpdate, RSQLSgiRestFilter, SgiRestBaseService,
   SgiRestFilterOperator, SgiRestFindOptions, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IRelacionRequest } from './relacion-request';

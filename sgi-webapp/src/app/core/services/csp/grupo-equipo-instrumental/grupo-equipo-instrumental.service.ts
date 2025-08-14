@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGrupoEquipoInstrumentalRequest } from './grupo-equipo-instrumental-request';
+import { GRUPO_EQUIPO_INSTRUMENTAL_REQUEST_CONVERTER } from './grupo-equipo-instrumental-request.converter';
 import { IGrupoEquipoInstrumentalResponse } from './grupo-equipo-instrumental-response';
 import { GRUPO_EQUIPO_INSTRUMENTAL_RESPONSE_CONVERTER } from './grupo-equipo-instrumental-response.converter';
-import { GRUPO_EQUIPO_INSTRUMENTAL_REQUEST_CONVERTER } from './grupo-equipo-instrumental-request.converter';
 
 // tslint:disable-next-line: variable-name
 const _GrupoEquipoInstrumentalMixinBase:

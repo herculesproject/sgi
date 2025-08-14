@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AllowModuleGuard } from '@core/guards/allow-module.guard';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { RootComponent } from '@shared/root/root.component';
 import { APP_ROUTE_NAMES } from './app-route-names';
 import { HomeComponent } from './home/home.component';

@@ -1,4 +1,4 @@
-import { SgiRestFindOptions } from "@sgi/framework/http";
+import { SgiRestFindOptions } from "@herculesproject/framework/http";
 
 export interface IBaseExportModalData {
   findOptions?: SgiRestFindOptions;

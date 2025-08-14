@@ -16,7 +16,6 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { TranslateService } from '@ngx-translate/core';
 import {
   RSQLSgiRestFilter,
   RSQLSgiRestSort,
@@ -25,7 +24,8 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
+import { TranslateService } from '@ngx-translate/core';
 import { from, merge, Observable, of, Subject } from 'rxjs';
 import { map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';

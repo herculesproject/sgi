@@ -7,13 +7,13 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { ConvocatoriaCrearComponent } from './convocatoria-crear.component';
-import { ConvocatoriaDatosGeneralesComponent } from '../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
+import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
-import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
-import { ConvocatoriaActionService } from '../convocatoria.action.service';
 import { SharedModule } from '@shared/shared.module';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { ConvocatoriaDatosGeneralesComponent } from '../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
+import { ConvocatoriaActionService } from '../convocatoria.action.service';
+import { ConvocatoriaCrearComponent } from './convocatoria-crear.component';
 
 describe('ConvocatoriaCrearComponent', () => {
   let component: ConvocatoriaCrearComponent;

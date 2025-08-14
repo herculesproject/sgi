@@ -4,7 +4,7 @@ import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-
 import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
 import { IProyectoClasificacion } from '@core/models/csp/proyecto-clasificacion';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'

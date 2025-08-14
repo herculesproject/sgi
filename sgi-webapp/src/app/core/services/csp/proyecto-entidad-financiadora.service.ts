@@ -4,7 +4,7 @@ import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/pr
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'

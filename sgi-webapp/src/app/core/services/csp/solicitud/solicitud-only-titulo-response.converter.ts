@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ISolicitud } from '@core/models/csp/solicitud';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudOnlyTituloResponse } from './solicitud-only-titulo-response';
 
 class SolicitudOnlyTituloResponseConverter extends SgiBaseConverter<ISolicitudOnlyTituloResponse, ISolicitud> {

@@ -1,6 +1,6 @@
 import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-num-comentario';
 import { IEvaluacionWithNumComentarioResponse } from '@core/services/eti/evaluacion/evaluacion-with-num-comentario-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { EVALUACION_RESPONSE_CONVERTER } from './evaluacion-response.converter';
 
 class EvaluacionWithNumComentarioResponseConverter extends SgiBaseConverter<IEvaluacionWithNumComentarioResponse, IEvaluacionWithNumComentario> {

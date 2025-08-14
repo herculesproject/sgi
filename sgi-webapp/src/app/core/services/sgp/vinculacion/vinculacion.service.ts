@@ -6,7 +6,7 @@ import { IVinculacionCategoriaProfesionalBackend } from '@core/models/sgp/backen
 import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { IVinculacionCategoriaProfesional } from '@core/models/sgp/vinculacion-categoria-profesional';
 import { environment } from '@env';
-import { SgiRestFindOptions, SgiRestService } from '@sgi/framework/http';
+import { SgiRestFindOptions, SgiRestService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { VINCULACION_CONVERTER } from './vinculacion-converter';
@@ -14,7 +14,7 @@ import { VINCULACION_CONVERTER } from './vinculacion-converter';
 @Injectable({
   providedIn: 'root'
 })
-export class VinculacionService extends SgiRestService<string, IVinculacion>{
+export class VinculacionService extends SgiRestService<string, IVinculacion> {
   private static readonly MAPPING = '/vinculaciones';
 
   constructor(protected http: HttpClient) {

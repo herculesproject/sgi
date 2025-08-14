@@ -1,13 +1,13 @@
 import { Directive } from '@angular/core';
 import { FieldOrientation } from '@core/models/rep/field-orientation.enum';
-import { OutputReport, OUTPUT_REPORT_TYPE_EXTENSION_MAP } from '@core/models/rep/output-report.enum';
+import { OUTPUT_REPORT_TYPE_EXTENSION_MAP, OutputReport } from '@core/models/rep/output-report.enum';
 import { ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiDynamicReport } from '@core/models/rep/sgi-dynamic-report';
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { ReportService } from '@core/services/rep/report.service';
 import { triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
-import { SgiRestFindOptions } from '@sgi/framework/http';
+import { SgiRestFindOptions } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 

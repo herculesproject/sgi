@@ -1,5 +1,5 @@
 import { IFormly } from '@core/models/eti/formly';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IFormlyResponse } from './formly-response';
 
 class FormlyResponseConverter extends SgiBaseConverter<IFormlyResponse, IFormly> {

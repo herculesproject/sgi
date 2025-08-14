@@ -1,6 +1,6 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITipoFacturacionRequest } from './tipo-facturacion-request';
 
 class TipoFacturacionRequestConverter extends SgiBaseConverter<ITipoFacturacionRequest, ITipoFacturacion> {

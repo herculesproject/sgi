@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { InvencionCrearComponent } from './invencion-crear/invencion-crear.component';
 import { InvencionEditarComponent } from './invencion-editar/invencion-editar.component';
 import { InvencionContratosComponent } from './invencion-formulario/invencion-contratos/invencion-contratos.component';
@@ -22,7 +22,7 @@ import { SolicitudProteccionComponent } from './invencion-formulario/solicitud-p
 import { InvencionListadoComponent } from './invencion-listado/invencion-listado.component';
 import { INVENCION_ROUTE_NAMES } from './invencion-route-names';
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
-import { InvencionResolver, INVENCION_DATA_KEY } from './invencion.resolver';
+import { INVENCION_DATA_KEY, InvencionResolver } from './invencion.resolver';
 
 const MSG_LISTADO_TITLE = marker('menu.pii.invenciones');
 const MSG_NEW_TITLE = marker('title.new.entity');

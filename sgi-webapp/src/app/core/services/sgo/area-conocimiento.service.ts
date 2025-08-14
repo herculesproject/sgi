@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAreaConocimiento } from '@core/models/sgo/area-conocimiento';
 import { environment } from '@env';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AreaConocimientoService extends SgiRestService<string, IAreaConocimiento>{
+export class AreaConocimientoService extends SgiRestService<string, IAreaConocimiento> {
   private static readonly MAPPING = '/areas-conocimiento';
 
   constructor(protected http: HttpClient) {

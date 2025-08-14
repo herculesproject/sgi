@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { IProcedimientoDocumento } from '@core/models/pii/procedimiento-documento';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IProcedimientoDocumentoResponse } from '../solicitud-proteccion-procedimiento-documento/solicitud-proteccion-procedimiento-documento-response';
 import { SOLICITUD_PROTECCION_PROCEDIMIENTO_DOCUMENTO_RESPONSE_CONVERTER } from '../solicitud-proteccion-procedimiento-documento/solicitud-proteccion-procedimiento-documento-response.converter';

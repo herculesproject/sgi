@@ -2,12 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ICategoriaProfesional } from '@core/models/sgp/categoria-profesional';
 import { environment } from '@env';
-import { SgiRestService } from '@sgi/framework/http';
+import { SgiRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoriaProfesionalService extends SgiRestService<string, ICategoriaProfesional>{
+export class CategoriaProfesionalService extends SgiRestService<string, ICategoriaProfesional> {
   private static readonly MAPPING = '/categorias-profesionales';
 
   constructor(protected http: HttpClient) {

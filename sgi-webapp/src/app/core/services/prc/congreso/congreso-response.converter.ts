@@ -1,9 +1,9 @@
 import { ICongreso } from '@core/models/prc/congreso';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ICongresoResponse } from './congreso-response';
 
-class CongresoResponseConverter extends SgiBaseConverter<ICongresoResponse, ICongreso>{
+class CongresoResponseConverter extends SgiBaseConverter<ICongresoResponse, ICongreso> {
   toTarget(value: ICongresoResponse): ICongreso {
     if (!value) {
       return value as unknown as ICongreso;

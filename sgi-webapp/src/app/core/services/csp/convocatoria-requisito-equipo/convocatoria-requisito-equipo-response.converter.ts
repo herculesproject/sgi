@@ -3,7 +3,7 @@ import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requ
 import { ISexo } from '@core/models/sgp/sexo';
 import { IConvocatoriaRequisitoEquipoResponse } from '@core/services/csp/convocatoria-requisito-equipo/convocatoria-requisito-equipo-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaRequisitoEquipoResponseConverter
   extends SgiBaseConverter<IConvocatoriaRequisitoEquipoResponse, IConvocatoriaRequisitoEquipo> {

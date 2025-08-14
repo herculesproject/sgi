@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@herculesproject/framework/http';
 import { ITipoCaducidadResponse } from './tipo-caducidad-response';
 import { TIPO_CADUCIDAD_RESPONSE_CONVERTER } from './tipo-caducidad-response.converter';
 

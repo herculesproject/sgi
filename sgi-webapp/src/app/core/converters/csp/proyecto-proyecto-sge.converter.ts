@@ -2,7 +2,7 @@ import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-p
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ProyectoProyectoSgeConverter
   extends SgiBaseConverter<IProyectoProyectoSgeBackend, IProyectoProyectoSge> {

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ITipoTarea } from '@core/models/eti/tipo-tarea';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { ITipoTareaResponse } from './tipo-tarea/tipo-tarea-response';
 import { TIPO_TAREA_RESPONSE_CONVERTER } from './tipo-tarea/tipo-tarea-response.converter';
 

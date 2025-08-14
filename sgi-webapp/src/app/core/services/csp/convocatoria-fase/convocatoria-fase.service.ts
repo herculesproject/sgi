@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IConvocatoriaFaseRequest } from './convocatoria-fase-request';
 import { CONVOCATORIA_FASE_REQUEST_CONVERTER } from './convocatoria-fase-request.converter';

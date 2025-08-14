@@ -4,7 +4,7 @@ import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convo
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'

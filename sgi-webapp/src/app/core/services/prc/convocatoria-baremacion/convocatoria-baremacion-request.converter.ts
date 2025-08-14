@@ -1,8 +1,8 @@
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConvocatoriaBaremacionRequest } from './convocatoria-baremacion-request';
 
-class ConvocatoriaBaremacionRequestConverter extends SgiBaseConverter<IConvocatoriaBaremacionRequest, IConvocatoriaBaremacion>{
+class ConvocatoriaBaremacionRequestConverter extends SgiBaseConverter<IConvocatoriaBaremacionRequest, IConvocatoriaBaremacion> {
   toTarget(value: IConvocatoriaBaremacionRequest): IConvocatoriaBaremacion {
     if (!value) {
       return value as unknown as IConvocatoriaBaremacion;

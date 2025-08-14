@@ -3,7 +3,7 @@ import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-
 import { IProyectoPeriodoAmortizacion } from '@core/models/csp/proyecto-periodo-amortizacion';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPeriodoAmortizacionRequest } from './proyecto-periodo-amortizacion-request';
 
 class ProyectoPeriodoAmortizacionRequestConverter extends

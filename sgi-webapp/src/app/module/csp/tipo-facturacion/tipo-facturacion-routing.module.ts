@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
-import { SgiAuthGuard } from '@sgi/framework/auth';
-import { TipoFacturacionListadoComponent } from './tipo-facturacion-listado/tipo-facturacion-listado.component';
 import { SgiRoutes } from '@core/route';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
+import { TipoFacturacionListadoComponent } from './tipo-facturacion-listado/tipo-facturacion-listado.component';
 
 const MSG_LISTADO_TITLE = marker('csp.tipo-facturacion');
 

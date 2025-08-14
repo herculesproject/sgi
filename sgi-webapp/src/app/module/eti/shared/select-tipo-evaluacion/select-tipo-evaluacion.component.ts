@@ -6,8 +6,8 @@ import { SelectServiceComponent } from '@core/component/select-service/select-se
 import { TIPO_EVALUACION, TIPO_EVALUACION_MAP, TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { LanguageService } from '@core/services/language.service';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

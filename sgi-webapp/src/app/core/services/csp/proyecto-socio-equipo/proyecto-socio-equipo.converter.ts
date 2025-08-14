@@ -2,7 +2,7 @@ import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
 import { IPersona } from '@core/models/sgp/persona';
 import { ROL_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/rol-proyecto/rol-proyecto-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoSocioEquipoResponse } from './proyecto-socio-equipo-response';
 
 class ProyectoSocioEquipoConverter extends SgiBaseConverter<IProyectoSocioEquipoResponse, IProyectoSocioEquipo> {

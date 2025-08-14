@@ -8,7 +8,7 @@ import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestar
 import { LanguageService } from '@core/services/language.service';
 import { PartidaPresupuestariaGastoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-gasto-sge.service';
 import { PartidaPresupuestariaIngresoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-ingreso-sge.service';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

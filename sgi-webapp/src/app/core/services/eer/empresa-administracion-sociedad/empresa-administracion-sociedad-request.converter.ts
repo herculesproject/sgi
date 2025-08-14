@@ -4,7 +4,7 @@ import { IEmpresaAdministracionSociedad } from '@core/models/eer/empresa-adminis
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEmpresaAdministracionSociedadRequest } from './empresa-administracion-sociedad-request';
 
 class EmpresaAdministracionSociedadRequestConverter

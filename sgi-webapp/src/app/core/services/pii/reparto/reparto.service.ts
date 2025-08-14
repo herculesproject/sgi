@@ -8,7 +8,7 @@ import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll,
   mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IRepartoCreateRequest } from './reparto-create-request';
 import { REPARTO_CREATE_REQUEST_CONVERTER } from './reparto-create-request.converter';

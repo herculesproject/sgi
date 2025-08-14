@@ -4,13 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthModule, SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { SeguimientoComentariosComponent } from './seguimiento-comentarios.component';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
+import { SeguimientoComentariosComponent } from './seguimiento-comentarios.component';
 
 describe('SeguimientoComentariosComponent', () => {
   let component: SeguimientoComentariosComponent;

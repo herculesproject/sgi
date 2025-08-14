@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { ISolicitudGrupoRequest } from './solicitud-grupo-request';
 import { SOLICITUD_GRUPO_REQUEST_CONVERTER } from './solicitud-grupo-request-converter';
 import { ISolicitudGrupoResponse } from './solicitud-grupo-response';

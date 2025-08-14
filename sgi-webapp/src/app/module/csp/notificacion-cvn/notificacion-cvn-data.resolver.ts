@@ -5,7 +5,7 @@ import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-p
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { NotificacionProyectoExternoCvnService } from '@core/services/csp/notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

@@ -6,7 +6,7 @@ import { SelectServiceComponent } from '@core/component/select-service/select-se
 import { ITipoRequerimiento } from '@core/models/csp/tipo-requerimiento';
 import { TipoRequerimientoService } from '@core/services/csp/tipo-requerimiento/tipo-requerimiento.service';
 import { LanguageService } from '@core/services/language.service';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

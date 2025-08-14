@@ -7,7 +7,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { Module } from '@core/module';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY, SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY } from '../solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto-data.resolver';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
 import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';

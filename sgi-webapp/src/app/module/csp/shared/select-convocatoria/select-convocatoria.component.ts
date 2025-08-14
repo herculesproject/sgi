@@ -8,7 +8,7 @@ import { SearchResult, SelectDialogComponent } from '@core/component/select-dial
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import {
   RSQLSgiRestFilter,
   RSQLSgiRestSort,
@@ -17,7 +17,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SearchConvocatoriaModalComponent, SearchConvocatoriaModalData } from './dialog/search-convocatoria.component';

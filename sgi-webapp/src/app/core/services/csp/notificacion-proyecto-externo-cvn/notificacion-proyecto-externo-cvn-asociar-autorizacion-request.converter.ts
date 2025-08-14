@@ -1,6 +1,6 @@
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { INotificacionProyectoExternoCvnAsociarAutorizacionRequest } from './notificacion-proyecto-externo-cvn-asociar-autorizacion-request';
 import { INotificacionProyectoExternoCVNRequest } from './notificacion-proyecto-externo-cvn-request';
 

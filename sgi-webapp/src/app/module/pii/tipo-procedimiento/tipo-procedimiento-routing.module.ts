@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { TipoProcedimientoListadoComponent } from './tipo-procedimiento-listado/tipo-procedimiento-listado.component';
 
 const MSG_LISTADO_TITLE = marker('pii.tipo-procedimiento');

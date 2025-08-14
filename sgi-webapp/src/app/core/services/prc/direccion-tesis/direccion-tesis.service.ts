@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IDireccionTesis } from '@core/models/prc/direccion-tesis';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IDireccionTesisResponse } from './direccion-tesis-response';
 import { DIRECCION_TESIS_RESPONSE_CONVERTER } from './direccion-tesis-response.converter';

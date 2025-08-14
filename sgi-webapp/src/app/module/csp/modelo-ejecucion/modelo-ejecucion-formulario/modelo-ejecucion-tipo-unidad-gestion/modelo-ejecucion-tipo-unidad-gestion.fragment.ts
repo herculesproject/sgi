@@ -5,7 +5,7 @@ import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.serv
 import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { BehaviorSubject, from, merge, Observable, of, zip } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 

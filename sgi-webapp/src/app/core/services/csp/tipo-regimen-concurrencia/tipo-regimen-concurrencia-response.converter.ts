@@ -1,6 +1,6 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITipoRegimenConcurrenciaResponse } from './tipo-regimen-concurrencia-response';
 
 class TipoRegimenConcurrenciaResponseConverter extends SgiBaseConverter<ITipoRegimenConcurrenciaResponse, ITipoRegimenConcurrencia> {

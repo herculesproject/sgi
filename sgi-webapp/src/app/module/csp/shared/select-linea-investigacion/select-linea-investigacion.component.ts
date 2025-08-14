@@ -9,7 +9,7 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { ILineaInvestigacion } from '@core/models/csp/linea-investigacion';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LineaInvestigacionModalComponent } from '../../linea-investigacion/linea-investigacion-modal/linea-investigacion-modal.component';

@@ -8,8 +8,8 @@ import { TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/rel/relacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { ProyectoRelacionValidator } from '@core/validators/proyecto-relacion-validator';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { switchMap } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../../proyecto-formulario/proyecto-relaciones/proyecto-relaciones.fragment';
 

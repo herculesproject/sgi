@@ -23,7 +23,7 @@ import {
   SgiRestFilter,
   SgiRestFilterOperator,
   SgiRestFindOptions, SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable, Subject, from, merge } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';

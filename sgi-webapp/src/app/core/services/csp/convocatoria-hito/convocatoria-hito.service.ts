@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IConvocatoriaHitoRequest } from './convocatoria-hito-request';
 import { CONVOCATORIA_HITO_REQUEST_CONVERTER } from './convocatoria-hito-request.converter';

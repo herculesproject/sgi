@@ -1,7 +1,7 @@
 
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRolProyectoRequest } from './rol-proyecto-request';
 
 

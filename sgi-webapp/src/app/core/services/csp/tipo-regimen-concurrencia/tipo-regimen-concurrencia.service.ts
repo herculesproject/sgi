@@ -14,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ITipoRegimenConcurrenciaRequest } from './tipo-regimen-concurrencia-request';
 import { TIPO_REGIMEN_CONCURRENCIA_REQUEST_CONVERTER } from './tipo-regimen-concurrencia-request.converter';

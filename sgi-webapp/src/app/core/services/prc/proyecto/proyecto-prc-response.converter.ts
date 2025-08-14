@@ -1,10 +1,10 @@
 import { IProyectoResumen } from '@core/models/csp/proyecto-resumen';
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
 import { IProyectoPrc } from '@core/models/prc/proyecto-prc';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPrcResponse } from './proyecto-prc-response';
 
-class ProyectoPrcResponseConverter extends SgiBaseConverter<IProyectoPrcResponse, IProyectoPrc>{
+class ProyectoPrcResponseConverter extends SgiBaseConverter<IProyectoPrcResponse, IProyectoPrc> {
   toTarget(value: IProyectoPrcResponse): IProyectoPrc {
     if (!value) {
       return value as unknown as IProyectoPrc;

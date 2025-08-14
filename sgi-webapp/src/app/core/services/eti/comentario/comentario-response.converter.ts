@@ -3,7 +3,7 @@ import { IComentario } from '@core/models/eti/comentario';
 import { IPersona } from '@core/models/sgp/persona';
 import { IComentarioResponse } from '@core/services/eti/comentario/comentario-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { APARTADO_RESPONSE_CONVERTER } from '../apartado/apartado-response.converter';
 import { EVALUACION_RESPONSE_CONVERTER } from '../evaluacion/evaluacion-response.converter';
 import { MEMORIA_RESPONSE_CONVERTER } from '../memoria/memoria-response.converter';

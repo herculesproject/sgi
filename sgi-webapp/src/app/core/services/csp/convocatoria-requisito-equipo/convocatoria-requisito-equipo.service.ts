@@ -5,7 +5,7 @@ import { IRequisitoEquipoCategoriaProfesional } from '@core/models/csp/requisito
 import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
 import { IConvocatoriaRequisitoEquipoResponse } from '@core/services/csp/convocatoria-requisito-equipo/convocatoria-requisito-equipo-response';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_REQUEST_CONVERTER } from '../requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-request.converter';

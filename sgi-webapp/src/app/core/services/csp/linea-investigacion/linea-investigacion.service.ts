@@ -14,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ILineaInvestigacionRequest } from './linea-investigacion-request';
 import { LINEA_INVESTIGACION_REQUEST_CONVERTER } from './linea-investigacion-request.converter';

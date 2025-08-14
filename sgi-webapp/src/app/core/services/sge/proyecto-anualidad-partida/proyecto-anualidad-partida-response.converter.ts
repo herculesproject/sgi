@@ -1,9 +1,9 @@
 import { IProyectoAnualidadPartida } from '@core/models/sge/proyecto-anualidad-partida';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoAnualidadPartidaResponse } from './proyecto-anualidad-partida-response';
 
-class ProyectoAnualidadPartidaResponseConverter extends SgiBaseConverter<IProyectoAnualidadPartidaResponse, IProyectoAnualidadPartida>{
+class ProyectoAnualidadPartidaResponseConverter extends SgiBaseConverter<IProyectoAnualidadPartidaResponse, IProyectoAnualidadPartida> {
   toTarget(value: IProyectoAnualidadPartidaResponse): IProyectoAnualidadPartida {
     if (!value) {
       return value as unknown as IProyectoAnualidadPartida;

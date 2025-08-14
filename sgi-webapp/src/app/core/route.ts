@@ -1,5 +1,5 @@
-import { SgiAuthRoute } from '@sgi/framework/auth';
-import { SgiAuthRouteData } from '@sgi/framework/auth/auth.route';
+import { SgiAuthRoute } from '@herculesproject/framework/auth';
+import { SgiAuthRouteData } from '@herculesproject/framework/auth/auth.route';
 
 /**
  * SGI route data with autorization and title

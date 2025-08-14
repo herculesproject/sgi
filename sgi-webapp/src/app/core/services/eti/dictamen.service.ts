@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IDictamen } from '@core/models/eti/dictamen';
 import { environment } from '@env';
-import { SgiRestListResult, SgiRestService } from '@sgi/framework/http';
+import { SgiRestListResult, SgiRestService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 @Injectable({

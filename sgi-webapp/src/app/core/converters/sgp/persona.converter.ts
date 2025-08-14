@@ -1,7 +1,7 @@
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersonaBackend } from '@core/models/sgp/backend/persona-backend';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class PersonaConverter extends SgiBaseConverter<IPersonaBackend, IPersona> {
   toTarget(value: IPersonaBackend): IPersona {

@@ -4,7 +4,7 @@ import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyect
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
 import { IProyectoPaqueteTrabajo } from '@core/models/csp/proyecto-paquete-trabajo';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'

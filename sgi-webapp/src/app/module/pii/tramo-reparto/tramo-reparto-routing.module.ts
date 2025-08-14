@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { TramoRepartoListadoComponent } from './tramo-reparto-listado/tramo-reparto-listado.component';
 
 const MSG_LISTADO_TITLE = marker('pii.tramo-reparto');

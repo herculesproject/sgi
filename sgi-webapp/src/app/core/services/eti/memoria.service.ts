@@ -21,7 +21,7 @@ import { MEMORIA_RESPONSE_CONVERTER } from '@core/services/eti/memoria/memoria-r
 import { IRespuestaResponse } from '@core/services/eti/respuesta/respuesta-response';
 import { RESPUESTA_RESPONSE_CONVERTER } from '@core/services/eti/respuesta/respuesta-response.converter';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IConvocatoriaReunionResponse } from './convocatoria-reunion/convocatoria-reunion-response';

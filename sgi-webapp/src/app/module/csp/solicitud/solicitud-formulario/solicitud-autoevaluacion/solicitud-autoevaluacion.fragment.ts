@@ -7,8 +7,8 @@ import { Fragment, Group } from '@core/services/action-service';
 import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
 import { FormlyService } from '@core/services/eti/formly/formly.service';
 import { LanguageService } from '@core/services/language.service';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 

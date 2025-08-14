@@ -1,7 +1,7 @@
 import { INotificacionCVNEntidadFinanciadora } from '@core/models/csp/notificacion-cvn-entidad-financiadora';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
 import { IEmpresa } from '@core/models/sgemp/empresa';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { INotificacionCVNEntidadFinanciadoraResponse } from './notificacion-cvn-entidad-financiadora-response';
 
 class INotificacionCVNEntidadFinanciadoraResponseConverter

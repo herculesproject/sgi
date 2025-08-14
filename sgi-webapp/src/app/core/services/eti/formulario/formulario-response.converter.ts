@@ -1,5 +1,5 @@
 import { IFormulario } from '@core/models/eti/formulario';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IFormularioResponse } from './formulario-response';
 
 class FormularioResponseConverter

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IFacturaPrevistaPendiente } from '@core/models/sge/factura-prevista-pendiente';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@herculesproject/framework/http';
 import { IFacturaPrevistaPendienteResponse } from './factura-prevista-pendiente-response';
 import { FACTURA_PREVISTA_PENDIENTE_RESPONSE_CONVERTER } from './factura-prevista-pendiente-response.converter';
 

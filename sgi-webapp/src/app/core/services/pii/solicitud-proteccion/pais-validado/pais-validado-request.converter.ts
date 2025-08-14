@@ -2,7 +2,7 @@ import { IPaisValidado } from '@core/models/pii/pais-validado';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { IPais } from '@core/models/sgo/pais';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IPaisValidadoRequest } from './pais-validado-request';
 
 class PaisValidadoRequestConverter extends SgiBaseConverter<IPaisValidadoRequest, IPaisValidado> {

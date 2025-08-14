@@ -5,8 +5,9 @@ import { IPeriodoTitularidadTitular } from '@core/models/pii/periodo-titularidad
 import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate,
-  RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, UpdateCtor
-} from '@sgi/framework/http';
+  SgiRestBaseService,
+  SgiRestListResult, UpdateCtor
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 // tslint:disable-next-line: max-line-length

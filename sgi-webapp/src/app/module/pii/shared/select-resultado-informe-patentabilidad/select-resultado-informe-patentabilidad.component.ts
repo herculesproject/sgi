@@ -8,8 +8,8 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { IResultadoInformePatentibilidad } from '@core/models/pii/resultado-informe-patentabilidad';
 import { LanguageService } from '@core/services/language.service';
 import { ResultadoInformePatentabilidadService } from '@core/services/pii/resultado-informe-patentabilidad/resultado-informe-patentabilidad.service';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResultadoInformePatentabilidadModalComponent } from '../../resultado-informe-patentabilidad/resultado-informe-patentabilidad-modal/resultado-informe-patentabilidad-modal.component';

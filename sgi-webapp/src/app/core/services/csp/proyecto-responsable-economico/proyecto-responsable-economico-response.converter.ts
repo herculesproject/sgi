@@ -1,11 +1,11 @@
 import { IProyectoResponsableEconomico } from '@core/models/csp/proyecto-responsable-economico';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico-response';
 
 class ProyectoResponsableEconomicoResponseConverter
-  extends SgiBaseConverter<IProyectoResponsableEconomicoResponse, IProyectoResponsableEconomico>{
+  extends SgiBaseConverter<IProyectoResponsableEconomicoResponse, IProyectoResponsableEconomico> {
   toTarget(value: IProyectoResponsableEconomicoResponse): IProyectoResponsableEconomico {
     if (!value) {
       return value as unknown as IProyectoResponsableEconomico;

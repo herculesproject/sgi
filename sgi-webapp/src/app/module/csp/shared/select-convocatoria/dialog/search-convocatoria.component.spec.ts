@@ -6,8 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthModule } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SearchConvocatoriaModalComponent } from './search-convocatoria.component';
 

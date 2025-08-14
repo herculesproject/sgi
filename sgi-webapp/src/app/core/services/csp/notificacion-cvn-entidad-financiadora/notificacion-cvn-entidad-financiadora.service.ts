@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { INotificacionCVNEntidadFinanciadora } from '@core/models/csp/notificacion-cvn-entidad-financiadora';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { INotificacionCVNEntidadFinanciadoraRequest } from './notificacion-cvn-entidad-financiadora-request';
 import { NOTIFICACION_CVN_ENTIDAD_FINANCIADORA_REQUEST_CONVERTER } from './notificacion-cvn-entidad-financiadora-request.converter';
 import { INotificacionCVNEntidadFinanciadoraResponse } from './notificacion-cvn-entidad-financiadora-response';

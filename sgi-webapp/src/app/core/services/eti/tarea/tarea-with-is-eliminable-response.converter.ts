@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
 import { ITareaWithIsEliminableResponse } from '@core/services/eti/tarea/tarea-with-is-eliminable-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { EQUIPO_TRABAJO_RESPONSE_CONVERTER } from '../equipo-trabajo/equipo-trabajo-response.converter';
 import { FORMACION_ESPECIFICA_RESPONSE_CONVERTER } from '../formacion-especifica/formacion-especifica-response.converter';
 import { MEMORIA_RESPONSE_CONVERTER } from '../memoria/memoria-response.converter';

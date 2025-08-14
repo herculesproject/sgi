@@ -1,5 +1,5 @@
 import { IProyectoAgrupacionGasto } from '@core/models/csp/proyecto-agrupacion-gasto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoAgrupacionGastoRequest } from './proyecto-agrupacion-gasto-request';
 
 class ProyectoAgrupacionGastoRequestConverter

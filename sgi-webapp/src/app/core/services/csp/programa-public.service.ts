@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPrograma } from '@core/models/csp/programa';
 import { environment } from '@env';
-import { SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
+import { SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http/';
 import { Observable } from 'rxjs';
 
 @Injectable({

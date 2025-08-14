@@ -12,11 +12,11 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { TranslateService } from '@ngx-translate/core';
 import {
   RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter,
   SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
+import { TranslateService } from '@ngx-translate/core';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';

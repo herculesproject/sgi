@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, SgiRestBaseService } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IModeloTipoFinalidadResponse } from './modelo-tipo-finalidad/modelo-tipo-finalidad-response';
 import { MODELO_TIPO_FINALIDAD_RESPONSE_CONVERTER } from './modelo-tipo-finalidad/modelo-tipo-finalidad-response.converter';

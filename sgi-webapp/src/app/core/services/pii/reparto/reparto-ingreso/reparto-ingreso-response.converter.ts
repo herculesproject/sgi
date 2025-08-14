@@ -1,10 +1,10 @@
 import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
 import { IReparto } from '@core/models/pii/reparto';
 import { IRepartoIngreso } from '@core/models/pii/reparto-ingreso';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRepartoIngresoResponse } from './reparto-ingreso-response';
 
-class RepartoIngresoResponseConverter extends SgiBaseConverter<IRepartoIngresoResponse, IRepartoIngreso>{
+class RepartoIngresoResponseConverter extends SgiBaseConverter<IRepartoIngresoResponse, IRepartoIngreso> {
   toTarget(value: IRepartoIngresoResponse): IRepartoIngreso {
     if (!value) {
       return value as unknown as IRepartoIngreso;

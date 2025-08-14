@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+import { SgiAuthGuard, SgiAuthRoutes } from '@herculesproject/framework/auth';
 import { MiembrosGruposInvestigacionListadoComponent } from './miembros-grupos-investigacion-listado/miembros-grupos-investigacion-listado.component';
 
 const MSG_LISTADO_TITLE = marker('csp.miembros-grupos-investigacion.listado');

@@ -10,7 +10,7 @@ import { RequerimientoJustificacionService } from '@core/services/csp/requerimie
 import { LanguageService } from '@core/services/language.service';
 import { SeguimientoJustificacionService } from '@core/services/sge/seguimiento-justificacion/seguimiento-justificacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { concatMap, map, mergeMap, skip, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IColumnDefinition } from '../../../ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';

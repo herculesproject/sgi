@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { TipoProteccionCrearComponent } from './tipo-proteccion-crear/tipo-proteccion-crear.component';
 import { TipoProteccionEditarComponent } from './tipo-proteccion-editar/tipo-proteccion-editar.component';
 import { TipoProteccionDatosGeneralesComponent } from './tipo-proteccion-formulario/tipo-proteccion-datos-generales/tipo-proteccion-datos-generales.component';

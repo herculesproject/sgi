@@ -1,8 +1,8 @@
 import { IGastoJustificadoDetalle } from '@core/models/sge/gasto-justificado-detalle';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGastoJustificadoDetalleResponse } from './gasto-justificado-detalle-response';
 
-class GastoJustificadoDetalleResponseConverter extends SgiBaseConverter<IGastoJustificadoDetalleResponse, IGastoJustificadoDetalle>{
+class GastoJustificadoDetalleResponseConverter extends SgiBaseConverter<IGastoJustificadoDetalleResponse, IGastoJustificadoDetalle> {
 
   toTarget(value: IGastoJustificadoDetalleResponse): IGastoJustificadoDetalle {
     if (!value) {

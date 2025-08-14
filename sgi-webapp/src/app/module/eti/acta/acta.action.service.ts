@@ -5,11 +5,14 @@ import { IActa } from '@core/models/eti/acta';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { ActionService } from '@core/services/action-service';
 import { ActaService } from '@core/services/eti/acta.service';
+import { ApartadoService } from '@core/services/eti/apartado.service';
 import { AsistenteService } from '@core/services/eti/asistente.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 import {
   ActaAsistentesFragment
 } from './acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.fragment';
@@ -17,9 +20,6 @@ import { ActaComentariosFragment } from './acta-formulario/acta-comentarios/acta
 import { ActaDatosGeneralesFragment } from './acta-formulario/acta-datos-generales/acta-datos-generales.fragment';
 import { ActaMemoriasFragment } from './acta-formulario/acta-memorias/acta-memorias.fragment';
 import { Rol } from './acta-rol';
-import { BloqueService } from '@core/services/eti/bloque.service';
-import { ApartadoService } from '@core/services/eti/apartado.service';
-import { LoggerConfig, NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class ActaActionService extends ActionService {

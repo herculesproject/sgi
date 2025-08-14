@@ -1,6 +1,6 @@
 import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionPalabraClave } from '@core/models/pii/invencion-palabra-clave';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInvencionPalabraClaveRequest } from './invencion-palabra-clave-request';
 
 class IInvencionPalabraClaveRequestConverter extends SgiBaseConverter<IInvencionPalabraClaveRequest, IInvencionPalabraClave> {

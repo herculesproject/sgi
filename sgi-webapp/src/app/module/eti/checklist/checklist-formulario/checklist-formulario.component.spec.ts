@@ -7,9 +7,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FormlyModule } from '@ngx-formly/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ChecklistFormularioComponent } from './checklist-formulario.component';
 

@@ -6,12 +6,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthModule, SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 
-import { ModeloEjecucionTipoUnidadGestionComponent } from './modelo-ejecucion-tipo-unidad-gestion.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ModeloEjecucionTipoUnidadGestionComponent } from './modelo-ejecucion-tipo-unidad-gestion.component';
 
 
 describe('ModeloEjecucionTipoUnidadGestionComponent', () => {

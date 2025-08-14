@@ -6,8 +6,8 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
@@ -32,7 +32,7 @@ const CONVOCATORIA_REUNION_REPORT_MEMORIA_EVALUADOR2_APELLIDOS_KEY = marker('eti
 
 @Injectable()
 export class ConvocatoriaReunionMemoriasListadoExportService extends
-  AbstractTableExportFillService<IConvocatoriaReunionReportData, IConvocatoriaReunionReportOptions>{
+  AbstractTableExportFillService<IConvocatoriaReunionReportData, IConvocatoriaReunionReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,

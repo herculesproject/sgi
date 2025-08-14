@@ -8,8 +8,8 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { ITipoProcedimiento } from '@core/models/pii/tipo-procedimiento';
 import { LanguageService } from '@core/services/language.service';
 import { TipoProcedimientoService } from '@core/services/pii/tipo-procedimiento/tipo-procedimiento.service';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoProcedimientoModalComponent } from '../../tipo-procedimiento/tipo-procedimiento-modal/tipo-procedimiento-modal.component';

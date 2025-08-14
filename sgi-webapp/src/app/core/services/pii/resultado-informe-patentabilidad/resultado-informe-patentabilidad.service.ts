@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IResultadoInformePatentibilidad } from '@core/models/pii/resultado-informe-patentabilidad';
 import { environment } from '@env';
 import {
@@ -15,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IResultadoInformePatentibilidadRequest } from './resultado-informe-patentabilidad-request';
 import { RESULTADO_INFORME_PATENTABILIDAD_REQUEST_CONVERTER } from './resultado-informe-patentabilidad-request.converter';

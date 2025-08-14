@@ -14,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IProyectoPeriodoAmortizacionRequest } from './proyecto-periodo-amortizacion-request';
 import { PROYECTO_PERIODO_AMORTIZACION_REQUEST_CONVERTER } from './proyecto-periodo-amortizacion-request.converter';

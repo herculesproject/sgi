@@ -17,7 +17,7 @@ import { SearchResult } from '@core/component/select-dialog/select-dialog.compon
 import { ILineaInvestigacion } from '@core/models/csp/linea-investigacion';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { LanguageService } from '@core/services/language.service';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 

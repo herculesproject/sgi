@@ -1,8 +1,8 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
-import { IConvocatoriaEnlaceResponse } from '@core/services/csp/convocatoria-enlace/convocatoria-enlace-response';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
+import { IConvocatoriaEnlaceResponse } from '@core/services/csp/convocatoria-enlace/convocatoria-enlace-response';
 import { TIPO_ENLACE_RESPONSE_CONVERTER } from '@core/services/csp/tipo-enlace/tipo-enlace-response.converter';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaEnlaceResponseConverter extends SgiBaseConverter<IConvocatoriaEnlaceResponse, IConvocatoriaEnlace> {
 

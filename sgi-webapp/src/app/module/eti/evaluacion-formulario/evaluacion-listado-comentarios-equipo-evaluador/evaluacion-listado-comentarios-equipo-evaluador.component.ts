@@ -7,11 +7,11 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestListResult } from '@herculesproject/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { Observable, from, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { Rol } from '../evaluacion-formulario.action.service';
-import { NGXLogger } from 'ngx-logger';
 
 export interface IEvaluadorWithComentariosAndEnviados extends IEvaluador {
   numComentarios: number;

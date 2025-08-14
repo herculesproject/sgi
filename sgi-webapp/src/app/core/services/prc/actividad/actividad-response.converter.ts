@@ -1,10 +1,10 @@
 import { IActividad } from '@core/models/prc/actividad';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IActividadResponse } from './actividad-response';
 
 
-class ActividadResponseConverter extends SgiBaseConverter<IActividadResponse, IActividad>{
+class ActividadResponseConverter extends SgiBaseConverter<IActividadResponse, IActividad> {
   toTarget(value: IActividadResponse): IActividad {
     if (!value) {
       return value as unknown as IActividad;

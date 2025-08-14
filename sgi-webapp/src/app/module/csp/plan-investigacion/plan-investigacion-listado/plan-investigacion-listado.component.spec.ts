@@ -10,8 +10,8 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { PlanInvestigacionListadoComponent } from './plan-investigacion-listado.component';
-import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('PlanInvestigacionListadoComponent', () => {
   let component: PlanInvestigacionListadoComponent;

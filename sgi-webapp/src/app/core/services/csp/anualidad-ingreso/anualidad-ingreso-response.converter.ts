@@ -3,10 +3,10 @@ import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { ICodigoEconomicoIngreso } from '@core/models/sge/codigo-economico-ingreso';
 import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestaria-sge';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IAnualidadIngresoResponse } from './anualidad-ingreso-response';
 
-class AnualidadIngresoResponseConverter extends SgiBaseConverter<IAnualidadIngresoResponse, IAnualidadIngreso>{
+class AnualidadIngresoResponseConverter extends SgiBaseConverter<IAnualidadIngresoResponse, IAnualidadIngreso> {
   toTarget(value: IAnualidadIngresoResponse): IAnualidadIngreso {
     if (!value) {
       return value as unknown as IAnualidadIngreso;

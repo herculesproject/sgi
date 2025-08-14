@@ -5,7 +5,7 @@ import { environment } from '@env';
 import {
   CreateCtor, FindByIdCtor, mixinCreate,
   mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { IInvencionIngresoRequest } from './invencion-ingreso-request';
 import { INVENCION_INGRESO_REQUEST_CONVERTER } from './invencion-ingreso-request.converter';
 import { IInvencionIngresoResponse } from './invencion-ingreso-response';

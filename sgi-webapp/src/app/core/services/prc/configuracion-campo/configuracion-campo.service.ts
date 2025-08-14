@@ -7,7 +7,7 @@ import {
   FindAllCtor, mixinFindAll,
   RSQLSgiRestFilter, SgiRestBaseService,
   SgiRestFilterOperator, SgiRestFindOptions
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CODIGO_CVN_MAP } from 'src/app/module/prc/shared/cvn/codigos-cvn';

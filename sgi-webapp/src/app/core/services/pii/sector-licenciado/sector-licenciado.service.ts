@@ -6,7 +6,7 @@ import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate,
   mixinFindAll, mixinFindById, mixinUpdate, RSQLSgiRestFilter,
   SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ISectorLicenciadoRequest } from './sector-licenciado-request';

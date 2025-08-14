@@ -3,7 +3,7 @@ import { IGenericEmailText } from "@core/models/com/generic-email-text";
 import { IConvocatoriaFase } from "@core/models/csp/convocatoria-fase";
 import { ISendEmailTask } from "@core/models/tp/send-email-task";
 import { LuxonUtils } from "@core/utils/luxon-utils";
-import { SgiBaseConverter } from "@sgi/framework/core";
+import { SgiBaseConverter } from "@herculesproject/framework/core";
 import { TIPO_FASE_RESPONSE_CONVERTER } from "../tipo-fase/tipo-fase-response.converter";
 import { IConvocatoriaFaseAviso } from "./convocatoria-fase-aviso";
 import { IConvocatoriaFaseAvisoResponse } from "./convocatoria-fase-aviso-response";

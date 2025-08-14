@@ -2,7 +2,7 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoResponsableEconomicoRequest } from './grupo-responsable-economico-request';
 
 class GrupoResponsableEconomicoRequestConverter

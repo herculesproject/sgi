@@ -16,16 +16,16 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { from, Observable, Subscription } from 'rxjs';
 import { concatMap, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { PROYECTO_ANUALIDAD_ROUTE_NAMES } from '../../proyecto-anualidad/proyecto-anualidad-route-names';
 import { PROYECTO_ROUTE_NAMES } from '../../proyecto/proyecto-route-names';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_NOTIFICADO_SUCCESS = marker('msg.csp.notificacion-presupuesto-sge.success');
 const MSG_CONTINUE_NOTIFICACION_PRESUPUESTO_KEY = marker('msg.continue.notificacion.presupuesto');

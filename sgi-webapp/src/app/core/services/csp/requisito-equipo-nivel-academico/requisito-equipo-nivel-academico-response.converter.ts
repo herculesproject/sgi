@@ -1,11 +1,11 @@
 import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
 import { INivelAcademico } from '@core/models/sgp/nivel-academico';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRequisitoEquipoNivelAcademicoResponse } from './requisito-equipo-nivel-academico-response';
 
 class RequisitoEquipoNivelAcademicoResponseConverter extends
-  SgiBaseConverter<IRequisitoEquipoNivelAcademicoResponse, IRequisitoEquipoNivelAcademico>{
+  SgiBaseConverter<IRequisitoEquipoNivelAcademicoResponse, IRequisitoEquipoNivelAcademico> {
   toTarget(value: IRequisitoEquipoNivelAcademicoResponse): IRequisitoEquipoNivelAcademico {
     if (!value) {
       return value as unknown as IRequisitoEquipoNivelAcademico;

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoProrrogaDocumento } from '@core/models/csp/proyecto-prorroga-documento';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IProyectoProrrogaDocumentoResponse } from './proyecto-prorroga-documento/proyecto-prorroga-documento-response';
 import { PROYECTO_PRORROGA_DOCUMENTO_RESPONSE_CONVERTER } from './proyecto-prorroga-documento/proyecto-prorroga-documento-response.converter';

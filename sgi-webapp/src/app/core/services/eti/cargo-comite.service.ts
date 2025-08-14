@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CargoComite } from '@core/models/eti/cargo-comite';
 import { environment } from '@env';
-import { SgiRestService } from '@sgi/framework/http';
+import { SgiRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root',

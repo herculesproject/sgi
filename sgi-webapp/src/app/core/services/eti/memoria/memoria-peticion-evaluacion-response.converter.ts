@@ -3,7 +3,7 @@ import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-ev
 import { IPersona } from '@core/models/sgp/persona';
 import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { RETROSPECTIVA_RESPONSE_CONVERTER } from '../retrospectiva/retrospectiva-response.converter';
 import { IMemoriaPeticionEvaluacionResponse } from './memoria-peticion-evaluacion-response';
 

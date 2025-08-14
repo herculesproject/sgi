@@ -1,9 +1,9 @@
 import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-resumen';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad-resumen-response';
 
-class ProyectoAnualidadResumenResponseConverter extends SgiBaseConverter<IProyectoAnualidadResumenResponse, IProyectoAnualidadResumen>{
+class ProyectoAnualidadResumenResponseConverter extends SgiBaseConverter<IProyectoAnualidadResumenResponse, IProyectoAnualidadResumen> {
   toTarget(value: IProyectoAnualidadResumenResponse): IProyectoAnualidadResumen {
     if (!value) {
       return value as unknown as IProyectoAnualidadResumen;

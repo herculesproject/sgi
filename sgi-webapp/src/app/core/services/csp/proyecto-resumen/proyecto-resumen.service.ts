@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoResumen } from '@core/models/csp/proyecto-resumen';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { IProyectoResumenResponse } from './proyecto-resumen-response';
 import { PROYECTO_RESUMEN_RESPONSE_CONVERTER } from './proyecto-resumen-response.converter';
 

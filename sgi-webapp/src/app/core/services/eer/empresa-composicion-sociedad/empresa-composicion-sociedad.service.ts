@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IEmpresaComposicionSociedad } from '@core/models/eer/empresa-composicion-sociedad';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EMPRESA_COMPOSICION_SOCIEDAD_REQUEST_CONVERTER } from './empresa-composicion-sociedad-request.converter';

@@ -4,7 +4,7 @@ import { IPersona } from '@core/models/sgp/persona';
 import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
 import { IEvaluadorResponse } from '@core/services/eti/evaluador/evaluador-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class EvaluadorResponseConverter extends SgiBaseConverter<IEvaluadorResponse, IEvaluador> {
   toTarget(value: IEvaluadorResponse): IEvaluador {

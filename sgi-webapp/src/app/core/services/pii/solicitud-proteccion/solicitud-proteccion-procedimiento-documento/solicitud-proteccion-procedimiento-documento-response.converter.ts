@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { IProcedimientoDocumento } from '@core/models/pii/procedimiento-documento';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProcedimientoDocumentoResponse } from './solicitud-proteccion-procedimiento-documento-response';
 
 class SolicitudProteccionProcedimientoDocumentoResponseConverter

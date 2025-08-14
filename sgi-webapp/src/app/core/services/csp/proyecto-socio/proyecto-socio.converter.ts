@@ -1,7 +1,7 @@
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ROL_SOCIO_RESPONSE_CONVERTER } from '../rol-socio/rol-socio-response.converter';
 import { IProyectoSocioResponse } from './proyecto-socio-response';
 

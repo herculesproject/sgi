@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IObraArtistica } from '@core/models/prc/obra-artistica';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IObraArtisticaResponse } from './obra-artistica-response';
 import { OBRA_ARTISTICA_RESPONSE_CONVERTER } from './obra-artistica-response.converter';

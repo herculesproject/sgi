@@ -1,6 +1,6 @@
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { IEmpresa } from '@core/models/sgemp/empresa';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { PROGRAMA_RESPONSE_CONVERTER } from '../programa/programa-response.converter';
 import { ISolicitudModalidadResponse } from './solicitud-modalidad-response';
 

@@ -10,7 +10,7 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
-import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 

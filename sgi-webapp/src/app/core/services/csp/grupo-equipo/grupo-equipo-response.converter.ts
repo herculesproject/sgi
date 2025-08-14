@@ -1,12 +1,11 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
-import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { IGrupoEquipoResponse } from './grupo-equipo-response';
-import { ROL_PROYECTO_RESPONSE_CONVERTER } from '../rol-proyecto/rol-proyecto-response.converter';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRolProyectoResponse } from '../rol-proyecto/rol-proyecto-response';
+import { ROL_PROYECTO_RESPONSE_CONVERTER } from '../rol-proyecto/rol-proyecto-response.converter';
+import { IGrupoEquipoResponse } from './grupo-equipo-response';
 
 class GrupoEquipoResponseConverter
   extends SgiBaseConverter<IGrupoEquipoResponse, IGrupoEquipo> {

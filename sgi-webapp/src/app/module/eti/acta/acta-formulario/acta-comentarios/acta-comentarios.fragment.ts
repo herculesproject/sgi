@@ -11,11 +11,11 @@ import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reun
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { catchError, endWith, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { Rol } from '../../acta-rol';
-import { NGXLogger } from 'ngx-logger';
 
 export class ActaComentariosFragment extends Fragment {
 

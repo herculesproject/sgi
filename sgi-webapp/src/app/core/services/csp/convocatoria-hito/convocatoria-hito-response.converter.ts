@@ -3,7 +3,7 @@ import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITipoHitoResponse } from '../tipo-hito/tipo-hito-response';
 import { TIPO_HITO_RESPONSE_CONVERTER } from '../tipo-hito/tipo-hito-response.converter';
 import { IConvocatoriaHitoResponse } from './convocatoria-hito-response';

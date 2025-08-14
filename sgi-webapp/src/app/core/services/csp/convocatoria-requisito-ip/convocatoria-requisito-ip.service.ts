@@ -6,7 +6,7 @@ import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-
 import { IConvocatoriaRequisitoIPResponse } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip-response';
 import { CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip-response.converter';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { REQUISITOIP_CATEGORIA_PROFESIONAL_REQUEST_CONVERTER } from '../requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-request.converter';

@@ -1,12 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IBaremo, TipoCuantia } from '@core/models/prc/baremo';
-import { IConfiguracionBaremo, TIPO_NODOS_PESO, TipoNodo, TipoBaremo } from '@core/models/prc/configuracion-baremo';
+import { IConfiguracionBaremo, TIPO_NODOS_PESO, TipoBaremo, TipoNodo } from '@core/models/prc/configuracion-baremo';
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
 import { Fragment } from '@core/services/action-service';
 import { ConfiguracionBaremoService } from '@core/services/prc/configuracion-baremo/configuracion-baremo.service';
 import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-baremacion/convocatoria-baremacion.service';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
 import { concatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';

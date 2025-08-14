@@ -1,8 +1,8 @@
 import { IFacturaPrevistaEmitida } from '@core/models/sge/factura-prevista-emitida';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IFacturaPrevistaEmitidaResponse } from './factura-prevista-emitida-response';
 
-class FacturaPrevistaEmitidaResponseConverter extends SgiBaseConverter<IFacturaPrevistaEmitidaResponse, IFacturaPrevistaEmitida>{
+class FacturaPrevistaEmitidaResponseConverter extends SgiBaseConverter<IFacturaPrevistaEmitidaResponse, IFacturaPrevistaEmitida> {
 
   toTarget(value: IFacturaPrevistaEmitidaResponse): IFacturaPrevistaEmitida {
     return value ? {

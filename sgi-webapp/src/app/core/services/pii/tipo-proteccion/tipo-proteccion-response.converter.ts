@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITipoProteccionResponse } from './tipo-proteccion-response';
 
 class TipoProteccionResponseConverter extends SgiBaseConverter<ITipoProteccionResponse, ITipoProteccion> {

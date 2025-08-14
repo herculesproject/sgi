@@ -1,6 +1,6 @@
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEquipoTrabajoResponse } from './equipo-trabajo-response';
 
 class EquipoTrabajoResponseConverter extends SgiBaseConverter<IEquipoTrabajoResponse, IEquipoTrabajo> {

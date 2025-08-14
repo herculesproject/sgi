@@ -5,7 +5,7 @@ import { IProvincia } from '@core/models/sgo/provincia';
 import { ISexo } from '@core/models/sgp/sexo';
 import { ITipoDocumento } from '@core/models/sgp/tipo-documento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitanteExternoRequest } from './solicitante-externo-request';
 
 class SolicitanteExternoRequestConverter

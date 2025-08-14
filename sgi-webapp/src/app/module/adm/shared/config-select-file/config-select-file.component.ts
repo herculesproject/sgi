@@ -1,22 +1,19 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { KeyValue } from '@angular/common';
-import { AfterViewInit, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Directive, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SelectValue } from '@core/component/select-common/select-common.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConfigValue } from '@core/models/cnf/config-value';
+import { IResourceInfo } from '@core/models/cnf/resource-info';
+import { triggerDownloadToUser } from '@core/services/cnf/resource.service';
+import { FormularioService } from '@core/services/eti/formulario.service';
+import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ResourceUploadComponent } from '../resource-upload/resource-upload.component';
-import { IResourceInfo } from '@core/models/cnf/resource-info';
-import { ResourceService, triggerDownloadToUser } from '@core/services/cnf/resource.service';
-import { LanguageService } from '@core/services/language.service';
-import { FormularioService } from '@core/services/eti/formulario.service';
-import { IFormulario } from '@core/models/eti/formulario';
-import { SgiRestListResult } from '@sgi/framework/http';
 
 const MSG_SUCCESS = marker('msg.adm.resource.update.success');
 const MSG_ERROR = marker('msg.adm.resource.download.error');

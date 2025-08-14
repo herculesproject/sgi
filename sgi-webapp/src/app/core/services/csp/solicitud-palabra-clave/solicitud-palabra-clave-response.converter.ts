@@ -1,6 +1,6 @@
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudPalabraClave } from '@core/models/csp/solicitud-palabra-clave';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudPalabraClaveResponse } from './solicitud-palabra-clave-response';
 
 class ISolicitudPalabraClaveResponseConverter extends SgiBaseConverter<ISolicitudPalabraClaveResponse, ISolicitudPalabraClave> {

@@ -1,7 +1,7 @@
 import { IInvencionGasto } from '@core/models/pii/invencion-gasto';
 import { IReparto } from '@core/models/pii/reparto';
 import { IRepartoGasto } from '@core/models/pii/reparto-gasto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRepartoGastoRequest } from './reparto-gasto-request';
 
 class RepartoGastoRequestConverter extends SgiBaseConverter<IRepartoGastoRequest, IRepartoGasto> {

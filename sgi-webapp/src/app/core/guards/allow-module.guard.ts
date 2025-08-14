@@ -1,8 +1,8 @@
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Module } from '@core/module';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { Observable } from 'rxjs';
 
 
 @Injectable({

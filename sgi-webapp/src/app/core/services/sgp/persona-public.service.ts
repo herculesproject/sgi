@@ -4,13 +4,13 @@ import { PERSONA_CONVERTER } from '@core/converters/sgp/persona.converter';
 import { IPersonaBackend } from '@core/models/sgp/backend/persona-backend';
 import { IPersona } from '@core/models/sgp/persona';
 import { environment } from '@env';
-import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
   FindAllCtor,
   FindByIdCtor,
   mixinFindAll,
   mixinFindById, SgiRestBaseService
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoColectivoPublic } from 'src/app/esb/sgp/shared/select-persona-public/select-persona-public.component';

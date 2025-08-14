@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IVinculacionBackend } from '@core/models/sgp/backend/vinculacion-backend';
 import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { VINCULACION_CONVERTER } from './vinculacion-converter';

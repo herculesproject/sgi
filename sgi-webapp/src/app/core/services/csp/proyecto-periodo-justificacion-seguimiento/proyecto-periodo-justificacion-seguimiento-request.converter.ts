@@ -1,10 +1,10 @@
 import { IProyectoPeriodoJustificacionSeguimiento } from '@core/models/csp/proyecto-periodo-justificacion-seguimiento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPeriodoJustificacionSeguimientoRequest } from './proyecto-periodo-justificacion-seguimiento-request';
 
 class ProyectoPeriodoJustificacionSeguimientoRequestConverter
-  extends SgiBaseConverter<IProyectoPeriodoJustificacionSeguimientoRequest, IProyectoPeriodoJustificacionSeguimiento>{
+  extends SgiBaseConverter<IProyectoPeriodoJustificacionSeguimientoRequest, IProyectoPeriodoJustificacionSeguimiento> {
 
   toTarget(value: IProyectoPeriodoJustificacionSeguimientoRequest): IProyectoPeriodoJustificacionSeguimiento {
     throw new Error('Method not implemented.');

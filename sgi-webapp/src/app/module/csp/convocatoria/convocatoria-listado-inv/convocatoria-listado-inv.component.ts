@@ -22,15 +22,15 @@ import { DatosPersonalesService } from '@core/services/sgp/datos-personales.serv
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http/';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
 import { DateTime } from 'luxon';
-import { EMPTY, forkJoin, from, Observable, of } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
+import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { INV_ROUTE_NAMES } from 'src/app/module/inv/inv-route-names';
 import { CONVOCATORIA_ID_KEY } from '../../solicitud/solicitud-crear/solicitud-crear.guard';
-import { NGXLogger } from 'ngx-logger';
 
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 

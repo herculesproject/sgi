@@ -13,7 +13,7 @@ import { ACTA_WITH_NUM_EVALUACIONES_RESPONSE_CONVERTER } from '@core/services/et
 import { IComentarioResponse } from '@core/services/eti/comentario/comentario-response';
 import { COMENTARIO_RESPONSE_CONVERTER } from '@core/services/eti/comentario/comentario-response.converter';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

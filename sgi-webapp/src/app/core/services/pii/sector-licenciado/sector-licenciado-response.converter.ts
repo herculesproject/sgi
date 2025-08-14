@@ -3,7 +3,7 @@ import { IInvencion } from '@core/models/pii/invencion';
 import { ISectorLicenciado } from '@core/models/pii/sector-licenciado';
 import { IPais } from '@core/models/sgo/pais';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { SECTOR_APLICACION_RESPONSE_CONVERTER } from '../sector-aplicacion/sector-aplicacion-response.converter';
 import { ISectorLicenciadoResponse } from './sector-licenciado-response';
 

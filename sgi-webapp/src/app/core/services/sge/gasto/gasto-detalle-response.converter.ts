@@ -1,8 +1,8 @@
 import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGastoDetalleResponse } from './gasto-detalle-response';
 
-class GastoDetalleResponseConverter extends SgiBaseConverter<IGastoDetalleResponse, IDatoEconomicoDetalle>{
+class GastoDetalleResponseConverter extends SgiBaseConverter<IGastoDetalleResponse, IDatoEconomicoDetalle> {
   toTarget(value: IGastoDetalleResponse): IDatoEconomicoDetalle {
     if (!value) {
       return value as unknown as IDatoEconomicoDetalle;

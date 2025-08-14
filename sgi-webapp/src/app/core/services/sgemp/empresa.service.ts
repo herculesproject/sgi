@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { environment } from '@env';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@herculesproject/framework/http';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 
 @Injectable({

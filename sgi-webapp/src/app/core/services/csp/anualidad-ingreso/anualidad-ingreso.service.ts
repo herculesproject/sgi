@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAnualidadIngreso } from '@core/models/csp/anualidad-ingreso';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ANUALIDAD_INGRESO_REQUEST_CONVERTER } from './anualidad-ingreso-request.converter';

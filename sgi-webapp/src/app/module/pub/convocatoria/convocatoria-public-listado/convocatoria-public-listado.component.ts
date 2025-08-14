@@ -9,7 +9,7 @@ import { IEmpresa } from '@core/models/sgemp/empresa';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaPublicService } from '@core/services/csp/convocatoria-public.service';
 import { EmpresaPublicService } from '@core/services/sgemp/empresa-public.service';
-import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http/';
+import { SgiRestFilter, SgiRestListResult } from '@herculesproject/framework/http/';
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
 import { PUB_ROUTE_NAMES } from '../../pub-route-names';

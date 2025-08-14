@@ -13,7 +13,7 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { FacturaPrevistaEmitidaService } from '@core/services/sge/factura-prevista-emitida/factura-prevista-emitida.service';
 import { FacturaPrevistaService } from '@core/services/sge/factura-prevista/factura-prevista.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@herculesproject/framework/http';
 import { BehaviorSubject, Observable, concat, forkJoin, from, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 

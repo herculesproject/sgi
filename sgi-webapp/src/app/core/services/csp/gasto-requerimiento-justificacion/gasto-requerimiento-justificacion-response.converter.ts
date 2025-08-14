@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requerimiento-justificacion';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { IGastoJustificado } from '@core/models/sge/gasto-justificado';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGastoRequerimientoJustificacionResponse } from './gasto-requerimiento-justificacion-response';
 
 class GastoRequerimientoJustificacionResponseConverter

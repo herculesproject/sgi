@@ -11,7 +11,7 @@ import {
   mixinFindById,
   mixinUpdate,
   SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { PROYECTO_PERIODO_JUSTIFICACION_IDENTIFICADOR_JUSTIFICACION_REQUEST_CONVERTER } from './proyecto-periodo-justificacion-identificador-justificacion-request.converter';

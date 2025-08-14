@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IFacturaPrevista } from '@core/models/sge/factura-prevista';
 import { environment } from '@env';
-import { CreateCtor, SgiRestBaseService, UpdateCtor, mixinCreate, mixinUpdate } from '@sgi/framework/http';
+import { CreateCtor, SgiRestBaseService, UpdateCtor, mixinCreate, mixinUpdate } from '@herculesproject/framework/http';
 import { IFacturaPrevistaRequest } from './factura-prevista-request';
 import { FACTURA_PREVISTA_REQUEST_CONVERTER } from './factura-prevista-request.converter';
 import { IFacturaPrevistaResponse } from './factura-prevista-response';

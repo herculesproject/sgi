@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
 import { MEMORIA_RESPONSE_CONVERTER } from '@core/services/eti/memoria/memoria-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEstadoMemoriaResponse } from './estado-memoria-response';
 
 class EstadoMemoriaResponseConverter extends SgiBaseConverter<IEstadoMemoriaResponse, IEstadoMemoria> {

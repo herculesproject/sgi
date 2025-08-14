@@ -6,13 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Data } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { EMPRESA_EXPLOTACION_RESULTADOS_DATA_KEY } from '../empresa-explotacion-resultados-data.resolver';
-import { IEmpresaExplotacionResultadosData, EmpresaExplotacionResultadosActionService } from '../empresa-explotacion-resultados.action.service';
+import { EmpresaExplotacionResultadosActionService, IEmpresaExplotacionResultadosData } from '../empresa-explotacion-resultados.action.service';
 import { EmpresaExplotacionResultadosEditarComponent } from './empresa-explotacion-resultados-editar.component';
 
 describe('EmpresaExplotacionResultadosEditarComponent', () => {

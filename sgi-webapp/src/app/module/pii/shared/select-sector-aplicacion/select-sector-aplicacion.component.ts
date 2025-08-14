@@ -8,8 +8,8 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { ISectorAplicacion } from '@core/models/pii/sector-aplicacion';
 import { LanguageService } from '@core/services/language.service';
 import { SectorAplicacionService } from '@core/services/pii/sector-aplicacion/sector-aplicacion.service';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SectorAplicacionModalComponent } from '../../sector-aplicacion/sector-aplicacion-modal/sector-aplicacion-modal.component';

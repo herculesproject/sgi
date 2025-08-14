@@ -1,7 +1,7 @@
 import { IDocumentoBackend } from '@core/models/sgdoc/backend/documento-backend';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class DocumentoConverter extends SgiBaseConverter<IDocumentoBackend, IDocumento> {
   toTarget(value: IDocumentoBackend): IDocumento {

@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthModule, SgiAuthService } from '@herculesproject/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { ApartadoService } from './apartado.service';

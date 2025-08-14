@@ -7,7 +7,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { environment } from '@env';
 import {
   RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

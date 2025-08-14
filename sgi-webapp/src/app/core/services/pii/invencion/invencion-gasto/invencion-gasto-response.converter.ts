@@ -2,10 +2,10 @@ import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionGasto } from '@core/models/pii/invencion-gasto';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { IDatoEconomico } from '@core/models/sgepii/dato-economico';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInvencionGastoResponse } from './invencion-gasto-response';
 
-class InvencionGastoResponseConverter extends SgiBaseConverter<IInvencionGastoResponse, IInvencionGasto>{
+class InvencionGastoResponseConverter extends SgiBaseConverter<IInvencionGastoResponse, IInvencionGasto> {
   toTarget(value: IInvencionGastoResponse): IInvencionGasto {
     if (!value) {
       return value as unknown as IInvencionGasto;

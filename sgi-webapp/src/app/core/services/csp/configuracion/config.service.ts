@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IConfigValue } from '@core/models/cnf/config-value';
 import { CalendarioFacturacionSgeIntegration, CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeEjecucionEconomicaFiltros, SgeIntegracionesEccMenus } from '@core/models/csp/configuracion';
 import { environment } from '@env';
-import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@sgi/framework/http';
+import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigCsp } from 'src/app/module/adm/config-csp/config-csp.component';

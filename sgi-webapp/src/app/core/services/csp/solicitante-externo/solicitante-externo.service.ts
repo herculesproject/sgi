@@ -5,7 +5,7 @@ import { environment } from '@env';
 import {
   CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate,
   SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { ISolicitanteExternoRequest } from './solicitante-externo-request';
 import { SOLICITANTE_EXTERNO_REQUEST_CONVERTER } from './solicitante-externo-request.converter';
 import { ISolicitanteExternoResponse } from './solicitante-externo-response';

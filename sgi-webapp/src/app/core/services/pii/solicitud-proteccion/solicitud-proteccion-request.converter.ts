@@ -6,7 +6,7 @@ import { IViaProteccion } from '@core/models/pii/via-proteccion';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPais } from '@core/models/sgo/pais';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudProteccionRequest } from './solicitud-proteccion-request';
 
 export class SolicitudProteccionRequestConverter extends SgiBaseConverter<ISolicitudProteccionRequest, ISolicitudProteccion> {

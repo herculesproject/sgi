@@ -1,6 +1,6 @@
 import { Language } from '@core/i18n/language';
 import { IApartadoDefinion } from '@core/models/eti/apartado';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IApartadoDefinicionResponse } from './apartado-definicion-response';
 
 class ApartadoDefinicionResponseConverter

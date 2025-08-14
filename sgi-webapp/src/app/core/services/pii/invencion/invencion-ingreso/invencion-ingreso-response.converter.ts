@@ -1,10 +1,10 @@
 import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
 import { IDatoEconomico } from '@core/models/sgepii/dato-economico';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInvencionIngresoResponse } from './invencion-ingreso-response';
 
-class InvencionIngresoResponseConverter extends SgiBaseConverter<IInvencionIngresoResponse, IInvencionIngreso>{
+class InvencionIngresoResponseConverter extends SgiBaseConverter<IInvencionIngresoResponse, IInvencionIngreso> {
   toTarget(value: IInvencionIngresoResponse): IInvencionIngreso {
     if (!value) {
       return value as unknown as IInvencionIngreso;

@@ -1,7 +1,7 @@
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { PROGRAMA_RESPONSE_CONVERTER } from '../programa/programa-response.converter';
 
 class ConvocatoriaEntidadConvocanteConverter extends

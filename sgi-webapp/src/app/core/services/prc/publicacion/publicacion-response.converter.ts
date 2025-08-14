@@ -1,9 +1,9 @@
 import { IPublicacion } from '@core/models/prc/publicacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IPublicacionResponse } from './publicacion-response';
 
-class PublicacionResponseConverter extends SgiBaseConverter<IPublicacionResponse, IPublicacion>{
+class PublicacionResponseConverter extends SgiBaseConverter<IPublicacionResponse, IPublicacion> {
   toTarget(value: IPublicacionResponse): IPublicacion {
     if (!value) {
       return value as unknown as IPublicacion;

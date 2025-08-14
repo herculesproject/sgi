@@ -1,7 +1,7 @@
 import { IInvencion } from "@core/models/pii/invencion";
 import { IInvencionSectorAplicacion } from "@core/models/pii/invencion-sector-aplicacion";
 import { ISectorAplicacion } from "@core/models/pii/sector-aplicacion";
-import { SgiBaseConverter } from "@sgi/framework/core";
+import { SgiBaseConverter } from "@herculesproject/framework/core";
 import { IInvencionSectorAplicacionRequest } from "./invencion-sector-aplicacion-request";
 
 class IInvencionSectorAplicacionRequestConverter extends SgiBaseConverter<IInvencionSectorAplicacionRequest, IInvencionSectorAplicacion> {

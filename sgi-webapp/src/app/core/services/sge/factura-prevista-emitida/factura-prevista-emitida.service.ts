@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IFacturaPrevistaEmitida } from '@core/models/sge/factura-prevista-emitida';
-import { PROYECTO_FACTURACION_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-facturacion/proyecto-facturacion-response.converter';
 import { environment } from '@env';
-import { FindByIdCtor, SgiRestBaseService, mixinFindById, RSQLSgiRestFilter, SgiRestFindOptions, FindAllCtor, mixinFindAll } from '@sgi/framework/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { IFacturaPrevistaEmitidaResponse } from './factura-prevista-emitida-response';
 import { FACTURA_PREVISTA_EMITIDA_RESPONSE_CONVERTER } from './factura-prevista-emitida-response.converter';
 

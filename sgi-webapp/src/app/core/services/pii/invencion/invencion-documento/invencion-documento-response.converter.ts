@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IInvencionDocumento } from '@core/models/pii/invencion-documento';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInvencionDocumentoResponse } from './invencion-documento-response';
 
 export class InvencionDocumentoResponseConverter extends SgiBaseConverter<IInvencionDocumentoResponse, IInvencionDocumento> {

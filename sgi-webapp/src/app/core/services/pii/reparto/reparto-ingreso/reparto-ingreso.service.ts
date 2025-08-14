@@ -5,7 +5,7 @@ import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate,
   mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { IRepartoIngresoRequest } from './reparto-ingreso-request';
 import { REPARTO_INGRESO_REQUEST_CONVERTER } from './reparto-ingreso-request.converter';
 import { IRepartoIngresoResponse } from './reparto-ingreso-response';

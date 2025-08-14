@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, SgiRestBaseService } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento/modelo-tipo-documento-response';
 import { MODELO_TIPO_DOCUMENTO_RESPONSE_CONVERTER } from './modelo-tipo-documento/modelo-tipo-documento-response.converter';

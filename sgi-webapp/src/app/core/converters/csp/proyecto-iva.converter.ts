@@ -1,7 +1,7 @@
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ProyectoIVAConverter extends SgiBaseConverter<IProyectoIVABackend, IProyectoIVA> {
 

@@ -12,7 +12,7 @@ import { PETICION_EVALUACION_RESPONSE_CONVERTER } from '@core/services/eti/petic
 import { IPeticionEvaluacionWithIsEliminableResponse } from '@core/services/eti/peticion-evaluacion/peticion-evaluacion-with-is-eliminable-response';
 import { PETICION_EVALUACION_WITH_IS_ELIMINABLE_RESPONSE_CONVERTER } from '@core/services/eti/peticion-evaluacion/peticion-evaluacion-with-is-eliminable-response.converter';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';

@@ -4,9 +4,10 @@ import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgeSharedModule } from 'src/app/esb/sge/shared/sge-shared.module';
@@ -15,7 +16,6 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../../../shared/csp-shared.module';
 import { GrupoActionService } from '../../grupo.action.service';
 import { GrupoDatosGeneralesComponent } from './grupo-datos-generales.component';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 describe('GrupoDatosGeneralesComponent', () => {
   let component: GrupoDatosGeneralesComponent;

@@ -1,6 +1,6 @@
 import { IDatosPersonales } from '@core/models/sgp/datos-personales';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IDatosPersonalesRequest } from './datos-personales-request';
 
 class DatosPersonalesRequestConverter

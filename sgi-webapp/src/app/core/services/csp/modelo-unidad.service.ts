@@ -4,7 +4,7 @@ import { MODELO_UNIDAD_CONVERTER } from '@core/converters/csp/modelo-unidad.conv
 import { IModeloUnidadBackend } from '@core/models/csp/backend/modelo-unidad-backend';
 import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'

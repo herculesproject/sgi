@@ -1,9 +1,9 @@
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProduccionCientificaResponse } from './produccion-cientifica-response';
 
-class ProduccionCientificaResponseConverter extends SgiBaseConverter<IProduccionCientificaResponse, IProduccionCientifica>{
+class ProduccionCientificaResponseConverter extends SgiBaseConverter<IProduccionCientificaResponse, IProduccionCientifica> {
   toTarget(value: IProduccionCientificaResponse): IProduccionCientifica {
     if (!value) {
       return value as unknown as IProduccionCientifica;

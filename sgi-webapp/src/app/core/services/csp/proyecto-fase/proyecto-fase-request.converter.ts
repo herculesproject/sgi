@@ -2,7 +2,7 @@ import { I18N_FIELD_REQUEST_CONVERTER } from "@core/i18n/i18n-field.converter";
 import { IProyectoFase } from "@core/models/csp/proyecto-fase";
 import { ITipoFase } from "@core/models/csp/tipos-configuracion";
 import { LuxonUtils } from "@core/utils/luxon-utils";
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoFaseAviso } from "./proyecto-fase-aviso";
 import { IProyectoFaseAvisoRequest } from "./proyecto-fase-aviso-request";
 import { IProyectoFaseRequest } from "./proyecto-fase-request";

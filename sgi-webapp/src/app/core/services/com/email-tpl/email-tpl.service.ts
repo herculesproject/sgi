@@ -4,7 +4,7 @@ import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { I18N_FIELD_REQUEST_CONVERTER, I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@herculesproject/framework/http';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { IEmailParam } from './email-param';

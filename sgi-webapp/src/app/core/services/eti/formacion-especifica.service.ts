@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IFormacionEspecifica } from '@core/models/eti/formacion-especifica';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { IFormacionEspecificaResponse } from './formacion-especifica/formacion-especifica-response';
 import { FORMACION_ESPECIFICA_RESPONSE_CONVERTER } from './formacion-especifica/formacion-especifica-response.converter';
 

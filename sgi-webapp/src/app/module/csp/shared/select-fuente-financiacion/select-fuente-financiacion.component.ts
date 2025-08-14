@@ -9,7 +9,7 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FuenteFinanciacionModalComponent } from '../../fuente-financiacion/fuente-financiacion-modal/fuente-financiacion-modal.component';

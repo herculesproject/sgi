@@ -6,7 +6,7 @@ import {
   CreateCtor, FindByIdCtor,
   mixinCreate, mixinFindById,
   mixinUpdate, SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IEmpresaDocumentoRequest } from './empresa-documento-request';
 import { EMPRESA_DOCUMENTO_REQUEST_CONVERTER } from './empresa-documento-request.converter';

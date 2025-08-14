@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoSeguimientoJustificacion } from '@core/models/csp/proyecto-seguimiento-justificacion';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { IProyectoSeguimientoJustificacionRequest } from './proyecto-seguimiento-justificacion-request';
 import { PROYECTO_SEGUIMIENTO_JUSTIFICACION_REQUEST_CONVERTER } from './proyecto-seguimiento-justificacion-request.converter';
 import { IProyectoSeguimientoJustificacionResponse } from './proyecto-seguimiento-justificacion-response';

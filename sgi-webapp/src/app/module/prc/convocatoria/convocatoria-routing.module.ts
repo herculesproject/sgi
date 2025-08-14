@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { ConvocatoriaBaremacionCrearComponent } from './convocatoria-baremacion-crear/convocatoria-baremacion-crear.component';
 import { ConvocatoriaBaremacionEditarComponent } from './convocatoria-baremacion-editar/convocatoria-baremacion-editar.component';
 import { ConvocatoriaBaremacionBaremosPuntuacionesComponent } from './convocatoria-baremacion-formulario/convocatoria-baremacion-baremos-puntuaciones/convocatoria-baremacion-baremos-puntuaciones.component';
@@ -14,7 +14,7 @@ import { ConvocatoriaBaremacionDatosGeneralesComponent } from './convocatoria-ba
 import { ModuladoresRangosComponent } from './convocatoria-baremacion-formulario/moduladores-rangos/moduladores-rangos.component';
 import { ConvocatoriaBaremacionListadoComponent } from './convocatoria-baremacion-listado/convocatoria-baremacion-listado.component';
 import { CONVOCATORIA_BAREMACION_ROUTE_PARAMS } from './convocatoria-baremacion-params';
-import { ConvocatoriaBaremacionResolver, CONVOCATORIA_BAREMACION_DATA_KEY } from './convocatoria-baremacion.resolver';
+import { CONVOCATORIA_BAREMACION_DATA_KEY, ConvocatoriaBaremacionResolver } from './convocatoria-baremacion.resolver';
 import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
 
 const MSG_LISTADO_TITLE = marker('prc.convocatoria.title');

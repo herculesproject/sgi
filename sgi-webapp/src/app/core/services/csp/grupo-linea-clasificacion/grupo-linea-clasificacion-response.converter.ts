@@ -1,6 +1,6 @@
 import { IGrupoLineaClasificacion } from '@core/models/csp/grupo-linea-clasificacion';
 import { IClasificacion } from '@core/models/sgo/clasificacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoLineaClasificacionResponse } from './grupo-linea-clasificacion-response';
 
 class GrupoLineaClasificacionResponseConverter

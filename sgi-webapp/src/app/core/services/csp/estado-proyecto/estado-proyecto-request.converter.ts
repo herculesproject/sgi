@@ -1,7 +1,7 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEstadoProyectoRequest } from './estado-proyecto-request';
 
 class EstadoProyectoRequestConverter extends SgiBaseConverter<IEstadoProyectoRequest, IEstadoProyecto> {

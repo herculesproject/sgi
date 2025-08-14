@@ -1,7 +1,7 @@
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { ITipoAmbitoGeograficoResponse } from './tipo-ambito-geografico-response';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { ITipoAmbitoGeograficoResponse } from './tipo-ambito-geografico-response';
 
 class TipoAmbitoGeograficoResponseConverter extends SgiBaseConverter<ITipoAmbitoGeograficoResponse, ITipoAmbitoGeografico> {
   toTarget(value: ITipoAmbitoGeograficoResponse): ITipoAmbitoGeografico {

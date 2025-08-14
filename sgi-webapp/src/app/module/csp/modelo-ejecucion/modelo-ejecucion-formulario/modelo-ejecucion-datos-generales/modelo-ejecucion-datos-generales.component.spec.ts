@@ -6,13 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthModule, SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 
-import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-datos-generales.component';
 import { SharedModule } from '@shared/shared.module';
+import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-datos-generales.component';
 
 describe('ModeloEjecucionDatosGeneralesComponent', () => {
   let component: ModeloEjecucionDatosGeneralesComponent;

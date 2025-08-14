@@ -3,7 +3,7 @@ import { Fragment } from '@core/services/action-service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { BehaviorSubject, from, merge, Observable, of, throwError } from 'rxjs';
 import { catchError, endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 

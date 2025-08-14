@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IAsistente } from '@core/models/eti/asistente';
 import { IAsistenteResponse } from '@core/services/eti/asistente/asistente-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '../convocatoria-reunion/convocatoria-reunion-response.converter';
 import { EVALUADOR_RESPONSE_CONVERTER } from '../evaluador/evaluador-response.converter';
 

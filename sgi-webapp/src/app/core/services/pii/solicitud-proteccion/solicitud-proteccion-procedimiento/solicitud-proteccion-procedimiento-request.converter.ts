@@ -3,7 +3,7 @@ import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ITipoProcedimiento } from '@core/models/pii/tipo-procedimiento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProcedimientoRequest } from './solicitud-proteccion-procedimiento-request';
 
 export class SolicitudProteccionProcedimientoRequestConverter extends SgiBaseConverter<IProcedimientoRequest, IProcedimiento> {

@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { BaseExportModalComponent } from '@core/component/base-export/base-export-modal.component';
@@ -9,9 +8,8 @@ import { MSG_PARAMS } from '@core/i18n';
 import { OutputReport } from '@core/models/rep/output-report.enum';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestFindOptions } from '@sgi/framework/http';
-import { IMemoriaReportOptions, MemoriaListadoExportService } from '../../memoria-listado-export.service';
 import { switchMap } from 'rxjs/operators';
+import { IMemoriaReportOptions, MemoriaListadoExportService } from '../../memoria-listado-export.service';
 
 const REPORT_TITLE_KEY = marker('eti.memoria.report.title');
 const ENTITY_KEY = marker('list.entity');

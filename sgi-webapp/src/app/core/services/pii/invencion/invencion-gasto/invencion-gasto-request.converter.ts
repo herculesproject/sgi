@@ -2,7 +2,7 @@ import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionGasto } from '@core/models/pii/invencion-gasto';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { IDatoEconomico } from '@core/models/sgepii/dato-economico';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInvencionGastoRequest } from './invencion-gasto-request';
 
 class InvencionGastoRequestConverter extends SgiBaseConverter<IInvencionGastoRequest, IInvencionGasto> {

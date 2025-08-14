@@ -1,7 +1,7 @@
 import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-equipo';
 import { IPersona } from '@core/models/sgp/persona';
 import { ROL_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/rol-proyecto/rol-proyecto-response.converter';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudProyectoEquipoResponse } from './solicitud-proyecto-equipo-response';
 
 class SolicitudProyectoEquipoConverter extends SgiBaseConverter<ISolicitudProyectoEquipoResponse, ISolicitudProyectoEquipo> {

@@ -4,7 +4,7 @@ import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyect
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoEntidadGestora } from '@core/models/csp/proyecto-entidad-gestora';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'

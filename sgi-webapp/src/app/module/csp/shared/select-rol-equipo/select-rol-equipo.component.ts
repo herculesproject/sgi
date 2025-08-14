@@ -10,7 +10,7 @@ import { Module } from '@core/module';
 import { ROUTE_NAMES } from '@core/route.names';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';

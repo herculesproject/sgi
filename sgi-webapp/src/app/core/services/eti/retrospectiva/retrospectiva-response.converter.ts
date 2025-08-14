@@ -1,7 +1,7 @@
 
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRetrospectivaResponse } from './retrospectiva-response';
 
 class RetrospectivaResponseConverter extends SgiBaseConverter<IRetrospectivaResponse, IRetrospectiva> {

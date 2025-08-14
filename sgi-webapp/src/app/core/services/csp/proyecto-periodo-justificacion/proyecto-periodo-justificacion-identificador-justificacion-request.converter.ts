@@ -1,6 +1,6 @@
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPeriodoJustificacionIdentificadorJustificacionRequest } from './proyecto-periodo-justificacion-identificador-justificacion-request';
 
 class ProyectoPeriodoJustificacionIdentificadorJustificacionRequestConverter

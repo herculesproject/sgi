@@ -14,7 +14,7 @@ import { IGastoJustificadoDetalle } from '@core/models/sge/gasto-justificado-det
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { SeguimientoJustificacionService } from '@core/services/sge/seguimiento-justificacion/seguimiento-justificacion.service';
-import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@herculesproject/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of, zip } from 'rxjs';

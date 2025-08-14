@@ -4,7 +4,7 @@ import { IInvencion } from "@core/models/pii/invencion";
 import { IDocumento } from "@core/models/sgdoc/documento";
 import { IEmpresa } from "@core/models/sgemp/empresa";
 import { LuxonUtils } from "@core/utils/luxon-utils";
-import { SgiBaseConverter } from "@sgi/framework/core";
+import { SgiBaseConverter } from "@herculesproject/framework/core";
 import { RESULTADO_INFORME_PATENTABILIDAD_RESPONSE_CONVERTER } from "../resultado-informe-patentabilidad/resultado-informe-patentabilidad-response.converter";
 import { IInformePatentabilidadResponse } from "./informe-patentabilidad-response";
 

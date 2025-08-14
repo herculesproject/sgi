@@ -9,7 +9,7 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
 import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoRegimenConcurrenciaModalComponent } from '../../tipo-regimen-concurrencia/tipo-regimen-concurrencia-modal/tipo-regimen-concurrencia-modal.component';

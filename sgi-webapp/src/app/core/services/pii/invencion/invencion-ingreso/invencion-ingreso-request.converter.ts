@@ -1,7 +1,7 @@
 import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
 import { IDatoEconomico } from '@core/models/sgepii/dato-economico';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInvencionIngresoRequest } from './invencion-ingreso-request';
 
 class InvencionIngresoRequestConverter extends SgiBaseConverter<IInvencionIngresoRequest, IInvencionIngreso> {

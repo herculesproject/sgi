@@ -4,12 +4,12 @@ import { CODIGO_ECONOMICO_GASTO_CONVERTER } from '@core/converters/sge/codigo-ec
 import { ICodigoEconomicoGastoBackend } from '@core/models/sge/backend/codigo-economico-gasto-backend';
 import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CodigoEconomicoGastoService extends SgiMutableRestService<string, ICodigoEconomicoGastoBackend, ICodigoEconomicoGasto>{
+export class CodigoEconomicoGastoService extends SgiMutableRestService<string, ICodigoEconomicoGastoBackend, ICodigoEconomicoGasto> {
   private static readonly MAPPING = '/codigos-economicos-gastos';
 
   constructor(protected http: HttpClient) {

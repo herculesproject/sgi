@@ -1,7 +1,7 @@
 import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
 import { IReparto } from '@core/models/pii/reparto';
 import { IRepartoIngreso } from '@core/models/pii/reparto-ingreso';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRepartoIngresoRequest } from './reparto-ingreso-request';
 
 class RepartoIngresoRequestConverter extends SgiBaseConverter<IRepartoIngresoRequest, IRepartoIngreso> {

@@ -1,5 +1,5 @@
 import { IFacturaPrevistaPendiente } from '@core/models/sge/factura-prevista-pendiente';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IFacturaPrevistaPendienteResponse } from './factura-prevista-pendiente-response';
 
 class FacturaPrevistaPendienteResponseConverter extends SgiBaseConverter<IFacturaPrevistaPendienteResponse, IFacturaPrevistaPendiente> {

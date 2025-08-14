@@ -6,13 +6,13 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { EvaluacionDocumentacionComponent } from './evaluacion-documentacion.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
 import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { EvaluacionDocumentacionComponent } from './evaluacion-documentacion.component';
 
 describe('EvaluacionDocumentacionComponent', () => {
   let component: EvaluacionDocumentacionComponent;

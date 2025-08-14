@@ -1,18 +1,12 @@
 
 import { IEmpresaAdministracionSociedad } from '@core/models/eer/empresa-administracion-sociedad';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
-import { IVinculacion } from '@core/models/sgp/vinculacion';
-import { IVinculacionCategoriaProfesional } from '@core/models/sgp/vinculacion-categoria-profesional';
 import { Fragment } from '@core/services/action-service';
 import { EmpresaAdministracionSociedadService } from '@core/services/eer/empresa-administracion-sociedad/empresa-administracion-sociedad.service';
 import { EmpresaExplotacionResultadosService } from '@core/services/eer/empresa-explotacion-resultados/empresa-explotacion-resultados.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
-import { LuxonUtils } from '@core/utils/luxon-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
-import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';

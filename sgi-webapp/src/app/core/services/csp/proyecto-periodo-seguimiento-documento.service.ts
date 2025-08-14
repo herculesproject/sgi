@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoPeriodoSeguimientoDocumento } from '@core/models/csp/proyecto-periodo-seguimiento-documento';
 import { environment } from '@env';
-import { CreateCtor, SgiRestBaseService, UpdateCtor, mixinCreate, mixinUpdate } from '@sgi/framework/http';
+import { CreateCtor, SgiRestBaseService, UpdateCtor, mixinCreate, mixinUpdate } from '@herculesproject/framework/http';
+import { Observable } from 'rxjs';
 import { IProyectoPeriodoSeguimientoDocumentoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento-response';
 import { PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_RESPONSE_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento-response.converter';
-import { Observable } from 'rxjs';
 
 const _ProyectoPeriodoSeguimientoDocumentoServiceMixinBase:
   CreateCtor<IProyectoPeriodoSeguimientoDocumento, IProyectoPeriodoSeguimientoDocumento, IProyectoPeriodoSeguimientoDocumentoResponse, IProyectoPeriodoSeguimientoDocumentoResponse> &

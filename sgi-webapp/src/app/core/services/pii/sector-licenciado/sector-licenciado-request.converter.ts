@@ -4,7 +4,7 @@ import { ISectorAplicacion } from '@core/models/pii/sector-aplicacion';
 import { ISectorLicenciado } from '@core/models/pii/sector-licenciado';
 import { IPais } from '@core/models/sgo/pais';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISectorLicenciadoRequest } from './sector-licenciado-request';
 
 class SectorLicenciadoRequestConverter extends SgiBaseConverter<ISectorLicenciadoRequest, ISectorLicenciado> {

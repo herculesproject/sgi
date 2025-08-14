@@ -2,7 +2,7 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoPersonaAutorizadaResponse } from './grupo-persona-autorizada-response';
 
 class GrupoPersonaAutorizadaResponseConverter

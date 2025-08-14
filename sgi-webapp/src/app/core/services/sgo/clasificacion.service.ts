@@ -2,14 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IClasificacion } from '@core/models/sgo/clasificacion';
 import { environment } from '@env';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
-import { TipoClasificacion } from 'src/app/esb/sgo/shared/clasificacion-modal/clasificacion-modal.component';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
+import { TipoClasificacion } from 'src/app/esb/sgo/shared/clasificacion-modal/clasificacion-modal.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClasificacionService extends SgiRestService<string, IClasificacion>{
+export class ClasificacionService extends SgiRestService<string, IClasificacion> {
   private static readonly MAPPING = '/clasificaciones';
 
   constructor(protected http: HttpClient) {

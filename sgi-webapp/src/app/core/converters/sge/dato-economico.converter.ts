@@ -1,7 +1,7 @@
 import { IDatoEconomicoBackend } from '@core/models/sge/backend/dato-economico-backend';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class DatoEconomicoConverter extends SgiBaseConverter<IDatoEconomicoBackend, IDatoEconomico> {
   toTarget(value: IDatoEconomicoBackend): IDatoEconomico {

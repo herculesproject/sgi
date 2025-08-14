@@ -1,12 +1,12 @@
 
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoPeriodoAmortizacion } from '@core/models/csp/proyecto-periodo-amortizacion';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IPeriodoAmortizacionRequest } from './periodo-amortizacion-request';
-import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class PeriodoAmortizacionRequestConverter extends SgiBaseConverter<IPeriodoAmortizacionRequest, IProyectoPeriodoAmortizacion> {
   toTarget(value: IPeriodoAmortizacionRequest): IProyectoPeriodoAmortizacion {

@@ -1,10 +1,10 @@
 import { ISolicitudProyectoResponsableEconomico } from '@core/models/csp/solicitud-proyecto-responsable-economico';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudProyectoResponsableEconomicoRequest } from './solicitud-proyecto-responsable-economico-request';
 
 class SolicitudProyectoResponsableEconomicoRequestConverter
-  extends SgiBaseConverter<ISolicitudProyectoResponsableEconomicoRequest, ISolicitudProyectoResponsableEconomico>{
+  extends SgiBaseConverter<ISolicitudProyectoResponsableEconomicoRequest, ISolicitudProyectoResponsableEconomico> {
   toTarget(value: ISolicitudProyectoResponsableEconomicoRequest): ISolicitudProyectoResponsableEconomico {
     if (!value) {
       return value as unknown as ISolicitudProyectoResponsableEconomico;

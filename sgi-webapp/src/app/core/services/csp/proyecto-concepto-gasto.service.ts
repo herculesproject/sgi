@@ -14,7 +14,7 @@ import {
   RSQLSgiRestFilter,
   SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoConceptoGastoCodigoEcResponse } from './proyecto-concepto-gasto-codigo-ec/proyecto-concepto-gasto-codigo-ec-response';

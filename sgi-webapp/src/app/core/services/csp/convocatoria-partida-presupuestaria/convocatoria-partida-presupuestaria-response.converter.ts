@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestaria-sge';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConvocatoriaPartidaPresupuestariaResponse } from './convocatoria-partida-presupuestaria-response';
 
 class ConvocatoriaPartidaPresupuestariaResponseConverter

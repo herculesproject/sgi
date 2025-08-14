@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { TipoRegimenConcurrenciaListadoComponent } from './tipo-regimen-concurrencia-listado/tipo-regimen-concurrencia-listado.component';
 
 const TIPO_REGIMEN_CONCURRENCIA_KEY = marker('menu.csp.tipo-regimen-concurrencia');

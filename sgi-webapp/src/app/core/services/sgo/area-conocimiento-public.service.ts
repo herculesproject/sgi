@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAreaConocimiento } from '@core/models/sgo/area-conocimiento';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, mixinFindAll, mixinFindById } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, mixinFindAll, mixinFindById } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 // tslint:disable-next-line: variable-name

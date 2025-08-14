@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAlegacionRequerimiento } from '@core/models/csp/alegacion-requerimiento';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { IAlegacionRequerimientoRequest } from './alegacion-requerimiento-request';
 import { ALEGACION_REQUERIMIENTO_REQUEST_CONVERTER } from './alegacion-requerimiento-request.converter';
 import { IAlegacionRequerimientoResponse } from './alegacion-requerimiento-response';

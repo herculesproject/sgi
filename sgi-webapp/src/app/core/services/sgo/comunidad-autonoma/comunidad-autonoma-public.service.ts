@@ -10,7 +10,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 // tslint:disable-next-line: variable-name

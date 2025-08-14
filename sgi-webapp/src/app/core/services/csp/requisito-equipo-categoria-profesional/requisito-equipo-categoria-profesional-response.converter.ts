@@ -1,11 +1,11 @@
 import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { IRequisitoEquipoCategoriaProfesional } from '@core/models/csp/requisito-equipo-categoria-profesional';
 import { ICategoriaProfesional } from '@core/models/sgp/categoria-profesional';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRequisitoEquipoCategoriaProfesionalResponse } from './requisito-equipo-categoria-profesional-response';
 
 class RequisitoEquipoCategoriaProfesionalResponseConverter extends
-  SgiBaseConverter<IRequisitoEquipoCategoriaProfesionalResponse, IRequisitoEquipoCategoriaProfesional>{
+  SgiBaseConverter<IRequisitoEquipoCategoriaProfesionalResponse, IRequisitoEquipoCategoriaProfesional> {
   toTarget(value: IRequisitoEquipoCategoriaProfesionalResponse): IRequisitoEquipoCategoriaProfesional {
     if (!value) {
       return value as unknown as IRequisitoEquipoCategoriaProfesional;

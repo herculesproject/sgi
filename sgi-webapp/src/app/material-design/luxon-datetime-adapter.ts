@@ -1,8 +1,8 @@
-import { NgxMatDateAdapter } from '@angular-material-components/datetime-picker';
 import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
-import { MatDateFormats, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatDateFormats } from '@angular/material/core';
 import { LocaleId } from '@core/i18n/locale-id';
 import { TIME_ZONE } from '@core/time-zone';
+import { NgxMatDateAdapter } from '@herculesproject/datetime-picker';
 import { DateTime, DateTimeOptions, Info } from 'luxon';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

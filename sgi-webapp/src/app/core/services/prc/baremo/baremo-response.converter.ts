@@ -1,10 +1,10 @@
 import { IBaremo } from '@core/models/prc/baremo';
 import { IConfiguracionBaremo } from '@core/models/prc/configuracion-baremo';
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IBaremoResponse } from './baremo-response';
 
-class BaremoResponseConverter extends SgiBaseConverter<IBaremoResponse, IBaremo>{
+class BaremoResponseConverter extends SgiBaseConverter<IBaremoResponse, IBaremo> {
   toTarget(value: IBaremoResponse): IBaremo {
     if (!value) {
       return value as unknown as IBaremo;

@@ -3,7 +3,7 @@ import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoFacturacionRequest } from './proyecto-facturacion-request';
 
 class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFacturacionRequest, IProyectoFacturacion> {

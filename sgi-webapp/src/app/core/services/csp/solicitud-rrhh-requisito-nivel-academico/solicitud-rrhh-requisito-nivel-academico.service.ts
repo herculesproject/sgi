@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitudRrhhRequisitoNivelAcademico } from '@core/models/csp/solicitud-rrhh-requisito-nivel-academico';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, SgiRestBaseService } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ISolicitudRrhhRequisitoNivelAcademicoRequest } from './solicitud-rrhh-requisito-nivel-academico-request';
 import { SOLICITUD_RRHH_REQUISITO_NIVEL_ACADEMICO_REQUEST_CONVERTER } from './solicitud-rrhh-requisito-nivel-academico-request.converter';

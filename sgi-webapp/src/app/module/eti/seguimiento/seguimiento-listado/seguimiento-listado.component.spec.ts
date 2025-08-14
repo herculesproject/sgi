@@ -6,13 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthModule, SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { EtiSharedModule } from '../../shared/eti-shared.module';
 import { SeguimientoListadoComponent } from './seguimiento-listado.component';
-import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 
 describe('SeguimientoListadoComponent', () => {
   let component: SeguimientoListadoComponent;

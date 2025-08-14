@@ -1,7 +1,7 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoEspecialInvestigacionResponse } from './grupo-especial-investigacion-response';
 
 class GrupoEspecialInvestigacionResponseConverter

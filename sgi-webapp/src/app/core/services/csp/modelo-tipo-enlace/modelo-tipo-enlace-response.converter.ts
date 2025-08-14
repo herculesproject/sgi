@@ -1,6 +1,6 @@
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { TIPO_ENLACE_RESPONSE_CONVERTER } from '../tipo-enlace/tipo-enlace-response.converter';
 import { IModeloTipoEnlaceResponse } from './modelo-tipo-enlace-response';
 

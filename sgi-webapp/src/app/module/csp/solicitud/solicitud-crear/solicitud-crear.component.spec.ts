@@ -5,8 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
@@ -16,7 +16,7 @@ import { SolicitudCrearComponent } from './solicitud-crear.component';
 describe('SolicitudCrearComponent', () => {
   let component: SolicitudCrearComponent;
   let fixture: ComponentFixture<SolicitudCrearComponent>;
- 
+
   const state = {
     idConvocatoria: 1
   };

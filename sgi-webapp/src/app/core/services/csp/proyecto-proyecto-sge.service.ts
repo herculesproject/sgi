@@ -4,7 +4,7 @@ import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-p
 import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-proyecto-sge-backend';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { environment } from '@env';
-import { RSQLSgiRestFilter, SgiMutableRestService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiMutableRestService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

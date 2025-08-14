@@ -1,13 +1,13 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from "@core/i18n/i18n-field.converter";
 import { IGenericEmailText } from "@core/models/com/generic-email-text";
 import { IProyectoFase } from "@core/models/csp/proyecto-fase";
 import { ISendEmailTask } from "@core/models/tp/send-email-task";
 import { LuxonUtils } from "@core/utils/luxon-utils";
-import { SgiBaseConverter } from "@sgi/framework/core";
+import { SgiBaseConverter } from "@herculesproject/framework/core";
 import { TIPO_FASE_RESPONSE_CONVERTER } from "../tipo-fase/tipo-fase-response.converter";
 import { IProyectoFaseAviso } from "./proyecto-fase-aviso";
 import { IProyectoFaseAvisoResponse } from "./proyecto-fase-aviso-response";
 import { IProyectoFaseResponse } from "./proyecto-fase-response";
-import { I18N_FIELD_RESPONSE_CONVERTER } from "@core/i18n/i18n-field.converter";
 
 class ProyectoFaseResponseConverter extends SgiBaseConverter<IProyectoFaseResponse, IProyectoFase> {
 

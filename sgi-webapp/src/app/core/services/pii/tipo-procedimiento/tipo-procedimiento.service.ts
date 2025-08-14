@@ -14,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ITipoProcedimientoRequest } from './tipo-procedimiento-request';
 import { TIPO_PROCEDIMIENTO_REQUEST_CONVERTER } from './tipo-procedimiento-request.converter';

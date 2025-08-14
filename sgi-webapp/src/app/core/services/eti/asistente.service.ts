@@ -4,7 +4,7 @@ import { IAsistente } from '@core/models/eti/asistente';
 import { IAsistenteResponse } from '@core/services/eti/asistente/asistente-response';
 import { ASISTENTE_RESPONSE_CONVERTER } from '@core/services/eti/asistente/asistente-response.converter';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 
 // tslint:disable-next-line: variable-name
 const _AsistenteServiceMixinBase:

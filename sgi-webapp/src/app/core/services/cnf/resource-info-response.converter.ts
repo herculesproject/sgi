@@ -1,5 +1,5 @@
 import { IResourceInfo } from '@core/models/cnf/resource-info';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IResourceInfoResponse } from './resource-info-response';
 
 class ResourceInfoResponseConverter extends SgiBaseConverter<IResourceInfoResponse, IResourceInfo> {

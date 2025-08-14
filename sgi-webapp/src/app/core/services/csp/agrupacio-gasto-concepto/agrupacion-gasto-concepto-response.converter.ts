@@ -1,5 +1,5 @@
 import { IAgrupacionGastoConcepto } from '@core/models/csp/agrupacion-gasto-concepto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '../concepto-gasto/concepto-gasto-response.converter';
 import { IAgrupacionGastoConceptoResponse } from './agrupacion-gasto-concepto-response';
 

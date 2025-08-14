@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITipoEnlaceResponse } from './tipo-enlace-response';
 
 class TipoEnlaceResponseConverter extends SgiBaseConverter<ITipoEnlaceResponse, ITipoEnlace> {

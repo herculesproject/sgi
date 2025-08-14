@@ -10,7 +10,7 @@ import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { environment } from '@env';
 import {
   RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSort, SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

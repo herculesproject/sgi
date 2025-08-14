@@ -5,7 +5,7 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, takeLast, tap, toArray } from 'rxjs/operators';

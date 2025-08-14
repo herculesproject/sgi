@@ -1,7 +1,7 @@
 import { IProyectoEntidadConvocante } from '@core/models/csp/proyecto-entidad-convocante';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IProyectoEntidadConvocanteResponse } from '@core/services/csp/proyecto-entidad-convocante/proyecto-entidad-convocante-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { PROGRAMA_RESPONSE_CONVERTER } from '../programa/programa-response.converter';
 
 class ProyectoEntidadConvocanteResponseConverter extends SgiBaseConverter<IProyectoEntidadConvocanteResponse, IProyectoEntidadConvocante> {
