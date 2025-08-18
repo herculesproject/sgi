@@ -10,15 +10,15 @@ sgi:
   time-zone: "Europe/Madrid"
   rest:
     api:
-      com-url: "http://sgi-com-service:4286"
-      csp-url: "http://sgi-csp-service:4281"
-      eti-url: "http://sgi-eti-service:4280"
-      pii-url: "http://sgi-pii-service:4283"
-      prc-url: "http://sgi-prc-service:4289"
-      rel-url: "http://sgi-rel-service:4284"
-      rep-url: "http://sgi-rep-service:4287"
-      usr-url: "http://sgi-usr-service:4282"
-      sge-url: "http://sge-service:4291"
+      com-url: "http://localhost:4286"
+      csp-url: "http://localhost:4281"
+      eti-url: "http://localhost:4280"
+      pii-url: "http://localhost:4283"
+      prc-url: "http://localhost:4289"
+      rel-url: "http://localhost:4284"
+      rep-url: "http://localhost:4287"
+      usr-url: "http://localhost:4282"
+      sge-url: "http://localhost:4291"
 spring:
   profiles:
     # Set spring-profile using maven
@@ -90,7 +90,7 @@ spring:
             scope: sgi-cnf,sgi-com,sgi-csp,sgi-eti,sgi-pii,sgi-prc,sgi-rel,sgi-rep,sgi-usr
         provider:
           keycloak:
-            issuer-uri: http://sgi-auth:8080/auth/realms/sgi
+            issuer-uri: http://localhost:8080/auth/realms/sgi
             token-uri: ${spring.security.oauth2.client.provider.keycloak.issuer-uri}/protocol/openid-connect/token
             user-name-attribute: user_ref_id
       resourceserver:

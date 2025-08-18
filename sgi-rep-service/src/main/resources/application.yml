@@ -8,17 +8,17 @@ sgi:
   time-zone: "Europe/Madrid"
   rest:
     api:
-      cnf-url: "http://sgi-cnf-service:4288"
-      com-url: "http://sgi-com-service:4286"
-      csp-url: "http://sgi-csp-service:4281"
-      eti-url: "http://sgi-eti-service:4280"
-      pii-url: "http://sgi-pii-service:4283"
-      prc-url: "http://sgi-prc-service:4289"
-      rel-url: "http://sgi-rel-service:4284"
-      sgemp-url: "http://sgi-esb:8080/api/sgemp"
-      sgp-url: "http://sgi-esb:8080/api/sgp"
-      tp-url: "http://sgi-tp-service:4285"
-      usr-url: "http://sgi-usr-service:4282"
+      cnf-url: "http://localhost:4288"
+      com-url: "http://localhost:4286"
+      csp-url: "http://localhost:4281"
+      eti-url: "http://localhost:4280"
+      pii-url: "http://localhost:4283"
+      prc-url: "http://localhost:4289"
+      rel-url: "http://localhost:4284"
+      sgemp-url: "http://localhost:8290/sgemp"
+      sgp-url: "http://localhost:8290/sgp"
+      tp-url: "http://localhost:4285"
+      usr-url: "http://localhost:4282"
 spring:
   profiles:
     # Set spring-profile using maven
@@ -89,7 +89,7 @@ spring:
             scope: sgi-csp,sgi-eti,sgi-prc,sgi-sgemp,sgi-sgp,sgi-cnf     
         provider:
           keycloak:
-            issuer-uri: http://sgi-auth:8080/auth/realms/sgi
+            issuer-uri: http://localhost:8080/auth/realms/sgi
             user-name-attribute: user_ref_id
       resourceserver:
         jwt:
