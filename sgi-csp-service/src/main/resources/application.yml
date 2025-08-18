@@ -5,18 +5,18 @@ server:
       # Disble the default error page displayed in browsers in case of a server error
       enabled: false
 sgi:
-  web-url: "http://sgi.crue.com"
+  web-url: "http://localhost:4200"
   time-zone: "Europe/Madrid"
   rest:
     api:
-      cnf-url: "http://sgi-cnf-service:4288"
-      com-url: "http://sgi-com-service:4286"
-      eti-url: "http://sgi-eti-service:4280"
-      rep-url: "http://sgi-rep-service:4287"
-      sgdoc-url: "http://sgi-esb:8080/sgdoc" 
-      sgp-url: "http://sgi-esb:8080/sgp"
-      tp-url: "http://sgi-tp-service:4285"
-      sgemp-url: "http://sgi-esb:8080/sgemp"
+      cnf-url: "http://localhost:4288"
+      com-url: "http://localhost:4286"
+      eti-url: "http://localhost:4280"
+      rep-url: "http://localhost:4287"
+      sgdoc-url: "http://localhost:8290/sgdoc" 
+      sgp-url: "http://localhost:8290/sgp"
+      tp-url: "http://localhost:4285"
+      sgemp-url: "http://localhost:8290/sgemp"
 spring:
   profiles:
     # Set spring-profile using maven
@@ -88,7 +88,7 @@ spring:
             scope: sgi-cnf,sgi-com,sgi-eti,sgi-sgp,sgi-tp
         provider:
           keycloak:
-            issuer-uri: http://sgi-auth:8080/auth/realms/sgi
+            issuer-uri: http://localhost:8080/auth/realms/sgi
             user-name-attribute: user_ref_id
       resourceserver:
         jwt:

@@ -1,0 +1,119 @@
+{
+  "folders": [
+    {
+      "path": "sgi-cnf-service"
+    },
+    {
+      "path": "sgi-com-service"
+    },
+    {
+      "path": "sgi-csp-service"
+    },
+    {
+      "path": "sgi-eer-service"
+    },
+    {
+      "path": "sgi-eti-service"
+    },
+    {
+      "path": "sgi-pii-service"
+    },
+    {
+      "path": "sgi-prc-service"
+    },
+    {
+      "path": "sgi-rel-service"
+    },
+    {
+      "path": "sgi-rep-service"
+    },
+    {
+      "path": "sgi-tp-service"
+    },
+    {
+      "path": "sgi-usr-service"
+    },
+    {
+      "path": "sgi-webapp"
+    }
+  ],
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Start sgi-auth",
+        "type": "docker-run",
+        "dockerRun": {
+          "containerName": "sgi-auth",
+          "image": "herculesproject/sgi-auth:${input:sgi-auth-version}",
+          "env": {
+            "KEYCLOAK_IMPORT": "/realm/sgi-realm.json",
+            "KEYCLOAK_USER": "admin",
+            "KEYCLOAK_PASSWORD": "password",
+            "KEYCLOAK_MIGRATION_STRATEGY": "OVERWRITE_EXISTING",
+            "PROXY_ADDRESS_FORWARDING": "true"
+          },
+          "remove": true,
+          "ports": [
+            {
+              "hostPort": 8080,
+              "containerPort": 8080
+            }
+          ]
+        },
+      },
+      {
+        "label": "Start sgi-esb",
+        "type": "docker-run",
+        "dockerRun": {
+          "containerName": "sgi-esb",
+          "image": "herculesproject/esb-wso2-mi:${input:sgi-esb-version}",
+          "env": {
+            "SGI_ESB_AUTH_SERVER_REALM_ID": "sgi",
+            "SGI_ESB_AUTH_SERVER_URL": "http://sgi-auth:8080/auth",
+            "SGI_ESB_SGDOC_SERVICE_URL": "",
+            "SGI_ESB_SGE_SERVICE_URL": "",
+            "SGI_ESB_SGE_API_KEY": "",
+            "SGI_ESB_SGP_SERVICE_URL": "",
+            "SGI_ESB_SGP_API_KEY": "",
+            "SGI_ESB_SGEMP_SERVICE_URL": "",
+            "SGI_ESB_SGEMP_API_KEY": "",
+            "SGI_ESB_SGO_SERVICE_URL": "",
+            "SGI_ESB_SGO_API_KEY": "",
+            "SGI_ESB_SGO_STANDALONE_SERVICE_URL": "",
+            "SGI_ESB_SGEPII_SERVICE_URL": "",
+            "SGI_ESB_SGEPII_API_KEY": "",
+            "SGI_ESB_SGICSP_SERVICE_URL": "",
+            "SGI_ESB_SGIPII_SERVICE_URL": "",
+            "SGI_ESB_SGIEER_SERVICE_URL": "",
+            "SGI_ESB_SGIPRC_SERVICE_URL": "",
+            "SGI_ESB_SGIUSR_SERVICE_URL": "",
+            "SGI_ESB_CVN_SERVICE_URL": "",
+            "SGI_ESB_CONTEXT": "dev",
+          },
+          "remove": true,
+          "ports": [
+            {
+              "hostPort": 8290,
+              "containerPort": 8290
+            }
+          ]
+        },
+      }
+    ],
+    "inputs": [
+      {
+        "type": "promptString",
+        "id": "sgi-auth-version",
+        "description": "sgi-auth to start",
+        "default": "0.6.0-SNAPSHOT"
+      },
+      {
+        "type": "promptString",
+        "id": "sgi-esb-version",
+        "description": "sgi-esb to start",
+        "default": "0.9.0-um-SNAPSHOT"
+      }
+    ]
+  }
+}

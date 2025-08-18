@@ -6,19 +6,19 @@ server:
       enabled: false
 sgi:
   time-zone: "Europe/Madrid"
-  web-url: "http://sgi.crue.com"
+  web-url: "http://localhost:4200"
   rest:
     api:
-      cnf-url: "http://sgi-cnf-service:4288"
-      com-url: "http://sgi-com-service:4286"
-      csp-url: "http://sgi-csp-service:4281"
-      pii-url: "http://sgi-pii-service:4283"
-      rel-url: "http://sgi-rel-service:4284"
-      rep-url: "http://sgi-rep-service:4287"
-      sgo-url: "http:/sgi-esb:8080/sgo"
-      sgepii-url: "http://sgi-esb:8080/sgepii"
-      sgp-url: "http://sgi-esb:8080/sgp"
-      tp-url:  "http://sgi-tp-service:4285"
+      cnf-url: "http://localhost:4288"
+      com-url: "http://localhost:4286"
+      csp-url: "http://localhost:4281"
+      pii-url: "http://localhost:4283"
+      rel-url: "http://localhost:4284"
+      rep-url: "http://localhost:4287"
+      sgo-url: "http://localhost:8290/sgo"
+      sgepii-url: "http://localhost:8290/sgepii"
+      sgp-url: "http://localhost:8290/sgp"
+      tp-url:  "http://localhost:4285"
 
 spring:
   profiles:
@@ -90,7 +90,7 @@ spring:
             scope: sgi-cnf,sgi-com,sgi-csp,sgi-pii,sgi-rel,sgi-rep,sgi-sgepii,sgi-sgo,sgi-sgp,sgi-tp          
         provider:
           keycloak:
-            issuer-uri: http://sgi-auth:8080/auth/realms/sgi
+            issuer-uri: http://localhost:8080/auth/realms/sgi
             user-name-attribute: user_ref_id
       resourceserver:
         jwt:

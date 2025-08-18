@@ -35,7 +35,7 @@ export const environment = {
     mode: SgiAuthMode.Keycloak,
     ssoRealm: 'sgi',
     ssoClientId: 'front',
-    ssoUrl: 'http://sgi-auth:8080/auth',
+    ssoUrl: '/auth',
     // InMemory  auth config
     inMemoryConfig: {
       userRefId: '',

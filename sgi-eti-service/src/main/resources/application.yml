@@ -12,11 +12,11 @@ sgi:
   time-zone: "Europe/Madrid"
   rest:
     api:
-      rep-url: "http://sgi-rep-service:4287"
-      sgdoc-url: "http://sgi-esb:8080/api/sgdoc"
-      sgp-url: "http://sgi-esb:8080/api/sgp"
-      com-url: "http://sgi-com-service:4286"
-      cnf-url: "http://sgi-cnf-service:4288"
+      rep-url: "http://localhost:4287"
+      sgdoc-url: "http://localhost:8290/sgdoc"
+      sgp-url: "http://localhost:8290/sgp"
+      com-url: "http://localhost:4286"
+      cnf-url: "http://localhost:4288"
 spring:
   profiles:
     # Set spring-profile using maven
@@ -90,7 +90,7 @@ spring:
             scope: sgi-com,sgi-sgp
         provider:
           keycloak:
-            issuer-uri: http://sgi-auth:8080/auth/realms/sgi
+            issuer-uri: http://localhost:8080/auth/realms/sgi
             user-name-attribute: user_ref_id
       resourceserver:
         jwt:
