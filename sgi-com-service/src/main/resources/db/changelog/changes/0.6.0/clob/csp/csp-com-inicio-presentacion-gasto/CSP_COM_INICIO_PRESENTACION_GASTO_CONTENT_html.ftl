@@ -24,7 +24,7 @@
 <p>Próximamente se inician los periodos de presentación de la justificación económica de los proyectos abajo indicados.</p>
 <#list data.proyectos as proyecto>
 <p>
-- Proyecto: ${sgi.getFieldValue(proyecto.titulo)?html}<br>
+- Proyecto: ${sgi.getFieldValue(proyecto.titulo)}<br>
 - Inicio del periodo de presentación de justificación: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}<br>
 - Fin del periodo de presentación de justificación: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </p>
@@ -36,7 +36,7 @@
 <p>Please be advised that the periods for the submission of the justification for the scientific follow-up of the projects listed below will start soon. The periods for submission of justification documents are as follows:</p>
 <#list data.proyectos as proyecto>
 <p>
-- Project: ${sgi.getFieldValue(proyecto.titulo)?html}<br>
+- Project: ${sgi.getFieldValue(proyecto.titulo)}<br>
 - Start of the period for submission of justification: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}<br>
 - End of the period for submission of justification:  <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </p>
@@ -48,7 +48,7 @@
 <p>Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuen jarraipen zientifikorako justifikazioa aurkezteko epea. Honako hauek dira justifikazio dokumentuak aurkezteko epeak:</p>
 <#list data.proyectos as proyecto>
 <p>
-- Proiektua: ${sgi.getFieldValue(proyecto.titulo)?html}<br>
+- Proiektua: ${sgi.getFieldValue(proyecto.titulo)}<br>
 - Justifikazioa aurkezteko epearen hasiera: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}<br>
 - Justifikazioa aurkezteko epearen amaiera: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </p>
