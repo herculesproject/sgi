@@ -36,10 +36,10 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class EvaluadorServiceImpl implements EvaluadorService {
   private static final String MSG_KEY_FIELD = "field";
-  private static final String MSG_FIELD_PRESIDENTES = "presidentes";
-  private static final String MSG_FIELD_SECRETARIOS = "secretarios";
-  private static final String MSG_FIELD_EVALUADORES = "evaluadores";
-  private static final String MSG_FIELD_EXISTENTE = "org.crue.hercules.sgi.csp.exceptions.field.existente";
+  private static final String MSG_FIELD_PRESIDENTE = "presidente";
+  private static final String MSG_FIELD_SECRETARIO = "secretario";
+  private static final String MSG_FIELD_EXISTENTE_ROL = "org.crue.hercules.sgi.csp.exceptions.field.rol.existente";
+  private static final String MSG_FIELD_EXISTENTE_EVALUADOR = "org.crue.hercules.sgi.csp.exceptions.field.evaluador.existente";
 
   private static final Long PRESIDENTE = 1L;
   private static final Long SECRETARIO = 3L;
@@ -71,10 +71,10 @@ public class EvaluadorServiceImpl implements EvaluadorService {
         .equals(SECRETARIO)) {
       Assert.isTrue(isPresidenteOrSecretarioInFechasOk(evaluador),
           () -> ProblemMessage.builder()
-              .key(MSG_FIELD_EXISTENTE)
+              .key(MSG_FIELD_EXISTENTE_ROL)
               .parameter(MSG_KEY_FIELD, evaluador.getCargoComite().getId().equals(PRESIDENTE)
-                  ? ApplicationContextSupport.getMessage(MSG_FIELD_PRESIDENTES)
-                  : ApplicationContextSupport.getMessage(MSG_FIELD_SECRETARIOS))
+                  ? ApplicationContextSupport.getMessage(MSG_FIELD_PRESIDENTE)
+                  : ApplicationContextSupport.getMessage(MSG_FIELD_SECRETARIO))
               .build());
 
     }
@@ -83,8 +83,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     // distinto cargo
     Assert.isTrue(isEvaluadorInFechasOk(evaluador),
         () -> ProblemMessage.builder()
-            .key(MSG_FIELD_EXISTENTE)
-            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_EVALUADORES))
+            .key(MSG_FIELD_EXISTENTE_EVALUADOR)
             .build());
 
     return evaluadorRepository.save(evaluador);
@@ -267,10 +266,10 @@ public class EvaluadorServiceImpl implements EvaluadorService {
         .equals(SECRETARIO)) {
       Assert.isTrue(isPresidenteOrSecretarioInFechasOk(evaluadorActualizar),
           () -> ProblemMessage.builder()
-              .key(MSG_FIELD_EXISTENTE)
+              .key(MSG_FIELD_EXISTENTE_ROL)
               .parameter(MSG_KEY_FIELD, evaluadorActualizar.getCargoComite().getId().equals(PRESIDENTE)
-                  ? ApplicationContextSupport.getMessage(MSG_FIELD_PRESIDENTES)
-                  : ApplicationContextSupport.getMessage(MSG_FIELD_SECRETARIOS))
+                  ? ApplicationContextSupport.getMessage(MSG_FIELD_PRESIDENTE)
+                  : ApplicationContextSupport.getMessage(MSG_FIELD_SECRETARIO))
               .build());
 
     }
@@ -279,8 +278,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     // distinto cargo
     Assert.isTrue(isEvaluadorInFechasOk(evaluadorActualizar),
         () -> ProblemMessage.builder()
-            .key(MSG_FIELD_EXISTENTE)
-            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_EVALUADORES))
+            .key(MSG_FIELD_EXISTENTE_EVALUADOR)
             .build());
 
     return evaluadorRepository.findById(evaluadorActualizar.getId()).map(evaluador -> {
