@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sgiusr" name="sgiusr-api" publishSwagger="/_system/governance/swagger_files/sgicsp-swagger.yaml" xmlns="http://ws.apache.org/ns/synapse">
+
+  <!-- Unidades -->
+  <resource methods="GET" url-mapping="/unidades">
+    <inSequence>
+      <send>
+        <endpoint key="sgiusr-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
+  <resource methods="GET" uri-template="/unidades/{id}">
+    <inSequence>
+      <send>
+        <endpoint key="sgiusr-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
+</api>
