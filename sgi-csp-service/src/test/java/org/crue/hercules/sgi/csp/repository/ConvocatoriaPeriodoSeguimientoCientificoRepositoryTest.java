@@ -1,0 +1,140 @@
+package org.crue.hercules.sgi.csp.repository;
+
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+@DataJpaTest
+class ConvocatoriaPeriodoSeguimientoCientificoRepositoryTest extends BaseRepositoryTest {
+
+  @Autowired
+  private ConvocatoriaPeriodoSeguimientoCientificoRepository repository;
+
+  @Test
+  void findAllByConvocatoriaIdOrderByMesInicial_ReturnsConvocatoriaPeriodoSeguimientoCientificoList() {
+
+    // given: 10 ConvocatoriaPeriodoSeguimientoCientifico with same ConvocatoriId
+    Set<ConvocatoriaTitulo> convocatoriaTitulo1 = new HashSet<>();
+    convocatoriaTitulo1.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria1 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-1")
+        .unidadGestionRef("2")
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+        .titulo(convocatoriaTitulo1)
+        .activo(Boolean.TRUE)
+        .build();
+    entityManager.persistAndFlush(convocatoria1);
+
+    Set<ConvocatoriaTitulo> convocatoriaTitulo2 = new HashSet<>();
+    convocatoriaTitulo2.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria2 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-2")
+        .unidadGestionRef("2")
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+        .titulo(convocatoriaTitulo2)
+        .activo(Boolean.TRUE)
+        .build();
+    entityManager.persistAndFlush(convocatoria2);
+
+    for (int i = 11; i > 1; i--) {
+      ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
+          .builder()
+          .convocatoriaId((i % 2 == 0) ? convocatoria2.getId() : convocatoria1.getId())
+          .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
+          .mesInicial(i - 1)
+          .mesFinal(i)
+          .build();
+      entityManager.persistAndFlush(convocatoriaPeriodoSeguimientoCientifico);
+    }
+    Long convocatoriaIdBuscado = convocatoria1.getId();
+
+    // when: se busca ConvocatoriaPeriodoSeguimientoCientifico por ConvocatoriaId
+    // ordenadas por Mes Inicial
+    List<ConvocatoriaPeriodoSeguimientoCientifico> dataFound = repository
+        .findAllByConvocatoriaIdOrderByMesInicial(convocatoriaIdBuscado);
+
+    // then: Se recupera ConvocatoriaPeriodoSeguimientoCientifico con el
+    // ConvocatoriaId ordenados por Mes Inicial
+    Assertions.assertThat(dataFound).isNotNull();
+    Assertions.assertThat(dataFound).size().isEqualTo(5);
+
+    for (int i = 0; i < dataFound.size(); i++) {
+      int numPeriodo = dataFound.get(i).getNumPeriodo();
+      Assertions.assertThat(dataFound.get(i).getNumPeriodo()).as("getNumPeriodo()").isEqualTo(i + 1);
+      Assertions.assertThat(dataFound.get(i).getMesInicial()).as("getMesInicial()").isEqualTo(numPeriodo * 2);
+      Assertions.assertThat(dataFound.get(i).getMesFinal()).as("getMesFinal()").isEqualTo((numPeriodo * 2) + 1);
+    }
+  }
+
+  @Test
+  void findAllByConvocatoriaIdOrderByMesInicial_ReturnsNull() {
+    // given: 10 ConvocatoriaPeriodoSeguimientoCientifico
+    Set<ConvocatoriaTitulo> convocatoriaTitulo1 = new HashSet<>();
+    convocatoriaTitulo1.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria1 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-1")
+        .unidadGestionRef("2")
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+        .titulo(convocatoriaTitulo1)
+        .activo(Boolean.TRUE)
+        .build();
+    entityManager.persistAndFlush(convocatoria1);
+
+    Set<ConvocatoriaTitulo> convocatoriaTitulo2 = new HashSet<>();
+    convocatoriaTitulo2.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria2 = Convocatoria.builder()
+        .estado(Convocatoria.Estado.BORRADOR)
+        .codigo("codigo-2")
+        .unidadGestionRef("2")
+        .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+        .titulo(convocatoriaTitulo2)
+        .activo(Boolean.TRUE)
+        .build();
+    entityManager.persistAndFlush(convocatoria2);
+
+    for (int i = 11; i > 1; i--) {
+      ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
+          .builder()
+          .convocatoriaId((i % 2 == 0) ? convocatoria2.getId() : convocatoria1.getId())
+          .numPeriodo(i / 2)
+          .tipoSeguimiento(TipoSeguimiento.FINAL)
+          .mesInicial(i - 1)
+          .mesFinal(i)
+          .build();
+
+      if (i % 2 == 0) {
+        entityManager.persistAndFlush(convocatoriaPeriodoSeguimientoCientifico);
+      }
+    }
+
+    Long convocatoriaIdBuscado = convocatoria1.getId();
+
+    // when: se busca ConvocatoriaPeriodoSeguimientoCientifico para ConvocatoriaId
+    List<ConvocatoriaPeriodoSeguimientoCientifico> dataFound = repository
+        .findAllByConvocatoriaIdOrderByMesInicial(convocatoriaIdBuscado);
+
+    // then: No encuentra ConvocatoriaPeriodoSeguimientoCientifico para
+    // ConvocatoriaId
+    Assertions.assertThat(dataFound).isEmpty();
+  }
+
+}

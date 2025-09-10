@@ -1,0 +1,33 @@
+package org.crue.hercules.sgi.csp.service;
+
+import java.util.Locale;
+
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.framework.spring.context.support.boot.autoconfigure.ApplicationContextSupportAutoConfiguration;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+/**
+ * BaseServiceTest
+ */
+@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@Import({ ValidationAutoConfiguration.class, MessageSourceAutoConfiguration.class,
+    ApplicationContextSupportAutoConfiguration.class })
+@EnableConfigurationProperties(value = SgiConfigProperties.class)
+@TestPropertySource(locations = { "classpath:application.yml" })
+@ContextConfiguration(initializers = { ConfigDataApplicationContextInitializer.class })
+public abstract class BaseServiceTest {
+
+  public BaseServiceTest() {
+    Locale.setDefault(new Locale("es", "ES"));
+  }
+}
