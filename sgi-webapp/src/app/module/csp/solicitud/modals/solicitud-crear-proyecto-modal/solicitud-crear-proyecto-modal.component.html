@@ -1,0 +1,132 @@
+<sgi-action-dialog title="{{'title.csp.proyecto.new' | translate}}">
+  <div fxLayout="row" fxLayout.xs="column" fxFlexFill fxLayoutAlign="center center">
+    <p fxFlex="100">{{'info.csp.solicitud-proyecto.new'| translate}}</p>
+  </div>
+  <form [formGroup]="formGroup">
+    <div fxLayout="row">
+      <!-- Título -->
+      <mat-form-field>
+        <mat-label>{{'csp.solicitud-proyecto.titulo' | translate}}</mat-label>
+        <sgi-i18n-input formControlName="titulo" required>
+        </sgi-i18n-input>
+        <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
+          {{'error.required.entity' | translate:msgParamTituloEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.titulo.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamTituloEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="10px">
+      <!-- Fecha inicio proyecto -->
+      <div fxFlex>
+        <mat-form-field>
+          <mat-label>{{'csp.solicitud-proyecto.fecha-inicio'| translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaInicio>
+          </mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
+            {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.before">
+            {{'error.before.fecha-inicio' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Fecha fin proyecto -->
+      <div fxFlex>
+        <mat-form-field sgiEndDate>
+          <mat-label>{{'csp.solicitud-proyecto.fecha-fin'| translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaFin>
+          </mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
+            {{'error.required.entity' | translate:msgParamFechaFinEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
+            {{'error.after.fecha-fin' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Modelo de ejecución -->
+    <div fxLayout="row">
+      <mat-form-field class="input-form">
+        <mat-label>{{'csp.solicitud-proyecto.modelo-ejecucion' | translate}}</mat-label>
+        <sgi-select-modelo-ejecucion #modeloEjecucion formControlName="modeloEjecucion"
+          [unidadGestionRef]="data?.solicitud?.unidadGestion?.id" required>
+        </sgi-select-modelo-ejecucion>
+        <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
+          {{'error.required.entity' | translate:msgParamModeloEjecucionEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.invalid">
+          {{'error.invalid.entity' | translate:msgParamModeloEjecucionEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <h3 *ngIf="(proyectos$ | async)?.length >0">{{'title.csp.proyecto.proyectos-solicitud' | translate}}</h3>
+  <table mat-table [dataSource]="proyectos$ | async" matSort matSortActive="id" matSortDirection="desc"
+    matSortDisableClear [class.hidden]="(proyectos$ | async)?.length == 0">
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.id' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let proyecto">{{proyecto.id}}</td>
+    </ng-container>
+
+    <!-- Código SGE -->
+    <ng-container matColumnDef="codigoSGE">
+      <th mat-header-cell *matHeaderCellDef> {{'csp.proyecto.codigo-sge' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let proyecto">{{proyecto.proyectosSGE}}</td>
+    </ng-container>
+
+    <!-- Titulo -->
+    <ng-container matColumnDef="titulo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto.titulo' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let proyecto">
+        <sgi-i18n-table-field [field]="proyecto.titulo"></sgi-i18n-table-field>
+      </td>
+    </ng-container>
+
+    <!-- Fecha inicio -->
+    <ng-container matColumnDef="fechaInicio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.proyecto.fecha-inicio' | translate}} </th>
+      <td mat-cell *matCellDef="let proyecto">
+        {{proyecto.fechaInicio | luxon:'shortDate'}}
+      </td>
+    </ng-container>
+
+    <!-- Fecha fin -->
+    <ng-container matColumnDef="fechaFin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.proyecto.fecha-fin' | translate}} </th>
+      <td mat-cell *matCellDef="let proyecto">
+        {{proyecto.fechaFin | luxon:'shortDate'}}
+      </td>
+    </ng-container>
+
+    <!-- Estado proyecto -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef> {{'csp.proyecto.estado' | translate}} </th>
+      <td mat-cell *matCellDef="let proyecto">
+        {{ESTADO_MAP.get(proyecto.estado.estado) | translate}}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElements" showFirstLastButtons
+    [class.hidden]="(proyectos$ | async)?.length == 0">
+  </mat-paginator>
+
+</sgi-action-dialog>

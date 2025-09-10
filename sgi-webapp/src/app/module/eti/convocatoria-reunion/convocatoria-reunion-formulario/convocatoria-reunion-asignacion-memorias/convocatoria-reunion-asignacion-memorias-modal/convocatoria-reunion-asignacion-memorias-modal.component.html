@@ -1,0 +1,80 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- Memoria -->
+    <div fxLayout="column" fxLayoutGap="10px">
+      <div>
+        <mat-form-field class="input-form">
+          <mat-label>{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+          <sgi-select-entity formControlName="memoria" #memoria required [options]="memorias$ | async"
+            [displayWith]="displayerMemoria">
+          </sgi-select-entity>
+          <mat-error *ngIf="formGroup.controls.memoria.errors?.required">
+            {{'error.required.entity' | translate:msgParamMemoriaEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Evaluador 1 -->
+      <div>
+        <ng-container *ngIf="!!msgParamEvaludador1Asignacion.evaluador">
+          <sgi-info-message *ngIf="!msgParamEvaludador1Asignacion.activo"
+            message="{{'info.eti.convocatoria-reunion.asignancion-memoria.evaluador-no-activo' | translate:msgParamEvaludador1Asignacion}}">
+          </sgi-info-message>
+          <sgi-info-message
+            *ngIf="msgParamEvaludador1Asignacion.activo && !msgParamEvaludador1Asignacion.conflictoIntereses"
+            message="{{'info.eti.convocatoria-reunion.asignancion-memoria.evaluador-conflicto-intereses' | translate:msgParamEvaludador1Asignacion}}">
+          </sgi-info-message>
+        </ng-container>
+
+        <mat-form-field>
+          <mat-label>
+            {{'eti.convocatoria-reunion.memoria.evaludador-1' | translate}}
+          </mat-label>
+          <sgi-select-evaluador formControlName="evaluador1"
+            [fechaEvaluacion]="this.data.evaluacion.convocatoriaReunion.fechaEvaluacion"
+            [memoria]="formGroup.controls.memoria.value" [resetOnChange]="memoria.selectionChange"
+            [excludeOnChange]="evaluador2$"
+            (selectValuesChange)="selectEvaluador1IfLastEvaluacionMemoriaPendienteCorrecciones($event)" required>
+          </sgi-select-evaluador>
+          <mat-error *ngIf="formGroup.controls.evaluador1.errors?.required">
+            {{'error.required.entity' | translate:msgParamEvaludador1Entity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Evaluador 2 -->
+      <div>
+        <ng-container *ngIf="!!msgParamEvaludador2Asignacion.evaluador">
+          <sgi-info-message *ngIf="!msgParamEvaludador2Asignacion.activo"
+            message="{{'info.eti.convocatoria-reunion.asignancion-memoria.evaluador-no-activo' | translate:msgParamEvaludador2Asignacion}}">
+          </sgi-info-message>
+          <sgi-info-message
+            *ngIf="msgParamEvaludador2Asignacion.activo && !msgParamEvaludador2Asignacion.conflictoIntereses"
+            message="{{'info.eti.convocatoria-reunion.asignancion-memoria.evaluador-conflicto-intereses' | translate:msgParamEvaludador2Asignacion}}">
+          </sgi-info-message>
+        </ng-container>
+
+        <mat-form-field>
+          <mat-label>{{'eti.convocatoria-reunion.memoria.evaludador-2' | translate}}
+          </mat-label>
+          <sgi-select-evaluador formControlName="evaluador2" [memoria]="formGroup.controls.memoria.value"
+            [resetOnChange]="memoria.selectionChange" [excludeOnChange]="evaluador1$"
+            [fechaEvaluacion]="this.data.evaluacion.convocatoriaReunion.fechaEvaluacion"
+            (selectValuesChange)="selectEvaluador2IfLastEvaluacionMemoriaPendienteCorrecciones($event)" required>
+          </sgi-select-evaluador>
+          <mat-error *ngIf="formGroup.controls.evaluador2.errors?.required">
+            {{'error.required.entity' | translate:msgParamEvaludador2Entity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.data.readonly || this.actionDisabled" mat-raised-button
+    type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{isEdit() ? ('btn.ok' |
+    translate) : ('btn.add'| translate)}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

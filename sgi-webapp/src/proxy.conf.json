@@ -1,0 +1,137 @@
+{
+  "/api/eti": {
+    "target": "http://sgi-eti-service:4280",
+    "pathRewrite": {
+      "^/api/eti": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/csp": {
+    "target": "http://sgi-csp-service:4281",
+    "pathRewrite": {
+      "^/api/csp": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/usr": {
+    "target": "http://sgi-usr-service:4282",
+    "pathRewrite": {
+      "^/api/usr": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/pii": {
+    "target": "http://sgi-pii-service:4283",
+    "pathRewrite": {
+      "^/api/pii": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/rel": {
+    "target": "http://sgi-rel-service:4284",
+    "pathRewrite": {
+      "^/api/rel": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/rep": {
+    "target": "http://sgi-rep-service:4287",
+    "pathRewrite": {
+      "^/api/rep": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/sgp": {
+    "target": "http://sgi-esb:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/sge/": {
+    "target": "http://sgi-esb:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/sgemp": {
+    "target": "http://sgi-esb:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/sgepii": {
+    "target": "http://sgi-esb:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/sgdoc": {
+    "target": "http://sgi-esb:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/sgo": {
+    "target": "http://sgi-esb:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/prc": {
+    "target": "http://sgi-prc-service:4289",
+    "pathRewrite": {
+      "^/api/prc": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/cnf": {
+    "target": "http://sgi-cnf-service:4288",
+    "pathRewrite": {
+      "^/api/cnf": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/com": {
+    "target": "http://sgi-com-service:4286",
+    "pathRewrite": {
+      "^/api/com": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/tp": {
+    "target": "http://sgi-tp-service:4285",
+    "pathRewrite": {
+      "^/api/tp": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/eer": {
+    "target": "http://sgi-eer-service:4290",
+    "pathRewrite": {
+      "^/api/eer": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  }
+}

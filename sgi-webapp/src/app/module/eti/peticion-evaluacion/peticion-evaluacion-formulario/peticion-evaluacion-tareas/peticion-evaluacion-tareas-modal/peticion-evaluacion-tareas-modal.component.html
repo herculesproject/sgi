@@ -1,0 +1,126 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- Persona equipo trabajo -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'eti.peticion-evaluacion.tarea.persona' | translate}}</mat-label>
+        <sgi-select-entity placeholder="{{'eti.peticion-evaluacion.tarea.persona' | translate}}"
+          formControlName="equipoTrabajo" [options]="this.personas$ | async"
+          [displayWith]="displayerPersonaEquipoTrabajo" required>
+        </sgi-select-entity>
+        <mat-error *ngIf="formGroup.controls.equipoTrabajo.errors?.required">
+          {{'error.required.entity' | translate:msgParamEquipoTrabajoEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Memoria -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+        <sgi-select-entity formControlName="memoria" [options]="this.data.memorias" [displayWith]="displayerMemoria"
+          required>
+        </sgi-select-entity>
+        <mat-error *ngIf="formGroup.controls.memoria.errors?.required">
+          {{'error.required.entity' | translate:msgParamMemoriaEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Tarea -->
+    <div fxLayout="row" fxLayoutGap="10px">
+      <ng-container *ngIf="tareaLibre">
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.tarea' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+          <sgi-i18n-input #tarea formControlName="nombre"
+            [placeholder]="'eti.peticion-evaluacion.tarea' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"
+            required></sgi-i18n-input>
+          <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+            {{'error.required.entity' | translate:msgParamTareaEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamTareaEntity}}
+          </mat-error>
+        </mat-form-field>
+
+      </ng-container>
+      <ng-container *ngIf="!tareaLibre">
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.tarea'| translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+          <sgi-select-entity *ngIf="!tareaLibre" formControlName="tipoTarea" [options]="this.tipoTareas$ | async"
+            required>
+          </sgi-select-entity>
+          <sgi-i18n-input *ngIf="tareaLibre" formControlName="nombre"
+            [placeholder]="'eti.peticion-evaluacion.tarea' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"
+            required></sgi-i18n-input>
+          <mat-error *ngIf="formGroup.controls.tipoTarea.errors?.required">
+            {{'error.required.entity' | translate:msgParamTareaEntity}}
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+
+    </div>
+    <!-- Formación específica -->
+    <div fxLayout="row" fxLayoutGap="10px">
+      <ng-container *ngIf="formacionLibre">
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.tarea.experiencia' | translate}}</mat-label>
+          <sgi-i18n-input #formacion formControlName="formacion"
+            [placeholder]="'eti.peticion-evaluacion.tarea.experiencia' | translate" required></sgi-i18n-input>
+          <mat-hint align="end">{{formacion.editingValue?.length || 0}} / 250</mat-hint>
+          <mat-error *ngIf="formGroup.controls.formacion.errors?.required">
+            {{'error.required.entity' | translate:msgParamFormacionEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.formacion.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamFormacionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+      <ng-container *ngIf="!formacionLibre">
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.tarea.formacion-especifica' | translate}}</mat-label>
+          <sgi-select-entity formControlName="formacionEspecifica" [options]="this.formaciones$ | async" required>
+          </sgi-select-entity>
+          <mat-error *ngIf="formGroup.controls.formacionEspecifica.errors?.required">
+            {{'error.required.entity' | translate:msgParamFormacionEspecificaEntity}}
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="detalleFormacion">
+      <!-- Año -->
+      <div fxLayout="row">
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.tarea.anio' | translate}}</mat-label>
+          <input matInput formControlName="anio" type="number"
+            [placeholder]="'eti.peticion-evaluacion.tarea.anio' | translate" required />
+          <mat-error *ngIf="formGroup.controls.anio.errors?.required">
+            {{'error.required.entity' | translate:msgParamAnioEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Organismo -->
+      <div fxLayout="row">
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.tarea.organismo' | translate}}</mat-label>
+          <sgi-i18n-input #organismo formControlName="organismo"
+            [placeholder]="'eti.peticion-evaluacion.tarea.organismo' | translate" required></sgi-i18n-input>
+          <mat-hint align="end">{{organismo.editingValue?.length || 0}} / 250</mat-hint>
+          <mat-error *ngIf="formGroup.controls.organismo.errors?.required">
+            {{'error.required.entity' | translate:msgParamOrganismoEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.organismo.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamOrganismoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{textoAceptar}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

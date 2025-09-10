@@ -1,0 +1,80 @@
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
+  <form [formGroup]="formGroup">
+    <!-- Nombre -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'csp.modelo-ejecucion.nombre' | translate}}</mat-label>
+          <sgi-i18n-input formControlName="nombre" id="nombre"
+            placeholder="{{'csp.modelo-ejecucion.nombre' | translate}}" required>
+          </sgi-i18n-input>
+          <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+            {{'error.required.entity' | translate:msgParamNombreEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'csp.modelo-ejecucion.descripcion' | translate}}</mat-label>
+          <sgi-i18n-textarea formControlName="descripcion" id="descripcion"
+            placeholder="{{'csp.modelo-ejecucion.descripcion' | translate}}"></sgi-i18n-textarea>
+          <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        {{'csp.modelo-ejecucion.caracteristicas' | translate}}
+      </div>
+    </div>
+
+    <!-- Externo -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <sgi-field-info matSuffix [visible]="formPart.hasProyectosAsociados"
+          message="{{'info.csp.modelo-ejecucion-proyecto.tooltip' | translate}}">
+        </sgi-field-info>
+        <mat-checkbox formControlName="externo">
+          {{'msg.csp.modelo-ejecucion.externo' | translate}}
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <!-- Contrato -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <sgi-field-info matSuffix [visible]="formPart.hasProyectosAsociados"
+          message="{{'info.csp.modelo-ejecucion-proyecto.tooltip' | translate}}">
+        </sgi-field-info>
+        <mat-checkbox formControlName="contrato">
+          {{'csp.modelo-ejecucion.contrato' | translate}}
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <!-- Solicitud sin convocatoria -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-checkbox formControlName="solicitudSinConvocatoria">
+          {{'csp.modelo-ejecucion.solicitud-sin-convocatoria' | translate}}
+        </mat-checkbox>
+      </div>
+    </div>
+  </form>
+</sgi-fragment>

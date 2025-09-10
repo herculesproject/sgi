@@ -1,0 +1,34 @@
+@import "colors.scss";
+
+:host {
+
+  .module,
+  .module-inv {
+    margin: 1.5em;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background-color: $dark-dividers;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    .module-content {
+      width: 100%;
+      text-align: center;
+      white-space: pre-wrap;
+      margin: auto;
+    }
+  }
+
+  .module-inv {
+    background-color: map-get($sgi-custom-colors, orange-inv);
+  }
+
+  .module-divider {
+    width: 90%;
+  }
+}

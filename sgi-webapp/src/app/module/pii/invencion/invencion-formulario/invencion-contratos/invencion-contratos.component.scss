@@ -1,0 +1,9 @@
+@import "colors.scss";
+
+.mat-row.selected {
+  background-color: map-get($palette-grey, 100);
+}
+
+.table-sectores-licenciados {
+  margin-top: 4em;
+}

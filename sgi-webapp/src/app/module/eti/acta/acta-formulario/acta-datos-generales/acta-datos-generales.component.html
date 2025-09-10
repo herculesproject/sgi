@@ -1,0 +1,80 @@
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.acta.convocatoria-reunion' | translate}}</mat-label>
+        <sgi-select-entity formControlName="convocatoriaReunion" [options]="convocatorias$ | async" required
+          [displayWith]="displayerConvocatoriaReunion">
+        </sgi-select-entity>
+        <mat-error *ngIf="formGroup.controls.convocatoriaReunion.errors?.required">
+          {{'error.required.entity' | translate:msgParamConvocatoriaReunionEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.acta.hora-inicio' | translate}}</mat-label>
+        <input matTimepicker #timepickerInicio="matTimepicker" formControlName="horaInicio"
+          disableDialogOpenOnClick="true" strict="false" okLabel="{{ 'btn.ok' | translate }}"
+          cancelLabel="{{ 'btn.cancel' | translate }}" required [readonly]="readonly">
+        <button mat-icon-button type="button" matSuffix (click)="timepickerInicio.showDialog()" color="primary"
+          [disabled]="readonly">
+          <mat-icon>access_time</mat-icon>
+        </button>
+        <mat-error *ngIf="formGroup.controls.horaInicio.errors?.required">
+          {{'error.required.entity' | translate:msgParamHoraInicioEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.horaInicio.errors?.before">
+          {{'error.before.hora-inicio' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.acta.hora-fin' | translate}}</mat-label>
+        <input matTimepicker #timepickerFin="matTimepicker" formControlName="horaFin" disableDialogOpenOnClick="true"
+          strict="false" okLabel="{{ 'btn.ok' | translate }}" cancelLabel="{{ 'btn.cancel' | translate }}" required
+          [readonly]="readonly">
+        <button mat-icon-button type="button" matSuffix (click)="timepickerFin.showDialog()" color="primary"
+          [disabled]="readonly">
+          <mat-icon>access_time</mat-icon>
+        </button>
+        <mat-error *ngIf="formGroup.controls.horaFin.errors?.required">
+          {{'error.required.entity' | translate:msgParamHoraFinEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.horaFin.errors?.after">
+          {{'error.after.hora-fin' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxFlex="100" fxLayoutGap="10px" [fxFlexOrder]="fxFlexProperties.order">
+      <span class="ckeditor-label">{{'eti.acta.resumen' | translate}}<span
+          [class]="(formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.required) ? 'warn' : ''">
+          *</span></span>
+      <sgi-i18n-ckeditor #resumen
+        [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''"
+        formControlName="resumen" required [disabled]="readonly">
+      </sgi-i18n-ckeditor>
+      <span class="ckeditor-hint" *ngIf="!formGroup.controls.resumen.errors">{{resumen.editingValue?.length}}
+        /
+        4000</span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.required">
+        {{'error.required.entity' | translate:msgParamResumenEntity}}
+      </span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.maxlength">
+        {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
+      </span>
+    </div>
+  </form>
+
+  <sgi-acta-listado-comentarios-equipo-evaluador
+    *ngIf="this.formPart.isRolGestor() && this.actionService.getConvocatoriaReunion()" [actaId]="this.formPart.getKey()"
+    [convocatoriaReunion]="this.actionService.getConvocatoriaReunion()" (errors)="this.formPart.handleErrors($event)">
+  </sgi-acta-listado-comentarios-equipo-evaluador>
+</sgi-fragment>

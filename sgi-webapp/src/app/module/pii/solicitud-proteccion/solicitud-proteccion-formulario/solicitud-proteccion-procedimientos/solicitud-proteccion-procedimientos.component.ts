@@ -1,0 +1,28 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { IProcedimiento } from '@core/models/pii/procedimiento';
+import { SolicitudProteccionActionService } from '../../solicitud-proteccion.action.service';
+import { TranslateService } from '@ngx-translate/core';
+
+@Component({
+  selector: 'sgi-solicitud-proteccion-procedimientos',
+  templateUrl: './solicitud-proteccion-procedimientos.component.html',
+  styleUrls: ['./solicitud-proteccion-procedimientos.component.scss']
+})
+export class SolicitudProteccionProcedimientosComponent extends FormFragmentComponent<IProcedimiento> implements OnInit, OnDestroy {
+
+  constructor(
+    protected actionService: SolicitudProteccionActionService,
+    private readonly translate: TranslateService
+  ) {
+    super(actionService.FRAGMENT.PROCEDIMIENTOS, actionService, translate);
+  }
+
+  ngOnDestroy(): void {
+  }
+
+  ngOnInit(): void {
+  }
+
+  protected setupI18N(): void { }
+}

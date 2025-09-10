@@ -1,0 +1,10 @@
+@import "colors.scss";
+
+:host {
+  a {
+    display: inline-flex !important;
+    color: $dark-disabled-text !important;
+    text-decoration: underline !important;
+  }
+
+}

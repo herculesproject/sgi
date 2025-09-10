@@ -1,0 +1,71 @@
+<!-- Configuración -->
+<sgi-fragment title="{{'eti.configuracion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
+
+  <form class="configuracion" [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
+    [fxLayout]="fxLayoutProperties.layout" [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+    <!-- diasArchivadaInactivo -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.configuracion.dias-inactiva' | translate}}</mat-label>
+        <input type="number" [placeholder]="'eti.configuracion.dias-inactiva' | translate" arial-label="Number" matInput
+          formControlName="diasArchivadaInactivo">
+        <mat-hint>{{'eti.configuracion.dias-inactiva.descripcion' | translate}}
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- mesesArchivadaPendienteCorrecciones -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.configuracion.meses-correcciones' | translate}}</mat-label>
+        <input type="number" [placeholder]="'eti.configuracion.meses-correcciones' | translate" arial-label="Number"
+          matInput formControlName="mesesArchivadaPendienteCorrecciones">
+        <mat-hint>{{'eti.configuracion.meses-correcciones.descripcion' | translate}}
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- diasLimiteEvaluador -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.configuracion.dias-evaluar' | translate}}</mat-label>
+        <input type="number" [placeholder]="'eti.configuracion.dias-evaluar' | translate" arial-label="Number" matInput
+          formControlName="diasLimiteEvaluador">
+        <mat-hint>{{'eti.configuracion.dias-evaluar.descripcion' | translate}}</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- diasAvisoRetrospectiva -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.configuracion.dias-aviso-retrospectiva' | translate}}</mat-label>
+        <input type="number" [placeholder]="'eti.configuracion.dias-aviso-retrospectiva' | translate"
+          arial-label="Number" matInput formControlName="diasAvisoRetrospectiva">
+        <mat-hint>{{'eti.configuracion.dias-aviso-retrospectiva.descripcion' | translate}}</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- duracionProyectoEvaluacion -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.configuracion.duracion-proyecto-evaluacion' | translate}}</mat-label>
+        <input type="number" [placeholder]="'eti.configuracion.duracion-proyecto-evaluacion' | translate"
+          arial-label="Number" matInput formControlName="duracionProyectoEvaluacion">
+        <mat-hint>{{'eti.configuracion.duracion-proyecto-evaluacion.descripcion' | translate}}</mat-hint>
+      </mat-form-field>
+    </div>
+
+  </form>
+
+  <div id="modals-buttons" class="float-right" mat-dialog-actions>
+    <button color="accent" (click)="update()" mat-raised-button type="submit" [disabled]="!updateEnable">{{'btn.save' |
+      translate}}</button>
+    <button class="link-cancelar" mat-button (click)="cancel()" type="button">{{'btn.cancel' | translate}}</button>
+  </div>
+</sgi-fragment>

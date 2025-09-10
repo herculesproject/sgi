@@ -1,0 +1,273 @@
+import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { SgiError } from '@core/errors/sgi-error';
+import { MSG_PARAMS } from '@core/i18n';
+import { IViaProteccion } from '@core/models/pii/via-proteccion';
+import { ROUTE_NAMES } from '@core/route.names';
+import { DialogService } from '@core/services/dialog.service';
+import { ViaProteccionService } from '@core/services/pii/via-proteccion/via-proteccion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
+import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { ViaProteccionModalComponent } from '../via-proteccion-modal/via-proteccion-modal.component';
+
+const MSG_CREATE = marker('btn.add.entity');
+const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
+const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
+const MSG_REACTIVE = marker('msg.reactivate.entity');
+const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
+const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
+const MSG_DEACTIVATE = marker('msg.deactivate.entity');
+const MSG_ERROR_DEACTIVATE = marker('error.deactivate.entity');
+const MSG_SUCCESS_DEACTIVATE = marker('msg.deactivate.entity.success');
+const VIA_PROTECCION_KEY = marker('pii.via-proteccion');
+
+@Component({
+  selector: 'sgi-via-proteccion-listado',
+  templateUrl: './via-proteccion-listado.component.html',
+  styleUrls: ['./via-proteccion-listado.component.scss']
+})
+export class ViaProteccionListadoComponent extends AbstractTablePaginationComponent<IViaProteccion> implements OnInit {
+
+  ROUTE_NAMES = ROUTE_NAMES;
+  viasProteccion$: Observable<IViaProteccion[]>;
+  msgParamEntity = {};
+
+  textCrear: string;
+  textCrearSuccess: string;
+  textUpdateSuccess: string;
+  textDesactivar: string;
+  textReactivar: string;
+  textErrorDesactivar: string;
+  textSuccessDesactivar: string;
+  textSuccessReactivar: string;
+  textErrorReactivar: string;
+
+  constructor(
+    private logger: NGXLogger,
+    private viaProteccionService: ViaProteccionService,
+    protected snackBarService: SnackBarService,
+    private matDialog: MatDialog,
+    private dialogService: DialogService,
+    private translate: TranslateService
+  ) {
+    super(translate);
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'nombre') {
+        return 'nombre.value';
+      } else if (column === 'descripcion') {
+        return 'descripcion.value';
+      }
+      return column;
+    }
+  }
+
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IViaProteccion>> {
+    return this.viaProteccionService.findTodos(this.getFindOptions(reset));
+  }
+
+  protected initColumns(): void {
+    this.columnas = ['nombre', 'descripcion', 'paisEspecifico', 'extensionInternacional', 'variosPaises', 'activo', 'acciones'];
+  }
+
+  protected loadTable(reset?: boolean): void {
+    this.viasProteccion$ = this.getObservableLoadTable(reset);
+  }
+
+  protected createFilter(): SgiRestFilter {
+    return undefined;
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+
+  }
+
+  protected setupI18N(): void {
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value: string) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_CREATE,
+          { entity: value, ...this.msgParamEntity }
+        );
+      })
+    ).subscribe((value: string) => this.textCrear = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SAVE_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textCrearSuccess = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_UPDATE_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textUpdateSuccess = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textDesactivar = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textErrorDesactivar = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_DEACTIVATE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textSuccessDesactivar = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textReactivar = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SUCCESS_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textSuccessReactivar = value);
+
+    this.translate.get(
+      VIA_PROTECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_ERROR_REACTIVE,
+          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+        );
+      })
+    ).subscribe((value: string) => this.textErrorReactivar = value);
+
+  }
+
+  /**
+   * Desactivar Via de Proteccion.
+   * @param viaProteccion Via de Proteccion
+   */
+  deactivateViaProteccion(viaProteccion: IViaProteccion): void {
+    const subcription = this.dialogService.showConfirmation(this.textDesactivar).pipe(
+      switchMap((accept) => accept ? this.viaProteccionService.desactivar(viaProteccion.id)
+        : of())).subscribe(() => {
+          this.snackBarService.showSuccess(this.textSuccessDesactivar);
+          this.loadTable();
+        }, (error) => {
+          this.logger.error(error);
+          if (error instanceof SgiError) {
+            this.processError(error);
+          } else {
+            this.processError(new SgiError(this.textErrorDesactivar));
+          }
+        }
+        );
+    this.suscripciones.push(subcription);
+  }
+
+  /**
+   * Activar un registro de Via de Proteccion
+   * @param viaProteccion  Via de Proteccion
+   */
+  activateViaProteccion(viaProteccion: IViaProteccion): void {
+    const subcription = this.dialogService.showConfirmation(this.textReactivar)
+      .pipe(switchMap((accept) => {
+        return accept ? this.viaProteccionService.activar(viaProteccion.id)
+          : of();
+      })).subscribe(() => {
+        this.snackBarService.showSuccess(this.textSuccessReactivar);
+        this.loadTable();
+      }, (error) => {
+        this.logger.error(error);
+        if (error instanceof SgiError) {
+          this.processError(error);
+        } else {
+          this.processError(new SgiError(this.textErrorReactivar));
+        }
+      }
+      );
+    this.suscripciones.push(subcription);
+  }
+
+  /**
+   * Abre un modal para añadir o actualizar una Via de Proteccion
+   * @param viaProteccion Via de Proteccion
+   */
+  openModal(viaProteccion?: IViaProteccion): void {
+    const config: MatDialogConfig<IViaProteccion> = {
+      data: viaProteccion
+    };
+    const dialogRef = this.matDialog.open(ViaProteccionModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (result: IViaProteccion) => {
+        if (result) {
+          this.snackBarService.showSuccess(viaProteccion ? this.textUpdateSuccess : this.textCrearSuccess);
+          this.loadTable();
+        }
+      });
+  }
+
+}

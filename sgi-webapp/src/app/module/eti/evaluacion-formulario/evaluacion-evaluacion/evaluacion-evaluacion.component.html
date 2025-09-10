@@ -1,0 +1,88 @@
+<sgi-fragment title="{{'eti.evaluacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}">
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <!--Comité-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+        <sgi-select-comite placeholder="{{'label.eti.comite' | translate}}"
+          formControlName="comite"></sgi-select-comite>
+      </mat-form-field>
+    </div>
+    <!--Solicitante-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.solicitante' | translate}}</mat-label>
+        <sgi-select-persona placeholder="{{'eti.solicitante' | translate}}"
+          formControlName="solicitante"></sgi-select-persona>
+      </mat-form-field>
+    </div>
+    <!--Fecha Evaluación-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field color="primary">
+        <mat-label>{{'eti.evaluacion.fecha-evaluacion'| translate}}</mat-label>
+        <input matInput [matDatepicker]="fechaEvaluacion" formControlName="fechaEvaluacion">
+        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="fechaEvaluacion"></mat-datepicker-toggle>
+        <mat-datepicker #fechaEvaluacion></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <!--Referencia Memoria-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.memoria.referencia' | translate}}</mat-label>
+        <input matInput formControlName="referenciaMemoria" placeholder="{{'eti.memoria.referencia' | translate}}">
+      </mat-form-field>
+    </div>
+    <!--Versión-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.evaluacion-evaluador.memoria.version' | translate}}</mat-label>
+        <input matInput formControlName="version"
+          placeholder="{{'eti.evaluacion-evaluador.memoria.version' | translate}}">
+      </mat-form-field>
+    </div>
+    <!-- Dictamen -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <div fxLayout="row">
+        <mat-form-field class="input-form">
+          <mat-label>{{'eti.dictamen' | translate}}</mat-label>
+          <sgi-select-dictamen formControlName="dictamen" [evaluacionId]="this.actionService.getEvaluacion().id"
+            required></sgi-select-dictamen>
+          <mat-error *ngIf="formGroup.controls.dictamen.errors?.required">
+            {{'error.required.entity' | translate:msgParamDictamenEntity}}
+          </mat-error>
+        </mat-form-field>
+        <div fxLayoutAlign="center center">
+          <button mat-icon-button color="primary" (click)="visualizarInforme(this.formPart.evaluacion?.id)"
+            [disabled]="!enableBtnVisualizarInforme()">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--Comentario-->
+    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexPropertiesInline.md"
+      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexProperties.order"
+      *ngIf="this.formPart.mostrarComentario$.getValue()">
+      <mat-form-field>
+        <mat-label>{{'eti.evaluacion-evaluador.comentario' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="comentario"></sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.comentario.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+  <sgi-evaluacion-listado-comentarios-equipo-evaluador [evaluacion]="this.actionService.getEvaluacion()"
+    [rol]="this.actionService.getRol()" (errors)="formPart.handleErrors($event)">
+  </sgi-evaluacion-listado-comentarios-equipo-evaluador>
+  <sgi-evaluacion-listado-anterior-memoria #evaluaciones [rol]="this.actionService.getRol()"
+    (errors)="formPart.handleErrors($event)">
+  </sgi-evaluacion-listado-anterior-memoria>
+</sgi-fragment>

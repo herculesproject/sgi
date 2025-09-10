@@ -1,0 +1,54 @@
+@import "colors.scss";
+
+:host {
+  .footer-row-total {
+    font-weight: bold;
+
+    .mat-column-totalGastosCaption {
+      padding-right: 20px;
+      text-align: right;
+    }
+
+    .mat-column-importeADeducir {
+      background-color: map-get($sgi-custom-colors, bg);
+    }
+
+    .mat-column-totalIngresosCaption {
+      padding-right: 20px;
+      text-align: right;
+    }
+
+    .mat-column-importeARepartir {
+      background-color: map-get($sgi-custom-colors, bg);
+    }
+  }
+
+  .mat-row.selected {
+    background-color: map-get($palette-grey, 100);
+  }
+
+  .reparto-gastos {
+    margin-bottom: 1em;
+    padding: 1px;
+    overflow: auto;
+  }
+
+  .reparto-ingresos {
+    margin-bottom: 1em;
+    padding: 1px;
+    overflow: auto;
+  }
+
+  .reparto-resultado {
+    text-align: center;
+
+    h2 {
+      font-weight: bold;
+
+      span {
+        background-color: map-get($sgi-custom-colors, bg);
+        margin-left: 20px;
+      }
+    }
+  }
+}

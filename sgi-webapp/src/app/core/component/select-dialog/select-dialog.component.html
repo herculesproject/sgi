@@ -1,0 +1,26 @@
+<div fxLayout="row">
+  <input class="mat-input-element" #searchInput [formControl]="searchInputCtrl" [matAutocomplete]="auto"
+    [placeholder]="placeholder" *ngIf="empty" [attr.tabindex]="disabled ? -1 : null">
+
+  <input #displayInput type="text" class="mat-input-element" readonly [disabled]="disabled"
+    [attr.tabindex]="disabled ? -1 : null" *ngIf="!empty" [value]="displayWith(this.value)"
+    [class]="(notFoundSelectedValue$ | async) ? 'not-found-error' : ''">
+
+  <div class="icon-wrapper" [class.disabled]="disabled">
+    <button #dialogButton mat-icon-button type="button" [disabled]="disabled" (click)="showDialog()"
+      [attr.tabindex]="disabled ? -1 : null">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+</div>
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="_selected($event)" autoActiveFirstOption="true"
+  class="sgi-results">
+
+  <div class="page" fxFlex="1 1" fxFlexAlign="center" fxLayoutAlign="center">
+    <span *ngIf="tooManyResults">{{'label.search.too-many-results' | translate}}</span>
+  </div>
+  <mat-option *ngFor="let result of searchResult$ | async" [value]="result">
+    {{displayWith(result)}}
+  </mat-option>
+
+</mat-autocomplete>

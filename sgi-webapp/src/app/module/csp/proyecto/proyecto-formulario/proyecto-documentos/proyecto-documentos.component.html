@@ -1,0 +1,134 @@
+<sgi-fragment title="{{'csp.documentos' | translate}}">
+
+  <div class="programa" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+    <div class="arbol" fxFlex>
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="arbol-tree">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+          <button mat-button *ngIf="viewMode === VIEW_MODE.NEW">
+            <sgi-i18n-tree-field [field]="node.title"></sgi-i18n-tree-field>
+          </button>
+          <button color="primary" mat-button *ngIf="(viewMode !== VIEW_MODE.NEW && node !== viewingNode)"
+            (click)="showNodeDetails(node)">
+            <sgi-i18n-tree-field [field]="node.title"></sgi-i18n-tree-field>
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{ 'visibility'}}
+            </mat-icon>
+          </button>
+          <button color="primary" mat-button *ngIf="(viewMode !== VIEW_MODE.NEW && node === viewingNode)"
+            (click)="hideNodeDetails()">
+            <sgi-i18n-tree-field [field]="node.title"></sgi-i18n-tree-field>
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{ 'visibility_off'}}
+            </mat-icon>
+          </button>
+        </mat-tree-node>
+        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+          <button color="primary" mat-button matTreeNodeToggle
+            [attr.aria-label]="'Toggle ' + getI18nValue(node.documento?.value?.nombre)">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+            <sgi-i18n-tree-field [field]="node.title" [appendText]="node.childs.length > 0 ? '' : '\*'"
+              [params]="node.params"></sgi-i18n-tree-field>
+          </button>
+        </mat-tree-node>
+      </mat-tree>
+    </div>
+
+    <!-- Visualizacion crear/editar/detalle -->
+    <form [formGroup]="formGroup" class="visualizacion" fxFlex="50" *ngIf="viewMode !== VIEW_MODE.NONE">
+      <h3 *ngIf="viewMode === VIEW_MODE.NEW">
+        {{'btn.add.entity' | translate:msgParamEntity}}</h3>
+      <h3 *ngIf="viewMode === VIEW_MODE.EDIT">{{'btn.edit.entity' | translate:msgParamEntity}}
+      </h3>
+      <h3 *ngIf="viewMode === VIEW_MODE.VIEW">{{'btn.view.entity' | translate:msgParamEntity}}</h3>
+      <div fxLayout="column" fxLayout.xs="column" fxLayoutGap="10px">
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.documento.nombre' | translate}}</mat-label>
+          <sgi-i18n-input placeholder="{{'csp.documento.nombre' | translate}}" formControlName="nombre"
+            required></sgi-i18n-input>
+          <mat-error *ngIf="formGroup.get('nombre').errors?.required">
+            {{'error.required.entity' | translate:msgParamNombreEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.get('nombre').errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-documento.fase' | translate}}</mat-label>
+          <sgi-select-tipo-fase #fase placeholder="{{'csp.proyecto-documento.fase' | translate}}"
+            formControlName="tipoFase" [modeloEjecucionId]="actionService.modeloEjecucionId" relation="proyecto">
+          </sgi-select-tipo-fase>
+        </mat-form-field>
+
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-documento.tipo' | translate}}</mat-label>
+          <sgi-select-tipo-documento placeholder="{{'csp.proyecto-documento.tipo' | translate}}"
+            formControlName="tipoDocumento" [modeloEjecucionId]="actionService.modeloEjecucionId"
+            [tipoFaseId]="formGroup.controls.tipoFase.value?.id" [resetOnChange]="fase.selectionChange">
+          </sgi-select-tipo-documento>
+        </mat-form-field>
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-documento.fichero' | translate}}</mat-label>
+          <sgi-file-upload #uploader placeholder="{{'csp.documento.fichero' | translate}}" formControlName="fichero"
+            required autoUpload="false" (uploadEventChange)="onUploadProgress($event)">
+          </sgi-file-upload>
+          <mat-error *ngIf="formGroup.get('fichero').errors?.required">
+            {{'error.required.entity' | translate:msgParamFicheroEntity}}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-documento.visible' | translate}}</mat-label>
+          <sgi-select-boolean formControlName="visible" required></sgi-select-boolean>
+          <mat-error *ngIf="formGroup.get('visible').errors?.required">
+            {{'error.required.entity' | translate:msgParamVisibleEntity}}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.documento.comentarios' | translate}}</mat-label>
+          <sgi-i18n-textarea placeholder="{{'csp.documento.comentarios' | translate}}"
+            formControlName="comentarios"></sgi-i18n-textarea>
+          <mat-error *ngIf="formGroup.get('comentarios').errors?.maxlength"> {{'error.maxlength.entity' |
+            translate:msgParamComentariosEntity}}
+          </mat-error>
+
+        </mat-form-field>
+
+      </div>
+      <div class="separation-button" *ngIf="group.status$ | async as status">
+        <button *ngIf="viewMode === VIEW_MODE.VIEW" mat-button mat-raised-button color="primary" class="rounded"
+          [disabled]="!viewingNode.fichero || actionService.readonly" (click)="downloadFile(viewingNode)">
+          <mat-icon>arrow_downward</mat-icon>
+          {{'btn.download.file' | translate}}
+        </button>
+        <button *ngIf="viewMode === VIEW_MODE.NEW || viewMode === VIEW_MODE.EDIT" color="accent" mat-button
+          mat-raised-button (click)="acceptDetail()"
+          [disabled]="!status.complete || (status.complete && uploading) || actionService.readonly">{{'btn.ok' |
+          translate}}</button>
+        <button *ngIf="viewMode === VIEW_MODE.NEW || viewMode === VIEW_MODE.EDIT" class="link-cancelar" mat-button><span
+            class="underline" (click)="cancelDetail()">{{'btn.cancel' | translate}}</span></button>
+        <button *ngIf="viewMode === VIEW_MODE.VIEW" color="accent" class="rounded" mat-button mat-raised-button
+          (click)="switchToEdit()" [disabled]="docReadonly || actionService.readonly || this.formPart.isVisor">
+          <mat-icon>edit</mat-icon>
+          {{'btn.edit.entity'| translate:msgParamEntity}}
+        </button>
+        <button *ngIf="viewMode === VIEW_MODE.VIEW" color="warn" class="rounded" mat-button mat-raised-button
+          [disabled]="docReadonly || actionService.readonly || this.formPart.isVisor" (click)="deleteDetail()">
+          <mat-icon>close</mat-icon>
+          {{'btn.delete.entity' | translate:msgParamEntity}}
+        </button>
+      </div>
+    </form>
+    <!-- FIN Visualizacion crear/editar/detalle -->
+  </div>
+
+  <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+    <div class="separation-button">
+      <button color="three" *ngIf="!actionService.readonly" aria-label="Center Align" mat-button mat-raised-button
+        (click)="switchToNew()">
+        <mat-icon color="accent">add_circle</mat-icon>
+        {{ 'btn.add.entity' | translate:msgParamEntity }}
+      </button>
+    </div>
+  </ng-container>
+</sgi-fragment>

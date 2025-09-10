@@ -1,0 +1,60 @@
+<header class="navbar header">
+  <div fxLayout.xs="row wrap" fxLayout="row wrap">
+    <!-- Columna menu movil (xs-sm) y logos-->
+    <div class="logos" fxLayoutAlign="start center" fxFlex="initial" fxLayoutGap="5px">
+      <img *ngIf="numLogosCabecera >=1" [src]="getUrlResource('web-header-logo-ministerio')"
+        [srcset]="getUrlSetResource('web-header-logo-ministerio', ['2x', '3x'])" alt=""
+        [class]="'logo-ministerio-'+numLogosCabecera">
+      <img *ngIf="numLogosCabecera >1" [src]="getUrlResource('web-header-logo-feder')"
+        [srcset]="getUrlSetResource('web-header-logo-feder', ['2x', '3x'])" alt="" class="logo-feder">
+      <img *ngIf="numLogosCabecera >2" [src]="getUrlResource('web-header-logo-ue')"
+        [srcset]="getUrlSetResource('web-header-logo-ue', ['2x', '3x'])" alt="" class="logo-ue">
+    </div>
+    <div class="select-modulo" fxLayoutAlign="center center" fxFlex fxHide.xs fxHide.sm>
+      <h2 *ngIf="module !== Module.INV">{{module?.title | translate}}</h2>
+    </div>
+
+    <div fxLayoutAlign="center center" fxFlex="10%" fxHide.xs fxHide.sm>
+      <mat-select [value]="selectedLanguage" (selectionChange)="selectLanguage($event.value)">
+        <mat-select-trigger class="mat-option">
+          <span>{{selectedLanguage.translateKey |
+            translate}} ({{selectedLanguage.codeExtended}})</span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let language of languages" [value]="language">
+          <span>{{language.translateKey |
+            translate}} ({{language.codeExtended}})</span>
+        </mat-option>
+      </mat-select>
+    </div>
+
+    <!-- FIN Columna menu movil (xs-sm) y logos-->
+    <div fxFlex="nogrow">
+      <!-- navbar movil (xs-sm) -->
+      <div fxHide fxShow.xs fxLayoutAlign="flex-end" class="icons-options devices">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu class="mat-menu" #menu="matMenu">
+          <sgi-navbar class="icons-responsive"></sgi-navbar>
+        </mat-menu>
+      </div>
+      <!-- FIN navbar (xs-sm) -->
+
+      <!-- navbar pantallas grandes -->
+      <div fxHide fxShow.sm>
+        <div fxLayoutAlign="flex-end" class="icons-options desktop">
+          <sgi-navbar class="inline"></sgi-navbar>
+        </div>
+      </div>
+      <!-- FIN navbar pantallas grandes -->
+
+      <!-- Menu secundario pantallas grandes (md,lg,xl) -->
+      <div fxHide fxShow.md fxShow.lg fxShow.xl>
+        <div fxLayoutAlign="flex-end" class="icons-options desktop">
+          <sgi-navbar class="inline"></sgi-navbar>
+        </div>
+      </div>
+    </div>
+    <!-- FIN Menu secundario pantallas grandes (md,lg,xl) -->
+  </div>
+</header>

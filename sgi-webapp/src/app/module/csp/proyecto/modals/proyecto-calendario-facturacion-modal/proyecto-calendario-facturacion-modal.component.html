@@ -1,0 +1,175 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div fxFlex="50">
+        <!-- Número prevision -->
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-calendario-facturacion.numero-prevision' | translate}}</mat-label>
+          <input matInput formControlName="numeroPrevision" type="number" required>
+          <mat-error *ngIf="formGroup.controls.numeroPrevision.errors?.required">
+            {{'error.required.entity' | translate:msgParamNumeroPrevisionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" *ngIf="canShowValidacionIP()">
+        <!-- Validacion IP -->
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-calendario-facturacion.validacion-ip' | translate}}</mat-label>
+          <sgi-select-enum formControlName="validacionIP" [enumMap]="TIPO_VALIDACION_IP_MAP" required></sgi-select-enum>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Fecha emisión -->
+    <div fxLayout="row">
+      <div>
+        <mat-form-field>
+          <input matInput formControlName="fechaEmision" [matDatepicker]="pickerFechaEmision"
+            placeholder="{{'csp.proyecto-calendario-facturacion.fecha-emision' | translate}}" required>
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaEmision"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaEmision></mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaEmision.errors?.required">
+            {{'error.required.entity' | translate:msgParamFechaEmisionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Importe base -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.importe-base' | translate}}</mat-label>
+        <input matInput formControlName="importeBase" type="text" required sgiInputWithThousandSeparator>
+        <mat-error *ngIf="formGroup.controls.importeBase.errors?.required">
+          {{'error.required.entity' | translate:msgParamImporteBaseEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- IVA -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.iva' | translate}}</mat-label>
+        <input matInput formControlName="porcentajeIVA" type="number" required>
+        <mat-error *ngIf="formGroup.controls.porcentajeIVA.errors?.required">
+          {{'error.required.entity' | translate:msgParamPorcentajeIVAEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.porcentajeIVA.errors?.pattern">
+          {{'error.number.format.integer.entity' | translate:msgParamPorcentajeIVAEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.porcentajeIVA.errors?.min">
+          {{ 'error.min.entity' | translate:msgParamPorcentajeIVAEntity }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.porcentajeIVA.errors?.max">
+          {{ 'error.max.entity' | translate:msgParamPorcentajeIVAEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Comentario -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.comentario' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="comentario"
+          placeholder="{{'csp.proyecto-calendario-facturacion.comentario' | translate}}">
+        </sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.get('comentario').errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamComentarioEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Tipo facturación -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.tipo-facturacion' | translate}}</mat-label>
+        <sgi-select-entity formControlName="tipoFacturacion" [options]="tiposFacturacion$ | async">
+        </sgi-select-entity>
+      </mat-form-field>
+    </div>
+    <!-- Prorroga -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.prorroga' | translate}}</mat-label>
+        <sgi-select-proyecto-prorroga formControlName="proyectoProrroga" [proyectoId]="data.proyectoId">
+        </sgi-select-proyecto-prorroga>
+      </mat-form-field>
+    </div>
+    <!-- Fecha conformidad -->
+    <div fxLayout="row" *ngIf="canShowFechaConformidad()">
+      <div>
+        <mat-form-field>
+          <input matInput formControlName="fechaConformidad" [matDatepicker]="pickerFechaConformidad"
+            placeholder="{{'csp.proyecto-calendario-facturacion.fecha-conformidad' | translate}}" required>
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaConformidad"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaConformidad></mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaEmision.errors?.required">
+            {{'error.required.entity' | translate:msgParamFechaConformidadEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Nuevo Estado Validacion IP -->
+    <div fxLayout="row" *ngIf="DIALOG_ACTION.VALIDAR_IP === data.action">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.nuevo-estado-validacion-ip' | translate}}</mat-label>
+        <sgi-select-enum formControlName="nuevoEstadoValidacionIP"
+          [enumMap]="TIPO_ESTADO_VALIDACION_ESTADO_NOTIFICADA_MAP" required>
+        </sgi-select-enum>
+        <mat-error *ngIf="formGroup.get('nuevoEstadoValidacionIP').errors?.required">
+          {{'error.required.entity' | translate:msgParamNuevoEstadoValidacionIPEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Mensaje Motivo Rechazo -->
+    <div fxLayout="row" *ngIf="DIALOG_ACTION.VALIDAR_IP === data.action && showMensajeMotivoRechazo$ | async">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.motivo-rechazo' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="mensajeMotivoRechazo"
+          placeholder="{{'csp.proyecto-calendario-facturacion.motivo-rechazo' | translate}}" required>
+        </sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.get('mensajeMotivoRechazo').errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamMotivoRechazoEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('mensajeMotivoRechazo').errors?.required">
+          {{'error.required.entity' | translate:msgParamMotivoRechazoEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <ng-container *ngIf="(this.isCalendarioFacturacionSgeWriteIntegrationEnabled || this.isCalendarioFacturacionSgeIntegrationDisabled) 
+      && (DIALOG_ACTION.VALIDAR_IP === data.action || DIALOG_ACTION.EDIT === data.action) 
+      && showIndentificadorSge$ | async">
+      <!-- Identificador SGE -->
+      <div fxLayout="row">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-calendario-facturacion.identificador-sge' | translate}}</mat-label>
+          <sgi-select formControlName="identificadorSge" [options]=" data.proyectosSge" required
+            [displayWith]="displayerIdentificadorSge" [compareWith]="comparerIdentificadorSge"
+            [sortWith]="sorterIdentificadorSge">
+          </sgi-select>
+          <mat-error *ngIf="formGroup.controls.identificadorSge.errors?.required">
+            {{'error.required.entity' | translate:msgParamIdentificadorSge}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Nº factura emitida -->
+      <div fxLayout="row" *ngIf="this.isCalendarioFacturacionSgeIntegrationDisabled">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-calendario-facturacion.numero-factura-emitida' | translate}}</mat-label>
+          <input matInput formControlName="numeroFacturaEmitida" type="text">
+          <mat-error *ngIf="formGroup.get('numeroFacturaEmitida').errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamNumeroFacturaEmitidaEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate |
+    translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

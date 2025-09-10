@@ -1,0 +1,64 @@
+<sgi-action-dialog [title]="title">
+  <form [formGroup]="formGroup">
+    <!-- Nombre -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.fuente-financiacion.nombre' | translate}}</mat-label>
+        <sgi-i18n-input matInput formControlName="nombre" type="text" id="nombre"
+          placeholder="{{'csp.fuente-financiacion.nombre' | translate}}"></sgi-i18n-input>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+          {{'error.required.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+
+      </mat-form-field>
+    </div>
+    <!-- Descripción -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.fuente-financiacion.descripcion' | translate}}</mat-label>
+        <sgi-i18n-textarea matInput formControlName="descripcion" id="descripcion"
+          placeholder="{{'csp.fuente-financiacion.descripcion' | translate}}"></sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
+        </mat-error>
+
+      </mat-form-field>
+    </div>
+    <!--Ambito geográfico-->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.fuente-financiacion.ambito-geografico' | translate}}</mat-label>
+        <sgi-select-tipo-ambito-geografico formControlName="ambitoGeografico" required>
+        </sgi-select-tipo-ambito-geografico>
+        <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
+          {{'error.required.entity' | translate:msgParamAmbitoEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!--Origen-->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.fuente-financiacion.origen' | translate}}</mat-label>
+        <sgi-select-tipo-origen-fuente-financiacion formControlName="origen" required>
+        </sgi-select-tipo-origen-fuente-financiacion>
+        <mat-error *ngIf="formGroup.controls.origen.errors?.required">
+          {{'error.required.entity' | translate:msgParamOrigenEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Fondo Estructural -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.fuente-financiacion.fondo-estructural' | translate}}</mat-label>
+        <sgi-select-boolean formControlName="fondoEstructural" required>
+        </sgi-select-boolean>
+        <mat-error *ngIf="formGroup.controls.fondoEstructural.errors?.required">
+          {{'error.required.entity' | translate:msgParamFondoEstructuralEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-action-dialog>

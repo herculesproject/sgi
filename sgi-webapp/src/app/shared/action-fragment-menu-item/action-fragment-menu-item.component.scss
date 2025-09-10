@@ -1,0 +1,22 @@
+@import "colors.scss";
+@import "typography.scss";
+
+button.mat-list-item {
+  font-size: map-get($sgi-typography-size, menu-secondary);
+  cursor: pointer;
+  background-color: unset;
+  border-style: unset;
+
+  &.is-active {
+    background-color: map-get($sgi-custom-colors, white);
+    font-weight: bold;
+  }
+
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+  }
+}

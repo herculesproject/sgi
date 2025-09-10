@@ -1,0 +1,33 @@
+<sgi-action-dialog [title]="title">
+  <form [formGroup]="formGroup">
+    <!-- Nombre -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'pii.sector-aplicacion.nombre' | translate}}</mat-label>
+        <sgi-i18n-input formControlName="nombre" placeholder="{{'pii.sector-aplicacion.nombre' | translate}}"
+          required></sgi-i18n-input>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+          {{'error.required.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Descripción -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'pii.sector-aplicacion.descripcion' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="descripcion"
+          placeholder="{{'pii.sector-aplicacion.descripcion' | translate}}" required>
+        </sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.descripcion.errors?.required">
+          {{'error.required.entity' | translate:msgParamDescripcionEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-action-dialog>

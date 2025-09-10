@@ -1,0 +1,100 @@
+<sgi-action-dialog [title]="title">
+  <form [formGroup]="formGroup">
+    <div fxLayout="row">
+
+      <!-- Tipo -->
+      <mat-form-field class="first-row-input">
+        <mat-label>{{'pii.tramo-reparto.tipo' | translate}}</mat-label>
+        <sgi-select-enum formControlName="tipo" [enumMap]="TIPO_TRAMO_REPARTO_MAP" required>
+        </sgi-select-enum>
+        <mat-error *ngIf="formGroup.controls.tipo.errors?.required">
+          {{'error.required.entity' | translate:msgParamTipoEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.tipo.errors?.noDuplicateTipoTramo">
+          {{'pii.tramo-reparto.tipo.error.required.noDuplicateTipoTramo' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <ng-container *ngIf="formGroup.controls?.tipo.value">
+      <div class="fieldset-form">
+        {{'pii.tramo-reparto.tramo' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}
+      </div>
+      <div fxLayout="row">
+
+        <!-- Desde -->
+        <mat-form-field class="first-row-input">
+          <mat-label>{{'pii.tramo-reparto.desde' | translate}}</mat-label>
+          <input matInput formControlName="desde" type="text" id="desde" type="number"
+            placeholder="{{'pii.tramo-reparto.desde' | translate}}" required cdkFocusInitial>
+          <mat-error *ngIf="formGroup.controls.desde.errors?.required">
+            {{'error.required.entity' | translate:msgParamDesdeEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.desde.errors?.min">
+            {{'error.min.entity' | translate:msgParamDesdeEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.desde.errors?.pattern">
+            {{'error.integer.entity' | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Hasta -->
+        <mat-form-field>
+          <mat-label>{{'pii.tramo-reparto.hasta' | translate}}</mat-label>
+          <input matInput formControlName="hasta" id="hasta" type="number"
+            placeholder="{{'pii.tramo-reparto.hasta' | translate}}" required>
+          <mat-error *ngIf="formGroup.controls.hasta.errors?.required">
+            {{'error.required.entity' | translate:msgParamHastaEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.hasta.errors?.pattern">
+            {{'error.integer.entity' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.hasta.errors?.after">
+            {{'error.after.param' | translate:msgParamDesdeEntity}}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </ng-container>
+
+    <div fxLayout="row">
+
+      <!-- % Universidad -->
+      <mat-form-field class="first-row-input">
+        <mat-label>{{'pii.tramo-reparto.porcentaje-universidad' | translate}}</mat-label>
+        <input matInput formControlName="porcentajeUniversidad" id="porcentajeUniversidad" type="number"
+          placeholder="{{'pii.tramo-reparto.porcentaje-universidad' | translate}}" required>
+        <mat-error *ngIf="formGroup.controls.porcentajeUniversidad.errors?.required">
+          {{'error.required.entity' | translate:msgParamPorcentajeUniversidadEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.porcentajeUniversidad.errors?.max">
+          {{'error.max.entity' | translate:msgParamPorcentajeUniversidadEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.porcentajeUniversidad.errors?.min">
+          {{'error.min.entity' | translate:msgParamPorcentajeUniversidadEntity}}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- % Inventores -->
+      <mat-form-field>
+        <mat-label>{{'pii.tramo-reparto.porcentaje-inventores' | translate}}</mat-label>
+        <input matInput formControlName="porcentajeInventores" id="porcentajeInventores" type="number"
+          placeholder="{{'pii.tramo-reparto.porcentaje-inventores' | translate}}" required>
+        <mat-error *ngIf="formGroup.controls.porcentajeInventores.errors?.required">
+          {{'error.required.entity' | translate:msgParamPorcentajeInventoresEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.porcentajeInventores.errors?.max">
+          {{'error.max.entity' | translate:msgParamPorcentajeInventoresEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.porcentajeInventores.errors?.min">
+          {{'error.min.entity' | translate:msgParamPorcentajeInventoresEntity}}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+    <div fxLayout="row">
+      <mat-error *ngIf="formGroup?.errors?.fieldsSumNotEqualsToValue">
+        {{'error.sum.fields' | translate: formGroup.errors.fieldsSumNotEqualsToValue }}
+      </mat-error>
+    </div>
+  </form>
+</sgi-action-dialog>

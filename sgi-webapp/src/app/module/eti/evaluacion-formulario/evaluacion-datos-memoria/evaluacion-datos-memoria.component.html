@@ -1,0 +1,48 @@
+<sgi-fragment title="{{'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}">
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+        <sgi-select-comite placeholder="{{'label.eti.comite' | translate}}"
+          formControlName="comite"></sgi-select-comite>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field color="primary">
+        <mat-label>{{'eti.evaluacion.fecha-evaluacion'| translate}}</mat-label>
+        <input matInput [matDatepicker]="fechaEvaluacion" formControlName="fechaEvaluacion">
+        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="fechaEvaluacion"></mat-datepicker-toggle>
+        <mat-datepicker #fechaEvaluacion></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.memoria.referencia' | translate}}</mat-label>
+        <input matInput formControlName="referenciaMemoria" placeholder="{{'eti.memoria.referencia' | translate}}">
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.solicitante' | translate}}</mat-label>
+        <sgi-select-persona placeholder="{{'eti.solicitante' | translate}}"
+          formControlName="solicitante"></sgi-select-persona>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.evaluacion-evaluador.memoria.version' | translate}}</mat-label>
+        <input matInput formControlName="version"
+          placeholder="{{'eti.evaluacion-evaluador.memoria.version' | translate}}">
+      </mat-form-field>
+    </div>
+  </form>
+  <sgi-evaluacion-listado-anterior-memoria #evaluaciones [rol]="this.actionService.getRol()"
+    (errors)="formPart.handleErrors($event)">
+  </sgi-evaluacion-listado-anterior-memoria>
+</sgi-fragment>
