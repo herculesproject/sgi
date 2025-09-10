@@ -1,0 +1,100 @@
+package org.crue.hercules.sgi.rep.service.eti;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
+import org.crue.hercules.sgi.rep.dto.eti.AsistentesDto;
+import org.crue.hercules.sgi.rep.dto.eti.EvaluadorDto;
+import org.crue.hercules.sgi.rep.dto.eti.MemoriaEvaluadaDto;
+import org.crue.hercules.sgi.rep.service.InformeActaReportService;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
+import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
+
+/**
+ * InformeActaReportServiceTest
+ */
+class InformeActaReportServiceTest extends BaseReportEtiServiceTest {
+
+  private InformeActaReportService informeActaReportService;
+
+  @Autowired
+  private SgiConfigProperties sgiConfigProperties;
+
+  @Mock
+  private SgiApiConfService sgiApiConfService;
+
+  @Mock
+  private PersonaService personaService;
+
+  @Mock
+  private ConvocatoriaReunionService convocatoriaReunionService;
+
+  @Mock
+  private ActaService actaService;
+
+  @Mock
+  private EvaluacionService evaluacionService;
+
+  @Mock
+  private BaseApartadosRespuestasReportService baseApartadosRespuestasReportService;
+
+  @BeforeEach
+  public void setUp() throws Exception {
+    informeActaReportService = new InformeActaReportService(
+        personaService, sgiApiConfService,
+        convocatoriaReunionService, actaService, evaluacionService,
+        baseApartadosRespuestasReportService);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-INV-EVALR" })
+  void getInformeActa_ReturnsResource() throws Exception {
+    Long idActa = 1L;
+
+    BDDMockito.given(actaService.findById(idActa)).willReturn((generarMockActa(idActa, 2)));
+    BDDMockito.given(actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(idActa))
+        .willReturn((generarMockMemoriasEvaluadas(idActa)));
+
+    BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
+        .willReturn(getResource("eti/docx/rep-eti-acta.docx"));
+
+    BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
+    BDDMockito.given(convocatoriaReunionService
+        .findAsistentesByConvocatoriaReunionId(1L)).willReturn((generarMockAsistentes("123456F")));
+
+    byte[] reportContent = informeActaReportService.getReport(idActa);
+    assertNotNull(reportContent);
+
+  }
+
+  private List<AsistentesDto> generarMockAsistentes(String string) {
+    List<AsistentesDto> memorias = new ArrayList<>();
+    memorias.add(AsistentesDto.builder()
+        .evaluador(EvaluadorDto.builder().personaRef(null).build())
+        .build());
+    return memorias;
+  }
+
+  private List<MemoriaEvaluadaDto> generarMockMemoriasEvaluadas(Long idActa) {
+    List<MemoriaEvaluadaDto> memorias = new ArrayList<>();
+    memorias.add(MemoriaEvaluadaDto.builder()
+        .numReferencia("numReferencia")
+        .personaRef(null)
+        .dictamenId(1L)
+        .version(1)
+        .tipoEvaluacionId(1L)
+        .build());
+    return memorias;
+  }
+
+}
