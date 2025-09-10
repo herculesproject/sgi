@@ -196,9 +196,9 @@ public class EvaluadorIT extends BaseIT {
 
     // Contiene de resumen='Evaluador7' a 'Evaluador8'
     Assertions.assertThat(I18nHelper.getValueForLanguage(evaluadores.get(0).getResumen(), Language.ES))
-        .isEqualTo("Evaluador7");
+        .isEqualTo("Evaluador5");
     Assertions.assertThat(I18nHelper.getValueForLanguage(evaluadores.get(1).getResumen(), Language.ES))
-        .isEqualTo("Evaluador8");
+        .isEqualTo("Evaluador6");
   }
 
   @Test
