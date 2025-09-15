@@ -24,6 +24,7 @@ import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operato
 import { EJECUCION_ECONOMICA_ROUTE_NAMES } from '../ejecucion-economica-route-names';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 import { IRequerimientoJustificacionListadoModalData, RequerimientoJustificacionListadoExportModalComponent } from '../modals/requerimiento-justificacion-listado-export-modal/requerimiento-justificacion-listado-export-modal.component';
+
 @Component({
   selector: 'sgi-ejecucion-economica-listado',
   templateUrl: './ejecucion-economica-listado.component.html',
@@ -32,7 +33,6 @@ import { IRequerimientoJustificacionListadoModalData, RequerimientoJustificacion
 export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationComponent<IRelacionEjecucionEconomicaWithResponsables>
   implements OnInit, OnDestroy {
   ROUTE_NAMES = ROUTE_NAMES;
-  SGE_INTEGRACIONES_ECC_MENUS = SgeIntegracionesEccMenus;
 
   dataSource$: Observable<IRelacionEjecucionEconomicaWithResponsables[]>;
 
@@ -61,6 +61,11 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
 
   get EJECUCION_ECONOMICA_ROUTE_NAMES() {
     return EJECUCION_ECONOMICA_ROUTE_NAMES;
+  }
+
+  get shouldShowPaginatorWithExport(): boolean {
+    return this.tipoEntidadSelected === TipoEntidad.PROYECTO &&
+      this.integracionesEccSgeEnabled?.includes(SgeIntegracionesEccMenus.ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS);
   }
 
   constructor(
@@ -365,7 +370,4 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
 
   protected setupI18N(): void { }
 
-  isOpcionHabilitadaIntegracionesEcc(opcion: SgeIntegracionesEccMenus): boolean {
-    return this.integracionesEccSgeEnabled?.includes(opcion) ?? false;;
-  }
 }
