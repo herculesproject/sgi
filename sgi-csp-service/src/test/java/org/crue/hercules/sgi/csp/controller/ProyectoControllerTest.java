@@ -80,6 +80,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
@@ -203,6 +204,9 @@ class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private RequerimientoJustificacionConverter requerimientoJustificacionConverter;
+
+  @MockBean
+  private SolicitudService solicitudService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

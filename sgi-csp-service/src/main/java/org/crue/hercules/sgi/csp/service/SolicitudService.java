@@ -72,6 +72,7 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
@@ -142,6 +143,7 @@ public class SolicitudService {
   private final SolicitudTituloConverter solicitudTituloConverter;
   private final SolicitudProyectoObjetivosConverter solicitudProyectoObjetivosConverter;
   private final SolicitudProyectoResultadosPrevistosConverter solicitudProyectoResultadosPrevistosConverter;
+  private final ProyectoHelper proyectoHelper;
 
   /**
    * Guarda la entidad {@link Solicitud}.
@@ -1307,6 +1309,25 @@ public class SolicitudService {
 
     log.debug("findIdsSolicitudesModificadas(String query) - end");
 
+    return returnValue;
+  }
+
+  /**
+   * Devuelve la {@link Solicitud} asociada al {@link Proyecto} con el id
+   * indicado si el usuario está logado con perfil investigador.
+   * 
+   * @param proyectoId Identificador de {@link Solicitud}.
+   * @return {@link Solicitud}
+   */
+  public Solicitud findSolicitudByProyectoIdAndUserIsInvestigador(Long proyectoId) {
+    log.debug("findBySolicitudIdAndUserIsInvestigador(proyectoId = {}) - start", proyectoId);
+
+    proyectoHelper.checkCanAccessProyecto(proyectoId);
+
+    final Solicitud returnValue = repository.findOne(SolicitudSpecifications.byProyectoId(proyectoId))
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(proyectoId));
+
+    log.debug("findBySolicitudIdAndUserIsInvestigador(proyectoId = {}) - end", proyectoId);
     return returnValue;
   }
 

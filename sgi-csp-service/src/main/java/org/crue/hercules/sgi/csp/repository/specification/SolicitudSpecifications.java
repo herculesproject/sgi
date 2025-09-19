@@ -8,6 +8,8 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.Grupo_;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.SolicitanteExterno;
 import org.crue.hercules.sgi.csp.model.SolicitanteExterno_;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -111,6 +113,23 @@ public class SolicitudSpecifications {
       queryTutor.select(queryTutorRoot.get(SolicitudRrhh_.solicitud).get(Solicitud_.id))
           .where(cb.equal(queryTutorRoot.get(SolicitudRrhh_.tutorRef), personaRef));
       return root.get(Solicitud_.id).in(queryTutor);
+    };
+  }
+
+  /**
+   * {@link Solicitud} del {@link Proyecto} con el id indicado.
+   * 
+   * @param proyectoId identificador del {@link Proyecto}.
+   * @return specification para obtener la {@link Solicitud} del {@link Proyecto}
+   *         con el id indicado.
+   */
+  public static Specification<Solicitud> byProyectoId(Long proyectoId) {
+    return (root, query, cb) -> {
+      Subquery<Long> queryProyecto = query.subquery(Long.class);
+      Root<Proyecto> queryProyectoRoot = queryProyecto.from(Proyecto.class);
+      queryProyecto.select(queryProyectoRoot.get(Proyecto_.solicitud).get(Solicitud_.id))
+          .where(cb.equal(queryProyectoRoot.get(Proyecto_.id), proyectoId));
+      return root.get(Solicitud_.id).in(queryProyecto);
     };
   }
 

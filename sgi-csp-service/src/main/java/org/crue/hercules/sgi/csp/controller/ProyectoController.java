@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersonas;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
+import org.crue.hercules.sgi.csp.dto.SolicitudOnlyTituloOutput;
 import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
@@ -91,6 +92,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -154,6 +156,8 @@ public class ProyectoController {
   public static final String PATH_REQUERIMIENTOS_JUSTIFICACION = PATH_ID + PATH_SEPARATOR
       + "requerimientos-justificacion";
   public static final String PATH_SOLICITUD = PATH_ID + PATH_SEPARATOR + "solicitud";
+  public static final String PATH_SOLICITUD_INV = PATH_ID + PATH_SEPARATOR + "solicitud-inv";
+  public static final String PATH_CONVOCATORIA = PATH_ID + PATH_SEPARATOR + "convocatoria";
 
   private final ModelMapper modelMapper;
 
@@ -189,6 +193,7 @@ public class ProyectoController {
   private final ProyectoSocioPeriodoJustificacionDocumentoService proyectoSocioPeriodoJustificacionDocumentoService;
   private final ProyectoSocioService proyectoSocioService;
   private final RequerimientoJustificacionService requerimientoJustificacionService;
+  private final SolicitudService solicitudService;
 
   private final ProyectoFaseConverter proyectoFaseConverter;
   private final RequerimientoJustificacionConverter requerimientoJustificacionConverter;
@@ -1408,7 +1413,7 @@ public class ProyectoController {
    * @param id Identificador de {@link Proyecto}.
    * @return {@link Convocatoria}
    */
-  @GetMapping("/{id}/convocatoria")
+  @GetMapping(PATH_CONVOCATORIA)
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-INV-VR')")
   public ResponseEntity<ConvocatoriaOnlyTituloOutput> findConvocatoriaByProyectoIdAndUserIsInvestigador(
       @PathVariable Long id) {
@@ -1423,6 +1428,32 @@ public class ProyectoController {
     }
 
     log.debug("findConvocatoriaByProyectoIdAndUserIsInvestigador(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve la {@link SolicitudOnlyTituloOutput} asociada al {@link Proyecto}
+   * con el id
+   * indicado si el usuario tiene permisos de investigador.
+   * 
+   * @param id Identificador de {@link Proyecto}.
+   * @return {@link SolicitudOnlyTituloOutput}
+   */
+  @GetMapping(PATH_SOLICITUD_INV)
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-INV-VR')")
+  public ResponseEntity<SolicitudOnlyTituloOutput> findSolicitudByProyectoIdAndUserIsInvestigador(
+      @PathVariable Long id) {
+    log.debug("findSolicitudByProyectoIdAndUserIsInvestigador(Long id) - start");
+
+    SolicitudOnlyTituloOutput returnValue = convert(
+        solicitudService.findSolicitudByProyectoIdAndUserIsInvestigador(id));
+
+    if (returnValue == null) {
+      log.debug("findSolicitudByProyectoIdAndUserIsInvestigador(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findSolicitudByProyectoIdAndUserIsInvestigador(Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
@@ -1658,6 +1689,10 @@ public class ProyectoController {
 
   private ConvocatoriaOnlyTituloOutput convert(Convocatoria convocatoria) {
     return modelMapper.map(convocatoria, ConvocatoriaOnlyTituloOutput.class);
+  }
+
+  private SolicitudOnlyTituloOutput convert(Solicitud solicitud) {
+    return modelMapper.map(solicitud, SolicitudOnlyTituloOutput.class);
   }
 
   private List<ProyectoEquipoDto> convertProyectoEquipoToProyectoEquipoDto(List<ProyectoEquipo> list) {

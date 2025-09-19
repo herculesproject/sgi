@@ -69,6 +69,7 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -176,6 +177,9 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudProyectoResultadosPrevistosConverter solicitudProyectoResultadosPrevistosConverter;
 
+  @Mock
+  private ProyectoHelper proyectoHelper;
+
   private SolicitudService service;
 
   @BeforeEach
@@ -206,7 +210,8 @@ class SolicitudServiceTest extends BaseServiceTest {
         solicitudProyectoEntidadRepository,
         solicitudTituloConverter,
         solicitudProyectoObjetivosConverter,
-        solicitudProyectoResultadosPrevistosConverter);
+        solicitudProyectoResultadosPrevistosConverter,
+        proyectoHelper);
   }
 
   @Test
