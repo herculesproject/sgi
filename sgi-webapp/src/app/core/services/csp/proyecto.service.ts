@@ -50,6 +50,7 @@ import { IProyectoResponsableEconomico } from '@core/models/csp/proyecto-respons
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectosCompetitivosPersonas } from '@core/models/csp/proyectos-competitivos-personas';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
+import { ISolicitud } from '@core/models/csp/solicitud';
 import { ESTADO_PROYECTO_REQUEST_CONVERTER } from '@core/services/csp/estado-proyecto/estado-proyecto-request.converter';
 import { IEstadoProyectoResponse } from '@core/services/csp/estado-proyecto/estado-proyecto-response';
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/estado-proyecto/estado-proyecto-response.converter';
@@ -122,6 +123,8 @@ import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos
 import { PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response.converter';
 import { IRequerimientoJustificacionResponse } from './requerimiento-justificacion/requerimiento-justificacion-response';
 import { REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from './requerimiento-justificacion/requerimiento-justificacion-response.converter';
+import { ISolicitudOnlyTituloResponse } from './solicitud/solicitud-only-titulo-response';
+import { SOLICITUD_ONLY_TITULO_RESPONSE_CONVERTER } from './solicitud/solicitud-only-titulo-response.converter';
 
 const _ProyectoServiceMixinBase:
   CreateCtor<IProyecto, IProyecto, IProyectoResponse, IProyectoResponse> &
@@ -871,6 +874,19 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
       `${this.endpointUrl}/${id}/convocatoria`
     ).pipe(
       map(response => CONVOCATORIA_ONLY_TITULO_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
+   * Devuelve los datos de la solicitud asociada a un proyecto
+   * para usuarios con perfil investigador
+   * @param id Id del proyecto
+   */
+  findSolicitud(id: number): Observable<ISolicitud> {
+    return this.http.get<ISolicitudOnlyTituloResponse>(
+      `${this.endpointUrl}/${id}/solicitud-inv`
+    ).pipe(
+      map(response => SOLICITUD_ONLY_TITULO_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

@@ -75,7 +75,7 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
             })
           );
       }),
-      switchMap(data => this.fillDatosSolicitud(data)),
+      switchMap(data => !data.isInvestigador ? this.fillDatosSolicitud(data) : of(data)),
       switchMap(data => this.hasAnyProyectoSocioWithRolCoordinador(data)),
       switchMap(data => this.isReadonly(data))
     );

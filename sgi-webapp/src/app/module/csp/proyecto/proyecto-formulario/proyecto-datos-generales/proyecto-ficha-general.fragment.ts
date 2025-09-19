@@ -160,7 +160,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.proyecto = proyecto;
         this.proyectoWithoutChanges = { ...proyecto };
         if (this.proyecto.solicitudId) {
-          this.subscriptions.push(this.solicitudService.findById(this.proyecto.solicitudId).subscribe(solicitud => {
+          this.subscriptions.push(this.getSolicitud(this.proyecto).subscribe(solicitud => {
             this.solicitud = solicitud;
             this.getFormGroup().controls.solicitudProyecto.setValue(this.languageService.getFieldValue(solicitud.titulo));
           }));
@@ -952,6 +952,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     }
 
     return this.isInvestigador ? this.service.findConvocatoria(proyecto.id) : this.convocatoriaService.findById(proyecto.convocatoriaId);
+  }
+
+  private getSolicitud(proyecto: IProyecto): Observable<ISolicitud> {
+    if (!proyecto.solicitudId) {
+      return of(null);
+    }
+
+    return this.isInvestigador ? this.service.findSolicitud(proyecto.id) : this.solicitudService.findById(proyecto.solicitudId);
   }
 
   private getSocilictudProyecto(proyecto: IProyecto): Observable<ISolicitudProyecto> {
