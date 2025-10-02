@@ -49,7 +49,6 @@ public class DatosContactoDto implements Serializable {
 
     private String id;
     private String nombre;
-    private Long paisId;
   }
 
   @Data
@@ -62,6 +61,5 @@ public class DatosContactoDto implements Serializable {
 
     private String id;
     private String nombre;
-    private Long comunidadAutonomaId;
   }
 }
