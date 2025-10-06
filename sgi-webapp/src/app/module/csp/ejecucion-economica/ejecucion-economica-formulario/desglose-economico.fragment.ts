@@ -241,6 +241,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
         const proyectosConAnualidades = new Set<string>(
           proyectoAnualidadesPresupuesto
             .filter(anualidad => anualidad.proyecto?.id)
+            .filter(anualidad => anualidad.anio)
             .map(anualidad => anualidad.proyecto.id.toString())
         );
 
@@ -271,7 +272,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
             ];
 
             return {
-              anualidades: [... new Set(proyectoAnualidades.map(anualidad => anualidad.anio.toString()).sort())],
+              anualidades: [... new Set(proyectoAnualidades.filter(anualidad => anualidad.anio).map(anualidad => anualidad.anio.toString()).sort())],
               hasAnualidadesFechas: !!proyectoAnualidadesFechas?.length,
               hasAnualidadesPresupuesto: !!proyectoAnualidadesPresupuesto?.length
             };
