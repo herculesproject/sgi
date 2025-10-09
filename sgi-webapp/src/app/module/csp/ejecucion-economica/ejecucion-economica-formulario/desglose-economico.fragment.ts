@@ -130,12 +130,11 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
   }
 
   /**
-   * Si el proyecto no tiene anualidades en el presupuesto pero si tiene anualiades obtenidas de las fechas del proyecto
-   * se oculta el filtro de anualidades
+   * Si el proyecto no tiene anualidades en el presupuesto pero si tiene anualidades obtenidas de las fechas del proyecto
    * 
    * @returns true si no tiene anualidades en el presupuesto y tiene anualidades obtenidas de las fechas del proyecto
    */
-  get hideFilterAnualidades(): boolean {
+  get isAnualidadesFechasProyecto(): boolean {
     return !this.hasAnualidadesPresupuesto && this.hasAnualidadesFechas;
   }
 
@@ -164,7 +163,8 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
         this.hasAnualidadesPresupuesto = desgloseEconomicoAnualidades.hasAnualidadesPresupuesto;
         this.hasAnualidadesFechas = desgloseEconomicoAnualidades.hasAnualidadesFechas;
         if (this.isAnualidadesRequired) {
-          this.aniosControl.setValue(desgloseEconomicoAnualidades.anualidades);
+          const currentYear = new Date().getFullYear();
+          this.aniosControl.setValue(this.isAnualidadesFechasProyecto ? desgloseEconomicoAnualidades.anualidades?.filter(anio => Number(anio) <= currentYear) : desgloseEconomicoAnualidades.anualidades);
         }
       })
     );
@@ -251,7 +251,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
           return of({
             anualidades: [... new Set(proyectoAnualidadesPresupuesto.map(anualidad => anualidad.anio.toString()))],
             hasAnualidadesFechas: false,
-            hasAnualidadesPresupuesto: !!proyectoAnualidadesPresupuesto?.length
+            hasAnualidadesPresupuesto: !!proyectoAnualidadesPresupuesto?.filter(anualidad => anualidad.anio)?.length
           });
         }
 
@@ -274,7 +274,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
             return {
               anualidades: [... new Set(proyectoAnualidades.filter(anualidad => anualidad.anio).map(anualidad => anualidad.anio.toString()).sort())],
               hasAnualidadesFechas: !!proyectoAnualidadesFechas?.length,
-              hasAnualidadesPresupuesto: !!proyectoAnualidadesPresupuesto?.length
+              hasAnualidadesPresupuesto: !!proyectoAnualidadesPresupuesto?.filter(anualidad => anualidad.anio)?.length
             };
           })
         );

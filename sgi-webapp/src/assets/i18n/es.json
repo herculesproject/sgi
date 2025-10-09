@@ -2528,6 +2528,7 @@
   "info.csp.convocatoria-elegibilidad.codigo-economico": "Para añadir códigos económicos es necesario rellenar el concepto de gasto de la convocatoria.",
   "info.csp.convocatoria-enlace": "Para añadir enlaces es necesario rellenar el modelo de ejecución de la convocatoria.",
   "info.csp.datos-convocatoria": "Datos de la convocatoria",
+  "info.csp.ejecucion-economica.anualidades": "En el apartado presupuesto de los datos del proyecto no se ha aportado el desglose por anualidades. Las anualidades listadas se corresponden con los años naturales delimitados por las fechas de inicio y fin indicadas en los datos del proyecto.",
   "info.csp.fase": "Para añadir fases es necesario rellenar el modelo de ejecución de la convocatoria.",
   "info.csp.hito": "Para añadir hitos es necesario rellenar el modelo de ejecución de la convocatoria.",
   "info.csp.modelo-ejecucion-proyecto.tooltip": "No se puede modificar esta configuración del modelo de ejecución debido a que ya tiene proyectos/contratos vinculados.",

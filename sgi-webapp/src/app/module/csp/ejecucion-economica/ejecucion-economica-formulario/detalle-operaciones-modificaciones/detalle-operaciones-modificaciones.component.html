@@ -6,7 +6,10 @@
     </sgi-ejecucion-economica-table-proyectos-relacionados>
 
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" class="separation-button">
-      <mat-form-field *ngIf="!formPart.hideFilterAnualidades">
+      <mat-form-field>
+        <sgi-field-info matSuffix [visible]="formPart.isAnualidadesFechasProyecto" color="warn" icon="error"
+          message="{{'info.csp.ejecucion-economica.anualidades' | translate}}">
+        </sgi-field-info>
         <mat-label>{{'csp.proyecto-presupuesto.anualidad' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}</mat-label>
         <mat-select #anualSel [formControl]="formPart.aniosControl" multiple
           [required]="formPart.isAnualidadesRequired">
