@@ -6,7 +6,7 @@ import { SgiRoutes } from '@core/route';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { TipoRegimenConcurrenciaListadoComponent } from './tipo-regimen-concurrencia-listado/tipo-regimen-concurrencia-listado.component';
 
-const TIPO_REGIMEN_CONCURRENCIA_KEY = marker('csp.tipo-regimen-concurrencia');
+const TIPO_REGIMEN_CONCURRENCIA_KEY = marker('menu.csp.tipo-regimen-concurrencia');
 
 const routes: SgiRoutes = [
   {
