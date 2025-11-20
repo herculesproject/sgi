@@ -44,6 +44,7 @@
     <fr-opensagres-xdocreport.version>2.1.0</fr-opensagres-xdocreport.version>
     <org-commons-csv.version>1.11.0</org-commons-csv.version>
     <commons-io.version>2.16.1</commons-io.version>
+    <sgi-opensagres-xdocreport.version>2.1.0-sgi</sgi-opensagres-xdocreport.version>
   </properties>
   <profiles>
     <profile>
@@ -117,6 +118,16 @@
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.poi.xwpf.converter.pdf</artifactId>
+      <version>${sgi-opensagres-xdocreport.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>fr.opensagres.xdocreport</groupId>
+      <artifactId>fr.opensagres.poi.xwpf.converter.core</artifactId>
+      <version>${fr-opensagres-xdocreport.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>fr.opensagres.xdocreport</groupId>
+      <artifactId>fr.opensagres.xdocreport.core</artifactId>
       <version>${fr-opensagres-xdocreport.version}</version>
     </dependency>
     <!--

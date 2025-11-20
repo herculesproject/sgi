@@ -7,12 +7,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -20,6 +23,7 @@ import org.crue.hercules.sgi.rep.report.data.ReportData;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.util.CustomSpELRenderDataCompute;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -155,6 +159,8 @@ public abstract class SgiDocxReportService {
   protected byte[] buildPDF(ReportData data) throws IOException {
     XWPFDocument docx = build(data);
 
+    applyStyleLineSpacing(docx);
+
     ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
     PdfOptions pdfOptions = createCustomPdfOptions();
 
@@ -181,6 +187,58 @@ public abstract class SgiDocxReportService {
       }
     }
     return pdfOptions;
+  }
+
+  /**
+   * Aplica al párrafo el interlineado definido en su estilo de Word.
+   *
+   * <p>
+   * Para cada párrafo del documento, busca su estilo (o el estilo base mediante
+   * {@code basedOn}), obtiene el valor de interlineado definido en <w:spacing>
+   * del estilo y lo convierte al formato utilizado por Apache POI, aplicándolo
+   * mediante {@link XWPFParagraph#setSpacingBetween(double)}.
+   * </p>
+   *
+   * @param document Documento DOCX al que se aplicará el interlineado.
+   */
+
+  private void applyStyleLineSpacing(XWPFDocument document) {
+    if (document == null)
+      return;
+
+    for (XWPFParagraph paragraph : document.getParagraphs()) {
+      String styleId = paragraph.getStyle();
+      if (styleId != null) {
+        XWPFStyle style = document.getStyles().getStyle(styleId);
+        if (style != null) {
+          String basedOnId = style.getCTStyle().getBasedOn() != null
+              ? style.getCTStyle().getBasedOn().getVal()
+              : null;
+          if (basedOnId != null) {
+            style = document.getStyles().getStyle(basedOnId);
+          }
+        }
+
+        if (style != null) {
+          CTPPrGeneral pPr = style.getCTStyle().getPPr();
+          if (pPr != null && pPr.isSetSpacing() && pPr.getSpacing() != null && pPr.getSpacing().isSetLine()) {
+            Object lineObj = pPr.getSpacing().getLine();
+            double lineSpacing = 1.0;
+
+            if (lineObj instanceof BigInteger lineBi) {
+              lineSpacing = lineBi.doubleValue() / 240.0;
+            } else {
+              try {
+                lineSpacing = new BigInteger(lineObj.toString()).doubleValue() / 240.0;
+              } catch (NumberFormatException e) {
+                log.error("applyStyleLineSpacing() - Error: ", e);
+              }
+            }
+            paragraph.setSpacingBetween(lineSpacing);
+          }
+        }
+      }
+    }
   }
 
 }
