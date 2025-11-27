@@ -82,6 +82,21 @@
       </whereParams>
     </update>
 
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-csp-certificado-autorizacion-proyecto-externo-docx-es" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/es/rep-csp-certificado-autorizacion-proyecto-externo.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/es/rep-csp-certificado-autorizacion-proyecto-externo.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-csp-certificado-autorizacion-proyecto-externo-docx-es" />
+      </whereParams>
+    </update>
+
   </changeSet>
 
 </databaseChangeLog>
