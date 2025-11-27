@@ -25,6 +25,20 @@
         <param name="name" value="rep-eti-ficha-evaluador-docx-es" />
       </whereParams>
     </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-retrospectiva-docx-es" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/es/rep-eti-evaluacion-retrospectiva.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/es/rep-eti-evaluacion-retrospectiva.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-retrospectiva-docx-es" />
+      </whereParams>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
