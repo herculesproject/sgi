@@ -99,6 +99,20 @@
       </whereParams>
     </update>
 
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-eti-evaluacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-docx-en" />
+      </whereParams>
+    </update>
+
   </changeSet>
 
 </databaseChangeLog>
