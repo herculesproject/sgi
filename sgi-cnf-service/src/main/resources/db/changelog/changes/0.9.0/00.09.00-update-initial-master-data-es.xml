@@ -68,6 +68,19 @@
       </whereParams>
     </update>
 
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx-es" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/es/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/es/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx-es" />
+      </whereParams>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
