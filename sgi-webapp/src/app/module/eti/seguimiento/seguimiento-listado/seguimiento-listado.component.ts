@@ -129,19 +129,23 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
         map((evaluaciones: IEvaluacion[]) =>
           this.sortByIsEvaluador1orEvaluador2(evaluaciones)
         ),
-        tap((sortedEvaluaciones: IEvaluacion[]) => {
-          this.evaluaciones = sortedEvaluaciones as IEvaluacionWithComentariosEnviados[];
-        }),
         switchMap((evaluacionesSorted: IEvaluacionWithComentariosEnviados[]) =>
-          forkJoin([
-            this.loadSolicitantes(evaluacionesSorted),
-            this.loadEvaluacionWithComentariosEnviados(evaluacionesSorted),
-            this.loadExistsEvaluacionWithComentarioAbiertos(evaluacionesSorted)
-          ])
-        )
+          forkJoin({
+            solicitantes: this.loadSolicitantes(evaluacionesSorted),
+            comentariosEnviados: this.loadEvaluacionWithComentariosEnviados(evaluacionesSorted),
+            comentariosAbiertos: this.loadExistsEvaluacionWithComentarioAbiertos(evaluacionesSorted)
+          }).pipe(
+            map(() => ({
+              evaluaciones: evaluacionesSorted
+            }))
+          )
+        ),
+        tap(result => {
+          this.evaluaciones = result.evaluaciones;
+        })
       ).subscribe({
         next: () => { },
-        error: (error: any) => this.processError(error)
+        error: (error) => this.processError(error)
       })
     );
   }
