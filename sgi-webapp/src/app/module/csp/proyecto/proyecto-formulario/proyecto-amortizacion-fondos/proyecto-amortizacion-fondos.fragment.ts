@@ -83,26 +83,27 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
               }),
               mergeMap(periodosAmortizacion =>
                 from(periodosAmortizacion).pipe(
-                  mergeMap(periodoAmortizacion => {
-                    return this.proyectoEntidadFinanciadoraService.findById(periodoAmortizacion.value.proyectoEntidadFinanciadora.id).pipe(
-                      map((proyectoEntidadFinanciadora) => {
-                        periodoAmortizacion.value.proyectoEntidadFinanciadora = proyectoEntidadFinanciadora;
-                        return periodoAmortizacion;
-                      }),
-                      switchMap(() =>
-                        this.empresaService.findById(periodoAmortizacion.value.proyectoEntidadFinanciadora.empresa.id).pipe(
-                          map((empresa) => {
-                            periodoAmortizacion.value.proyectoEntidadFinanciadora.empresa = empresa;
-                            return periodoAmortizacion;
-                          }),
-                          catchError((error) => {
-                            this.logger.error(error);
-                            return of(periodoAmortizacion);
-                          })
-                        )
+                  mergeMap(periodoAmortizacion =>
+                    this.proyectoEntidadFinanciadoraService
+                      .findById(periodoAmortizacion.value.proyectoEntidadFinanciadora.id)
+                      .pipe(
+                        mergeMap((proyectoEntidadFinanciadora) => {
+                          const empresaId = proyectoEntidadFinanciadora.empresa.id;
+                          return this.empresaService.findById(empresaId).pipe(
+                            map((empresa) => {
+                              proyectoEntidadFinanciadora.empresa = empresa;
+                              periodoAmortizacion.value.proyectoEntidadFinanciadora = proyectoEntidadFinanciadora;
+                              return periodoAmortizacion;
+                            }),
+                            catchError((error) => {
+                              this.logger.error(error);
+                              periodoAmortizacion.value.proyectoEntidadFinanciadora = proyectoEntidadFinanciadora;
+                              return of(periodoAmortizacion);
+                            })
+                          );
+                        })
                       )
-                    );
-                  }),
+                  ),
                   mergeMap(periodoAmortizacion => {
                     return this.proyectoAnualidadService.findById(periodoAmortizacion.value.proyectoAnualidad.id).pipe(
                       map((proyectoAnualidad) => {
