@@ -16,6 +16,8 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.pom-version.outputs.VERSION }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -58,10 +60,25 @@ jobs:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+    - name: Get POM version
+      id: pom-version
+      run: |
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+
     - name: Deploy to Central
       run: mvn -B deploy -P deployToCentral -DskipTests
       env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-  
+
+  call_update_sgi_deploy:
+    name: Update sgi-deploy repo
+    needs: build
+    uses: herculesproject/sgi/.github/workflows/update-sgi-deploy-repo.yml@ci
+    with:
+      service-name: 'sgi-framework-spring'
+      service-version: ${{ needs.build.outputs.VERSION }}
+      sha: ${{ github.sha }}
+    secrets: inherit

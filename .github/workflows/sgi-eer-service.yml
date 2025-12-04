@@ -16,6 +16,8 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.prepare-build.outputs.VERSION }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -118,6 +120,7 @@ jobs:
         tags: |
           type=semver,pattern={{version}},value=${{ steps.prepare-build.outputs.VERSION }}
           type=sha
+          type=raw,value=ci
     
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
@@ -144,4 +147,14 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+  call_update_sgi_deploy:
+    name: Update sgi-deploy repo
+    needs: build
+    uses: herculesproject/sgi/.github/workflows/update-sgi-deploy-repo.yml@ci
+    with:
+      service-name: 'sgi-eer-service'
+      service-version: ${{ needs.build.outputs.VERSION }}
+      sha: ${{ github.sha }}
+    secrets: inherit
   

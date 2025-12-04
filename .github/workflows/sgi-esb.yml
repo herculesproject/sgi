@@ -11,7 +11,8 @@ on:
       - ci
 
 env:
-    ESB_VERSION: 0.9.0-um-SNAPSHOT
+  ESB_VERSION: 0.9.0-um-SNAPSHOT
+
 defaults:
   run:
     working-directory: sgi-esb
@@ -19,6 +20,8 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      ESB_VERSION: ${{ steps.export-version.outputs.ESB_VERSION }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -93,6 +96,10 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+    - name: Export ESB Version
+      id: export-version
+      run: echo "ESB_VERSION=${{ env.ESB_VERSION }}" >> $GITHUB_OUTPUT
+
     - name: Extract metadata (tags, labels) for Docker
       id: docker-metadata
       uses: docker/metadata-action@v5
@@ -111,6 +118,7 @@ jobs:
         tags: |
           type=semver,pattern={{version}},value=${{ env.ESB_VERSION }}
           type=sha
+          type=raw,value=ci
     
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
@@ -129,3 +137,12 @@ jobs:
           ESB_SGO_VERSION=${{ steps.build-esb-sgo.outputs.VERSION }}
           ESB_SGP_VERSION=${{ steps.build-esb-sgp.outputs.VERSION }}
 
+  call_update_sgi_deploy:
+    name: Update sgi-deploy repo
+    needs: build
+    uses: herculesproject/sgi/.github/workflows/update-sgi-deploy-repo.yml@ci
+    with:
+      service-name: 'sgi-esb'
+      service-version: ${{ needs.build.outputs.ESB_VERSION }}
+      sha: ${{ github.sha }}
+    secrets: inherit

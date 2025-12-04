@@ -16,6 +16,8 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.build.outputs.VERSION }}
     permissions:
       contents: read
       id-token: write
@@ -55,6 +57,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     
     - name: Build
+      id: build
       run: |
         cd projects/sgi/framework
         export VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
@@ -67,4 +70,12 @@ jobs:
       env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-   
+  call_update_sgi_deploy:
+    name: Update sgi-deploy repo
+    needs: build
+    uses: herculesproject/sgi/.github/workflows/update-sgi-deploy-repo.yml@ci
+    with:
+      service-name: 'sgi-framework-angular'
+      service-version: ${{ needs.build.outputs.VERSION }}
+      sha: ${{ github.sha }}
+    secrets: inherit

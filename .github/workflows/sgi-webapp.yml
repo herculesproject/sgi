@@ -16,6 +16,8 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.prepare-build.outputs.VERSION }}
     permissions:
       contents: read
       id-token: write
@@ -82,6 +84,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}},value=${{ steps.prepare-build.outputs.VERSION }}
             type=sha
+            type=raw,value=ci
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -90,3 +93,14 @@ jobs:
           push: true
           tags: ${{ steps.docker-metadata.outputs.tags }}
           labels: ${{ steps.docker-metadata.outputs.labels }}
+
+  call_update_sgi_deploy:
+    name: Update sgi-deploy repo
+    needs: build
+    uses: herculesproject/sgi/.github/workflows/update-sgi-deploy-repo.yml@ci
+    with:
+      service-name: 'sgi-webapp'
+      service-version: ${{ needs.build.outputs.VERSION }}
+      sha: ${{ github.sha }}
+    secrets: inherit
+  

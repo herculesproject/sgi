@@ -1,0 +1,75 @@
+name: Update sgi-deploy repo
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        required: true
+        type: string
+      service-version:
+        required: true
+        type: string
+      sha:
+        required: true
+        type: string
+
+concurrency:
+  group: update-sgi-deploy-repo
+  cancel-in-progress: false
+
+jobs:
+  rollout-dev:
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Generate GitHub App token
+      #   uses: actions/create-github-app-token@v2
+      #   id: app-token
+      #   with:
+      #     app-id: ${{ vars.APP_ID }}
+      #     private-key: ${{ secrets.PRIVATE_KEY }}
+      #     owner: herculesproject
+      #     repositories: sgi-deploy
+
+      # - name: Clone sgi-deploy repo
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: herculesproject/sgi-deploy
+      #     token: ${{ steps.app-token.outputs.token }}
+      #     path: gitops
+      #     ref: main
+
+      - name: Clone sgi-deploy repo using PAT
+        uses: actions/checkout@v4
+        with:
+          repository: herculesproject/sgi-deploy
+          token: ${{ secrets.PAT_CI_TEST_UPDATE_DEPLOY }}
+          path: gitops
+          ref: main
+
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "TS=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Update rollout.yaml
+        run: |
+          cd gitops/values/dev/sgi
+          sed -i "s/rollme: \".*\"/rollme: \"${{ steps.timestamp.outputs.TS }}\"/g" rollout.yaml
+
+      - name: Commit & push
+        run: |
+          cd gitops
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          sha=${{ inputs.sha }}
+
+          git add .
+          git commit -m "Rollout triggered by ${{ inputs.service-name }} build ${sha:0:7}" \
+               -m "Service version: ${{ inputs.service-version }}" \
+               -m "Rollme value: ${{ steps.timestamp.outputs.TS }}"
+          git push
