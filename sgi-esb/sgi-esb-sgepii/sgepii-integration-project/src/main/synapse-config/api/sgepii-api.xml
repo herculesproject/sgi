@@ -7,8 +7,6 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sgepii-add-x-api-key-sequence"/>
-      <sequence key="sgepii-remove-authorization-header-sequence" />
       <send>
         <endpoint key="sgepii-endpoint"/>
       </send>
@@ -26,8 +24,6 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sgepii-add-x-api-key-sequence"/>
-      <sequence key="sgepii-remove-authorization-header-sequence" />
       <send>
         <endpoint key="sgepii-endpoint"/>
       </send>
@@ -45,8 +41,6 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sgepii-add-x-api-key-sequence"/>
-      <sequence key="sgepii-remove-authorization-header-sequence" />
       <send>
         <endpoint key="sgepii-endpoint"/>
       </send>
@@ -65,8 +59,6 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sgepii-add-x-api-key-sequence"/>
-      <sequence key="sgepii-remove-authorization-header-sequence" />
       <send>
         <endpoint key="sgepii-endpoint"/>
       </send>
@@ -84,8 +76,6 @@
       <call-template target="sgi-auth-sequence-template">
         <with-param name="requiredAuthorities" value=""/>
       </call-template>
-      <sequence key="sgepii-add-x-api-key-sequence"/>
-      <sequence key="sgepii-remove-authorization-header-sequence" />
       <send>
         <endpoint key="sgepii-endpoint"/>
       </send>
