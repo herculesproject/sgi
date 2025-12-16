@@ -178,8 +178,10 @@ public class EvaluadorIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-V")));
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
+    String sort = "resumen.value,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
+        .toUri();
 
     final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluador>>() {
@@ -196,9 +198,9 @@ public class EvaluadorIT extends BaseIT {
 
     // Contiene de resumen='Evaluador7' a 'Evaluador8'
     Assertions.assertThat(I18nHelper.getValueForLanguage(evaluadores.get(0).getResumen(), Language.ES))
-        .isEqualTo("Evaluador5");
+        .isEqualTo("Evaluador7");
     Assertions.assertThat(I18nHelper.getValueForLanguage(evaluadores.get(1).getResumen(), Language.ES))
-        .isEqualTo("Evaluador6");
+        .isEqualTo("Evaluador8");
   }
 
   @Test
