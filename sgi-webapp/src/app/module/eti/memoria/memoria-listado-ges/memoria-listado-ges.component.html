@@ -1,0 +1,147 @@
+<!-- Memorias listado -->
+<sgi-menu-content>
+  <form class="formulario mat-elevation-z8" [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
+    [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Comité -->
+      <mat-form-field fxFlex="8%">
+        <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+        <sgi-select-comite #selectComite formControlName="comite"></sgi-select-comite>
+      </mat-form-field>
+
+      <!-- Título proyecto -->
+      <mat-form-field fxFlex="20%">
+        <mat-label>{{'eti.memoria.proyecto-titulo' | translate}}</mat-label>
+        <input matInput type="text" placeholder="{{'eti.memoria.proyecto-titulo' | translate}}"
+          formControlName="titulo">
+      </mat-form-field>
+
+      <!--Persona-->
+      <mat-form-field fxFlex="30%">
+        <mat-label>{{'eti.solicitante' | translate}}</mat-label>
+        <sgi-select-persona placeholder="{{'eti.solicitante' | translate}}" formControlName="solicitante"
+          [tipoColectivo]="tipoColectivoSolicitante">
+        </sgi-select-persona>
+      </mat-form-field>
+
+      <!-- Referencia memoria-->
+      <mat-form-field fxFlex="15%">
+        <mat-label>{{'eti.memoria.referencia' | translate}}</mat-label>
+        <input matInput type="text" placeholder="{{'eti.memoria.referencia' | translate}}"
+          formControlName="numReferencia">
+      </mat-form-field>
+
+      <!-- Estado Memoria -->
+      <mat-form-field fxFlex="15%">
+        <mat-label>{{'eti.memoria.estado' | translate}}</mat-label>
+        <sgi-select-tipo-estado-memoria formControlName="tipoEstadoMemoria"></sgi-select-tipo-estado-memoria>
+      </mat-form-field>
+
+      <!-- Contiene texto -->
+      <mat-form-field fxFlex="20%">
+        <mat-label>{{'eti.memoria.contiene-texto' | translate}}</mat-label>
+        <input matInput type="text" placeholder="{{'eti.memoria.contiene-texto' | translate}}" formControlName="texto">
+      </mat-form-field>
+    </div>
+
+    <div class="buttons-final">
+      <div class="col filter-button">
+        <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
+          <mat-icon>search</mat-icon> {{'btn.search'| translate}}
+        </button>
+        <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
+          translate}}
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="mat-elevation-z4">
+    <table mat-table [dataSource]="memorias$ | async" matSort matSortActive="id" matSortDirection="asc"
+      matSortDisableClear>
+
+      <!-- Nombre y apellidos persona -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> {{'eti.solicitante' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let memoria" sgpNotFoundError [model]="memoria.solicitante">
+          {{memoria.solicitante?.nombre}} {{memoria.solicitante?.apellidos}}
+        </td>
+      </ng-container>
+
+      <!-- Referencia memoria -->
+      <ng-container matColumnDef="numReferencia">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.memoria.referencia' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let memoria"> {{memoria.numReferencia}} </td>
+      </ng-container>
+
+      <!-- Comité -->
+      <ng-container matColumnDef="comite">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'label.eti.comite' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let memoria">{{memoria.comite?.codigo}}</td>
+      </ng-container>
+
+      <!-- Estado memoria -->
+      <ng-container matColumnDef="estadoActual">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'eti.memoria.estado' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let memoria"> {{ESTADO_MEMORIA_MAP.get(memoria.estadoActual?.id) | translate}} </td>
+      </ng-container>
+
+      <!-- Fecha evaluacion -->
+      <ng-container matColumnDef="fechaEvaluacion">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'eti.memoria.fecha-evaluacion' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let memoria"> {{memoria.fechaEvaluacion | luxon:'shortDate'}} </td>
+      </ng-container>
+
+      <!-- Fecha límite -->
+      <ng-container matColumnDef="fechaLimite">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'eti.memoria.fecha-limite' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let memoria"> {{memoria.fechaLimite | luxon: 'shortDate'}} </td>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones" class="acciones">
+        <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
+        <td mat-cell *matCellDef="let memoria;let i=index;">
+          <ng-container>
+            <a mat-icon-button color="primary" [routerLink]="[memoria.id]" matTooltip="{{'btn.view' | translate}}">
+              <mat-icon>visibility</mat-icon>
+            </a>
+            <button color="primary" *ngIf="showNotificarRevisionMinima(memoria)" mat-icon-button
+              (click)="notificarRevisionMinima(memoria)"
+              matTooltip="{{'btn.eti.memoria.notificar-rev-minima' | translate}}">
+              <mat-icon>add_alert</mat-icon>
+            </button>
+            <button color="primary" *ngIf="showRecuperarEstadoAnterior(memoria)" mat-icon-button
+              (click)="recuperarEstadoAnterior(memoria)" matTooltip="{{'btn.eti.memoria.estado-anterior' | translate}}">
+              <mat-icon>restore</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div class="paginator-export">
+      <button mat-button matTooltip="{{'btn.export' | translate}}" (click)="openExportModal()"
+        [disabled]="totalElementos<=0">
+        <mat-icon color="primary">insert_chart_outlined</mat-icon>
+      </button>
+      <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </div>
+</sgi-menu-content>
+<!-- FIN Memorias listado-->

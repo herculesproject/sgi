@@ -1,0 +1,15 @@
+:host {
+  sgi-dialog-content {
+    min-width: 40vw;
+
+    .arbol {
+      .mat-tree-node {
+        .break-spaces {
+          padding-left: 2em;
+          text-indent: -2em;
+          white-space: break-spaces;
+        }
+      }
+    }
+  }
+}

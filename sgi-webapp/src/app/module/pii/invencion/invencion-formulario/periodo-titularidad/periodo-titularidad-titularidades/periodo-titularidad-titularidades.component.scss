@@ -1,0 +1,5 @@
+@import "colors.scss";
+
+.mat-row.selected {
+  background-color: map-get($palette-grey, 100);
+}

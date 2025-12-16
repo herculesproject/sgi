@@ -1,0 +1,36 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- Tipo de documento -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.documento.tipo' | translate}}</mat-label>
+        <sgi-select-tipo-documento #tipoDocumento formControlName="tipoDocumento" required
+          [disableWith]="disablerTipoDocumento">
+        </sgi-select-tipo-documento>
+        <mat-error *ngIf="formGroup.controls.tipoDocumento.errors?.required">
+          {{'error.required.entity' | translate:msgParamTipoEntiy}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Tipo de fase -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.modelo-ejecucion-tipo-documento.fase' | translate}}</mat-label>
+        <sgi-select-entity formControlName="tipoFase" [required]="isFaseRequired" [options]="tipoFases$ | async"
+          [resetOnChange]="tipoDocumento.selectionChange">
+        </sgi-select-entity>
+        <mat-error *ngIf="formGroup.controls.tipoFase.errors?.required">
+          {{'error.required.entity' | translate:msgParamFaseEntiy}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

@@ -1,0 +1,15 @@
+<mat-divider></mat-divider>
+<div [ngClass]="field.className">
+  <div class="title">
+    <span>{{ to.label | uppercase }}</span>
+  </div>
+  <div *ngIf="to.comentario" fxLayout="row" fxLayoutGap="10px" class="comentario">
+    <div>
+      <mat-icon class="warning">feedback</mat-icon>
+    </div>
+    <div fxFlex>
+      <sgi-i18n-display-field [field]="to.comentario.texto"></sgi-i18n-display-field>
+    </div>
+  </div>
+  <ng-container #fieldComponent></ng-container>
+</div>

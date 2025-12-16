@@ -1,0 +1,65 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form class="form-inline" [formGroup]="formGroup">
+    <div>
+      <div>
+        <mat-form-field class="input-form">
+          <mat-label>{{'list.entity' | translate:msgParamEntity}}</mat-label>
+          <sgi-select-area-tematica formControlName="padre" required></sgi-select-area-tematica>
+          <mat-error *ngIf="formGroup.controls.padre.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <h4>{{'csp.proyecto.select-area-tematica' | translate}}</h4>
+      <div class="programa">
+        <div class="arbol">
+          <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="arbol-tree">
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+              <li class="mat-tree-node">
+                <button mat-icon-button disabled></button>
+                <mat-checkbox class="checkbox" color="primary" [disabled]="node.disabled"
+                  [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
+                  <sgi-i18n-tree-field [field]="node.areaTematica.value.nombre"></sgi-i18n-tree-field>
+                </mat-checkbox>
+              </li>
+            </mat-tree-node>
+            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+              <li>
+                <div class="mat-tree-node">
+                  <button mat-icon-button matTreeNodeToggle
+                    [attr.aria-label]="'Toggle ' + node.areaTematica.value.nombre">
+                    <mat-icon color="primary" class="mat-icon-rtl-mirror">
+                      {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                  </button>
+
+                  <mat-label *ngIf="node === rootNodeConvocatoria">
+                    <sgi-i18n-tree-field [field]="node.areaTematica.value.nombre"></sgi-i18n-tree-field>
+                  </mat-label>
+
+                  <mat-checkbox *ngIf="node !== rootNodeConvocatoria" class="checkbox" color="primary"
+                    [disabled]="node.disabled" [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
+                    <sgi-i18n-tree-field [field]="node.areaTematica.value.nombre"></sgi-i18n-tree-field>
+                  </mat-checkbox>
+                </div>
+                <ul [class.arbol-invisible]="!treeControl.isExpanded(node)">
+                  <ng-container matTreeNodeOutlet></ng-container>
+                </ul>
+              </li>
+            </mat-nested-tree-node>
+          </mat-tree>
+        </div>
+      </div>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

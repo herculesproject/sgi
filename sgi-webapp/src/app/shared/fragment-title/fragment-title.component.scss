@@ -1,0 +1,12 @@
+@import "colors.scss";
+
+:host {
+  h2 {
+    font-weight: bold;
+
+    span.route {
+      padding-right: 10px;
+      color: map-get($palette-primary, $primary-color);
+    }
+  }
+}

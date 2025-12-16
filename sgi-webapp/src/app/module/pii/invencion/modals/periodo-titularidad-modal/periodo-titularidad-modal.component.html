@@ -1,0 +1,53 @@
+<sgi-dialog-header
+  title="{{(isEditionMode() ? 'pii.invencion-titularidad.periodo-titularidad' : 'pii.invencion-titularidad.periodo-titularidad.nuevo') | translate:msgParamTitle }}">
+</sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup" fxLayout="column">
+    <!-- Fecha Fin-->
+    <div fxFlex *ngIf="showFechaFin()">
+      <mat-form-field sgiEndDate>
+        <mat-label>{{'pii.invencion-titularidad.periodo-titularidad.fecha-fin-anterior' | translate}}</mat-label>
+        <input matInput formControlName="fechaFin" [matDatepicker]="fechaF" required>
+        <mat-datepicker-toggle matSuffix [for]="fechaF"></mat-datepicker-toggle>
+        <mat-datepicker #fechaF></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
+          {{'error.required.entity' | translate:msgParamFechaFinEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.fechaFin.errors?.minDate">
+          {{'error.pii.invencion-titularidad.periodo-titularidad.fecha-fin.min' | translate}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.fechaFin.errors?.before">
+          {{'error.pii.invencion-titularidad.periodo-titularidad.fecha-fin.before' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Fecha Inicio-->
+    <div fxFlex>
+      <mat-form-field>
+        <mat-label *ngIf="showFechaFin()">{{'pii.invencion-titularidad.periodo-titularidad.fecha-inicio-nueva' |
+          translate}}
+        </mat-label>
+        <mat-label *ngIf="!showFechaFin()">{{'pii.invencion-titularidad.periodo-titularidad.fecha-inicio' |
+          translate}}
+        </mat-label>
+        <input matInput formControlName="fechaInicio" [matDatepicker]="fechaI" min="fechaF" required>
+        <mat-datepicker-toggle matSuffix [for]="fechaI"></mat-datepicker-toggle>
+        <mat-datepicker #fechaI></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
+          {{'error.required.entity' | translate:msgParamFechaInicioEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.after">
+          {{'error.pii.invencion-titularidad.periodo-titularidad.fecha-inicio.after' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

@@ -1,0 +1,271 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
+import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
+import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
+import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
+import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
+import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
+import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
+import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
+import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
+import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
+import { IConvocatoriaPalabraClave } from '@core/models/csp/convocatoria-palabra-clave';
+import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
+import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
+import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
+import { IRequisitoEquipoCategoriaProfesional } from '@core/models/csp/requisito-equipo-categoria-profesional';
+import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
+import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-categoria-profesional';
+import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
+import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
+import { IConvocatoriaEnlaceResponse } from '@core/services/csp/convocatoria-enlace/convocatoria-enlace-response';
+import { CONVOCATORIA_ENLACE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-enlace/convocatoria-enlace-response.converter';
+import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response';
+import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
+import { IConvocatoriaPeriodoJustificacionResponse } from '@core/services/csp/convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response';
+import { IConvocatoriaPeriodoSeguimientoCientificoResponse } from '@core/services/csp/convocatoria-periodo-seguimiento-cientifico/convocatoria-periodo-seguimiento-cientifico-response';
+import { IConvocatoriaResponse } from '@core/services/csp/convocatoria/convocatoria-response';
+import { CONVOCATORIA_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria/convocatoria-response.converter';
+import { environment } from '@env';
+import { FindByIdCtor, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, mixinFindById } from '@sgi/framework/http/';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
+import { CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response.converter';
+import { CONVOCATORIA_DOCUMENTO_RESPONSE_CONVERTER } from './convocatoria-documento/convocatoria-documento-response.converter';
+import { IConvocatoriaFaseResponse } from './convocatoria-fase/convocatoria-fase-response';
+import { CONVOCATORIA_FASE_RESPONSE_CONVERTER } from './convocatoria-fase/convocatoria-fase-response.converter';
+import { IConvocatoriaHitoResponse } from './convocatoria-hito/convocatoria-hito-response';
+import { CONVOCATORIA_HITO_RESPONSE_CONVERTER } from './convocatoria-hito/convocatoria-hito-response.converter';
+import { IConvocatoriaPalabraClaveResponse } from './convocatoria-palabra-clave/convocatoria-palabra-clave-response';
+import { CONVOCATORIA_PALABRACLAVE_RESPONSE_CONVERTER } from './convocatoria-palabra-clave/convocatoria-palabra-clave-response.converter';
+import { IConvocatoriaPartidaPresupuestariaResponse } from './convocatoria-partida-presupuestaria/convocatoria-partida-presupuestaria-response';
+import { CONVOCATORIA_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER } from './convocatoria-partida-presupuestaria/convocatoria-partida-presupuestaria-response.converter';
+import { CONVOCATORIA_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response.converter';
+import { CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_RESPONSE_CONVERTER } from './convocatoria-periodo-seguimiento-cientifico/convocatoria-periodo-seguimiento-cientifico-response.converter';
+import { IRequisitoEquipoCategoriaProfesionalResponse } from './requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-response';
+import { REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from './requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-response.converter';
+import { IRequisitoEquipoNivelAcademicoResponse } from './requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response';
+import { REQUISITO_EQUIPO_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response.converter';
+import { IRequisitoIPCategoriaProfesionalResponse } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response';
+import { REQUISITOIP_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response.converter';
+import { IRequisitoIPNivelAcademicoResponse } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response';
+import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response.converter';
+
+// tslint:disable-next-line: variable-name
+const _ConvocatoriaMixinBase:
+  FindByIdCtor<number, IConvocatoria, IConvocatoriaResponse> &
+  typeof SgiRestBaseService = mixinFindById(
+    SgiRestBaseService,
+    CONVOCATORIA_RESPONSE_CONVERTER
+  );
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ConvocatoriaPublicService extends _ConvocatoriaMixinBase {
+
+  private static readonly MAPPING = '/convocatorias';
+  private static readonly PUBLIC_PREFIX = '/public';
+
+  constructor(protected http: HttpClient) {
+    super(
+      `${environment.serviceServers.csp}${ConvocatoriaPublicService.PUBLIC_PREFIX}${ConvocatoriaPublicService.MAPPING}`,
+      http
+    );
+  }
+
+  /**
+   * Comprueba si existe una convocatoria
+   *
+   * @param id Id de la convocatoria
+   */
+  exists(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
+    return this.find<IConvocatoriaResponse, IConvocatoria>(
+      `${this.endpointUrl}/investigador`,
+      options,
+      CONVOCATORIA_RESPONSE_CONVERTER
+    );
+  }
+
+  tramitable(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/tramitable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  findAllConvocatoriaEntidadConvocantes(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
+    return this.find<IConvocatoriaEntidadConvocanteResponse, IConvocatoriaEntidadConvocante>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`,
+      options,
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER
+    );
+  }
+
+  findAllConvocatoriaFases(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaFase>> {
+    return this.find<IConvocatoriaFaseResponse, IConvocatoriaFase>(
+      `${this.endpointUrl}/${id}/convocatoriafases`,
+      options,
+      CONVOCATORIA_FASE_RESPONSE_CONVERTER
+    );
+  }
+
+  findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadFinanciadora>> {
+    return this.find<IConvocatoriaEntidadFinanciadoraBackend, IConvocatoriaEntidadFinanciadora>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadfinanciadoras`,
+      options,
+      CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER
+    );
+  }
+
+  getPeriodosJustificacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaPeriodoJustificacion>> {
+    return this.find<IConvocatoriaPeriodoJustificacionResponse, IConvocatoriaPeriodoJustificacion>(
+      `${this.endpointUrl}/${id}/convocatoriaperiodojustificaciones`,
+      options,
+      CONVOCATORIA_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER
+    );
+  }
+
+  findHitosConvocatoria(idConvocatoria: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaHito>> {
+    return this.find<IConvocatoriaHitoResponse, IConvocatoriaHito>(
+      `${this.endpointUrl}/${idConvocatoria}/convocatoriahitos`,
+      options,
+      CONVOCATORIA_HITO_RESPONSE_CONVERTER
+    );
+  }
+
+  findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaDocumento>> {
+    return this.find<IConvocatoriaDocumentoResponse, IConvocatoriaDocumento>(
+      `${this.endpointUrl}/${id}/convocatoriadocumentos`,
+      options,
+      CONVOCATORIA_DOCUMENTO_RESPONSE_CONVERTER
+    );
+  }
+
+  findSeguimientosCientificos(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IConvocatoriaPeriodoSeguimientoCientifico>> {
+    return this.find<IConvocatoriaPeriodoSeguimientoCientificoResponse, IConvocatoriaPeriodoSeguimientoCientifico>(
+      `${this.endpointUrl}/${id}/convocatoriaperiodoseguimientocientificos`,
+      options,
+      CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_RESPONSE_CONVERTER
+    );
+  }
+
+  getEnlaces(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEnlace>> {
+    return this.find<IConvocatoriaEnlaceResponse, IConvocatoriaEnlace>(
+      `${this.endpointUrl}/${id}/convocatoriaenlaces`,
+      options,
+      CONVOCATORIA_ENLACE_RESPONSE_CONVERTER
+    );
+  }
+
+  findPartidasPresupuestarias(id: number, options?: SgiRestFindOptions)
+    : Observable<SgiRestListResult<IConvocatoriaPartidaPresupuestaria>> {
+    return this.find<IConvocatoriaPartidaPresupuestariaResponse, IConvocatoriaPartidaPresupuestaria>(
+      `${this.endpointUrl}/${id}/convocatoria-partidas-presupuestarias`,
+      options,
+      CONVOCATORIA_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER
+    );
+  }
+
+  findAllConvocatoriaConceptoGastosNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+    return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
+      `${this.endpointUrl}/${id}/convocatoriagastos/nopermitidos`,
+      undefined,
+      CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
+    );
+  }
+
+  findAllConvocatoriaConceptoGastosPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+    return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
+      `${this.endpointUrl}/${id}/convocatoriagastos/permitidos`,
+      undefined,
+      CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
+    );
+  }
+
+  findAllConvocatoriaEntidadGestora(id: number, options?:
+    SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadGestora>> {
+    return this.find<IConvocatoriaEntidadGestoraBackend, IConvocatoriaEntidadGestora>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadgestoras`,
+      options,
+      CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER
+    );
+  }
+
+  findPalabrasClave(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaPalabraClave>> {
+    return this.find<IConvocatoriaPalabraClaveResponse, IConvocatoriaPalabraClave>(
+      `${this.endpointUrl}/${id}/palabrasclave`,
+      options,
+      CONVOCATORIA_PALABRACLAVE_RESPONSE_CONVERTER);
+  }
+
+  findAreaTematicas(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaAreaTematica>> {
+    return this.find<IConvocatoriaAreaTematicaBackend, IConvocatoriaAreaTematica>(
+      `${this.endpointUrl}/${id}/convocatoriaareatematicas`,
+      options,
+      CONVOCATORIA_AREA_TEMATICA_CONVERTER
+    );
+  }
+
+  findRequisitosEquipoCategoriasProfesionales(id: number): Observable<IRequisitoEquipoCategoriaProfesional[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/categoriasprofesionalesrequisitosequipo`;
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get<IRequisitoEquipoCategoriaProfesionalResponse[]>(endpointUrl, { params })
+      .pipe(
+        map(r => {
+          return REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER.toTargetArray(r);
+        })
+      );
+  }
+
+  findRequisitosIpCategoriasProfesionales(id: number): Observable<IRequisitoIPCategoriaProfesional[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/categoriasprofesionalesrequisitosip`;
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get<IRequisitoIPCategoriaProfesionalResponse[]>(endpointUrl, { params })
+      .pipe(
+        map(r => {
+          return REQUISITOIP_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER.toTargetArray(r);
+        })
+      );
+  }
+
+  findRequisitosEquipoNivelesAcademicos(id: number): Observable<IRequisitoEquipoNivelAcademico[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/nivelesrequisitosequipo`;
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get<IRequisitoEquipoNivelAcademicoResponse[]>(endpointUrl, { params })
+      .pipe(
+        map(r => {
+          return REQUISITO_EQUIPO_NIVELACADEMICO_RESPONSE_CONVERTER.toTargetArray(r);
+        })
+      );
+  }
+
+  findRequisitosIpNivelesAcademicos(id: number): Observable<IRequisitoIPNivelAcademico[]> {
+    const endpointUrl = `${this.endpointUrl}/${id}/nivelesrequisitosip`;
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get<IRequisitoIPNivelAcademicoResponse[]>(endpointUrl, { params })
+      .pipe(
+        map(r => {
+          return REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER.toTargetArray(r);
+        })
+      );
+  }
+
+}

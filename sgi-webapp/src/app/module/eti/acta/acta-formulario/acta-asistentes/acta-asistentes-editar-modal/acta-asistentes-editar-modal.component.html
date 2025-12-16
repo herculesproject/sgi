@@ -1,0 +1,40 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- Asistente -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'eti.acta.asistente' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+        <sgi-select-persona placeholder="{{'eti.acta.asistente' | translate}}"
+          formControlName="asistente"></sgi-select-persona>
+      </mat-form-field>
+    </div>
+    <!-- Asistencia -->
+    <div fxLayout="column">
+      <mat-label>{{'eti.acta.asistente.asistencia' | translate}}</mat-label>
+      <mat-radio-group class="radio-inline" name="opciones" formControlName="asistencia">
+        <mat-radio-button color="primary" *ngFor="let estado of estados" name="opciones" [value]="estado.value">
+          {{estado.label | translate}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <!-- Motivo -->
+    <div fxLayout="row" *ngIf="!ocultarMotivo">
+      <mat-form-field>
+        <mat-label>{{'eti.acta.asistente.motivo' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="motivo" placeholder="{{'eti.acta.asistente.motivo' | translate}}"
+          [required]="!ocultarMotivo"></sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.get('motivo').errors?.required">
+          {{'error.required.entity' | translate:msgParamMotivoEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{'btn.ok' | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

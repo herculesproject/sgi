@@ -1,0 +1,271 @@
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
+  <form [formGroup]="formGroup" fxLayout="column">
+    <!--Estado-->
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="25%">
+        <mat-label>{{'csp.autorizacion.estado' | translate}}</mat-label>
+        <sgi-select-enum formControlName="estado" required [enumMap]="ESTADO_MAP">
+        </sgi-select-enum>
+        <mat-error *ngIf="formGroup.controls.estado.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamEstadoEntity }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Fecha Solicitud -->
+      <mat-form-field fxFlex="25%" *ngIf="!formPart.isInvestigador">
+        <mat-label>{{'csp.autorizacion.fecha-solicitud'| translate}}</mat-label>
+        <input matInput [matDatepicker]="pickerfechaSolicitud" formControlName="fechaSolicitud" required>
+        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerfechaSolicitud"></mat-datepicker-toggle>
+        <mat-datepicker #pickerfechaSolicitud>
+        </mat-datepicker>
+      </mat-form-field>
+
+      <!--Solicitante-->
+      <mat-form-field fxFlex="50%" *ngIf="!formPart.isInvestigador">
+        <mat-label>{{'csp.autorizacion.solicitante' | translate}}</mat-label>
+        <sgi-select-persona placeholder="{{'csp.autorizacion.solicitante' | translate}}" formControlName="solicitante">
+        </sgi-select-persona>
+      </mat-form-field>
+    </div>
+
+    <!-- Titulo -->
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{'csp.autorizacion.titulo-proyecto' | translate}}</mat-label>
+        <sgi-i18n-input formControlName="tituloProyecto" required
+          placeholder="{{'csp.autorizacion.titulo-proyecto' | translate}}">
+        </sgi-i18n-input>
+        <mat-error *ngIf="formGroup.controls.tituloProyecto.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamTituloEntity }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.tituloProyecto.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamTituloEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Formulario para Investigador-->
+    <ng-container *ngIf="this.formPart.isInvestigador">
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <div fxFlex="100%" *ngIf="!formGroup.controls.convocatoria.value && (!this.formPart.isEdit())"
+          class="info-message">
+          <mat-icon class="info-icon">info</mat-icon>
+          {{'csp.autorizacion.info-datos-convocatoria' | translate}}
+        </div>
+      </div>
+      <!--Convocatoria-->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.convocatoria' | translate}}</mat-label>
+          <sgi-select-convocatoria placeholder="{{'csp.autorizacion.convocatoria' | translate}}"
+            formControlName="convocatoria" investigador="true">
+          </sgi-select-convocatoria>
+        </mat-form-field>
+
+        <!-- Datos Convocatoria -->
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.datos-convocatoria' | translate}}</mat-label>
+          <sgi-i18n-input formControlName="datosConvocatoria"
+            placeholder="{{'csp.autorizacion.datos-convocatoria' | translate}}">
+          </sgi-i18n-input>
+          <mat-error *ngIf="formGroup.controls.datosConvocatoria.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamDatosConvocatoriaEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <div fxFlex="100%" *ngIf="!formGroup.controls.entidadParticipa.value && (!this.formPart.isEdit())"
+          class="info-message">
+          <mat-icon class="info-icon">info</mat-icon>
+          {{'csp.autorizacion.info-datos-entidad' | translate}}
+        </div>
+      </div>
+
+      <!-- Entidad con la que participa -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.entidad-participa' | translate}}</mat-label>
+          <sgi-select-empresa placeholder="{{'csp.autorizacion.entidad-participa' | translate}}"
+            formControlName="entidadParticipa" [required]="this.formPart.entidadRequired">
+          </sgi-select-empresa>
+          <sgi-field-info matSuffix message="{{'csp.autorizacion.entidad-participa' | translate}}">
+          </sgi-field-info>
+          <mat-error *ngIf="formGroup.controls.entidadParticipa.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamEntidadParticipaEntity }}
+          </mat-error>
+        </mat-form-field>
+        <!-- Datos de la entidad con la que participa  -->
+
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.datos-entidad' | translate}}</mat-label>
+          <input matInput formControlName="datosEntidad" type="text" id="datosEntidad"
+            placeholder="{{'csp.autorizacion.datos-entidad' | translate}}" [required]="!this.formPart.entidadRequired">
+          <mat-error *ngIf="formGroup.controls.datosEntidad.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamDatosEntidadEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.datosEntidad.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamDatosEntidadEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <div fxFlex="100%" *ngIf="!formGroup.controls.investigadorPrincipalProyecto.value && (!this.formPart.isEdit())"
+          class="info-message">
+          <mat-icon class="info-icon">info</mat-icon>
+          {{'csp.autorizacion.info-datos-investigador'|translate}}
+        </div>
+      </div>
+      <!-- Investigador Principal-->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.investigador-principal' | translate}}</mat-label>
+          <sgi-select-persona placeholder="{{'csp.autorizacion.investigador-principal' | translate}}"
+            formControlName="investigadorPrincipalProyecto" [required]="this.formPart.investigadorRequired">
+          </sgi-select-persona>
+          <mat-error *ngIf="formGroup.controls.investigadorPrincipalProyecto.errors?.required">
+            {{'error.required.entity' | translate:msgParamInvestigadorPrincipalEntity}}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Datos Ip Proyecto -->
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.datos-ip-proyecto' | translate}}</mat-label>
+          <input matInput formControlName="datosIpProyecto" type="text" id="datosIpProyecto"
+            placeholder="{{'csp.autorizacion.datos-ip-proyecto' | translate}}"
+            [required]="!this.formPart.investigadorRequired">
+          <mat-error *ngIf="formGroup.controls.datosIpProyecto.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamDatosIpProyectoEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.datosIpProyecto.errors?.required">
+            {{'error.required.entity' | translate:msgParamDatosIpProyectoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <div fxFlex="100%" *ngIf="(!this.formPart.isEdit())" class="info-message">
+          <mat-icon class="info-icon">info</mat-icon>
+          {{'csp.autorizacion.info-horas-dedicacion' | translate}}
+        </div>
+      </div>
+
+      <!-- Horas dedicacion -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="33%">
+          <mat-label>{{'csp.autorizacion.horas-dedicacion' | translate}}</mat-label>
+          <input matInput formControlName="horasDedicacion" type="number" id="horasDedicacion"
+            placeholder="{{'csp.autorizacion.horas-dedicacion' | translate}}">
+          <mat-error *ngIf="formGroup.controls.horasDedicacion.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamHorasDedicacionEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!this.formPart.isInvestigador">
+      <!--Convocatoria-->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.convocatoria' | translate}}</mat-label>
+          <sgi-select-convocatoria placeholder="{{'csp.autorizacion.convocatoria' | translate}}"
+            formControlName="convocatoria">
+          </sgi-select-convocatoria>
+        </mat-form-field>
+        <!-- Datos Convocatoria -->
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.datos-convocatoria' | translate}}</mat-label>
+          <sgi-i18n-input formControlName="datosConvocatoria"
+            placeholder="{{'csp.autorizacion.datos-convocatoria' | translate}}">
+          </sgi-i18n-input>
+          <mat-error *ngIf="formGroup.controls.datosConvocatoria.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamDatosConvocatoriaEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Entidad con la que participa -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.entidad-participa' | translate}}</mat-label>
+          <sgi-select-empresa placeholder="{{'csp.autorizacion.entidad-participa' | translate}}"
+            formControlName="entidadParticipa" [required]="this.formPart.entidadRequired">
+          </sgi-select-empresa>
+          <sgi-field-info matSuffix message="{{'csp.autorizacion.entidad-participa' | translate}}">
+          </sgi-field-info>
+          <mat-error *ngIf="formGroup.controls.entidadParticipa.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamEntidadParticipaEntity }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Datos de la entidad con la que participa  -->
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.datos-entidad' | translate}}</mat-label>
+          <input matInput formControlName="datosEntidad" type="text" id="datosEntidad"
+            placeholder="{{'csp.autorizacion.datos-entidad' | translate}}" [required]="!this.formPart.entidadRequired">
+          <mat-error *ngIf="formGroup.controls.datosEntidad.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamDatosEntidadEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.datosEntidad.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamDatosEntidadEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Investigador Principal-->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.investigador-principal' | translate}}</mat-label>
+          <sgi-select-persona placeholder="{{'csp.autorizacion.investigador-principal' | translate}}"
+            formControlName="investigadorPrincipalProyecto"
+            [tipoColectivo]="TIPO_COLECTIVO.RESPONSABLE_PROYECTO_EXTERNO"
+            [required]="this.formPart.investigadorRequired">
+          </sgi-select-persona>
+          <mat-error *ngIf="formGroup.controls.investigadorPrincipalProyecto.errors?.required">
+            {{'error.required.entity' | translate:msgParamInvestigadorPrincipalEntity}}
+          </mat-error>
+        </mat-form-field>
+
+
+        <!-- Datos Ip Proyecto -->
+        <mat-form-field fxFlex="50%">
+          <mat-label>{{'csp.autorizacion.datos-ip-proyecto' | translate}}</mat-label>
+          <input matInput formControlName="datosIpProyecto" type="text" id="datosIpProyecto"
+            placeholder="{{'csp.autorizacion.datos-ip-proyecto' | translate}}"
+            [required]="!this.formPart.investigadorRequired">
+          <mat-error *ngIf="formGroup.controls.datosIpProyecto.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamDatosIpProyectoEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.datosIpProyecto.errors?.required">
+            {{'error.required.entity' | translate:msgParamDatosIpProyectoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Horas dedicacion -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="33%">
+          <mat-label>{{'csp.autorizacion.horas-dedicacion' | translate}}</mat-label>
+          <input matInput formControlName="horasDedicacion" type="number" id="horasDedicacion"
+            placeholder="{{'csp.autorizacion.horas-dedicacion' | translate}}">
+          <mat-error *ngIf="formGroup.controls.horasDedicacion.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamHorasDedicacionEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <!-- Observaciones -->
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{'csp.autorizacion.observaciones' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="observaciones"
+          placeholder="{{'csp.convocatoria.observaciones' | translate}}">
+        </sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamObservacionesEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-fragment>

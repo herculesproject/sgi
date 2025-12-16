@@ -1,0 +1,101 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { FragmentComponent } from '@core/component/fragment.component';
+import { CAUSA_EXENCION_MAP } from '@core/models/csp/proyecto';
+import { TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
+import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
+import { IRelacionEjecucionEconomicaWithIva, ProyectosFragment } from './proyectos.fragment';
+
+@Component({
+  selector: 'sgi-proyectos',
+  templateUrl: './proyectos.component.html',
+  styleUrls: ['./proyectos.component.scss']
+})
+export class ProyectosComponent extends FragmentComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
+  formPart: ProyectosFragment;
+
+  elementosPagina = [5, 10, 25, 100];
+  displayedColumns = [];
+
+  dataSource = new MatTableDataSource<IRelacionEjecucionEconomicaWithIva>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  get TipoEntidad() {
+    return TipoEntidad;
+  }
+
+  get CAUSA_EXENCION_MAP() {
+    return CAUSA_EXENCION_MAP;
+  }
+
+  get CSP_ROUTE_NAMES() {
+    return CSP_ROUTE_NAMES;
+  }
+
+  constructor(
+    private actionService: EjecucionEconomicaActionService,
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
+  ) {
+    super(actionService.FRAGMENT.PROYECTOS, actionService, translate);
+
+    this.formPart = this.fragment as ProyectosFragment;
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.initDisplayedColumns();
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = (relacionEjecucionEconomica: IRelacionEjecucionEconomicaWithIva, property: string) => {
+      switch (property) {
+        case 'nombre':
+          return this.languageService.getFieldValue(relacionEjecucionEconomica.nombre);
+        default:
+          return relacionEjecucionEconomica[property];
+      }
+    };
+    this.dataSource.sort = this.sort;
+
+    this.subscriptions.push(this.formPart.relaciones$.subscribe(elements => {
+      this.dataSource.data = elements;
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  protected setupI18N(): void { }
+
+  private initDisplayedColumns(): void {
+    this.displayedColumns = [
+      'id',
+      'proyectoSge.id',
+      'nombre',
+      'codigoExterno',
+      'codigoInterno',
+      'responsables',
+      'fechaInicio',
+      'fechaFin',
+      'fechaFinDefinitiva',
+      'ivaDeducible',
+      'iva',
+      'causaExencion',
+      'acciones'
+    ];
+
+    if (this.formPart.isSectorIvaSgeEnabled) {
+      this.displayedColumns.splice(12, 0, 'sectorIva');
+    }
+  }
+
+}

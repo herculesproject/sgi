@@ -1,0 +1,163 @@
+<sgi-fragment
+  title="{{(formPart.isEjecucionEconomicaGruposEnabled ? 'csp.ejecucion-economica.proyectos-grupos' : 'csp.ejecucion-economica.proyectos')| translate}}">
+
+  <div class="mat-elevation-z4">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
+
+      <!-- Identificador interno SGI Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.identificador-sgi' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.id}}
+        </td>
+      </ng-container>
+
+      <!-- Identificador SGE Column -->
+      <ng-container matColumnDef="proyectoSge.id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.identificador-sge' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.proyectoSge.id}}
+        </td>
+      </ng-container>
+
+      <!-- Nombre / Titulo Column -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{(formPart.isEjecucionEconomicaGruposEnabled ? 'csp.ejecucion-economica.proyectos-grupos.nombre' :
+          'csp.ejecucion-economica.proyectos.nombre')| translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <sgi-i18n-table-field [field]="element.nombre"></sgi-i18n-table-field>
+        </td>
+      </ng-container>
+
+      <!-- Referencia en entidad convocante Column -->
+      <ng-container matColumnDef="codigoExterno">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.ref-entidad-convocante' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.codigoExterno}}
+        </td>
+      </ng-container>
+
+      <!-- Referencia interna Column -->
+      <ng-container matColumnDef="codigoInterno">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.ref-interna' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.codigoInterno}}
+        </td>
+      </ng-container>
+
+      <!-- Responsable Column -->
+      <ng-container matColumnDef="responsables">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.proyectos-grupos.responsable' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element" matTooltip="{{element.responsables | personaNombreCompleto}}">
+          {{element.responsables | personaNombreCompleto}}
+        </td>
+      </ng-container>
+
+      <!-- Fecha inicio Column -->
+      <ng-container matColumnDef="fechaInicio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.fecha-inicio' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fechaInicio | luxon:'shortDate'}}
+        </td>
+      </ng-container>
+
+      <!-- Fecha fin Column -->
+      <ng-container matColumnDef="fechaFin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.fecha-fin' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fechaFin | luxon:'shortDate'}}
+        </td>
+      </ng-container>
+
+      <!-- Fecha fin definitiva Column -->
+      <ng-container matColumnDef="fechaFinDefinitiva">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.fecha-fin-definitiva' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fechaFinDefinitiva | luxon:'shortDate'}}
+        </td>
+      </ng-container>
+
+      <!-- IVA deducible Column -->
+      <ng-container matColumnDef="ivaDeducible">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.iva-deducible' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.ivaDeducible === undefined || element.ivaDeducible === null ? ''
+          : ((element.ivaDeducible ? 'label.si' : 'label.no') | translate)}}
+        </td>
+      </ng-container>
+
+      <!-- Porcentaje IVA Column -->
+      <ng-container matColumnDef="iva">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.iva' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.iva}}
+        </td>
+      </ng-container>
+
+      <!-- Causa exencion Column -->
+      <ng-container matColumnDef="causaExencion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.causa-exencion' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{CAUSA_EXENCION_MAP.get(element.causaExencion) | translate}}
+        </td>
+      </ng-container>
+
+      <!-- Sector IVA Column -->
+      <ng-container matColumnDef="sectorIva">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.sector-iva' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.sectorIva === undefined || element.sectorIva === null ? ''
+          : ((element.sectorIva ? 'label.si' : 'label.no') | translate)}}
+        </td>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container>
+            <button *ngIf="element.tipoEntidad === TipoEntidad.PROYECTO" mat-icon-button color="primary"
+              matTooltip="{{'btn.view' | translate}}" [routerLink]="['../../..', CSP_ROUTE_NAMES.PROYECTO, element.id]">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button *ngIf="element.tipoEntidad === TipoEntidad.GRUPO" mat-icon-button color="primary"
+              matTooltip="{{'btn.view' | translate}}" [routerLink]="['../../..', CSP_ROUTE_NAMES.GRUPO, element.id]">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</sgi-fragment>

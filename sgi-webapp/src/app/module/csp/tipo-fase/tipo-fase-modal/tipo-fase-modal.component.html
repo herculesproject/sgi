@@ -1,0 +1,30 @@
+<sgi-action-dialog [title]="title">
+  <form [formGroup]="formGroup">
+    <!-- Nombre -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.tipo-fase.nombre' | translate}}</mat-label>
+        <sgi-i18n-input formControlName="nombre" type="text" placeholder="{{'csp.tipo-fase.nombre' | translate}}"
+          required>
+        </sgi-i18n-input>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+          {{'error.required.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Descripción -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.tipo-fase.descripcion' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="descripcion" placeholder="{{'csp.tipo-fase.descripcion' | translate}}">
+        </sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-action-dialog>

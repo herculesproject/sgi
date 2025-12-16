@@ -1,0 +1,84 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- Entidad -->
+    <div fxLayout="row">
+      <mat-form-field fxFlex>
+        <mat-label>{{ 'csp.proyecto-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR }}</mat-label>
+        <sgi-select-empresa formControlName="entidad"
+          placeholder="{{ 'csp.proyecto-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR }}" required>
+        </sgi-select-empresa>
+        <mat-error *ngIf="formGroup.controls.entidad.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamEntity }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.entidad.errors?.duplicated">
+          {{ 'error.csp.proyecto-entidad-convocatante.duplicated' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Plan -->
+    <div fxLayout="row">
+      <mat-form-field fxFlex>
+        <mat-label>{{ 'csp.proyecto-entidad-convocante.programa.plan' | translate }}</mat-label>
+        <sgi-select-entity formControlName="plan" [options]="planes$ | async"></sgi-select-entity>
+        <mat-error *ngIf="formGroup.controls.plan.errors?.invalid">
+          {{ 'error.invalid.entity' | translate:msgParamPlanEntity }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Programa -->
+    <div class="programa" fxLayout="column" fxLayoutGap="10px">
+      <mat-label>{{ 'csp.proyecto-entidad-convocante.programa.programa' | translate }}</mat-label>
+      <div class="arbol" fxFlex>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="arbol-tree">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+            <li class="mat-tree-node">
+              <button mat-icon-button disabled></button>
+              <mat-label *ngIf="node.programa.id === data.proyectoEntidadConvocante.programaConvocatoria?.id">
+                <sgi-i18n-tree-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-tree-field>
+              </mat-label>
+              <mat-checkbox *ngIf="node.programa.id !== data.proyectoEntidadConvocante.programaConvocatoria?.id"
+                class="checkbox" color="primary" [checked]="node === checkedNode" (change)="onCheckNode(node, $event)"
+                matTooltip="{{node.programa.descripcion | i18nFieldTooltip}}">
+                <sgi-i18n-tree-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-tree-field>
+              </mat-checkbox>
+            </li>
+          </mat-tree-node>
+          <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+            <li>
+              <div class="mat-tree-node">
+                <button mat-icon-button matTreeNodeToggle>
+                  <mat-icon color="primary" class="mat-icon-rtl-mirror">
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                  </mat-icon>
+                </button>
+                <mat-label *ngIf="node.programa.id === data.proyectoEntidadConvocante.programaConvocatoria?.id"
+                  matTooltip="{{node.programa.descripcion | i18nFieldTooltip}}">
+                  <sgi-i18n-tree-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-tree-field>
+                </mat-label>
+                <mat-checkbox *ngIf="node.programa.id !== data.proyectoEntidadConvocante.programaConvocatoria?.id"
+                  class="checkbox" color="primary" [checked]="node === checkedNode" (change)="onCheckNode(node, $event)"
+                  matTooltip="{{node.programa.descripcion | i18nFieldTooltip}}">
+                  <sgi-i18n-tree-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-tree-field>
+                </mat-checkbox>
+              </div>
+              <ul [class.arbol-invisible]="!treeControl.isExpanded(node)">
+                <ng-container matTreeNodeOutlet></ng-container>
+              </ul>
+            </li>
+          </mat-nested-tree-node>
+        </mat-tree>
+      </div>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button *ngIf="!this.data.readonly" color="accent" (click)="doAction()" [disabled]="this.actionDisabled"
+    mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{
+    (create ? 'btn.add.entity' :'btn.ok') | translate:msgParamEntity }}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{'btn.cancel' | translate}}
+  </button>
+</mat-dialog-actions>

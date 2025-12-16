@@ -1,0 +1,41 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+
+  <form [formGroup]="formGroup" fxLayout="column">
+    <!-- Nombre -->
+    <div fxFlex>
+      <mat-form-field>
+        <mat-label>{{'pii.tipo-proteccion.nombre' | translate}}</mat-label>
+        <sgi-i18n-input formControlName="nombre" placeholder="{{'pii.tipo-proteccion.nombre' | translate}}" required
+          cdkFocusInitial></sgi-i18n-input>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+          {{'error.required.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- Descripción -->
+    <div fxFlex>
+      <mat-form-field>
+        <mat-label>{{'pii.tipo-proteccion.descripcion' | translate}}</mat-label>
+        <sgi-i18n-textarea matInput formControlName="descripcion"
+          placeholder="{{'pii.tipo-proteccion.descripcion' | translate}}" required></sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.descripcion.errors?.required">
+          {{'error.required.entity' | translate: msgParamDescripcionEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

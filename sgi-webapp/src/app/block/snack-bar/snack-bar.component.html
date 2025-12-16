@@ -1,0 +1,19 @@
+<ng-container *ngIf="data.msg">
+  {{ data.msg | translate:data.params }}
+</ng-container>
+<ng-container *ngIf="data.error">
+  <div fxLayout="row" fxLayoutGap="10px">
+    <div fxFlex style="text-align: left;">
+      <div class="preserve-lines">
+        {{errorMsg(data.error) | async}}
+      </div>
+    </div>
+    <mat-icon style="cursor: pointer;" (click)="dismiss()">close</mat-icon>
+  </div>
+
+  <ng-container *ngIf="data.error.errors">
+    <ul style="text-align: left; margin-top:0px; margin-bottom: 0px">
+      <li *ngFor="let error of data.error.errors">{{error.field}}{{error.field ? ':' : ''}} {{error.error}}</li>
+    </ul>
+  </ng-container>
+</ng-container>

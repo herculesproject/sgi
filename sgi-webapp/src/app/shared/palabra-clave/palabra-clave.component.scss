@@ -1,0 +1,9 @@
+@import "colors.scss";
+
+.page {
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: $dark-dividers;
+  color: map-get($sgi-foreground, icon);
+  font-size: 12px;
+}

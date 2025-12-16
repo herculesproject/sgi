@@ -1,0 +1,18 @@
+<sgi-action-dialog [title]="title" class="modal-lineas-investigacion">
+  <form [formGroup]="formGroup">
+    <!-- Nombre -->
+    <div fxLayout="row" fxFlex="600px" style="margin-bottom: 100px">
+      <mat-form-field>
+        <mat-label>{{'csp.linea-investigacion.nombre' | translate}}</mat-label>
+        <sgi-input-linea-investigacion formControlName="nombre"
+          placeholder="{{'csp.linea-investigacion.nombre' | translate}}" required></sgi-input-linea-investigacion>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+          {{'error.required.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-action-dialog>

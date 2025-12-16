@@ -1,0 +1,24 @@
+<!-- Menu secundario -->
+<div class="navbar-icon">
+  <div class="nav-item" [matTooltip]="(authService.authStatus$ | async)?.preferredUsername">
+    <a class="nav-link" [matMenuTriggerFor]="account">
+      <mat-icon color="primary">person</mat-icon>
+    </a>
+    <mat-menu #account="matMenu">
+      <button mat-menu-item (click)="authService.logout('/')">
+        <span>{{'menu.secundario.cuenta.logout' | translate}}</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>
+
+<div class="navbar-icon modulo" *ngIf="modulesCount(authService.authStatus$ | async) > 1">
+  <div class="nav-item modulo" matTooltip="{{'menu.secundario.selector-modulo' | translate}}"
+    (click)="selectorModulo()">
+    <a class="nav-link">
+      <mat-icon color="primary">border_all</mat-icon>
+      <span fxHide fxShow.xs class="posicion">{{'menu.secundario.selector-modulo' | translate}}</span>
+    </a>
+  </div>
+</div>
+<!-- FIN Menu secundario -->

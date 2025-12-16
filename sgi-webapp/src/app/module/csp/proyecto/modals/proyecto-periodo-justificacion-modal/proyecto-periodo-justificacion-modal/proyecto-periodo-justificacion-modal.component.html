@@ -1,0 +1,256 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="none start">
+    <div fxFlex fxLayout="column" fxLayoutGap="10px">
+      <h3 *ngIf="showDatosConvocatoriaPeriodoJustificacion">&nbsp;</h3>
+      <!-- Número de periodo -->
+      <div *ngIf="data.proyectoPeriodoJustificacion?.numPeriodo" fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.numero-periodo' | translate}}</mat-label>
+          <input matInput formControlName="numPeriodo" type="text"
+            placeholder="{{'csp.proyecto-periodo-justificacion.periodo' | translate}}" readonly maxlength="100">
+          <mat-error *ngIf="formGroup.controls.numPeriodo.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamPeriodoEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Tipo -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.tipoJustificacion' | translate}}</mat-label>
+          <sgi-select-enum formControlName="tipoJustificacion" required [enumMap]="TIPO_JUSTIFICACION_MAP">
+          </sgi-select-enum>
+          <mat-error *ngIf="formGroup.controls.tipoJustificacion.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamTipoEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.tipoJustificacion.errors?.notAllowed">
+            <ng-container
+              *ngIf="formGroup.controls.tipoJustificacion.value !== formGroup.controls.tipoJustificacionConvocatoria.value else duplicateFromCopy">
+              {{'error.csp.proyecto-periodo-justificacion.tipo.duplicate' | translate}}
+            </ng-container>
+            <ng-template #duplicateFromCopy>
+              {{'error.csp.proyecto-periodo-justificacion.tipo.duplicate-convocatoria' | translate}}
+            </ng-template>
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.tipoJustificacion.errors?.finalNotLast">
+            {{'error.csp.proyecto-periodo-justificacion.tipo.last' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px" class="fieldset-form">
+        {{'label.csp.proyecto-periodo-justificacion.periodo-justificar' | translate}}
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Fecha inicio -->
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-inicio' | translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required
+            (blur)="recalcularNumPeriodo()">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaInicio>
+          </mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamFechaInicioEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.overlapped">
+            {{ 'error.periodo.justificacion.overlapping.range.fecha-inicio' | translate }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.minDate">
+            {{'error.csp.proyecto-calendario-facturacion.fecha-inicio.after' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.maxDate">
+            {{'error.start.period' | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Fecha fin -->
+        <mat-form-field sgiEndDate>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-fin' | translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechafin" formControlName="fechaFin" required>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechafin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechafin>
+          </mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamFechaFinEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
+            {{'error.after.param' | translate:msgParamFechaInicioEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.overlapped">
+            {{ 'error.periodo.justificacion.overlapping.range.fecha-fin' | translate }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.maxDate">
+            {{'error.csp.proyecto-calendario-facturacion.fecha-fin.before' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px" class="fieldset-form">
+        {{'label.csp.proyecto-periodo-justificacion.periodo-entrega-justificacion' | translate}}
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Fecha de inicio Presentación-->
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-inicio-presentacion' | translate}}</mat-label>
+          <input matInput formControlName="fechaInicioPresentacion" [ngxMatDatetimePicker]="picker1">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker1 showSeconds="true" [defaultTime]="[0,0,0]"></ngx-mat-datetime-picker>
+        </mat-form-field>
+
+        <!-- Fecha de fin Presentación -->
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-fin-presentacion' | translate}}</mat-label>
+          <input matInput formControlName="fechaFinPresentacion" [ngxMatDatetimePicker]="picker2">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker2 showSeconds="true" [defaultTime]="[23,59,59]"></ngx-mat-datetime-picker>
+          <mat-error *ngIf="formGroup.controls.fechaFinPresentacion.errors?.after">
+            {{'error.after.param' | translate:msgParamFechaInicioPresentacionEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Observaciones -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.observaciones' | translate}}</mat-label>
+          <sgi-i18n-textarea formControlName="observaciones"
+            placeholder="{{'csp.proyecto-periodo-justificacion.observaciones' | translate}}"></sgi-i18n-textarea>
+          <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
+            {{ 'error.maxlength.entity' | translate:msgParamObservacionesEntity }}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </div>
+
+    <!-- Datos de la convocatoria -->
+    <div fxFlex="50" fxLayout="column" fxLayoutGap="10px" *ngIf="showDatosConvocatoriaPeriodoJustificacion">
+      <h3>{{'info.csp.datos-convocatoria' | translate}}</h3>
+      <!-- Número de período convocatoria -->
+      <div *ngIf="data.proyectoPeriodoJustificacion?.numPeriodo" fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-seguimiento-cientifico.numero-periodo' | translate}}</mat-label>
+          <input matInput formControlName="numPeriodoConvocatoria" type="number" id="numPeriodoConvocatoria"
+            placeholder="{{'csp.proyecto-periodo-seguimiento-cientifico.numero-periodo' | translate}}">
+        </mat-form-field>
+      </div>
+      <!-- Tipo De Justificacion convocatoria-->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.tipoJustificacion' | translate}}</mat-label>
+          <sgi-select-enum formControlName="tipoJustificacionConvocatoria" [enumMap]="TIPO_JUSTIFICACION_MAP">
+          </sgi-select-enum>
+        </mat-form-field>
+      </div>
+      <!-- Periodo de Justificacion convocatoria -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px" class="fieldset-form">
+        {{'label.csp.proyecto-periodo-justificacion.periodo-justificar' | translate}}
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Fecha inicio Convocatoria-->
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-inicio' | translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaInicioConvocatoria" formControlName="fechaInicioConvocatoria"
+            required>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicioConvocatoria">
+          </mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaInicioConvocatoria>
+          </mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaInicioConvocatoria.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamFechaInicioEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicioConvocatoria.errors?.overlapped">
+            {{ 'error.overlapping.range' | translate }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Fecha fin Convocatoria -->
+        <mat-form-field sgiEndDate>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-fin' | translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechafinConvocatoria" formControlName="fechaFinConvocatoria" required>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechafinConvocatoria">
+          </mat-datepicker-toggle>
+          <mat-datepicker #pickerFechafinConvocatoria>
+          </mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaFinConvocatoria.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamFechaFinEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFinConvocatoria.errors?.after">
+            {{'error.after.param' | translate:msgParamFechaInicioEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFinConvocatoria.errors?.overlapped">
+            {{ 'error.overlapping.range' | translate }}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <!-- Plazo de presentación convocatoria -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px" class="fieldset-form">
+        {{'label.csp.proyecto-periodo-justificacion.periodo-entrega-justificacion' | translate}}
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+
+        <!-- Fecha de inicio de presentación convocatoria-->
+
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-inicio-presentacion'|
+            translate}}</mat-label>
+          <input matInput formControlName="fechaInicioPresentacionConvocatoria"
+            [ngxMatDatetimePicker]="pickerFechaInicioPresentacion">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicioPresentacion">
+          </mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerFechaInicioPresentacion showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+
+
+        <!-- Fecha de fin de presentación convocatoria-->
+
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.fecha-fin-presentacion' | translate}}</mat-label>
+          <input matInput formControlName="fechaFinPresentacionConvocatoria"
+            [ngxMatDatetimePicker]="pickerFechaFinPresentacion">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFinPresentacion">
+          </mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #pickerFechaFinPresentacion showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+
+      </div>
+
+      <!-- Observaciones convocatoria -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-periodo-justificacion.observaciones' | translate}}</mat-label>
+          <sgi-i18n-textarea formControlName="observacionesConvocatoria"
+            placeholder="{{'csp.proyecto-periodo-justificacion.observaciones' | translate}}"
+            [disabled]></sgi-i18n-textarea>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px" class="separation-button"
+        *ngIf="data.convocatoriaPeriodoJustificacion">
+        <button color="primary" aria-label="Center Align" mat-raised-button (click)="copyToProyecto()"
+          [disabled]="disabledCopy">
+          {{'btn.csp.aplicar-proyecto'| translate}}
+        </button>
+      </div>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled || disabledSave" mat-raised-button
+    type="submit" *sgiHasAnyAuthorityForAnyUO="['CSP-CON-C', 'CSP-CON-E']">
+    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{'btn.cancel' | translate}}
+  </button>
+</mat-dialog-actions>

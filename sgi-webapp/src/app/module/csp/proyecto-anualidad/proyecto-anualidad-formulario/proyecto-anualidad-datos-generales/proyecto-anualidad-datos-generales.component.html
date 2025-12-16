@@ -1,0 +1,76 @@
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
+  <form [formGroup]="formGroup">
+
+    <div fxLayout="row" fxLayoutGap="10px" *ngIf="!this.formPart.isAnualidadGenerica">
+      <!-- Anualidad -->
+      <div fxFlex>
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-presupuesto.anualidad' |
+            translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+          <input matInput formControlName="anualidad" type="number" [required]="!this.formPart.isAnualidadGenerica"
+            placeholder="{{'csp.proyecto-presupuesto.anualidad' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}">
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.duplicate">
+            {{'error.duplicate.anualidad' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.pattern && this.formPart.isFormatoAnio">
+            {{'error.csp.proyecto-presupuesto.anualidad.pattern' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.pattern && !this.formPart.isFormatoAnio">
+            {{'error.csp.proyecto-presupuesto.anualidad.numero.pattern' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamAnualidadEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex *ngIf="this.formPart.isNotificacionPresupuestoSgeEnabled">
+        <!-- Presupuestar -->
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-anualidad.presupuestar' | translate}}
+          </mat-label>
+          <sgi-select-boolean formControlName="presupuestar" required></sgi-select-boolean>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="10px"
+      *ngIf="this.formPart.isAnualidadGenerica && this.formPart.isNotificacionPresupuestoSgeEnabled">
+      <div fxFlex="50">
+        <!-- Presupuestar -->
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.proyecto-anualidad.presupuestar' | translate}}
+          </mat-label>
+          <sgi-select-boolean formControlName="presupuestar" required></sgi-select-boolean>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="10px">
+      <!-- Fecha de Inicio -->
+      <div fxFlex>
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-anualidad.fecha-inicio' | translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaInicio>
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Fecha de fin -->
+      <div fxFlex>
+        <mat-form-field sgiEndDate>
+          <mat-label>{{'csp.proyecto-anualidad.fecha-fin' | translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin">
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaFin>
+          </mat-datepicker>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
+            {{'error.after.fecha-fin' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+</sgi-fragment>

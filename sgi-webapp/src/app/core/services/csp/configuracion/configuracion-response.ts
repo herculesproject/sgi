@@ -1,0 +1,35 @@
+export interface IConfiguracionResponse {
+  id: number;
+  altaBuscadorSgeEnabled: boolean;
+  amortizacionFondosSgeEnabled: boolean;
+  calendarioFacturacionSgeIntegration: string;
+  cardinalidadRelacionSgiSge: string;
+  dedicacionMinimaGrupo: number;
+  integracionesEccSgeEnabled: string;
+  ejecucionEconomicaGruposEnabled: boolean;
+  facturasGastosColumnasFijasVisibles: string;
+  formatoAnualidadAnio: boolean;
+  formatoCodigoInternoProyecto: string;
+  formatoIdentificadorJustificacion: string;
+  formatoPartidaPresupuestaria: string;
+  gastosJustificadosSgeEnabled: boolean;
+  modificacionProyectoSgeEnabled: boolean;
+  notificacionPresupuestoSgeEnabled: boolean;
+  partidasPresupuestariasSgeEnabled: boolean;
+  personalContratadoColumnasFijasVisibles: string;
+  plantillaFormatoCodigoInternoProyecto: string;
+  plantillaFormatoIdentificadorJustificacion: string;
+  plantillaFormatoPartidaPresupuestaria: string;
+  proyectoSgeAltaModoEjecucion: string;
+  proyectoSgeModificacionModoEjecucion: string;
+  proyectoSocioPaisFilterEnabled: boolean;
+  sectorIvaSgeEnabled: boolean;
+  sgeDetalleOperacionesGastosDetalleEnabled: boolean;
+  sgeEjecucionPresupuestariaGastosDetalleEnabled: boolean;
+  sgeFiltroAnualidades: string;
+  solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
+  validacionClasificacionGastos: string;
+  viajesDietasColumnasFijasVisibles: string;
+  sgeEjecucionEconomicaFiltros: string;
+  sgeEliminarRelacionProyectoEnabled: boolean;
+}

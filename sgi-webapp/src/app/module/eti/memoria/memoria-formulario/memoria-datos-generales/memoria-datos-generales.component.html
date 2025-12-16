@@ -1,0 +1,103 @@
+<!-- Memoria datos generales -->
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
+  <form [formGroup]="formGroup" fxLayout="column">
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Referencia de la memoria -->
+      <ng-container *ngIf="this.formGroup.controls.numReferencia.value">
+        <div fxFlex="20">
+          <mat-form-field>
+            <mat-label>{{'eti.memoria.referencia' | translate}}</mat-label>
+            <input type="text" [placeholder]="'eti.memoria.referencia' | translate" arial-label="Number" matInput
+              formControlName="numReferencia">
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </div>
+    <div fxFlex fxLayout="row wrap" fxLayoutGap="10px">
+      <!-- Comité -->
+      <div fxFlex="40">
+        <mat-form-field>
+          <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+          <sgi-select-comite #selectComite [displayWith]="displayerComite" formControlName="comite" required>
+          </sgi-select-comite>
+          <mat-error *ngIf="formGroup.controls.comite.errors?.required">
+            {{'error.required.entity' | translate:msgParamComiteEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Tipo de Memoria -->
+      <div fxFlex="15">
+        <mat-form-field>
+          <mat-label>{{'eti.memoria.tipo' | translate}}</mat-label>
+          <sgi-select-enum formControlName="tipoMemoria" required [resetOnChange]="selectComite.selectionChange"
+            [enumMap]="tiposMemoria$ | async"></sgi-select-enum>
+          <mat-error *ngIf="formGroup.controls.tipoMemoria.errors?.required">
+            {{'error.required.entity' | translate:msgParamTipoMemoriaEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- memoria original-->
+      <ng-container *ngIf="this.datosGeneralesFragment.showMemoriaOriginal">
+        <div fxFlex="40">
+          <mat-form-field>
+            <mat-label>{{'eti.memoria.original' | translate}}</mat-label>
+            <sgi-select-entity formControlName="memoriaOriginal" [resetOnChange]="selectComite.selectionChange"
+              [options]="memorias$ | async" [displayWith]="displayerMemoria"
+              [required]="this.datosGeneralesFragment.showMemoriaOriginal">
+            </sgi-select-entity>
+            <mat-error *ngIf="formGroup.controls.memoriaOriginal?.errors?.required">
+              {{'error.required.entity' | translate:msgParamOrginalEntity}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <!-- Persona equipo trabajo -->
+      <div fxFlex="40">
+        <mat-form-field fxFill>
+          <mat-label>{{'eti.memoria.responsable' | translate}}</mat-label>
+          <sgi-select-entity formControlName="personaResponsable"
+            [options]="datosGeneralesFragment.personasResponsable$ | async" [displayWith]="displayerPersonaResponsable">
+          </sgi-select-entity>
+        </mat-form-field>
+      </div>
+
+      <!-- Título -->
+      <ng-container *ngIf="this.datosGeneralesFragment.showTitulo">
+        <div fxFlex="95.5">
+          <mat-form-field>
+            <mat-label>{{'eti.memoria.titulo-descriptivo' | translate}}</mat-label>
+            <sgi-i18n-textarea matInput [placeholder]="'eti.memoria.titulo-descriptivo' | translate"
+              formControlName="titulo"></sgi-i18n-textarea>
+            <sgi-field-info matSuffix [visible]="true" message="{{textoInfoTituloDescriptivo}}">
+            </sgi-field-info>
+            <mat-error *ngIf="formGroup.controls.titulo.hasError('maxlength')">
+              {{'error.maxlength.entity' | translate:msgParamTituloDescriptivoEntity}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <!-- Comentario subsanacion -->
+      <ng-container *ngIf="this.datosGeneralesFragment.showComentarioSubsanacion">
+        <div fxFlex="95.5">
+          <sgi-info-message message="{{'info.eti.memoria.comentario.subsanacion' | translate}}">
+          </sgi-info-message>
+
+          <mat-form-field>
+            <mat-label>{{'eti.memoria.indicar-subsanacion.comentario' | translate}}</mat-label>
+            <sgi-i18n-textarea formControlName="comentarioSubsanacion">
+            </sgi-i18n-textarea>
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </div>
+
+    <sgi-info-message
+      *ngIf="this.datosGeneralesFragment.showInfoRatificacion && !this.actionService.isLoadDocumentoRatificacion()"
+      message="{{'eti.memoria.info-ratificacion' | translate}}">
+    </sgi-info-message>
+  </form>
+</sgi-fragment>

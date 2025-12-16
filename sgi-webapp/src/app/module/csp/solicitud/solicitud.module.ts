@@ -1,0 +1,131 @@
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { SgiAuthModule } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
+import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from '../shared/csp-shared.module';
+import { CambioEstadoModalComponent } from './modals/cambio-estado-modal/cambio-estado-modal.component';
+import { SolicitudAreaTematicaModalComponent } from './modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
+import { SolicitudCrearProyectoModalComponent } from './modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
+import { SolicitudGrupoModalComponent } from './modals/solicitud-grupo-modal/solicitud-grupo-modal.component';
+import { SolicitudHitosModalComponent } from './modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
+import { SolicitudListadoExportModalComponent } from './modals/solicitud-listado-export-modal/solicitud-listado-export-modal.component';
+import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
+import { SolicitudProyectoPresupuestoListadoExportModalComponent } from './modals/solicitud-proyecto-presupuesto-listado-export-modal/solicitud-proyecto-presupuesto-listado-export-modal.component';
+import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/solicitud-proyecto-responsable-economico-modal/solicitud-proyecto-responsable-economico-modal.component';
+import { SolicitudRrhhAcreditarCategoriaProfesionalModalComponent } from './modals/solicitud-rrhh-acreditar-categoria-profesional/solicitud-rrhh-acreditar-categoria-profesional-modal.component';
+import { SolicitudRrhhAcreditarNivelAcademicoModalComponent } from './modals/solicitud-rrhh-acreditar-nivel-academico/solicitud-rrhh-acreditar-nivel-academico-modal.component';
+import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
+import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
+import { SolicitudDataResolver } from './solicitud-data.resolver';
+import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
+import { SolicitudEntidadConvocanteListadoExportService } from './solicitud-entidad-convocante-listado-export.service';
+import { SolicitudAutoevaluacionComponent } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.component';
+import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
+import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
+import { SolicitudEquipoProyectoComponent } from './solicitud-formulario/solicitud-equipo-proyecto/solicitud-equipo-proyecto.component';
+import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
+import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
+import { SolicitudProyectoAreaConocimientoComponent } from './solicitud-formulario/solicitud-proyecto-area-conocimiento/solicitud-proyecto-area-conocimiento.component';
+import { SolicitudProyectoClasificacionesComponent } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.component';
+import { SolicitudProyectoEntidadesFinanciadorasComponent } from './solicitud-formulario/solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.component';
+import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
+import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
+import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
+import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
+import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
+import { SolicitudRrhhMemoriaComponent } from './solicitud-formulario/solicitud-rrhh-memoria/solicitud-rrhh-memoria.component';
+import { SolicitudRrhhRequisitosConvocatoriaComponent } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.component';
+import { SolicitudRrhhSolitanteComponent } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.component';
+import { SolicitudRrhhTutorComponent } from './solicitud-formulario/solicitud-rrhh-tutor/solicitud-rrhh-tutor.component';
+import { SolicitudGeneralListadoExportService } from './solicitud-general-listado-export.service';
+import { SolicitudGruposInvestigacionIpListadoExportService } from './solicitud-grupos-investigacion-ips-listado-export.service';
+import { SolicitudListadoExportService } from './solicitud-listado-export.service';
+import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
+import { SolicitudProyectoAreaConocimientoListadoExportService } from './solicitud-proyecto-area-conocimiento-listado-export.service';
+import { SolicitudProyectoClasificacionListadoExportService } from './solicitud-proyecto-clasificacion-listado-export.service';
+import { SolicitudProyectoEntidadFinanciadoraListadoExportService } from './solicitud-proyecto-entidad-financiadora-listado-export.service';
+import { SolicitudProyectoEquipoListadoExportService } from './solicitud-proyecto-equipo-listado-export.service';
+import { SolicitudProyectoFichaGeneralListadoExportService } from './solicitud-proyecto-ficha-general-listado-export.service';
+import { SolicitudProyectoPresupuestoListadoExportService } from './solicitud-proyecto-presupuesto-listado-export.service';
+import { SolicitudProyectoResponsableEconomicoListadoExportService } from './solicitud-proyecto-responsable-economico-listado-export.service';
+import { SolicitudProyectoSocioListadoExportService } from './solicitud-proyecto-socio-listado-export.service';
+import { SolicitudRoutingModule } from './solicitud-routing.module';
+import { SolicitudRrhhListadoExportService } from './solicitud-rrhh-listado-export.service';
+
+@NgModule({
+  declarations: [
+    CambioEstadoModalComponent,
+    SolicitudAreaTematicaModalComponent,
+    SolicitudAutoevaluacionComponent,
+    SolicitudCrearComponent,
+    SolicitudCrearProyectoModalComponent,
+    SolicitudDatosGeneralesComponent,
+    SolicitudDocumentosComponent,
+    SolicitudEditarComponent,
+    SolicitudEquipoProyectoComponent,
+    SolicitudGrupoModalComponent,
+    SolicitudHistoricoEstadosComponent,
+    SolicitudHitosComponent,
+    SolicitudHitosModalComponent,
+    SolicitudListadoComponent,
+    SolicitudListadoExportModalComponent,
+    SolicitudModalidadEntidadConvocanteModalComponent,
+    SolicitudProyectoAreaConocimientoComponent,
+    SolicitudProyectoClasificacionesComponent,
+    SolicitudProyectoEntidadesFinanciadorasComponent,
+    SolicitudProyectoFichaGeneralComponent,
+    SolicitudProyectoPresupuestoEntidadesComponent,
+    SolicitudProyectoPresupuestoGlobalComponent,
+    SolicitudProyectoPresupuestoListadoExportModalComponent,
+    SolicitudProyectoResponsableEconomicoComponent,
+    SolicitudProyectoResponsableEconomicoModalComponent,
+    SolicitudProyectoSocioComponent,
+    SolicitudRrhhAcreditarCategoriaProfesionalModalComponent,
+    SolicitudRrhhAcreditarNivelAcademicoModalComponent,
+    SolicitudRrhhMemoriaComponent,
+    SolicitudRrhhRequisitosConvocatoriaComponent,
+    SolicitudRrhhSolitanteComponent,
+    SolicitudRrhhTutorComponent
+  ],
+  imports: [
+    CommonModule,
+    CspSharedModule,
+    FormlyFormsModule,
+    FormsModule,
+    MaterialDesignModule,
+    ReactiveFormsModule,
+    SgempSharedModule,
+    SgiAuthModule,
+    SgoSharedModule,
+    SgpSharedModule,
+    SharedModule,
+    SolicitudRoutingModule,
+    TranslateModule
+  ],
+  providers: [
+    DecimalPipe,
+    SolicitudCrearGuard,
+    SolicitudDataResolver,
+    SolicitudEntidadConvocanteListadoExportService,
+    SolicitudGeneralListadoExportService,
+    SolicitudGruposInvestigacionIpListadoExportService,
+    SolicitudListadoExportService,
+    SolicitudProyectoAreaConocimientoListadoExportService,
+    SolicitudProyectoClasificacionListadoExportService,
+    SolicitudProyectoEntidadFinanciadoraListadoExportService,
+    SolicitudProyectoEquipoListadoExportService,
+    SolicitudProyectoFichaGeneralListadoExportService,
+    SolicitudProyectoPresupuestoListadoExportService,
+    SolicitudProyectoResponsableEconomicoListadoExportService,
+    SolicitudProyectoSocioListadoExportService,
+    SolicitudRrhhListadoExportService
+  ]
+})
+export class SolicitudModule { }

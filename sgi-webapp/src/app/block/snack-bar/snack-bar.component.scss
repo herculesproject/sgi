@@ -1,0 +1,21 @@
+@import "colors.scss";
+
+:host {
+  flex-direction: column;
+}
+
+.preserve-lines {
+  white-space: pre-line;
+}
+
+.error-snack-bar {
+  background-color: map-get($sgi-custom-colors, danger);
+  color: map-get($sgi-custom-colors, white);
+  text-align: center;
+}
+
+.success-snack-bar {
+  background-color: map-get($sgi-custom-colors, success);
+  color: map-get($sgi-custom-colors, white);
+  text-align: center;
+}
