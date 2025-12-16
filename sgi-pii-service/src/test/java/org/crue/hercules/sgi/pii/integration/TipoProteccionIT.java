@@ -1,0 +1,368 @@
+package org.crue.hercules.sgi.pii.integration;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.pii.controller.TipoProteccionController;
+import org.crue.hercules.sgi.pii.dto.TipoProteccionInput;
+import org.crue.hercules.sgi.pii.dto.TipoProteccionOutput;
+import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
+import org.crue.hercules.sgi.pii.model.TipoProteccion;
+import org.crue.hercules.sgi.pii.repository.TipoProteccionRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
+
+/**
+ * Test de integracion de TipoProteccion.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class TipoProteccionIT extends BaseIT {
+
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CONTROLLER_BASE_PATH = TipoProteccionController.MAPPING;
+  private static final String PATH_TODOS = "/todos";
+  private static final String PATH_SUBTIPOS = "/subtipos";
+  private static final String PATH_ACTIVAR = "/activar";
+  private static final String PATH_DESACTIVAR = "/desactivar";
+
+  @Autowired
+  private TipoProteccionRepository tipoProteccionRepository;
+
+  private HttpEntity<TipoProteccionInput> buildRequest(HttpHeaders headers,
+      TipoProteccionInput entity, String... roles) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", roles)));
+
+    HttpEntity<TipoProteccionInput> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+// @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+// @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findActivos_WithPagingSortingAndFiltering_ReturnsTipoProteccionSubList() throws Exception {
+    String[] roles = { "PII-TPR-V", "PII-TPR-C", "PII-TPR-E", "PII-TPR-B", "PII-TPR-R", "PII-INV-V", "PII-INV-C",
+        "PII-INV-E", "PII-INV-B", "PII-INV-R", "PII-INV-MOD-V" };
+
+    // when: Obtiene la page=0 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    String sort = "id,desc";
+    String filter = "descripcion.value=ke=-00";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter)
+        .build(false).toUri();
+
+    final ResponseEntity<List<TipoProteccionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<TipoProteccionOutput>>() {
+        });
+
+    // then: Respuesta OK, retorna la información de la página correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoProteccionOutput> tipoProteccionOutput = response.getBody();
+    Assertions.assertThat(tipoProteccionOutput).hasSize(3);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
+
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.get(0).getNombre(), Language.ES))
+        .isEqualTo(
+            "nombre-tipo-proteccion-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.get(1).getNombre(), Language.ES))
+        .isEqualTo(
+            "nombre-tipo-proteccion-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.get(2).getNombre(), Language.ES))
+        .isEqualTo(
+            "nombre-tipo-proteccion-" + String.format("%03d", 1));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+   })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAll_WithPagingSortingAndFiltering_ReturnsTipoProteccionSubList() throws Exception {
+    String[] roles = {"PII-TPR-V", "PII-TPR-C", "PII-TPR-E", "PII-TPR-B", "PII-TPR-R"};   
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,desc";
+    String filter = "descripcion.value=ke=-00";
+
+    // when: find Convocatoria
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort).queryParam("q", filter)
+        .build(false).toUri();
+    final ResponseEntity<List<TipoProteccionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<TipoProteccionOutput>>() {
+        });
+
+    // given: Proyecto data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoProteccionOutput> tipoProteccionOutPut = response.getBody();
+    Assertions.assertThat(tipoProteccionOutPut).hasSize(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("4");
+
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutPut.get(0).getNombre(), Language.ES)).as("0.nombre[0].value")
+        .isEqualTo("nombre-tipo-proteccion-" + String.format("%03d", 6));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutPut.get(1).getNombre(), Language.ES)).as("1.nombre[0].value")
+        .isEqualTo("nombre-tipo-proteccion-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutPut.get(2).getNombre(), Language.ES)).as("2.nombre[0].value")
+        .isEqualTo("nombre-tipo-proteccion-" + String.format("%03d", 2));
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+   })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findSubtiposProteccion_WithPagingSortingAndFiltering_ReturnsTipoProteccionSubList() throws Exception {
+    String[] roles = {"PII-TPR-V", "PII-TPR-C", "PII-TPR-E", "PII-TPR-B", "PII-TPR-R", "PII-INV-V", "PII-INV-C", "PII-INV-E"};   
+    Long idTipoProteccion = 3L;
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,desc";
+    String filter = "descripcion.value=ke=-00";
+
+    // when: find SubtiposProteccion
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SUBTIPOS).queryParam("s", sort).queryParam("q", filter)
+        .buildAndExpand(idTipoProteccion).toUri();
+
+    final ResponseEntity<List<TipoProteccionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<TipoProteccionOutput>>() {
+        });
+
+    // given: Proyecto data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoProteccionOutput> tipoProteccionOutput = response.getBody();
+    Assertions.assertThat(tipoProteccionOutput).hasSize(2);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
+
+    Assertions.assertThat(tipoProteccionOutput.get(0).getId()).as("get(0).getId())")
+        .isEqualTo(5);
+    Assertions.assertThat(tipoProteccionOutput.get(1).getId()).as("get(1).getId())")
+        .isEqualTo(4);
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+   })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllSubtiposProteccion_WithPagingSortingAndFiltering_ReturnsTipoProteccionSubList() throws Exception {
+    String[] roles = {"PII-TPR-V", "PII-TPR-C", "PII-TPR-E", "PII-TPR-B", "PII-TPR-R", "PII-INV-V", "PII-INV-C", "PII-INV-E"};   
+    Long idTipoProteccion = 3L;
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,desc";
+    String filter = "descripcion.value=ke=-00";
+
+    // when: find SubtiposProteccion
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SUBTIPOS + PATH_TODOS).queryParam("s", sort).queryParam("q", filter)
+        .buildAndExpand(idTipoProteccion).toUri();
+
+    final ResponseEntity<List<TipoProteccionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<TipoProteccionOutput>>() {
+        });
+
+    // given: Proyecto data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoProteccionOutput> tipoProteccionOutput = response.getBody();
+    Assertions.assertThat(tipoProteccionOutput).hasSize(2);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
+
+    Assertions.assertThat(tipoProteccionOutput.get(0).getId()).as("get(0).getId())")
+        .isEqualTo(5);
+    Assertions.assertThat(tipoProteccionOutput.get(1).getId()).as("get(1).getId())")
+        .isEqualTo(4);
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+   })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findById_ReturnsTipoProteccion() throws Exception {
+    String[] roles = {"PII-TPR-V", "PII-TPR-C", "PII-TPR-E", "PII-TPR-B", "PII-TPR-R"};   
+    Long tipoProteccionId = 1L;
+
+    final ResponseEntity<TipoProteccionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET,
+        buildRequest(null, null, roles), TipoProteccionOutput.class, tipoProteccionId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    TipoProteccionOutput tipoProteccionOutput = response.getBody();
+
+    Assertions.assertThat(tipoProteccionOutput).isNotNull();
+    Assertions.assertThat(tipoProteccionOutput.getId()).as("id")
+        .isEqualTo(1);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("nombre-tipo-proteccion-001");
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+   })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void activar_ReturnsTipoProteccionActivo() throws Exception {
+    String[] roles = {"PII-TPR-R"};   
+    Long tipoProteccionId = 6L;
+
+    final ResponseEntity<TipoProteccion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, roles), TipoProteccion.class, tipoProteccionId);
+
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    TipoProteccion tipoProteccionOutput = response.getBody();
+
+    Assertions.assertThat(tipoProteccionOutput).isNotNull();
+    Assertions.assertThat(tipoProteccionOutput.getId()).as("id")
+        .isEqualTo(6);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("nombre-tipo-proteccion-006");
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+   })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void desactivar_ReturnsTipoProteccionInactivo() throws Exception {
+    String[] roles = {"PII-TPR-B"};   
+    Long tipoProteccionId = 1L;
+
+    final ResponseEntity<TipoProteccionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, roles), TipoProteccionOutput.class, tipoProteccionId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    TipoProteccionOutput tipoProteccionOutput = response.getBody();
+
+    Assertions.assertThat(tipoProteccionOutput).isNotNull();
+    Assertions.assertThat(tipoProteccionOutput.getId()).as("id")
+        .isEqualTo(1);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.getNombre(),Language.ES)).as("nombre")
+        .isEqualTo("nombre-tipo-proteccion-001");
+
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+  "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void create_ReturnsNewTipoProteccionOutput() throws Exception {
+    String[] roles = {"PII-TPR-C"};   
+    TipoProteccionInput input = this.buildMockTipoProteccionInput();
+
+    final ResponseEntity<TipoProteccionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
+        buildRequest(null, input, roles), TipoProteccionOutput.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(response.getBody()).isNotNull();
+
+    TipoProteccionOutput tipoProteccionOutput = response.getBody();
+    Assertions.assertThat(tipoProteccionOutput.getId()).isEqualTo(this.tipoProteccionRepository.count());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.getNombre(), Language.ES)).isEqualTo(I18nHelper.getValueForLanguage(input.getNombre(), Language.ES));
+    Assertions.assertThat(tipoProteccionOutput.getTipoPropiedad()).isEqualTo(input.getTipoPropiedad());
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_proteccion.sql",
+    // @formatter:off
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_ReturnsModifiedTipoProteccionOutput() throws Exception {
+    String[] roles = {"PII-TPR-E"};   
+    Long toUpdateId = 1L;
+    TipoProteccionInput input = this.buildMockTipoProteccionInput();
+
+    final ResponseEntity<TipoProteccionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
+        buildRequest(null, input, roles), TipoProteccionOutput.class, toUpdateId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull();
+
+    TipoProteccionOutput tipoProteccionOutput = response.getBody();
+    Assertions.assertThat(tipoProteccionOutput.getId()).isEqualTo(toUpdateId);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoProteccionOutput.getNombre(), Language.ES)).isEqualTo(I18nHelper.getValueForLanguage(input.getNombre(), Language.ES));
+    Assertions.assertThat(tipoProteccionOutput.getTipoPropiedad()).isEqualTo(input.getTipoPropiedad());
+  }
+
+  private TipoProteccionInput buildMockTipoProteccionInput() {
+    List<I18nFieldValueDto> nombreTipoProteccion = new ArrayList<>();
+    nombreTipoProteccion.add(new I18nFieldValueDto(Language.ES, "Testing tipo Proteccion"));
+
+    List<I18nFieldValueDto> descripcionTipoProteccion = new ArrayList<>();
+    descripcionTipoProteccion.add(new I18nFieldValueDto(Language.ES, "Testing tipo Proteccion"));
+
+    return TipoProteccionInput.builder()
+    .nombre(nombreTipoProteccion)
+    .descripcion(descripcionTipoProteccion)
+    .tipoPropiedad(TipoPropiedad.INTELECTUAL)
+    .build();
+  }
+
+}
