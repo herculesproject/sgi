@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet author="master" id="0.6.0-updateTemplatesOracle" dbms="oracle">
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_text.ftl" />
+       <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_html.ftl" /> 
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+  </changeSet>
+
+  <changeSet author="master" id="0.6.0-updateTemplatesNotOracle" dbms="!oracle">
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_text.ftl" /> 
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+  </changeSet>
+
+  <changeSet author="master" id="0.6.0-updateDefaultTemplates">
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT'</where>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>
