@@ -1,0 +1,90 @@
+package org.crue.hercules.sgi.csp.service;
+
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+/**
+ * Service Interface para gestionar {@link ProyectoProyectoSge}.
+ */
+
+public interface ProyectoProyectoSgeService {
+
+  /**
+   * Guarda la entidad {@link ProyectoProyectoSge}.
+   * 
+   * @param proyectoProyectoSge la entidad {@link ProyectoProyectoSge} a guardar.
+   * @return la entidad {@link ProyectoProyectoSge} persistida.
+   */
+  ProyectoProyectoSge create(ProyectoProyectoSge proyectoProyectoSge);
+
+  /**
+   * Actualiza el {@link ProyectoProyectoSge#proyectoSgeRef} al que esta asociado
+   * el {@link ProyectoProyectoSge#proyectoId}.
+   * 
+   * @param proyectoProyectoSge la entidad {@link ProyectoProyectoSge} a guardar.
+   * @return la entidad {@link ProyectoProyectoSge} actualizada.
+   */
+  ProyectoProyectoSge reasignar(ProyectoProyectoSge proyectoProyectoSge);
+
+  /**
+   * Elimina el {@link ProyectoProyectoSge}.
+   *
+   * @param id Id del {@link ProyectoProyectoSge}.
+   */
+  void delete(Long id);
+
+  /**
+   * Comprueba la existencia del {@link ProyectoProyectoSge} por id.
+   *
+   * @param id el id de la entidad {@link ProyectoProyectoSge}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsById(Long id);
+
+  /**
+   * Comprueba si el {@link ProyectoProyectoSge} es eliminable
+   *
+   * @param id el id de la entidad {@link ProyectoProyectoSge}.
+   * @return {@code true} si se puede eliminar, {@code false} en caso contrario.
+   */
+  boolean isDeletableById(Long id);
+
+  /**
+   * Obtiene {@link ProyectoProyectoSge} por su id.
+   *
+   * @param id el id de la entidad {@link ProyectoProyectoSge}.
+   * @return la entidad {@link ProyectoProyectoSge}.
+   */
+  ProyectoProyectoSge findById(Long id);
+
+  /**
+   * Obtiene las {@link ProyectoProyectoSge} para un {@link Proyecto}.
+   *
+   * @param proyectoId el id de la {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ProyectoProyectoSge} del
+   *         {@link Proyecto} paginadas.
+   */
+  Page<ProyectoProyectoSge> findAllByProyecto(Long proyectoId, String query, Pageable pageable);
+
+  /**
+   * Obtiene todos los {@link ProyectoProyectoSge}.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link ProyectoProyectoSge} paginadas.
+   */
+  Page<ProyectoProyectoSge> findAll(String query, Pageable pageable);
+
+  /**
+   * Indica si existen {@link ProyectoProyectoSge} de un {@link Proyecto}
+   * 
+   * @param proyectoId identificador de la {@link Proyecto}
+   * @return si existen {@link ProyectoProyectoSge}
+   */
+  boolean existsByProyecto(Long proyectoId);
+
+}

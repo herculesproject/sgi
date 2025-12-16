@@ -1,0 +1,242 @@
+package org.crue.hercules.sgi.csp.integration;
+
+import java.net.URI;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
+
+/**
+ * Test de integracion de TipoEnlace.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class TipoEnlaceIT extends BaseIT {
+
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
+  private static final String CONTROLLER_BASE_PATH = "/tipoenlaces";
+
+  private HttpEntity<TipoEnlace> buildRequest(HttpHeaders headers, TipoEnlace entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TENL-V", "CSP-TENL-C",
+        "CSP-TENL-E", "CSP-TENL-B", "CSP-ME-C", "CSP-ME-E", "CSP-TENL-R", "AUTH")));
+
+    HttpEntity<TipoEnlace> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void create_ReturnsTipoEnlace() throws Exception {
+    Set<TipoEnlaceNombre> nombre = new HashSet<>();
+    nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-1"));
+
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-1"));
+    // given: new TipoEnlace
+    TipoEnlace data = TipoEnlace.builder().nombre(nombre).descripcion(descripcion).activo(Boolean.TRUE).build();
+
+    // when: create TipoEnlace
+    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
+        buildRequest(null, data), TipoEnlace.class);
+
+    // then: new TipoEnlace is created
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    TipoEnlace responseData = response.getBody();
+    Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(data.getNombre());
+    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo(data.getDescripcion());
+    Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(data.getActivo());
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_ReturnsTipoEnlace() throws Exception {
+    Set<TipoEnlaceNombre> nombre = new HashSet<>();
+    nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-updated"));
+
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-updated"));
+    // given: existing TipoEnlace to be updated
+    TipoEnlace data = TipoEnlace.builder().id(1L).nombre(nombre).descripcion(descripcion)
+        .activo(Boolean.TRUE).build();
+
+    // when: update TipoEnlace
+    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, data), TipoEnlace.class, data.getId());
+
+    // then: TipoEnlace is updated
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoEnlace responseData = response.getBody();
+    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(data.getId());
+    Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(data.getNombre());
+    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo(data.getDescripcion());
+    Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(data.getActivo());
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void reactivar_ReturnTipoEnlace() throws Exception {
+    Long idTipoEnlace = 1L;
+
+    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        TipoEnlace.class, idTipoEnlace);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoEnlace tipoEnlaceDisabled = response.getBody();
+    Assertions.assertThat(tipoEnlaceDisabled.getId()).as("getId()").isEqualTo(idTipoEnlace);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(tipoEnlaceDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void desactivar_ReturnTipoEnlace() throws Exception {
+    Long idTipoEnlace = 1L;
+
+    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), TipoEnlace.class, idTipoEnlace);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoEnlace tipoEnlaceDisabled = response.getBody();
+    Assertions.assertThat(tipoEnlaceDisabled.getId()).as("getId()").isEqualTo(idTipoEnlace);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(tipoEnlaceDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findById_ReturnsTipoEnlace() throws Exception {
+    Long id = 1L;
+
+    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.GET, buildRequest(null, null), TipoEnlace.class, id);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoEnlace responseData = response.getBody();
+    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAll_WithPagingSortingAndFiltering_ReturnsTipoEnlaceSubList() throws Exception {
+
+    // given: data for TipoEnlace
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TENL-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "nombre.value,desc";
+    String filter = "descripcion.value=ke=00";
+
+    // when: find TipoEnlace
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
+        .build(false).toUri();
+    final ResponseEntity<List<TipoEnlace>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEnlace>>() {
+        });
+
+    // given: TipoEnlace data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEnlace> responseData = response.getBody();
+    Assertions.assertThat(responseData).hasSize(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoEnlaceSubList() throws Exception {
+
+    // given: data for TipoEnlace
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TENL-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "nombre.value,desc";
+    String filter = "descripcion.value=ke=00";
+
+    // when: find TipoEnlace
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+    final ResponseEntity<List<TipoEnlace>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEnlace>>() {
+        });
+
+    // given: TipoEnlace data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEnlace> responseData = response.getBody();
+    Assertions.assertThat(responseData).hasSize(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
+}
