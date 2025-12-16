@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="sge-endpoint" xmlns="http://ws.apache.org/ns/synapse">
+    <address uri="$SYSTEM:SGI_ESB_SGE_SERVICE_URL">
+        <timeout>
+            <duration>160000</duration> <!-- 180s timeout ingress & http.socket.timeout - 15s synapse.timeout_handler_interval - 5s extra margin = 160s -->
+            <responseAction>fault</responseAction>
+        </timeout>
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </address>
+</endpoint>
