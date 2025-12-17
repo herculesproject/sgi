@@ -40,6 +40,90 @@
         <param name="name" value="rep-eti-evaluacion-retrospectiva-docx-eu" />
       </whereParams>
     </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-favorable-memoria-nueva-docx-eu" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/eu/rep-eti-evaluacion-favorable-memoria-nueva.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/eu/rep-eti-evaluacion-favorable-memoria-nueva.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-nueva-docx-eu" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-acta-docx-eu" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/eu/rep-eti-acta.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/eu/rep-eti-acta.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-acta-docx-eu" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx-eu" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/eu/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/eu/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx-eu" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-favorable-memoria-ratificacion-docx-eu" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/eu/rep-eti-evaluacion-favorable-memoria-ratificacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/eu/rep-eti-evaluacion-favorable-memoria-ratificacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-ratificacion-docx-eu" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-retrospectiva-docx-eu" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/eu/rep-eti-evaluacion-retrospectiva.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/eu/rep-eti-evaluacion-retrospectiva.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-retrospectiva-docx-eu" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-docx-eu" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/eu/rep-eti-evaluacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/eu/rep-eti-evaluacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-docx-eu" />
+      </whereParams>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
