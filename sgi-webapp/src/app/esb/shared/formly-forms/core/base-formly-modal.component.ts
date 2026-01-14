@@ -55,7 +55,8 @@ export abstract class BaseFormlyModalComponent<R, S> extends DialogCommonCompone
   };
 
   get actionDisabled(): boolean {
-    return (this.status$.value.errors) || (this.edit && !this.status$.value.changes) || (!this.edit && !this.status$.value.complete);
+    return this.status$.value.errors || (this.edit && !this.status$.value.changes && !this.allowActionWithoutChanges()) ||
+      (!this.edit && !this.status$.value.complete);
   }
 
   get formGroup(): FormGroup {
@@ -219,6 +220,10 @@ export abstract class BaseFormlyModalComponent<R, S> extends DialogCommonCompone
       this.getKey(),
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.title = value);
+  }
+
+  protected allowActionWithoutChanges(): boolean {
+    return false;
   }
 
 }

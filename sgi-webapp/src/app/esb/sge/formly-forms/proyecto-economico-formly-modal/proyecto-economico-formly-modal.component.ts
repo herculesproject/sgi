@@ -631,4 +631,41 @@ export class ProyectoEconomicoFormlyModalComponent
     return this.formlyFieldKeys.some(field => formlyFields.some(formlyField => formlyField == field));
   }
 
+  protected allowActionWithoutChanges(): boolean {
+    return this.proyectoData?.action === ACTION_MODAL_MODE.EDIT
+      && this.areAllFormlyFieldsDisabled();
+  }
+
+  private areAllFormlyFieldsDisabled(): boolean {
+    let allDisabled = true;
+
+    this.formlyData.fields.forEach(field => {
+      allDisabled = this.checkFieldDisabled(field, allDisabled);
+    });
+
+    return allDisabled;
+  }
+
+  private checkFieldDisabled(
+    field: FormlyFieldConfig,
+    currentValue: boolean = true
+  ): boolean {
+    if (field.fieldGroup && Array.isArray(field.fieldGroup) && field.key && field.type) {
+      for (const child of field.fieldGroup) {
+        currentValue = this.checkFieldDisabled(child, currentValue);
+
+        if (!currentValue) {
+          return false;
+        }
+      }
+      return currentValue;
+    }
+
+    if (field.key && field.type) {
+      return field.templateOptions?.disabled === true;
+    }
+
+    return currentValue;
+  }
+
 }
