@@ -45,7 +45,7 @@
     <maven-help-plugin.version>3.2.0</maven-help-plugin.version>
 
     <!-- Keycloak Version (must match deployed version) -->
-    <org.keycloak.version>11.0.0</org.keycloak.version>
+    <org.keycloak.version>13.0.0</org.keycloak.version>
 
     <!-- Plugin versions (only those that are not defined in `spring-boot-starter-parent`) -->
     <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
