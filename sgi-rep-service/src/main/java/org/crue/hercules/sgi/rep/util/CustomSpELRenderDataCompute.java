@@ -28,6 +28,9 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
 
   private static final String I18N_FIELD_LANG = "lang";
   private static final String I18N_FIELD_VALUE = "value";
+  private static final String EL_STYLE_ITALIC = "|italic";
+  private static final String EL_STYLE_CLARIFY = "|clarify";
+  private static final String EL_STYLE_CLARIFY_ITALIC = "|clarify_i";
 
   private final ExpressionParser parser;
   private final EvaluationContext context;
@@ -60,7 +63,10 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
   @Override
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public Object compute(String el) {
-    Object resolved = innerCompute(el);
+
+    ElStyleOptions elStyleOptions = parseStyleOptions(el);
+
+    Object resolved = innerCompute(elStyleOptions.getRealEl());
     if (resolved instanceof ArrayList) {
       boolean isLinkedTreeMap = ((ArrayList) resolved).stream().allMatch(LinkedTreeMap.class::isInstance);
       if (isLinkedTreeMap) {
@@ -86,7 +92,8 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
         }
       }
     }
-    return resolved;
+
+    return applyStyles(resolved, elStyleOptions);
   }
 
   private Map<Language, String> collectValues(ArrayList<LinkedTreeMap> i18nField) {
@@ -174,6 +181,45 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
 
     },
         m -> Modifier.isPublic(m.getModifiers()) && Modifier.isStatic(m.getModifiers()));
+  }
+
+  private ElStyleOptions parseStyleOptions(String el) {
+    boolean italic = false;
+    boolean clarify = false;
+    String realEl = el;
+
+    if (el.endsWith(EL_STYLE_CLARIFY_ITALIC)) {
+      italic = true;
+      clarify = true;
+      realEl = el.substring(0, el.length() - EL_STYLE_CLARIFY_ITALIC.length());
+    } else if (el.endsWith(EL_STYLE_ITALIC)) {
+      italic = true;
+      realEl = el.substring(0, el.length() - EL_STYLE_ITALIC.length());
+    } else if (el.endsWith(EL_STYLE_CLARIFY)) {
+      clarify = true;
+      realEl = el.substring(0, el.length() - EL_STYLE_CLARIFY.length());
+    }
+
+    return new ElStyleOptions(realEl, italic, clarify);
+  }
+
+  private Object applyStyles(Object resolved, ElStyleOptions elStyleOptions) {
+
+    if (resolved == null || (!elStyleOptions.isItalic() && !elStyleOptions.isClarify())) {
+      return resolved;
+    }
+
+    String text = resolved.toString();
+
+    if (elStyleOptions.isItalic()) {
+      text = "<i>" + text + "</i>";
+    }
+
+    if (elStyleOptions.isClarify()) {
+      text = "<span style='color:rgba(97, 97, 97, 0.75)'>" + text + "</span>";
+    }
+
+    return text;
   }
 
 }
