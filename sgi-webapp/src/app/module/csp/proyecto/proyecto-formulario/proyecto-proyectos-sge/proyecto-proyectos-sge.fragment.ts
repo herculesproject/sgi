@@ -178,7 +178,8 @@ export class ProyectoProyectosSgeFragment extends Fragment {
       this.deleteProyectosSge(),
       this.createProyectosSge()
     ).pipe(
-      tap(() => {
+      toArray(),
+      map(() => {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
@@ -195,13 +196,23 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     return from(createdProyectosSge).pipe(
       mergeMap((wrappedProyectoSge) => {
         return this.service.create(wrappedProyectoSge.value).pipe(
-          map((createdProyectoSge) => {
-            const index = this.proyectosSge$.value.findIndex((currentProyectoSge) =>
-              currentProyectoSge === wrappedProyectoSge);
+          switchMap((createdProyectoSge) => {
             const proyectoSge = wrappedProyectoSge.value;
             proyectoSge.id = createdProyectoSge.id;
-            this.proyectosSge$.value[index] = new StatusWrapper<IProyectoProyectoSgeListadoData>(proyectoSge);
-            this.proyectosSge$.next(this.proyectosSge$.value);
+            return this.service.isEliminable(createdProyectoSge.id).pipe(
+              tap(isEliminable => {
+                proyectoSge.isEliminable = isEliminable;
+
+                const index = this.proyectosSge$.value.findIndex((currentProyectoSge) =>
+                  currentProyectoSge === wrappedProyectoSge);
+
+                this.proyectosSge$.value[index] =
+                  new StatusWrapper<IProyectoProyectoSgeListadoData>(proyectoSge);
+
+                this.proyectosSge$.next(this.proyectosSge$.value);
+              }),
+              map(() => void 0)
+            );
           })
         );
       })
@@ -228,8 +239,10 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     return from(this.proyectosSgeEliminados).pipe(
       switchMap(proyectoSgeEliminado => this.notificarRelacionEliminada(proyectoSgeEliminado.value.proyectoSge).pipe(
         switchMap(() => proyectoSgeEliminado.created ? of(void 0) : this.service.deleteById(proyectoSgeEliminado.value.id)),
-      ))
-    );
+        tap(() => {
+          this.proyectosSgeEliminados = this.proyectosSgeEliminados
+            .filter(deletedProyectoSge => deletedProyectoSge.value.id !== proyectoSgeEliminado.value.id);
+        }))));
   }
 
   private isSaveOrUpdateComplete(): boolean {

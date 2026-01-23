@@ -35,10 +35,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ACTION_MODAL_MODE, BaseFormlyModalComponent, IFormlyData } from 'src/app/esb/shared/formly-forms/core/base-formly-modal.component';
 
 const PROYECTO_KEY = marker('sge.proyecto');
+const SGP_NOT_FOUND = marker("error.sgp.not-found");
 
 export interface IProyectoEconomicoFormlyData {
   proyectoSgiId: number;
@@ -331,7 +332,7 @@ export class ProyectoEconomicoFormlyModalComponent
       if (this.formlyContainsField(FormlyFields.RESPONSABLE_REF)) {
         proyectoModel.responsable = {
           id: responsable.id,
-          nombreCompleto: (responsable?.nombre ?? '') + ' ' + (responsable?.apellidos ?? '')
+          nombreCompleto: (!responsable?.nombre && !responsable?.apellidos) ? this.getErrorMsgPersona(responsable.id) : (responsable?.nombre ?? '') + ' ' + (responsable?.apellidos ?? '')
         };
       } else if (this.formlyContainsField(FormlyFields.NUMERO_DOCUMENTO_RESPONSABLE)) {
         proyectoModel.numeroDocumentoResponsable = responsable.id;
@@ -363,7 +364,12 @@ export class ProyectoEconomicoFormlyModalComponent
         }
         return of(responsable);
       }),
-      switchMap((responsable) => responsable ? this.personaService.findById(responsable.persona.id) : of(null))
+      switchMap(responsable =>
+        responsable
+          ? this.personaService.findById(responsable.persona.id).pipe(
+            catchError(() => of(responsable.persona)))
+          : of(null)
+      )
     );
   }
 
@@ -455,7 +461,7 @@ export class ProyectoEconomicoFormlyModalComponent
       if (this.formlyContainsField(FormlyFields.RESPONSABLE_REF)) {
         grupoModel.responsable = {
           id: responsable.id,
-          nombreCompleto: (responsable?.nombre ?? '') + ' ' + (responsable?.apellidos ?? '')
+          nombreCompleto: (!responsable?.nombre && !responsable?.apellidos) ? this.getErrorMsgPersona(responsable.id) : (responsable?.nombre ?? '') + ' ' + (responsable?.apellidos ?? '')
         };
       } else if (this.formlyContainsField(FormlyFields.NUMERO_DOCUMENTO_RESPONSABLE)) {
         grupoModel.numeroDocumentoResponsable = responsable.id;
@@ -507,7 +513,12 @@ export class ProyectoEconomicoFormlyModalComponent
         }
         return of(result);
       }),
-      switchMap((responsable) => responsable ? this.personaService.findById(responsable.persona.id) : of(null))
+      switchMap(responsable =>
+        responsable
+          ? this.personaService.findById(responsable.persona.id).pipe(
+            catchError(() => of(responsable.persona)))
+          : of(null)
+      )
     );
   }
 
@@ -668,4 +679,7 @@ export class ProyectoEconomicoFormlyModalComponent
     return currentValue;
   }
 
+  private getErrorMsgPersona(id: string): string {
+    return this.translate.instant(SGP_NOT_FOUND, { ids: id, ...MSG_PARAMS.CARDINALIRY.SINGULAR })
+  }
 }
