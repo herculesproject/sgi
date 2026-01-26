@@ -152,21 +152,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
   protected buildFormGroup(): FormGroup {
 
     const data = this.data?.proyectoFacturacion;
-
     const identificadorSgeUnico = (this.data.proyectosSge?.length ?? 0) !== 1 ? null : this.data.proyectosSge[0];
-
-
-    let dataIdentificadorSge = null;
-    if (
-      !!data?.proyectoSgeRef
-      || (
-        identificadorSgeUnico
-        && data?.estadoValidacionIP?.estado === TipoEstadoValidacion.VALIDADA
-        && (this.isCalendarioFacturacionSgeWriteIntegrationEnabled || this.isCalendarioFacturacionSgeIntegrationDisabled)
-      )
-    ) {
-      dataIdentificadorSge = data?.proyectoSgeRef ? { id: data.proyectoSgeRef } as IProyectoSge : identificadorSgeUnico;
-    }
 
     const form = new FormGroup({
       numeroPrevision: new FormControl({ value: data?.numeroPrevision, disabled: true }, [Validators.required]),
@@ -180,7 +166,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       proyectoProrroga: new FormControl(data?.proyectoProrroga),
       nuevoEstadoValidacionIP: new FormControl(null),
       mensajeMotivoRechazo: new FormControl(''),
-      identificadorSge: new FormControl(dataIdentificadorSge),
+      identificadorSge: new FormControl(this.obtenerIdentificadorSge()),
       numeroFacturaEmitida: new FormControl(data?.numeroFacturaSge, [Validators.maxLength(50)]),
     });
 
@@ -232,8 +218,9 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
             const isValidada = newEstado === TipoEstadoValidacion.VALIDADA;
             this.showIndentificadorSge$.next(newEstado === TipoEstadoValidacion.VALIDADA);
             form.controls.identificadorSge.setValidators(isValidada ? [Validators.required] : []);
-            form.controls.identificadorSge.updateValueAndValidity();
           }
+          form.controls.identificadorSge.setValue(this.obtenerIdentificadorSge());
+          form.controls.identificadorSge.updateValueAndValidity();
         })
     );
 
@@ -370,5 +357,22 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
             return error;
           })
         ).subscribe((tipos: ITipoFacturacion[]) => this.tiposFacturacion$.next(tipos)));
+  }
+
+  private obtenerIdentificadorSge(): IProyectoSge {
+    const identificadorSgeUnico = (this.data.proyectosSge?.length ?? 0) !== 1 ? null : this.data.proyectosSge[0];
+    const data = this.data?.proyectoFacturacion;
+    if (
+      !!data?.proyectoSgeRef
+      || (
+        identificadorSgeUnico
+        && (data?.estadoValidacionIP?.estado === TipoEstadoValidacion.VALIDADA || this.formGroup?.controls.nuevoEstadoValidacionIP.value === TipoEstadoValidacion.VALIDADA)
+        && (this.isCalendarioFacturacionSgeWriteIntegrationEnabled || this.isCalendarioFacturacionSgeIntegrationDisabled)
+      )
+    ) {
+      return data?.proyectoSgeRef ? { id: data.proyectoSgeRef } as IProyectoSge : identificadorSgeUnico;
+    }
+
+    return null;
   }
 }

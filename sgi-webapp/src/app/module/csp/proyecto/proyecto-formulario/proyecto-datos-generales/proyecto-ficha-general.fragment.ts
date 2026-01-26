@@ -10,6 +10,7 @@ import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { IRelacion, TipoEntidad } from '@core/models/rel/relacion';
+import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
@@ -66,6 +67,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   modeloEjecucionConvocatoria: IModeloEjecucion;
 
   proyectosSgeIds$ = new Subject<string[]>();
+  proyectosSge$ = new Subject<IProyectoSge[]>();
   proyectoIva$ = new BehaviorSubject<StatusWrapper<IProyectoIVA>[]>([]);
   private initialIva;
 
@@ -175,17 +177,19 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         solicitudProyecto: this.getSocilictudProyecto(proyecto),
         ultimaProrroga: this.getUltimaProrrogaTiempo(proyecto),
         unidadGestion: this.getUnidadGestion(proyecto.unidadGestion.id),
-        proyectosSgeIds: this.service.findAllProyectosSgeProyecto(proyecto.id).pipe(map(({ items }) => items.map(p => p.proyectoSge.id)))
+        proyectosSge: this.service.findAllProyectosSgeProyecto(proyecto.id).pipe(map(({ items }) => items.map(p => p.proyectoSge)))
       }).pipe(
-        map(({ convocatoria, hasAnyProyectoSocio, palabrasClave, rolUniversidad, solicitudProyecto, ultimaProrroga, unidadGestion, proyectosSgeIds }) => {
+        map(({ convocatoria, hasAnyProyectoSocio, palabrasClave, rolUniversidad, solicitudProyecto, ultimaProrroga, unidadGestion, proyectosSge }) => {
           proyecto.convocatoria = convocatoria;
           proyecto.rolUniversidad = rolUniversidad;
           proyecto.solicitudProyecto = solicitudProyecto;
           proyecto.unidadGestion = unidadGestion;
 
           this.getFormGroup().controls.palabrasClave.setValue(palabrasClave);
+          const proyectosSgeIds = proyectosSge.map(p => p.id);
           this.getFormGroup().controls.codigosSge.setValue(proyectosSgeIds.join(', '));
           this.proyectosSgeIds$.next(proyectosSgeIds);
+          this.proyectosSge$.next(proyectosSge);
 
           this.hasPopulatedSocios = hasAnyProyectoSocio;
           this.hasPopulatedSocios$.next(hasAnyProyectoSocio);
