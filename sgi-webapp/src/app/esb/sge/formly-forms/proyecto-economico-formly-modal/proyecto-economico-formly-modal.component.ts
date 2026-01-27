@@ -282,7 +282,8 @@ export class ProyectoEconomicoFormlyModalComponent
       anio: proyecto.anio,
       fechaFinDefinitiva: proyecto.fechaFinDefinitiva,
       titulo: I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(proyecto.titulo),
-      sgeId: proyectoSgeId
+      sgeId: proyectoSgeId,
+      tipoEntidadSGI: TipoEntidadSGI.PROYECTO
     };
 
     if (this.formlyContainsField(FormlyFields.CAUSA_EXENCION) && !!proyecto.causaExencion) {
@@ -446,7 +447,8 @@ export class ProyectoEconomicoFormlyModalComponent
       fechaInicio: grupo.fechaInicio,
       fechaFin: grupo.fechaFin,
       titulo: I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(grupo.nombre),
-      sgeId: grupo.proyectoSge?.id
+      sgeId: grupo.proyectoSge?.id,
+      tipoEntidadSGI: TipoEntidadSGI.GRUPO
     };
 
     if (this.formlyContainsField(FormlyFields.CONVOCATORIA_ID)) {
