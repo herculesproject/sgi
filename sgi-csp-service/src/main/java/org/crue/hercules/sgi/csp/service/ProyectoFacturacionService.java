@@ -148,6 +148,7 @@ public class ProyectoFacturacionService {
 
     ProyectoFacturacion beforeUpdate = this.proyectoFacturacionRepository.findById(toUpdate.getId())
         .orElseThrow(() -> new ProyectoFacturacionNotFoundException(toUpdate.getId()));
+    beforeUpdate.setProyectoSgeRef(toUpdate.getProyectoSgeRef());
 
     if (toUpdate.getEstadoValidacionIP().getEstado() != beforeUpdate.getEstadoValidacionIP().getEstado()) {
       beforeUpdate.setEstadoValidacionIP(persistEstadoValidacionIP(toUpdate.getEstadoValidacionIP(), toUpdate.getId()));
