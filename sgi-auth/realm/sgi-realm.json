@@ -5984,7 +5984,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "960fe354-a546-4365-87bc-760b7a96bb3b",
       "defaultRoles": [
         "view-profile",
         "manage-account"
@@ -6031,7 +6030,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "bb7f7a94-87d4-4def-9a36-03f41ab452dd",
       "redirectUris": [
         "/realms/sgi/account/*"
       ],
@@ -6084,7 +6082,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "f12086ec-3f66-4efd-9314-e8941e553cff",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
@@ -6123,7 +6120,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "3ee3e820-b0ff-4f37-9836-83a3153d6d4e",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
@@ -6782,7 +6778,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "11e2e7e3-977b-42a5-a0d6-5b3f4d557236",
       "redirectUris": [
         "*"
       ],
@@ -6871,7 +6866,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "36b2a4bf-e1e7-4e50-b45b-fb5b5c47075c",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
@@ -6912,7 +6906,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "72dd721f-5fc7-4397-9748-b9b8faeb82f6",
       "redirectUris": [
         "/admin/sgi/console/*"
       ],
@@ -7951,9 +7944,6 @@
           "kid": [
             "d4435a74-7e5e-4830-96db-66316f591726"
           ],
-          "secret": [
-            "3-BXIVCPyjFBTl3cSjnvG1mdQo4GIwFfdjWm_bPrNuqrBGolOF2gUP8Fjx8nTkwyaOWG8SZX23BOIvHfUcYP8g"
-          ],
           "priority": [
             "100"
           ],
@@ -7971,9 +7961,6 @@
           "kid": [
             "3e9e92a4-59b2-47db-928b-d65e55446d20"
           ],
-          "secret": [
-            "SPDSWwirtQS52gZrZwiJKg"
-          ],
           "priority": [
             "100"
           ]
@@ -7985,12 +7972,6 @@
         "providerId": "rsa-generated",
         "subComponents": {},
         "config": {
-          "privateKey": [
-            "MIIEogIBAAKCAQEAlH9d1Z09iUBhDoXZ5KeTC28Ksd4f6Pn5LIxeZqJgPR6kJNsJ8Kq7ZBiepRG4AInrpwyP02posw7IOrVJVnfjskBH9LJyDxnAHlRChKsVuMSdoBOHswB+DnKjwbDBEI54KRNkTeYYYdmS/lNlJytsHfCbjhdGJ4sVw30HktT0adsGSusUhGp+A5b8MthNS4TCmzC5Xf3tihmH48m9XFuM5n4yndJKdEaeQMEmUPTTpQVVyRJiJohzewz5MRmUTYqNrgUt+McDIj3p33DJIP3HYOp34eZH9tOi+CUt150G0ZDaP2PeiwunkHNuE30qfl8AUrrHJ+PjwcfWWJanRRGI+wIDAQABAoIBADT69CmAfjH3zCj4THMt7mKH7ZLkIxJmDSZ9tjh7+kYUJpAXrgY1g8IEnqVaGwHmMzNYYgAV2OD5hyqa/11gTNaN5J5DBDqq/0ZS3aCjwY44Z9xy21lb9Z2F/TLfsyILEoflKUY5r71JeQ5QBqjg7yQHchhR6W+2Sb+DXi5e2AzjzsJsAklOx/OE2lqzMYSXo8yNLsJNQcaqG3jOV4s+JuEfdYG1efg5iCtb3Io+bbeu1T9s+rsTmj0zA0im1kgUBKka4mOjaaIpgZ37SP5QA33pdeIG7UmzbgJBAUFf8Pfq2fRk22eNNvQ1MA4kTOX0/V5l87j/k8lFMzDSkJfiX9ECgYEA9/UkYTpye3QwL2lJ5ovo5CNIOJMLyRZwyCP1j4aoQvD7fhpbN37IysNUhbwHoKGQuJA9/748uyFI571K5ymVtnZX0Tsu7bsII/BZzZq8AKjL53+YKX6P4cmynIc3BqJCNvMyJPEgKZGTd76+aBeFSxcGCldA+SmDJ5o4+FFtBl8CgYEAmVBhjKt3HABcPzR8M9FmCpxsBm/aeH56SB1w+yAcPaOLsq7rl65aXspC3tWUDmZyWTp4LHO+jnPah4aSZ7HH/LcO4D/XOJ5VrgcffWarkE421A1KmeAde0RmORYNHcT59n5JPqp9QZZseT1ggKRF8/9MkkIjHaZWXtctmoRI6uUCgYA5+lwTT/NM4pIRw/C/s581GPreH6P11QVyBtZ4ROg7HtXvWoJRq5ePsbSlwJ2X9a89OJ0Gm5jfuJyvcxd8jcCv9WP7THdgpwb0QFL/PFsRXGaxLqiJq0pBZUQaTZOUPYR2DM+Ay9DVZ3Cv4y3qcPV95VhIOra6i/Za4DjJ92AiyQKBgBTyUIGho6JlwjS4fQevYlusx22Rtq2jyh00OI1286TQRXPiRjnxDlPJGp3LXHEjOhhKzsR0A+L+nSrLDhGwznwOnq+wyTzpFRezzW+aqXIL3Z3XOwwO/LgsvjKqepxIn0Y4NtWjAX4GiUd/RUIOL6iIhvOsqZOReFd42rgzvqqpAoGAFqN6vy8crc6RSAGlQwquI1v3z9AcH+QJRePQ1WmhS1h22vxsOa/0c6zerH4f2rlzSxFPVIhys5dIP7MAQYL0Zp4pC4rr1oCFUw33hQmdNwLAR8Mglvq/5OydJgT+TkmQi05vuhSEobrJKDsMy1YobyrlejKcIZukZ36MuAXodXQ="
-          ],
-          "certificate": [
-            "MIIClTCCAX0CBgFzJDPy0zANBgkqhkiG9w0BAQsFADAOMQwwCgYDVQQDDANTR0kwHhcNMjAwNzA2MTI1NTUxWhcNMzAwNzA2MTI1NzMxWjAOMQwwCgYDVQQDDANTR0kwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCUf13VnT2JQGEOhdnkp5MLbwqx3h/o+fksjF5momA9HqQk2wnwqrtkGJ6lEbgAieunDI/TamizDsg6tUlWd+OyQEf0snIPGcAeVEKEqxW4xJ2gE4ezAH4OcqPBsMEQjngpE2RN5hhh2ZL+U2UnK2wd8JuOF0YnixXDfQeS1PRp2wZK6xSEan4Dlvwy2E1LhMKbMLld/e2KGYfjyb1cW4zmfjKd0kp0Rp5AwSZQ9NOlBVXJEmImiHN7DPkxGZRNio2uBS34xwMiPenfcMkg/cdg6nfh5kf206L4JS3XnQbRkNo/Y96LC6eQc24TfSp+XwBSuscn4+PBx9ZYlqdFEYj7AgMBAAEwDQYJKoZIhvcNAQELBQADggEBADLq3WmgUuWLfvzmIL80hcztuJZtXCDJVdZJ9L1eayLISrf24Q20yLma4h5RaXSQYbXl+SDYJ/mtvjWyvLiQPCC5WOrNDTYnN00KHsxa5bOf7pqK0nm9ZA3Xvfrlp6M3qHMGhA8Lp2Q6i71e6YWNyYaaLuazKa9wHrznpyWsGxZyB26GPTONH8iSMMNufz8i0+PDPL0m2USdgoYchPl2NHBV/HMcXZhfLanolSmNj0VcTAuTh+BRURZzfB8FAMbEJWRYSihNguW5ugOHSiaLAR2RnHZVicjSy3lB+R8XC6ZUT0lBQ3LtKY3kyabppMtIGfwEYWRoJv9U22IflYmrku4="
-          ],
           "priority": [
             "100"
           ]
