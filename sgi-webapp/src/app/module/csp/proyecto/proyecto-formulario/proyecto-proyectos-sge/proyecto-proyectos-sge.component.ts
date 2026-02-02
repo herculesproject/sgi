@@ -203,7 +203,7 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
         if (response?.createdOrUpdated) {
           this.snackBarService.showSuccess(textoActionSuccess);
           if (response.proyectoSge && ACTION_MODAL_MODE.NEW === modalAction) {
-            this.formPart.addProyectoSge(proyectoSge);
+            this.formPart.addProyectoSge(response.proyectoSge);
           }
           this.formPart.refreshSolicitudesProyectoPendientes();
         }
