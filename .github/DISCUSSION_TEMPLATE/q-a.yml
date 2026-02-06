@@ -1,0 +1,70 @@
+
+title: "[QA] "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta categoría para realizar **preguntas o dudas concretas** sobre el funcionamiento del sistema.
+
+        ⚠️ **No utilices este formulario para proponer mejoras o nuevas funcionalidades**  
+        👉 Para eso, usa la categoría **Ideas**.
+
+        🔴 Comprueba que tu consulta no existe previamente, si esa así añade un comentario 
+        🔴 Si se trata de un **error crítico en producción**, crea directamente un **GitHub Issue**.
+
+  - type: textarea
+    id: pregunta
+    attributes:
+      label: Pregunta o duda
+      description: Describe claramente cuál es tu duda.
+      placeholder: ¿Cómo funciona...? / ¿Es posible configurar...? / ¿Por qué ocurre...?
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Proporciona información adicional que ayude a entender la pregunta.
+      placeholder: Módulo afectado, caso de uso, pasos realizados, etc.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: entorno
+    attributes:
+      label: Entorno
+      description: ¿En qué entorno ocurre?
+      options:
+        - Producción
+        - Preproducción
+        - Desarrollo
+        - No aplica
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo de consulta
+      description: Selecciona la opción que mejor describa tu duda.
+      options:
+        - Duda funcional
+        - Duda técnica
+        - Comportamiento inesperado
+        - Documentación
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidencias
+    attributes:
+      label: Evidencias o información adicional
+      description: Incluye mensajes de error, capturas o enlaces relevantes (si aplica).
+      placeholder: capturas de pantalla, mensajes de error, enlaces, etc.
+    validations:
+      required: false
+
