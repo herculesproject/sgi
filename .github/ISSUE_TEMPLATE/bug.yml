@@ -1,0 +1,98 @@
+name: Reportar Bug
+description: Tarea que describe una incidencia o problema encontrado
+title: "[BUG] "
+labels:
+  - "estado: pendiente-revisión"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar una incidencia 🙌  
+        Completa este formulario con el mayor detalle posible para ayudarnos a reproducir y resolver el problema.
+
+        🔴 **Si se trata de un bug crítico en producción**, indícalo claramente en la descripción.
+
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Descripción de la incidencia o bug
+      description: |
+        Describe claramente el problema indicando:
+        - si el error es constante o intermitente
+        - el nivel de gravedad percibido
+
+        Evita descripciones genéricas como:
+        “Error general”, “Falla el botón añadir”, etc.
+      placeholder: Describe el problema de forma clara y concreta
+    validations:
+      required: true
+
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Pasos para reproducir
+      description: Enumera los pasos necesarios para reproducir el error.  Incluir capturas de pantalla que puedan ayudar a la explicación.
+      placeholder: |
+        1. Acceder a...
+        2. Pulsar en...
+        3. Introducir...
+    validations:
+        required: true
+
+  - type: textarea
+    id: resultado_esperado
+    attributes:
+      label: Resultado esperado
+      description: ¿Qué debería ocurrir al seguir los pasos indicados?
+      placeholder: Describe el comportamiento esperado
+    validations:
+      required: true
+
+  - type: textarea
+    id: resultado_actual
+    attributes:
+      label: Resultado actual
+      description: ¿Qué ocurre realmente al seguir los pasos indicados?
+      placeholder: Describe el comportamiento observado
+    validations:
+      required: true
+
+  - type: textarea
+    id: entorno
+    attributes:
+      label: Entorno
+      description: |
+        Indica la información del entorno en el que se ha detectado el bug: versión del sgi y navegador.
+      placeholder: |
+        - Versión del sistema:
+        - Sistema operativo:
+        - Navegador:
+    validations:
+      required: true
+
+  - type: textarea
+    id: relaciones
+    attributes:
+      label: Relación con otras historias
+      description: Referencia a historias de usuario, épicas, tareas o bugs relacionados (si aplica).
+      placeholder: Enlaces o referencias a Issues relacionados
+    validations:
+      required: false
+  
+  - type: textarea
+    id: info_adicional
+    attributes:
+      label: Información adicional
+      description: Cualquier otra información relevante que ayude a diagnosticar o resolver el problema.
+      placeholder: Logs, capturas, contexto adicional, etc.
+    validations:
+      required: false
+
+  - type: input
+    id: contacto
+    attributes:
+      label: Persona de contacto
+      description: Indica una persona de contacto para aclaraciones si fuera necesario.
+      placeholder: "@usuario"
+    validations:
+      required: false
