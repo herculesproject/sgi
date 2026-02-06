@@ -1,0 +1,40 @@
+title: "[IDEA] "
+labels:
+  - estado: abierta-a-comentarios
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por tu propuesta 🙌  
+        Usa este formulario para describir tu propuesta de la forma más clara posible.
+
+  - type: input
+    id: contexto
+    attributes:
+      label: Contexto / limitación detectada
+      description: ¿Qué problema o limitación has identificado?
+      placeholder: Describe la situación actual y por qué supone un problema
+    validations:
+      required: true
+
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Propuesta de mejora
+      description: ¿Qué cambio o funcionalidad propones?
+      placeholder: Explica la idea de forma clara, aunque sea a alto nivel
+    validations:
+      required: true
+
+  - type: textarea
+    id: beneficio
+    attributes:
+      label: Beneficio esperado
+      description: ¿Qué mejora aporta esta propuesta?
+      placeholder: Impacto para la universidad, usuarios, sistema, etc.
+    validations:
+      required: true
+
+
+
+
