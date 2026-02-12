@@ -25,21 +25,23 @@ public class DatosContactoObject implements Serializable {
   private String movil;
 
   public DatosContactoObject(DatosContactoDto dto) {
-    if (dto.getPaisContacto() != null) {
-      this.paisContacto = new PaisObject(dto.getPaisContacto());
+    if (dto != null) {
+      if (dto.getPaisContacto() != null) {
+        this.paisContacto = new PaisObject(dto.getPaisContacto());
+      }
+      if (dto.getComAutonomaContacto() != null) {
+        this.comAutonomaContacto = new ComunidadAutonomaObject(dto.getComAutonomaContacto());
+      }
+      if (dto.getProvinciaContacto() != null) {
+        this.provinciaContacto = new ProvinciaObject(dto.getProvinciaContacto());
+      }
+      this.ciudadContacto = dto.getCiudadContacto();
+      this.codigoPostalContacto = dto.getCodigoPostalContacto();
+      this.direccionContacto = dto.getDireccionContacto();
+      this.email = this.getEmail(dto.getEmails());
+      this.telefono = this.getTelefonoOrMovil(dto.getTelefonos());
+      this.movil = this.getTelefonoOrMovil(dto.getMoviles());
     }
-    if (dto.getComAutonomaContacto() != null) {
-      this.comAutonomaContacto = new ComunidadAutonomaObject(dto.getComAutonomaContacto());
-    }
-    if (dto.getProvinciaContacto() != null) {
-      this.provinciaContacto = new ProvinciaObject(dto.getProvinciaContacto());
-    }
-    this.ciudadContacto = dto.getCiudadContacto();
-    this.codigoPostalContacto = dto.getCodigoPostalContacto();
-    this.direccionContacto = dto.getDireccionContacto();
-    this.email = this.getEmail(dto.getEmails());
-    this.telefono = this.getTelefonoOrMovil(dto.getTelefonos());
-    this.movil = this.getTelefonoOrMovil(dto.getMoviles());
   }
 
   @Getter
