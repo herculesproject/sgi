@@ -1,0 +1,1186 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Gestión de la estructura Orgánica (SGO)
+  description: |-
+    Sistema de Gestión de la estructura Orgánica - Métodos para listar y consultar el detalle de ciertas entidades, que son consideradas de uso general por parte de varios módulos dentro del SGI y cuya gestión residirá en sistemas corporativos universitarios. Estas entidades tienen naturaleza diversa, algunas hacen referencia a la estructura organizativa de la Universidad desde diferentes ámbitos, otras a clasificaciones generales utilizadas en el ámbito de la investigación universitaria, otras a listados geográficos. Son ejemplos de las entidades cubiertas por los métodos de este API: áreas de conocimiento, centros, departamentos, clasificaciones (UNESCO, CNAE, NABS, ...), listado de geográficos (País, Comunidad Autónoma/Región, Provincia).
+
+  version: 0.1.0
+tags:
+  - name: areas-conocimiento
+    description: Áreas de conocimiento 
+  - name: centros
+    description: Centros
+  - name: clasificaciones
+    description: Clasificaciones
+  - name: clasificaciones-public
+    description: Clasificaciones (endpoints accesibles sin autentificación)
+  - name: comunidades-autonomas
+    description: Comunidades autónomas
+  - name: comunidades-autonomas-public
+    description: Comunidades autónomas (endpoints accesibles sin autentificación)
+  - name: departamentos
+    description: Departamentos
+  - name: departamentos-public
+    description: Departamentos (endpoints accesibles sin autentificación)
+  - name: paises
+    description: Países
+  - name: paises-public
+    description: Países (endpoints accesibles sin autentificación)
+  - name: palabras-clave
+    description: Palabras clave
+  - name: provincias
+    description: Provincias
+  - name: provincias-public
+    description: Provincias (endpoints accesibles sin autentificación)
+
+paths:
+  /areas-conocimiento:
+    get:
+      tags:
+        - areas-conocimiento
+      summary: Lista de áreas de conocimiento
+      description: |-
+        Devuelve las áreas de conocimiento ordenadas alfabéticamente de forma ascendente.
+      operationId: findAllAreasConocimiento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+      responses:
+        200:
+          description: Devuelve la lista de áreas de conocimiento
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AreaConocimientoOutput"
+        204:
+          description: No hay áreas de conocimiento
+  /areas-conocimiento/{id}:
+    get:
+      tags:
+        - areas-conocimiento
+      summary: Detalles del área de conocimiento
+      description: Devuelve el área de conocimiento correspondiente al id
+      operationId: findAreaConocimientoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del area de conocimiento
+          required: true
+          example: A1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el área de conocimiento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AreaConocimientoOutput"
+        404:
+          description: Área de conocimiento no encontrada
+          content: {}
+  
+  /centros:
+    get:
+      tags:
+        - centros
+      summary: Centros
+      description: |-
+        Devuelve los centros ordenados alfabéticamente de forma ascendente.
+      operationId: findAllCentros
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de centros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CentroOutput"
+        204:
+          description: No hay centros
+  /centros/{id}:
+    get:
+      tags:
+        - centros
+      summary: Detalles del centro
+      description: Devuelve el centro correspondiente al id
+      operationId: findCentroById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del centro
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el centro
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CentroOutput"
+        404:
+          description: Centro no encontrado
+          content: {}
+
+  /clasificaciones:
+    get:
+      tags:
+        - clasificaciones
+      summary: Devuelve una lista paginada y filtrada de clasificaciones
+      description: |-
+        Devuelve una lista paginada y filtrada de clasificaciones que cumplen los filtros.
+      operationId: findAllClasificaciones
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - tipoClasificacion
+            - padreId            
+          schema:
+            type: string
+          example: padreId=na="";tipoClasificacion==SECTORES_INDUSTRIALES
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+
+            Si no se indica por defecto se ordenan por nombre alfabéticamente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de clasificaciones
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClasificacionOutput"
+        204:
+          description: No hay clasificaciones que cumplan con los filtros de busqueda
+  /clasificaciones/{id}:
+    get:
+      tags:
+        - clasificaciones
+      summary: Detalles de la clasificación
+      description: Devuelve la clasifiación correspondiente al id
+      operationId: findClasificacionById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la clasificación
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve la clasificación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClasificacionOutput"
+        404:
+          description: Clasificación no encontrada
+          content: {}
+
+  /public/clasificaciones:
+    get:
+      tags:
+        - clasificaciones-public
+      summary: Devuelve una lista paginada y filtrada de clasificaciones
+      description: |-
+        Devuelve una lista paginada y filtrada de clasificaciones que cumplen los filtros.
+      operationId: findAllClasificacionesPublic
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - tipoClasificacion
+            - padreId            
+          schema:
+            type: string
+          example: padreId=na="";tipoClasificacion==SECTORES_INDUSTRIALES
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+
+            Si no se indica por defecto se ordenan por nombre alfabéticamente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de clasificaciones
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClasificacionOutput"
+        204:
+          description: No hay clasificaciones que cumplan con los filtros de busqueda
+  /public/clasificaciones/{id}:
+    get:
+      tags:
+        - clasificaciones-public
+      summary: Detalles de la clasificación
+      description: Devuelve la clasifiación correspondiente al id
+      operationId: findClasificacionPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la clasificación
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve la clasificación
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClasificacionOutput"
+        404:
+          description: Clasifiación no encontrada
+          content: {}
+
+  /comunidades-autonomas:
+    get:
+      tags:
+        - comunidades-autonomas
+      summary: Devuelve una lista paginada y filtrada de comunidades autónomas
+      description: |-
+        Devuelve una lista paginada y filtrada de comunidades autónomas que cumplen los filtros.
+      operationId: findAllComunidadesAutonomas
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - paisId            
+          schema:
+            type: string
+          example: paisId==P1;
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de comunidades autónomas
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        204:
+          description: No hay comunidades autónomas que cumplan con los filtros de busqueda
+  /comunidades-autonomas/{id}:
+    get:
+      tags:
+        - comunidades-autonomas
+      summary: Detalles de la comunidad autónoma
+      description: Devuelve la comunidad autónoma correspondiente al id
+      operationId: findComunidadAutonomaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la comunidad autónoma
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve la comunidad autónoma
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        404:
+          description: Comunidad autonoma no encontrada
+          content: {}
+
+  /public/comunidades-autonomas:
+    get:
+      tags:
+        - comunidades-autonomas-public
+      summary: Devuelve una lista paginada y filtrada de comunidades autónomas
+      description: |-
+        Devuelve una lista paginada y filtrada de comunidades autónomas que cumplen los filtros.
+      operationId: findAllComunidadesAutonomasPublic
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - paisId            
+          schema:
+            type: string
+          example: paisId==P1;
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de comunidades autónomas
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        204:
+          description: No hay comunidades autónomas que cumplan con los filtros de busqueda
+
+
+  /departamentos:
+    get:
+      tags:
+        - departamentos
+      summary: Lista de departamentos
+      description: |-
+        Devuelve los departamentos ordenados alfabéticamente de forma ascendente.
+      operationId: findAllDepartamentos
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de departamentos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DepartamentoOutput"
+        204:
+          description: No hay departamentos
+
+  /public/departamentos:
+    get:
+      tags:
+        - departamentos-public
+      summary: Lista de departamentos
+      description: |-
+        Devuelve los departamentos ordenados alfabéticamente de forma ascendente.
+      operationId: findAllDepartamentosPublic
+      responses:
+        200:
+          description: Devuelve la lista de departamentos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DepartamentoOutput"
+        204:
+          description: No hay departamentos
+
+  /paises:
+    get:
+      tags:
+        - paises
+      summary: Devuelve una lista paginada y filtrada de países
+      description: |-
+        Devuelve una lista paginada y filtrada de países que cumplen los filtros.
+      operationId: findAllPaises
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de países
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaisOutput"
+        204:
+          description: No hay países
+  /paises/{id}:
+    get:
+      tags:
+        - paises
+      summary: Detalles del país
+      description: Devuelve el país correspondiente al id
+      operationId: findPaisById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del país
+          required: true
+          example: P1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el país
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaisOutput"
+        404:
+          description: País no encontrado
+          content: {}
+
+  /public/paises:
+    get:
+      tags:
+        - paises-public
+      summary: Devuelve una lista paginada de países
+      description: |-
+        Devuelve una lista paginada de países.
+      operationId: findAllPaisesPublic
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de países
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaisOutput"
+        204:
+          description: No hay países que cumplan con los filtros de busqueda
+
+
+  /palabras-clave:
+    get:
+      tags:
+        - palabras-clave
+      summary: Devuelve una lista paginada y filtrada de palabras clave
+      description: |-
+        Devuelve una lista paginada y filtrada de palabras clave que cumplen los filtros.
+      operationId: findAllPalabrasClave
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - palabra            
+          schema:
+            type: string
+          example: palabra=ik=palabra1;
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de palabras clave
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["palabra1", "palabra12"]
+        204:
+          description: No hay palabras clave que cumplan con los filtros de busqueda
+    post:
+      tags:
+        - palabras-clave
+      summary: Añade una lista de nuevas palabras clave
+      description: Añade una lista de nuevas palabras clave
+      operationId: createPalabrasClave
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de palabras clave
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              example: ["palabra2", "palabra3"]
+      responses:
+        200:
+          description: palabras clave creadas correctamente
+
+  /provincias:
+    get:
+      tags:
+        - provincias
+      summary: Devuelve una lista paginada y filtrada de provincias
+      description: |-
+        Devuelve una lista paginada y filtrada de provincias que cumplen los filtros.
+      operationId: findAllProvincias
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - paisId            
+          schema:
+            type: string
+          example: comunidadAutonomaId==P1;
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de provincias
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProvinciaOutput"
+        204:
+          description: No hay provincias que cumplan con los filtros de busqueda
+
+  /provincias/{id}:
+    get:
+      tags:
+        - provincias
+      summary: Detalles de la provincia
+      description: Devuelve la provincia correspondiente al id
+      operationId: findProvinciaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la provincia
+          required: true
+          example: PR1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve la provincia
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvinciaOutput"
+        404:
+          description: Provincia no encontrada
+          content: {}
+
+  /public/provincias:
+    get:
+      tags:
+        - provincias-public
+      summary: Devuelve una lista paginada y filtrada de provincias
+      description: |-
+        Devuelve una lista paginada y filtrada de provincias que cumplen los filtros.
+      operationId: findAllProvinciasPublic
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - comunidadAutonomaId            
+          schema:
+            type: string
+          example: comunidadAutonomaId==C1;
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de provincias
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProvinciaOutput"
+        204:
+          description: No hay provincias que cumplan con los filtros de busqueda
+
+
+components:
+  schemas:
+    AreaConocimientoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: A1
+        nombre:
+          type: string
+          example: Área 1
+        padreId:
+          type: string
+          example: null
+    CentroOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: Centro 1
+    ClasificacionOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: Clasificación 1
+        codigo:
+          type: string
+          example: CLS1
+        padreId:
+          type: string
+          example: null
+    ComunidadAutonomaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: Comunidad 1
+        paisId:
+          type: string
+          example: P1
+    DepartamentoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: D1
+        nombre:
+          type: string
+          example: Departamento 1
+    PaisOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        nombre:
+          type: string
+          example: País 1
+    ProvinciaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: PR1
+        nombre:
+          type: string
+          example: Provincia 1
+        comunidadAutonomaId:
+          type: string
+          example: C1
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, for documentation purposes only
