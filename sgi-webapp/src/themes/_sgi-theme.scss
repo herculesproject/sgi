@@ -1,0 +1,58 @@
+// instead of creating a theme with mat-light-theme like a sane person, we will create our own theme-creating function that lets us apply our own foreground and background palettes.
+// Creates a container object for a light theme to be given to individual component theme mixins.
+@function mat-custom-light-theme(
+  $primary,
+  $accent,
+  $warn: mat-palette($mat-red),
+  $foreground: $mat-light-theme-foreground,
+  $background: $mat-light-theme-background
+) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: false,
+    foreground: $foreground,
+    background: $background
+  );
+}
+
+@import "colors.scss";
+@import "typography.scss";
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+
+// Definimos los colores primarios, secundarios y de aviso, con sus variantes light y dark
+$sgi-primary: mat-palette($palette-primary, $primary-color, $primary-light-color, $primary-dark-color);
+$sgi-accent: mat-palette($palette-accent, $accent-color, $accent-light-color, $accent-dark-color);
+$sgi-warn: mat-palette($palette-warn, $warn-color, $warn-light-color, $warn-dark-color);
+
+// Create the theme object (a Sass map containing all of the palettes).
+// $sgi-theme: mat-custom-light-theme($sgi-primary, $sgi-accent, $sgi-warn);
+$sgi-theme: mat-custom-light-theme($sgi-primary, $sgi-accent, $sgi-warn, $sgi-foreground, $sgi-background);
+
+// Se añade paleta de grises modificada por valores necesarios del mockup
+$sgi-theme: map-merge(
+  $sgi-theme,
+  (
+    palette-grease: $palette-grey,
+  )
+);
+
+// Se añade paleta de colores personalizados donde no se pueda obtener correspondencia de las paletas primary, accent, warn y grey
+$sgi-theme: map-merge(
+  $sgi-theme,
+  (
+    sgi-custom-colors: $sgi-custom-colors,
+  )
+);
+
+// Se añade tamaños de letra personalizados donde no se pueda obtener correspondencia con custom-typography
+$sgi-theme: map-merge(
+  $sgi-theme,
+  (
+    sgi-typography-size: $sgi-typography-size,
+  )
+);

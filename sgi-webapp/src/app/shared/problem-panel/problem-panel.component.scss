@@ -1,0 +1,32 @@
+@import "colors.scss";
+
+:host {
+  display: block;
+
+  div.problem {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+
+    &.error {
+      background-color: map-get($sgi-custom-colors, danger);
+      color: map-get($sgi-custom-colors, white);
+    }
+
+    &.warning {
+      background-color: map-get($sgi-custom-colors, bg-warning);
+    }
+
+    &.info {
+      background-color: map-get($sgi-custom-colors, bg);
+    }
+
+    .preserve-lines {
+      white-space: pre-line;
+    }
+  }
+}

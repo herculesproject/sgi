@@ -1,0 +1,27 @@
+@import "~@angular/material/theming";
+@import "colors.scss";
+
+.mat-select-trigger {
+  cursor: default;
+  width: 100%;
+
+  .mat-select-value {
+    .mat-input-element {
+      cursor: default;
+    }
+
+    .upload {
+      display: inline-block;
+    }
+  }
+
+  .icon-wrapper {
+    cursor: pointer;
+    color: map-get($sgi-foreground, icon);
+
+    &.disabled {
+      cursor: default;
+      color: $dark-disabled-text;
+    }
+  }
+}

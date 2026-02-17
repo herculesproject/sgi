@@ -1,0 +1,61 @@
+@import "colors.scss";
+@import "vars.scss";
+
+$background-color: map-get($sgi-custom-colors, bg);
+$border-bottom-color: map-get($sgi-custom-colors, divider);
+$breadcrumbTextColor: $dark-disabled-text;
+$breadcrumbTextColorActive: map-get($palette-primary, $primary-color);
+
+.breadcrumbComponent {
+  background-color: $background-color;
+  $height: calc(#{$breadcrumHeight} - #{$borderWidth * 1});
+
+  max-height: $height;
+  min-height: $height;
+  box-shadow: inset 0px 14px 12px -12px $border-bottom-color;
+  border-bottom: solid #{$borderWidth} map-get($sgi-foreground, divider);
+
+  .migas {
+    padding: 0px 15px 0px 15px;
+
+    .breadcrumb {
+      .breadcrumb__divider {
+        color: var(--breadcrumbTextColor);
+
+        .chevron {
+          margin-top: 5px;
+          color: $breadcrumbTextColorActive;
+        }
+      }
+
+      span.breadcrumb__point {
+        color: $breadcrumbTextColor;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      .breadcrumb__list {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .breadcrumb__group {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .r-list {
+        padding-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        list-style: none !important;
+      }
+
+      .r-link {
+        display: inline-flex !important;
+        color: $breadcrumbTextColor !important;
+        text-decoration: underline !important;
+      }
+    }
+  }
+}

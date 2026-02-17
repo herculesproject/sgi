@@ -1,0 +1,42 @@
+<sgi-dialog-header title="{{'pii.reparto.gasto.desglose-gasto-deducir' | translate}}"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+    <div fxLayout="row" fxLayoutGap="10px">
+      <!-- Importe pendiente de compensar -->
+      <mat-form-field class="first-row-input" fxFlex="0 1 calc(50% - 5px)">
+        <mat-label>{{'pii.reparto.gasto.importe-pendiente-compensar' | translate}}</mat-label>
+        <input matInput formControlName="importePendienteCompensar" id="importePendienteCompensar" type="text"
+          placeholder="{{'pii.reparto.gasto.importe-pendiente-compensar' | translate}}" sgiInputWithThousandSeparator>
+      </mat-form-field>
+
+      <!-- Importe a compensar -->
+      <mat-form-field fxFlex="0 1 calc(50% - 5px)">
+        <mat-label>{{'pii.reparto.gasto.importe-compensar' | translate}}</mat-label>
+        <input matInput formControlName="importeACompensar" id="importeACompensar" type="text"
+          placeholder="{{'pii.reparto.gasto.importe-compensar' | translate}}" required cdkFocusInitial
+          sgiInputWithThousandSeparator>
+        <mat-error *ngIf="formGroup.controls.importeACompensar.errors?.required">
+          {{'error.required.entity' | translate:msgParamImporteACompensarEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.importeACompensar.errors?.min">
+          {{'error.min.entity' | translate:msgParamImporteACompensarEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.importeACompensar.errors?.maxDecimals">
+          {{'error.max.decimals.entity' | translate:msgParamImporteACompensarEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.importeACompensar.errors?.beforeOrEqual">
+          {{'error.beforeOrEqual.param' | translate:msgParamImportePendienteCompensarEntity}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>
+    {{'btn.ok' | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{'btn.cancel' | translate}}
+  </button>
+</mat-dialog-actions>

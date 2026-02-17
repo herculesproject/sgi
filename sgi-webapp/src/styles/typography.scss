@@ -1,0 +1,21 @@
+@import "~@angular/material/theming";
+
+// Definimos tipografía de componentes angular material
+// Solamente cambiamos la tipografía de los componentes principales, no cambiamos los demás porque afectan a varios componentes.
+// En este caso es mejor sobreescribir los componentes en global.scss o material.scss
+$custom-typography: mat-typography-config(
+  $font-family: "Poppins",
+  // Se aumenta tamaño de line-height por los textos de error y las labels en los input al utilizar Poppins
+  // Se utiliza en mat-form-field, mat-input y mat-select
+  $input: mat-typography-level(inherit, 1.333, 400),
+);
+
+$sgi-typography-size: (
+  menu-secondary: 13px,
+  // TODO Centralizamos estilos hasta que se saque a componente
+  form-fieldset: 12px,
+  // Se utiliza en mat-card
+  mat-card-title: 16px,
+  // Se utiliza en sgi-dialog-header
+  dialog-header: 20px,
+);

@@ -1,0 +1,71 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { IColumna } from '@core/models/sgepii/columna';
+import { IDatoEconomico } from '@core/models/sgepii/dato-economico';
+import { environment } from '@env';
+import { RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IColumnDefinition } from 'src/app/module/csp/ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class IngresosInvencionService extends SgiRestBaseService {
+  private static readonly MAPPING = '/ingresos-invencion';
+
+  constructor(
+    protected http: HttpClient) {
+    super(
+      `${environment.serviceServers.sgepii}${IngresosInvencionService.MAPPING}`,
+      http
+    );
+  }
+
+  /**
+   * Obtiene los Ingresos asociados al ProyectoSGE.
+   * 
+   * @param proyectoSgeId Id del ProyectoSGE asociado al Proyecto de CSP.
+   * @returns Lista de Ingresos asociados al ProyectoSGE.
+   */
+  getIngresos(proyectoSgeId: string): Observable<IDatoEconomico[]> {
+    const filter = new RSQLSgiRestFilter('proyectoId', SgiRestFilterOperator.EQUALS, proyectoSgeId);
+    const options: SgiRestFindOptions = {
+      filter
+    };
+    return this.find<IDatoEconomico, IDatoEconomico>(
+      `${this.endpointUrl}`,
+      options
+    ).pipe(
+      map(response => response.items)
+    );
+  }
+
+
+  /**
+   * Obtiene la metainformación sobre las columnas dinámicas del Ingreso.
+   * 
+   * @param proyectoId Id del proyecto asociado a la Invención.
+   * @returns Lista de las columnas.
+   */
+  getColumnas(proyectoId?: string): Observable<IColumnDefinition[]> {
+    const filter = new RSQLSgiRestFilter('proyectoId', SgiRestFilterOperator.EQUALS, proyectoId);
+    const options: SgiRestFindOptions = {
+      filter
+    };
+    return this.find<IColumna, IColumna>(
+      `${this.endpointUrl}/columnas`,
+      options
+    ).pipe(
+      map(response => response.items ?? []),
+      map(columnas => columnas.map(columna => {
+        return {
+          id: columna.id,
+          name: columna.nombre,
+          compute: columna.acumulable,
+          importeReparto: columna.importeReparto
+        };
+      }))
+    );
+  }
+}

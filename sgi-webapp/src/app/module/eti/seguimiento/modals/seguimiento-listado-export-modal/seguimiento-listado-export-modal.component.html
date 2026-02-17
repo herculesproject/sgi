@@ -1,0 +1,22 @@
+<sgi-export-dialog [title]="'eti.seguimiento.report.title' | translate"
+  [totalRegistrosExportacionExcel]="TOTAL_REG_EXP_EXCEL" [limiteRegistrosExportacionExcel]="LIMITE_REG_EXP_EXCEL">
+  <form [formGroup]="formGroup">
+    <!-- OutputReportType -->
+    <mat-form-field>
+      <mat-label>{{'export.type' | translate}}</mat-label>
+      <sgi-select-enum formControlName="outputType" required [enumMap]="OUTPUT_REPORT_TYPE_EXCEL_CSV_MAP">
+      </sgi-select-enum>
+    </mat-form-field>
+
+    <!-- Columns visibility -->
+    <mat-label>{{'export.columns' | translate}}</mat-label>
+
+    <div class="row-visibility">
+      <div class="columns-visibility">
+        <mat-checkbox color="primary" class="checkbox" formControlName="showEvaluacionesAnteriores">
+          {{'eti.evaluacion.report.modal.evaluaciones-anteriores' | translate}}
+        </mat-checkbox>
+      </div>
+    </div>
+  </form>
+</sgi-export-dialog>

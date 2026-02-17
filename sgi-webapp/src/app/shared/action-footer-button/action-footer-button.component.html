@@ -1,0 +1,9 @@
+<ng-container [ngSwitch]="type">
+  <button *ngSwitchCase="'default'" [color]="color" class="fixed" mat-raised-button [disabled]="disabled"
+    (click)="doClick($event)">
+    <mat-icon>{{icon}}</mat-icon> {{text | translate | uppercase}}
+  </button>
+  <button *ngSwitchCase="'cancel'" class="link-cancelar" mat-button [disabled]="disabled" (click)="doClick($event)">
+    <span class="underline">{{text | translate}}</span>
+  </button>
+</ng-container>

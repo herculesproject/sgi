@@ -1,0 +1,311 @@
+import { CardinalidadRelacionSgiSge } from '@core/models/csp/configuracion';
+import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
+import { IProyectoSge } from '@core/models/sge/proyecto-sge';
+import { TipoEntidadSGI } from '@core/models/sge/relacion-eliminada';
+import { Estado, ISolicitudProyectoSge } from '@core/models/sge/solicitud-proyecto-sge';
+import { Fragment } from '@core/services/action-service';
+import { ConfigService } from '@core/services/csp/configuracion/config.service';
+import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
+import { SolicitudProyectoSgeService } from '@core/services/sge/solicitud-proyecto-sge/solicitud-proyecto-sge.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { BehaviorSubject, Observable, concat, forkJoin, from, merge, of } from 'rxjs';
+import { map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
+
+export interface IProyectoProyectoSgeListadoData extends IProyectoProyectoSge {
+  isEliminable: boolean;
+}
+
+export class ProyectoProyectosSgeFragment extends Fragment {
+  proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoProyectoSgeListadoData>[]>([]);
+  isSectorIvaSgeEnabled$ = new BehaviorSubject<boolean>(false);
+
+  private _cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
+  private _disableAddIdentificadorSge$ = new BehaviorSubject<boolean>(false);
+  private _isModificacionProyectoSgeEnabled: boolean;
+  private _isSolicitudProyectoAltaPendiente$ = new BehaviorSubject<boolean>(false);
+  private _solicitudesProyectoPendientes$ = new BehaviorSubject<ISolicitudProyectoSge[]>([]);
+  private _isSgeEliminarRelacionProyectoEnabled: boolean;
+  private proyectosSgeEliminados: StatusWrapper<IProyectoProyectoSge>[] = [];
+
+  get disableAddIdentificadorSge$(): Observable<boolean> {
+    return this._disableAddIdentificadorSge$;
+  }
+
+  get isModificacionProyectoSgeEnabled(): boolean {
+    return this._isModificacionProyectoSgeEnabled;
+  }
+
+  get showInfoSolicitudProyectoAltaPendiente$(): Observable<boolean> {
+    return this._isSolicitudProyectoAltaPendiente$;
+  }
+
+  get showInfoSolicitudProyectoModificacionPendiente$(): Observable<boolean> {
+    return this.solicitudesProyectoModificacionPendientes$.pipe(
+      map(modificacionesPendientes => !!modificacionesPendientes?.length)
+    );
+  }
+
+  get solicitudesProyectoAltaPendientes$(): Observable<ISolicitudProyectoSge[]> {
+    return this._solicitudesProyectoPendientes$.pipe(
+      map(solicitudesProyectoPendientes => solicitudesProyectoPendientes?.filter(solicitud => this.isSolicitudProyectoAltaPendiente(solicitud)) ?? [])
+    );
+  }
+
+  get solicitudesProyectoModificacionPendientes$(): Observable<ISolicitudProyectoSge[]> {
+    return this._solicitudesProyectoPendientes$.pipe(
+      map(solicitudesProyectoPendientes => solicitudesProyectoPendientes.filter(solicitud => this.isSolicitudProyectoModificacionPendiente(solicitud)) ?? [])
+    );
+  }
+
+  get isSgeEliminarRelacionProyectoEnabled(): boolean {
+    return !this.readonly && this._isSgeEliminarRelacionProyectoEnabled;
+  }
+
+  constructor(
+    key: number,
+    private service: ProyectoProyectoSgeService,
+    private proyectoService: ProyectoService,
+    private proyectoSgeService: ProyectoSgeService,
+    private solicitudProyectoSgeService: SolicitudProyectoSgeService,
+    private configService: ConfigService,
+    public readonly readonly: boolean,
+    public readonly isVisor: boolean
+  ) {
+    super(key);
+    this.setComplete(true);
+  }
+
+  protected onInitialize(): void {
+    if (this.getKey()) {
+
+      this.subscriptions.push(
+        this.configService.isSectorIvaSgeEnabled().pipe(
+          tap(isSectorIvaSgeEnabled => {
+            this.isSectorIvaSgeEnabled$.next(isSectorIvaSgeEnabled);
+          }),
+          switchMap(() =>
+            forkJoin({
+              proyectosSge: this.proyectoService.findAllProyectosSgeProyecto(this.getKey() as number).pipe(
+                map(response => response.items.map(proyectoProyectoSge => new StatusWrapper<IProyectoProyectoSgeListadoData>(proyectoProyectoSge as IProyectoProyectoSgeListadoData))),
+                switchMap(response =>
+                  from(response).pipe(
+                    mergeMap(wrapperProyectoProyectoSge => this.service.isEliminable(wrapperProyectoProyectoSge.value.id).pipe(
+                      map(isEliminable => {
+                        wrapperProyectoProyectoSge.value.isEliminable = isEliminable;
+                        return wrapperProyectoProyectoSge;
+                      })
+                    )),
+                    toArray(),
+                    map(() => {
+                      return response;
+                    })
+                  )
+                ),
+                switchMap(response => {
+                  if (!this.isSectorIvaSgeEnabled$.value) {
+                    return of(response);
+                  }
+
+                  const requestsProyectoSge: Observable<StatusWrapper<IProyectoProyectoSge>>[] = [];
+                  response.forEach(proyectoProyectoSge => {
+                    requestsProyectoSge.push(this.proyectoSgeService.findById(proyectoProyectoSge.value.proyectoSge.id).pipe(
+                      map((proyectoSge) => {
+                        proyectoProyectoSge.value.proyectoSge = proyectoSge;
+                        return proyectoProyectoSge;
+                      })
+                    ));
+                  });
+                  return of(response).pipe(
+                    tap(() => merge(...requestsProyectoSge).subscribe())
+                  );
+                })
+              ),
+              cardinalidadRelacionSgiSge: this.configService.getCardinalidadRelacionSgiSge(),
+              isModificacionProyectoSgeEnabled: this.configService.isModificacionProyectoSgeEnabled(),
+              solicitudesPendientes: this.getSolicitudesProyectoPendientes(this.getKey() as number),
+              _isSgeEliminarRelacionProyectoEnabled: this.configService.isSgeEliminarRelacionProyectoEnabled(),
+            })
+          )
+        ).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge, solicitudesPendientes, _isSgeEliminarRelacionProyectoEnabled }) => {
+          this._cardinalidadRelacionSgiSge = cardinalidadRelacionSgiSge;
+          this._isModificacionProyectoSgeEnabled = isModificacionProyectoSgeEnabled;
+          this._solicitudesProyectoPendientes$.next(solicitudesPendientes);
+          this._isSolicitudProyectoAltaPendiente$.next(this.containsSolicitudProyectoAltaPendiente(solicitudesPendientes));
+          this._isSgeEliminarRelacionProyectoEnabled = _isSgeEliminarRelacionProyectoEnabled;
+          this.proyectosSge$.next(proyectosSge);
+        })
+      );
+
+      this.subscriptions.push(
+        this.proyectosSge$.subscribe(proyectosSge => {
+          this.fillDisableAddIdentificadorSge(proyectosSge);
+        })
+      );
+    }
+  }
+
+  public addProyectoSge(proyectoSge: IProyectoSge) {
+    const proyectoProyectoSge: IProyectoProyectoSgeListadoData = {
+      id: undefined,
+      proyecto: { id: this.getKey() as number } as IProyecto,
+      proyectoSge,
+      isEliminable: true
+    };
+
+    const wrapped = new StatusWrapper<IProyectoProyectoSgeListadoData>(proyectoProyectoSge);
+    wrapped.setCreated();
+    const current = this.proyectosSge$.value;
+    current.push(wrapped);
+    this.proyectosSge$.next(current);
+    this.setChanges(true);
+  }
+
+  public refreshSolicitudesProyectoPendientes(): void {
+    this.subscriptions.push(
+      this.getSolicitudesProyectoPendientes(this.getKey() as number).subscribe(solicitudesPendientes => {
+        this._solicitudesProyectoPendientes$.next(solicitudesPendientes);
+        this._isSolicitudProyectoAltaPendiente$.next(this.containsSolicitudProyectoAltaPendiente(solicitudesPendientes));
+        this.fillDisableAddIdentificadorSge(this.proyectosSge$.value);
+      })
+    );
+  }
+
+  saveOrUpdate(): Observable<void> {
+    return concat(
+      this.deleteProyectosSge(),
+      this.createProyectosSge()
+    ).pipe(
+      toArray(),
+      map(() => {
+        if (this.isSaveOrUpdateComplete()) {
+          this.setChanges(false);
+        }
+      })
+    );
+  }
+
+  private createProyectosSge(): Observable<void> {
+    const createdProyectosSge = this.proyectosSge$.value.filter((proyectoSge) => proyectoSge.created);
+    if (createdProyectosSge.length === 0) {
+      return of(void 0);
+    }
+
+    return from(createdProyectosSge).pipe(
+      mergeMap((wrappedProyectoSge) => {
+        return this.service.create(wrappedProyectoSge.value).pipe(
+          switchMap((createdProyectoSge) => {
+            const proyectoSge = wrappedProyectoSge.value;
+            proyectoSge.id = createdProyectoSge.id;
+            return this.service.isEliminable(createdProyectoSge.id).pipe(
+              tap(isEliminable => {
+                proyectoSge.isEliminable = isEliminable;
+
+                const index = this.proyectosSge$.value.findIndex((currentProyectoSge) =>
+                  currentProyectoSge === wrappedProyectoSge);
+
+                this.proyectosSge$.value[index] =
+                  new StatusWrapper<IProyectoProyectoSgeListadoData>(proyectoSge);
+
+                this.proyectosSge$.next(this.proyectosSge$.value);
+              }),
+              map(() => void 0)
+            );
+          })
+        );
+      })
+    );
+  }
+
+  private notificarRelacionEliminada(proyectoSgeEliminado: IProyectoSge): Observable<void> {
+    return this.proyectoSgeService.notificarRelacionesEliminadas(
+      proyectoSgeEliminado.id,
+      [
+        {
+          entidadSGIId: this.getKey() as string,
+          tipoEntidadSGI: TipoEntidadSGI.PROYECTO
+        }
+      ]
+    );
+  }
+
+  private deleteProyectosSge(): Observable<void> {
+    if (this.proyectosSgeEliminados.length === 0) {
+      return of(void 0);
+    }
+
+    return from(this.proyectosSgeEliminados).pipe(
+      switchMap(proyectoSgeEliminado => this.notificarRelacionEliminada(proyectoSgeEliminado.value.proyectoSge).pipe(
+        switchMap(() => proyectoSgeEliminado.created ? of(void 0) : this.service.deleteById(proyectoSgeEliminado.value.id)),
+        tap(() => {
+          this.proyectosSgeEliminados = this.proyectosSgeEliminados
+            .filter(deletedProyectoSge => deletedProyectoSge.value.id !== proyectoSgeEliminado.value.id);
+        }))));
+  }
+
+  private isSaveOrUpdateComplete(): boolean {
+    const touched: boolean = this.proyectosSge$.value.some((wrapper) => wrapper.touched);
+    return !(touched);
+  }
+
+  private getSolicitudesProyectoPendientes(proyectoId: number): Observable<ISolicitudProyectoSge[]> {
+    return forkJoin({
+      altaAsync: this.configService.isProyectoSgeAltaModoEjecucionAsync(),
+      modificacionAsync: this.configService.isProyectoSgeModificacionModoEjecucionAsync()
+    }).pipe(
+      switchMap(({ altaAsync, modificacionAsync }) => {
+        if (!altaAsync && !modificacionAsync) {
+          return of([]);
+        }
+
+        return this.solicitudProyectoSgeService.findPendientes(proyectoId);
+      })
+    );
+  }
+
+  private isSolicitudProyectoAltaPendiente(solicitud: ISolicitudProyectoSge): boolean {
+    return [
+      Estado.ALTA_ACEPTADA_SGE,
+      Estado.ALTA_ERROR_SGI,
+      Estado.ALTA_RECHAZADA_SGE,
+      Estado.ALTA_SOLICITUD_SGI
+    ].includes(solicitud.estado);
+  }
+
+  private isSolicitudProyectoModificacionPendiente(solicitud: ISolicitudProyectoSge): boolean {
+    return [
+      Estado.MODIFICACION_ACEPTADA_SGE,
+      Estado.MODIFICACION_RECHAZADA_SGE,
+      Estado.MODIFICACION_SOLICITUD_SGI,
+      Estado.REASIGNACION_ACEPTADA_SGE,
+      Estado.REASIGNACION_ERROR_SGI
+    ].includes(solicitud.estado);
+  }
+
+  private containsSolicitudProyectoAltaPendiente(solicitudes: ISolicitudProyectoSge[]): boolean {
+    return solicitudes?.some(solicitud => this.isSolicitudProyectoAltaPendiente(solicitud));
+  }
+
+  private fillDisableAddIdentificadorSge(proyectosSge: StatusWrapper<IProyectoProyectoSge>[]): void {
+    this._disableAddIdentificadorSge$.next(
+      ((proyectosSge?.length ?? 0) > 0 || this._isSolicitudProyectoAltaPendiente$.value)
+      && (this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+        || this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1));
+  }
+
+  public deleteRelacionProyecto(wrapper: StatusWrapper<IProyectoProyectoSge>) {
+    const current = this.proyectosSge$.value;
+    const index = current.findIndex(
+      (value) => value === wrapper
+    );
+    if (index >= 0) {
+      this.proyectosSgeEliminados.push(current[index]);
+      current.splice(index, 1);
+      this.proyectosSge$.next(current);
+      this.setChanges(true);
+    }
+  }
+
+}

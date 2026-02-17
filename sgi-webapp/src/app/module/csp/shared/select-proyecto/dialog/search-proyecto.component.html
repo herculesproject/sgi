@@ -1,0 +1,223 @@
+<sgi-dialog-header title="{{'csp.proyecto' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}"></sgi-dialog-header>
+<sgi-dialog-content fxLayout="column" fxLayoutGap="10px">
+  <form [formGroup]="formGroup" fxLayout="column">
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Identificador interno -->
+      <mat-form-field fxFlex="33">
+        <mat-label>{{ 'csp.proyecto.id' | translate }}</mat-label>
+        <input matInput formControlName="identificadorInterno" type="number" />
+      </mat-form-field>
+      <!-- Código identificación en SGE -->
+      <mat-form-field fxFlex="33">
+        <mat-label>{{'csp.proyecto.codigo-identificacion-sge' | translate}}</mat-label>
+        <input matInput formControlName="codigoIdentificacionSGE" type="text" />
+      </mat-form-field>
+    </div>
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <mat-form-field fxFlex>
+        <mat-label>{{'csp.proyecto.titulo' | translate}}</mat-label>
+        <input matInput formControlName="titulo" type="text" />
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-label>{{'csp.proyecto.acronimo' | translate}}</mat-label>
+        <input matInput formControlName="acronimo" type="text" />
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-label>{{'csp.proyecto.codigo-externo' | translate}}</mat-label>
+        <input matInput formControlName="codigoExterno" type="text" />
+      </mat-form-field>
+    </div>
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Modelo de Ejecución -->
+      <mat-form-field fxFlex="33">
+        <mat-label>{{'csp.proyecto.modelo-ejecucion' | translate}}</mat-label>
+        <sgi-select-modelo-ejecucion formControlName="modeloEjecucion" extended="false"></sgi-select-modelo-ejecucion>
+      </mat-form-field>
+      <!-- Tipo finalidad -->
+      <mat-form-field fxFlex="33">
+        <mat-label>{{'csp.proyecto.tipo-finalidad' | translate}}</mat-label>
+        <sgi-select-tipo-finalidad formControlName="tipoFinalidad" extended="false"></sgi-select-tipo-finalidad>
+      </mat-form-field>
+    </div>
+    <!-- Rangos de Fechas -->
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex>
+          <mat-label>{{'csp.proyecto.fecha-inicio' | translate}} {{'label.desde' | translate}}</mat-label>
+          <input matInput formControlName="fechaInicioDesde" [matDatepicker]="pickerInicioDesde" />
+          <mat-datepicker-toggle matSuffix [for]="pickerInicioDesde"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicioDesde></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <mat-label>{{'csp.proyecto.fecha-inicio' | translate}} {{'label.hasta' | translate}}</mat-label>
+          <input matInput formControlName="fechaInicioHasta" [matDatepicker]="pickerInicioHasta" />
+          <mat-datepicker-toggle matSuffix [for]="pickerInicioHasta"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicioHasta></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex>
+          <mat-label>{{'csp.proyecto.fecha-fin' | translate}} {{'label.desde' | translate}}</mat-label>
+          <input matInput formControlName="fechaFinDesde" [matDatepicker]="pickerFinDesde" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFinDesde"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFinDesde></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <mat-label>{{'csp.proyecto.fecha-fin' | translate}} {{'label.hasta' | translate}}</mat-label>
+          <input matInput formControlName="fechaFinHasta" [matDatepicker]="pickerFinHasta" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFinHasta"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFinHasta></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Responsable -->
+      <mat-form-field fxFlex="33">
+        <mat-label>{{'csp.proyecto.responsable' | translate}}</mat-label>
+        <sgi-select-persona formControlName="responsableProyecto"></sgi-select-persona>
+      </mat-form-field>
+      <!-- Miembro equipo -->
+      <mat-form-field fxFlex="33">
+        <mat-label>{{ 'csp.proyecto.miembro-equipo' | translate }}</mat-label>
+        <sgi-select-persona formControlName="miembroEquipo"></sgi-select-persona>
+      </mat-form-field>
+    </div>
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Convocatoria -->
+      <mat-form-field fxFlex>
+        <mat-label>{{'csp.proyecto.convocatoria' | translate}}</mat-label>
+        <sgi-select-convocatoria formControlName="convocatoria"></sgi-select-convocatoria>
+      </mat-form-field>
+      <!-- Entidad Financiadora -->
+      <mat-form-field fxFlex>
+        <mat-label>{{'csp.proyecto-entidad-financiadora' | translate}}</mat-label>
+        <sgi-select-empresa formControlName="entidadFinanciadora"></sgi-select-empresa>
+      </mat-form-field>
+    </div>
+    <!-- cualquier miembro participante -->
+    <ng-container *ngIf="data?.personas?.length > 0">
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-checkbox fxFlex="100" formControlName="miembrosParticipantes" fxFlex="100">{{
+          'csp.proyecto.cualquier-miembro-participante' | translate }}
+        </mat-checkbox>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <span fxFlex="100" [matTooltip]="msgMiembrosEquipoFullName" class="truncate">{{
+          msgMiembrosEquipoFullName }}</span>
+      </div>
+    </ng-container>
+
+  </form>
+  <div fxLayout="row" class="separacion" fxLayoutAlign="start">
+    <button color="primary" mat-raised-button (click)="search(true)">{{'btn.search' |
+      translate}}</button>
+    <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
+      translate}}
+    </button>
+  </div>
+  <div fxLayout="column" class="mat-elevation-z3">
+    <table mat-table [dataSource]="proyectos$ | async" matSort matSortActive="id" matSortDirection="desc"
+      matSortDisableClear>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.id-interno' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.id }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="codigoSGE">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.codigo-sge' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.proyectosSGE }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="titulo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto.titulo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <sgi-i18n-table-field [field]="element.titulo"></sgi-i18n-table-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acronimo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto.acronimo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.acronimo }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="codigoExterno">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto.codigo-externo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.codigoExterno }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fechaInicio">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.fecha-inicio' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fechaInicio | luxon:'short'}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fechaFin">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.fecha-fin' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fechaFin | luxon:'short'}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fechaFinDefinitiva">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.fecha-fin-definitiva' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fechaFinDefinitiva | luxon: 'short'}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="modeloEjecucion">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'csp.proyecto.modelo-ejecucion' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <sgi-i18n-table-field [field]="element.modeloEjecucion.nombre"></sgi-i18n-table-field>
+        </td>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>
+          {{'label.actions' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let proyecto">
+          <button color="primary" mat-icon-button matTooltip="{{'btn.select' | translate}}"
+            (click)="closeModal(proyecto)">
+            <mat-icon>done_outline</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+    </mat-paginator>
+  </div>
+  <div class="separation-button" *ngIf="data.extended">
+    <button color="three" mat-raised-button *sgiHasAuthorityForAnyUO="'CSP-PRO-C'" (click)="openCreate()">
+      <mat-icon color="accent">add_circle</mat-icon>
+      {{ 'btn.add.entity' | translate:msgParamEntity }}
+    </button>
+  </div>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

@@ -1,0 +1,28 @@
+@import "colors.scss";
+
+:host {
+  fieldset:disabled {
+
+    mat-icon {
+      opacity: .5;
+    }
+
+    input:not(:disabled) {
+      cursor: not-allowed;
+      background-color: red;
+    }
+  }
+
+  mat-checkbox.node-error {
+    color: map-get($sgi-custom-colors, danger);
+  }
+}
+
+.programa {
+  .arbol {
+    .arbol-tree {
+      overflow-y: scroll;
+      max-height: 600px;
+    }
+  }
+}

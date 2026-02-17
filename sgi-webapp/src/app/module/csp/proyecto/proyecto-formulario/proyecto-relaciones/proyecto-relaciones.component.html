@@ -1,0 +1,104 @@
+<!-- Proyecto Relaciones -->
+<sgi-fragment
+  title="{{'label.datos-generales' | translate}} - {{'csp.proyecto-relacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
+
+  <div class="mat-elevation-z4">
+    <table class="table-relaciones" mat-table [dataSource]="dataSource" matSort matSortActive="id"
+      matSortDirection="asc" matSortDisableClear>
+
+      <!-- Tipo entidad relacionada Column -->
+      <ng-container matColumnDef="tipoEntidadRelacionada">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto-relacion.tipo-entidad-relacionada' | translate}} </th>
+        <td mat-cell *matCellDef="let wrapper">
+          {{ TIPO_ENTIDAD_MAP.get(wrapper.value.tipoEntidadRelacionada) | translate}}
+        </td>
+      </ng-container>
+
+      <!-- Entidad relacionada Column -->
+      <ng-container matColumnDef="entidadRelacionada">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto-relacion.entidad-relacionada' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper">
+          <ng-container *ngIf="wrapper.value?.entidadRelacionadaHref; else titulo">
+            <sgi-i18n-link [link]="wrapper.value.entidadRelacionada?.titulo"
+              [href]="wrapper.value?.entidadRelacionadaHref">
+            </sgi-i18n-link>
+          </ng-container>
+          <ng-template #titulo>
+            <sgi-i18n-table-field [field]="wrapper.value.entidadRelacionada?.titulo"></sgi-i18n-table-field>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Ref Entidad Convocante -->
+      <ng-container matColumnDef="refEntidadConvocante">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto-relacion.ref-entidad-convocante' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{ wrapper.value.tipoEntidadRelacionada === TipoEntidad.PROYECTO ?
+          wrapper.value.entidadConvocanteRef : '' }} </td>
+      </ng-container>
+
+      <!-- Código SGE -->
+      <ng-container matColumnDef="codigoSGE">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto-relacion.codigo-sge' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper">
+          {{(wrapper.value.tipoEntidadRelacionada === TipoEntidad.PROYECTO ||
+          wrapper.value.tipoEntidadRelacionada === TipoEntidad.GRUPO) ?
+          wrapper.value.codigosSge : '' }}
+        </td>
+      </ng-container>
+
+      <!-- Observaciones Column -->
+      <ng-container matColumnDef="observaciones">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.proyecto-relacion.observaciones' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper">
+          <sgi-i18n-table-field [field]="wrapper.value.observaciones"></sgi-i18n-table-field>
+        </td>
+      </ng-container>
+
+      <!-- Acciones  Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
+        <td mat-cell *matCellDef="let relacion; let i = index">
+          <ng-container>
+            <div fxLayout="row">
+              <button color="primary" *ngIf="!this.formPart.hasEditPerm() && isRelatedEntityReady(relacion)"
+                mat-icon-button matTooltip="{{'btn.view' | translate}}" (click)="openModal(relacion, i)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button color="primary" *ngIf="this.formPart.hasEditPerm() && isRelatedEntityReady(relacion)"
+                mat-icon-button matTooltip="{{'btn.edit' | translate}}" (click)="openModal(relacion, i)">
+                <mat-icon>border_color</mat-icon>
+              </button>
+              <button color="warn" *ngIf="formPart.hasEditPerm()" mat-icon-button
+                matTooltip="{{'btn.delete' | translate }}" (click)="deleteRelacion(relacion)">
+                <mat-icon>highlight_off</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
+    </mat-paginator>
+  </div>
+  <div class="separation-button" *ngIf="formPart.hasEditPerm()">
+    <!-- Botón añadir Areas -->
+    <button color="three" mat-button mat-raised-button (click)="openModal()">
+      <mat-icon color="accent">add_circle</mat-icon>
+      {{ 'btn.add.entity' | translate:msgParamEntity }}
+    </button>
+  </div>
+
+</sgi-fragment>

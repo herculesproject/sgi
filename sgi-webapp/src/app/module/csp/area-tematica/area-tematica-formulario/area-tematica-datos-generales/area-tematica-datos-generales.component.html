@@ -1,0 +1,31 @@
+<sgi-fragment title="{{'label.datos-generales' | translate}}">
+  <form [formGroup]="formGroup">
+    <!-- Nombre -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'csp.area-tematica.nombre' | translate}}</mat-label>
+          <sgi-i18n-input formControlName="nombre"
+            placeholder="{{'csp.area-tematica.nombre' | translate}}"></sgi-i18n-input>
+          <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+            {{'error.required.entity' | translate:msgParamNombreEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-form-field fxFill>
+          <mat-label>{{'csp.area-tematica.descripcion' | translate}}</mat-label>
+          <sgi-i18n-textarea formControlName="descripcion" id="descripcion"
+            placeholder="{{'csp.area-tematica.descripcion' | translate}}"></sgi-i18n-textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+</sgi-fragment>

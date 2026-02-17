@@ -1,0 +1,42 @@
+import { Component, Optional, Self } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectServiceComponent } from '@core/component/select-service/select-service.component';
+import { IComite } from '@core/models/eti/comite';
+import { ComiteService } from '@core/services/eti/comite.service';
+import { LanguageService } from '@core/services/language.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+@Component({
+  selector: 'sgi-select-comite',
+  templateUrl: '../../../../core/component/select-common/select-common.component.html',
+  styleUrls: ['../../../../core/component/select-common/select-common.component.scss'],
+  providers: [
+    {
+      provide: MatFormFieldControl,
+      useExisting: SelectComiteComponent
+    }
+  ]
+})
+export class SelectComiteComponent extends SelectServiceComponent<IComite> {
+
+  constructor(
+    defaultErrorStateMatcher: ErrorStateMatcher,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
+    private service: ComiteService,
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService);
+
+    this.displayWith = (comite: IComite) => comite?.codigo;
+  }
+
+  protected loadServiceOptions(): Observable<IComite[]> {
+    return this.service.findAll().pipe(
+      map(response => response.items)
+    );
+  }
+
+}

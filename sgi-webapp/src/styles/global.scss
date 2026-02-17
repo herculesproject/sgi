@@ -1,0 +1,461 @@
+@import "vars.scss";
+@import "colors.scss";
+@import "typography.scss";
+
+/**/
+/** CUERPO HTML */
+/**/
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+/**/
+/** FIN CUERPO HTML */
+/**/
+
+/**/
+
+/** TABLES */
+/**/
+
+.mat-table {
+  .mat-header-row {
+    background-color: map-get($sgi-custom-colors, bg);
+  }
+
+  width: 100%;
+}
+
+/**/
+/** From angular material table.scss */
+/**/
+.mat-table {
+
+  .mat-header-cell,
+  .mat-cell,
+  .mat-footer-cell {
+    padding-left: $mat-row-cell-padding-left;
+    padding-right: $mat-row-cell-padding-right;
+
+    // Note: we use `first-of-type`/`last-of-type` here in order to prevent extra
+    // elements like ripples or badges from throwing off the layout (see #11165).
+    &:first-of-type {
+      padding-left: $mat-row-horizontal-padding;
+
+      [dir="rtl"] &:not(:only-of-type) {
+        padding-left: 0;
+        padding-right: $mat-row-horizontal-padding;
+      }
+    }
+
+    &:last-of-type {
+      padding-right: $mat-row-horizontal-padding;
+
+      [dir="rtl"] &:not(:only-of-type) {
+        padding-right: 0;
+        padding-left: $mat-row-horizontal-padding;
+      }
+    }
+  }
+}
+
+/**/
+/** FIN TABLES */
+/**/
+
+/**/
+/** RADIOBUTTON */
+/**/
+mat-radio-group.radio-inline {
+  mat-radio-button {
+    padding: 5px 15px 0px 0px;
+  }
+}
+
+/**/
+/** RADIOBUTTON */
+/**/
+
+/**/
+/** INPUT */
+/**/
+
+// todos los input al 100%
+mat-form-field {
+  width: 100%;
+}
+
+// Allow responsive reserved space for errors in fields
+.mat-form-field-appearance-legacy .mat-form-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+
+  .mat-form-field-flex {
+    order: 1;
+  }
+
+  .mat-form-field-underline {
+    position: relative;
+    order: 2;
+    bottom: 0 !important;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    position: relative;
+    order: 3;
+    min-height: 1.33em; // Default line-height for inputs in $custom-typography
+    margin-bottom: -0.083em; // Difference between default padding and the min-height. (1.25 - 1.333)
+  }
+}
+
+// Icono de requerido de mat-form-field (por defecto es accent)
+.mat-focused .mat-form-field-required-marker {
+  color: map-get($palette-primary, $primary-color);
+}
+
+.mat-form-field-label mat-label {
+  color: map-get($sgi-custom-colors, label);
+}
+
+/**/
+/** FIN INPUT */
+/**/
+
+/**/
+/** MENSAJES */
+/**/
+
+.info-message {
+  margin: 13px 0;
+  padding: 10px;
+  border-radius: 5px;
+  color: map-get($palette-primary, $primary-color);
+  background-color: map-get($palette-primary, 100);
+  text-align: center;
+  -webkit-box-shadow: 0 5px 6px -6px map-get($sgi-custom-colors, divider);
+  -moz-box-shadow: 0 5px 6px -6px map-get($sgi-custom-colors, divider);
+  box-shadow: 0 5px 6px -6px map-get($sgi-custom-colors, divider);
+}
+
+.field-info-tooltip {
+  white-space: pre-line;
+}
+
+/**/
+/** FIN MENSAJES */
+/**/
+
+/**/
+/** BOTONES */
+/**/
+
+// Botones disabled
+.mat-raised-button.mat-accent[disabled] {
+  color: map-get($sgi-custom-colors, white);
+  background: map-get($palette-accent, $accent-color - 200);
+  opacity: 0.5;
+}
+
+.mat-raised-button.mat-primary[disabled] {
+  color: map-get($sgi-custom-colors, white);
+  background: map-get($palette-primary, $primary-color);
+  opacity: 0.5;
+}
+
+// Link cancelar en el footer. Negrita y subrayado
+.link-cancelar {
+  cursor: pointer;
+  font-weight: bold;
+  color: map-get($sgi-custom-colors, black);
+
+  .underline {
+    text-decoration: underline;
+  }
+}
+
+.link-busqueda {
+  cursor: pointer;
+  font-weight: bold;
+  color: map-get($palette-primary, $primary-color);
+
+  &.underline {
+    text-decoration: underline;
+  }
+}
+
+.separation-button {
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  button~button {
+    margin-left: 10px;
+  }
+
+  button.rounded {
+    border-radius: 1.5em;
+    padding-right: 1.2em;
+    font-weight: bold;
+
+    mat-icon {
+      margin-left: -0.2em;
+      padding-right: 0.1em;
+    }
+  }
+
+  // Boton verde terciario
+  .mat-three {
+    background-color: map-get($sgi-custom-colors, three-buton);
+    font-weight: bold;
+    color: $dark-secondary-text;
+    border-radius: 20px;
+    min-width: 150px;
+
+    &:has([mat-icon]) {
+      text-align: left;
+      padding-right: 35px;
+    }
+  }
+}
+
+.separation-bottom-button {
+  padding-bottom: 25px;
+
+  button~button {
+    margin-left: 10px;
+  }
+
+  button.rounded {
+    border-radius: 1.5em;
+    padding-right: 1.2em;
+    font-weight: bold;
+
+    mat-icon {
+      margin-left: -0.2em;
+      padding-right: 0.1em;
+    }
+  }
+
+  // Boton verde terciario
+  .mat-three {
+    background-color: map-get($sgi-custom-colors, three-buton);
+    font-weight: bold;
+    color: $dark-secondary-text;
+    border-radius: 20px;
+    min-width: 150px;
+
+    &:has([mat-icon]) {
+      text-align: left;
+      padding-right: 35px;
+    }
+  }
+}
+
+/**/
+/** FIN BOTONES */
+/**/
+
+/**/
+/** MODALES */
+/**/
+
+.sgi-dialog-container {
+  .mat-dialog-container {
+    padding: 0;
+
+    .mat-dialog-content,
+    .mat-dialog-actions {
+      margin: 0;
+      padding: 10px;
+    }
+
+    .mat-dialog-content {
+      .form-inline {
+        display: block;
+      }
+
+      .programa {
+        .arbol {
+          padding: 10px;
+          border: 1px solid map-get($sgi-custom-colors, divider);
+          margin: 10px 0px 10px 0px;
+
+          .mat-tree-node {
+            button {
+              font-weight: 400;
+            }
+          }
+
+          .arbol-invisible {
+            display: none;
+          }
+
+          .arbol-tree ul,
+          .arbol-tree li {
+            margin-top: 0;
+            margin-bottom: 0;
+            list-style-type: none;
+          }
+        }
+
+        .visualizacion {
+          h3 {
+            font-weight: bold;
+          }
+
+          background: map-get($sgi-custom-colors, bg);
+          padding: 30px;
+        }
+      }
+    }
+  }
+
+  .sgi-dialog-header {
+    font-size: map-get($sgi-typography-size, dialog-header);
+    color: map-get($sgi-custom-colors, white);
+    background-color: map-get($palette-primary, $primary-color);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+  }
+}
+
+/**/
+/** FIN MODALES */
+/**/
+
+/**/
+/** SELECTS */
+/**/
+
+.mat-select-panel mat-option.mat-option {
+  height: unset;
+}
+
+.mat-option-text.mat-option-text {
+  white-space: normal;
+  line-height: normal;
+  min-height: 1.5em;
+  margin-top: 0.9em;
+  margin-bottom: 0.9em;
+}
+
+/**/
+/** FIN SELECTS */
+/**/
+
+.not-found-error,
+.mat-input-element.not-found-error {
+  color: map-get($palette-warn, $warn-color);
+
+  &:disabled {
+    color: map-get($palette-warn, $warn-color - 100);
+  }
+}
+
+/**/
+/** CKEDITOR */
+/**/
+.ckeditor-label {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  font-size: smaller;
+  font-weight: 400;
+  line-height: 1.333;
+  font-family: Poppins;
+  letter-spacing: normal;
+  padding: 0.5em 0;
+  border-top: 0.99975em solid transparent;
+  color: rgba(0, 0, 0, 0.7);
+  left: 0;
+  pointer-events: none;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transform-origin: 0 0;
+  transition: transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1), color 400ms cubic-bezier(0.25, 0.8, 0.25, 1), width 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  .warn {
+    color: map-get($palette-warn, $warn-color) !important;
+  }
+}
+
+.ckeditor-error {
+  color: map-get($palette-warn, $warn-color);
+  font-size: 75%;
+}
+
+.ckeditor-hint {
+  height: 10px;
+  text-align: right;
+  font-size: 85%;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.ck-editor-border-warn {
+  border: 0.5px solid map-get($palette-warn, $warn-color);
+}
+
+.ck-content {
+  min-height: 200px;
+}
+
+/**/
+/** FIN CKEDITOR */
+/**/
+
+/**/
+/** I18N Components */
+/**/
+.mat-form-field-type-sgi-i18n-textarea,
+.mat-form-field-type-i18n-textarea {
+  .mat-form-field-label-wrapper {
+    margin-left: 50px;
+    width: calc(100% - 50px);
+  }
+
+  &.mat-form-field-should-float {
+    .mat-form-field-label-wrapper {
+      margin-left: 0px;
+    }
+  }
+}
+
+.mat-form-field-type-sgi-i18n-input,
+.mat-form-field-type-i18n-input {
+  .mat-form-field-label-wrapper {
+    margin-left: 50px;
+    width: calc(100% - 50px);
+  }
+
+  &.mat-form-field-should-float {
+    .mat-form-field-label-wrapper {
+      margin-left: 0px;
+    }
+  }
+}
+
+.mat-form-field-type-sgi-input-linea-investigacion,
+.mat-form-field-type-input-linea-investigacion {
+  .mat-form-field-label-wrapper {
+    margin-left: 50px;
+    width: calc(100% - 50px);
+  }
+
+  &.mat-form-field-should-float {
+    .mat-form-field-label-wrapper {
+      margin-left: 0px;
+    }
+  }
+}
+
+/**/
+/** Fin I18N Components */
+/**/

@@ -1,0 +1,255 @@
+import { DatePipe } from '@angular/common';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { DialogFormComponent } from '@core/component/dialog-form.component';
+import { SgiError } from '@core/errors/sgi-error';
+import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
+import { IDocumento } from '@core/models/sgdoc/documento';
+import { IPersona } from '@core/models/sgp/persona';
+import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
+import { LanguageService } from '@core/services/language.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
+import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
+import { DateTime } from 'luxon';
+import { switchMap } from 'rxjs/operators';
+
+const MSG_ACEPTAR = marker('btn.ok');
+const MGS_ANADIR = marker('btn.add');
+const CERTIFICADO_AUTORIZACION_KEY = marker('csp.certificado-autorizacion');
+const MSG_ERROR_FORM_GROUP = marker('error.form-group');
+const CERTIFICADO_AUTORIZACION_DOCUMENTO_KEY = marker('csp.certificado-autorizacion.documento');
+const CERTIFICADO_AUTORIZACION_PUBLICO_KEY = marker('csp.certificado-autorizacion.publico');
+
+export interface ICertificadoAutorizacionModalData {
+  certificado: ICertificadoAutorizacion;
+  fechaSolicitud: DateTime;
+  solicitante: IPersona;
+  hasSomeOtherCertificadoAutorizacionVisible: boolean;
+  generadoAutomatico: boolean;
+  documento: IDocumento;
+}
+
+@Component({
+  selector: 'sgi-autorizacion-certificado-modal',
+  templateUrl: './autorizacion-certificado-modal.component.html',
+  styleUrls: ['./autorizacion-certificado-modal.component.scss']
+})
+export class AutorizacionCertificadoModalComponent extends DialogFormComponent<ICertificadoAutorizacionModalData> implements OnInit {
+
+  showTipoRelacion: boolean;
+
+  textSaveOrUpdate: string;
+  title: string;
+
+  uploading = false;
+  documentosRefsGenerados: I18nFieldValue[];
+
+  msgParamTipoEntidadRelacionada = {};
+  msgParamEntidadRelacionada = {};
+  msgParamTipoRelacion = {};
+  msgParamObservaciones = {};
+  msgParamFicheroEntity = {};
+  msgParamPublicoEntity = {};
+  msgParamDocumentoEntity = {};
+
+  @ViewChild('uploader') private uploader: SgiFileUploadComponent;
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
+  }
+
+  constructor(
+    matDialogRef: MatDialogRef<AutorizacionCertificadoModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ICertificadoAutorizacionModalData,
+    private readonly translate: TranslateService,
+    private autorizacionService: AutorizacionService,
+    readonly sgiAuthService: SgiAuthService,
+    private readonly documentoService: DocumentoService,
+    private readonly datePipe: DatePipe,
+    private readonly languageService: LanguageService
+  ) {
+    super(matDialogRef, !!data?.certificado?.id);
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.setupI18N();
+
+    if (!this.data.certificado) {
+      this.data.certificado = {} as ICertificadoAutorizacion;
+    }
+
+    if (this.data?.certificado?.id) {
+      this.formGroup.controls.documento.disable();
+      this.formGroup.controls.documentoAuto.disable();
+    }
+  }
+
+  doAction(): void {
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.valid) {
+      if (this.formGroup.controls.generadoAutomatico.value) {
+        if (this.formGroup.controls.documentoAuto.value) {
+          this.close(this.getValue());
+        } else {
+          this.pushProblems(new SgiError(MSG_ERROR_FORM_GROUP));
+        }
+      } else {
+        this.uploader.uploadSelection().subscribe(
+          () => this.close(this.getValue()),
+          this.processError
+        );
+      }
+    }
+  }
+
+  protected getValue(): ICertificadoAutorizacionModalData {
+    this.data.certificado.nombre = this.formGroup.controls.nombre.value;
+    this.data.certificado.visible = this.formGroup.controls.publico.value;
+
+    if (!this.formGroup.controls.generadoAutomatico.disabled) {
+      this.data.certificado.documentoRef = this.formGroup.controls.generadoAutomatico.value
+        ? this.getDocumentoRefsGenerados() : [
+          {
+            lang: this.languageService.getLanguage(),
+            value: (this.formGroup.controls.documento.value as IDocumento)?.documentoRef
+          }
+        ];
+    }
+
+    this.data.generadoAutomatico = this.formGroup.controls.generadoAutomatico.value;
+    return this.data;
+  }
+
+  private getDocumentoRefsGenerados(): I18nFieldValue[] {
+    return this.documentosRefsGenerados ?? this.data.certificado.documentoRef;
+  }
+
+  private getTitleDocumento(): string {
+    if (this.data.generadoAutomatico || this.formGroup?.controls?.generadoAutomatico?.value) {
+      let apellidosNombre = '';
+      if (this.data.solicitante?.apellidos && this.data.solicitante?.nombre) {
+        apellidosNombre = (this.data.solicitante?.apellidos + this.data.solicitante?.nombre).toLowerCase().replace(/ /g, '');
+      }
+      let fechaStr = '';
+      if (this.data.fechaSolicitud) {
+        fechaStr = this.datePipe.transform(this.data.fechaSolicitud.toJSDate(), 'yyyyMMdd');
+      }
+      return apellidosNombre + fechaStr + "certificadoAutorizacionProyectoExterno.pdf";
+    } else {
+      return this.data?.documento?.nombre;
+    }
+  }
+
+  protected buildFormGroup(): FormGroup {
+    const form = new FormGroup({
+      nombre: new FormControl(this.data?.certificado?.nombre ?? []),
+      publico: new FormControl(this.data?.certificado?.visible, [Validators.required,
+      this.buildValidadorHasSomeOtherCertificadoAutorizacionVisible(this.data?.hasSomeOtherCertificadoAutorizacionVisible)]),
+      documento: new FormControl(this.data?.documento, Validators.required),
+      documentoAuto: new FormControl(this.getTitleDocumento(), Validators.required),
+      generadoAutomatico: new FormControl(null),
+    });
+    form.controls.generadoAutomatico.setValue(this.data.generadoAutomatico, { emitEvent: false });
+    if (this.data.generadoAutomatico) {
+      form.controls.documento.disable();
+    } else {
+      form.controls.documentoAuto.disable();
+    }
+
+    this.subscriptions.push(
+      form.controls.generadoAutomatico.valueChanges.subscribe(
+        (value) => {
+          form.controls.documento.setValue(null);
+          if (value) {
+            form.controls.documentoAuto.enable();
+            form.controls.documento.disable();
+            if (!this.documentosRefsGenerados?.length) {
+              this.generarInforme(this.data?.certificado?.autorizacion?.id);
+            }
+          } else {
+            form.controls.documento.enable();
+            form.controls.documentoAuto.disable();
+          }
+        }
+      )
+    );
+
+    return form;
+  }
+
+  private setupI18N(): void {
+    this.translate.get(
+      CERTIFICADO_AUTORIZACION_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.title = value);
+
+    this.translate.get(
+      CERTIFICADO_AUTORIZACION_DOCUMENTO_KEY,
+    ).subscribe((value) => this.msgParamDocumentoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CERTIFICADO_AUTORIZACION_PUBLICO_KEY,
+    ).subscribe((value) => this.msgParamPublicoEntity = { field: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    if (this.data?.certificado?.id) {
+      this.textSaveOrUpdate = MSG_ACEPTAR;
+    } else {
+      this.textSaveOrUpdate = MGS_ANADIR;
+    }
+  }
+
+  private buildValidadorHasSomeOtherCertificadoAutorizacionVisible(hasSomeOtherCertificadoAutorizacionVisible: boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (hasSomeOtherCertificadoAutorizacionVisible && control.value) {
+        return { hasCertificadoPublico: true };
+      } else {
+        return null;
+      }
+    };
+  }
+
+  onUploadProgress(event: UploadEvent) {
+    switch (event.status) {
+      case 'start':
+        this.uploading = true;
+        break;
+      case 'end':
+        this.uploading = false;
+        break;
+      case 'error':
+        this.uploading = false;
+        break;
+    }
+  }
+
+  private generarInforme(idAutorizacion: number): void {
+    this.autorizacionService.getInformeAutorizacion(idAutorizacion, this.getTitleDocumento()).subscribe(
+      (documentoInfo: I18nFieldValue[]) => {
+        this.documentosRefsGenerados = documentoInfo;
+        this.formGroup.controls.documentoAuto.setValue(this.getTitleDocumento());
+      });
+  }
+
+  /**
+   * Visualiza el informe de autorización generado automaticamente.
+   */
+  visualizarInformeGenerado(): void {
+    const documentosRefs = this.getDocumentoRefsGenerados();
+    if (documentosRefs?.length) {
+      this.documentoService.getInfoFichero(this.languageService.getFieldValue(documentosRefs)).pipe(
+        switchMap((documento: IDocumento) => {
+          return this.documentoService.downloadFichero(documento.documentoRef);
+        })
+      ).subscribe(response => {
+        triggerDownloadToUser(response, this.getTitleDocumento());
+      });
+    }
+  }
+}

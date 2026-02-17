@@ -1,0 +1,97 @@
+<sgi-dialog-header [title]="title | translate"></sgi-dialog-header>
+<sgi-dialog-content>
+  <mat-table [dataSource]="dataSource" multiTemplateDataRows>
+
+    <ng-container matColumnDef="anualidad">
+      <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.anualidad' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-icon color="primary" *ngIf="element.level === 0 && element.childs.length > 0"
+          (click)="element.expanded ? element.collapse() : element.expand()">
+          {{element.expanded ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+        {{element.level === 0 ? (!element.item.anualidad ? ('csp.solicitud-proyecto-presupuesto.sin-anualidad' |
+        translate) : element.item.anualidad) : '' }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="nombre">
+      <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.empresa' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-icon color="primary" *ngIf="element.level > 0 && element.childs.length > 0"
+          (click)="element.expanded ? element.collapse() : element.expand()">
+          {{element.expanded ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+        {{element.level > 0 && element.childs.length ?
+        element.item.solicitudProyectoEntidad.solicitudProyectoEntidadFinanciadoraAjena ?
+        element.item.solicitudProyectoEntidad.solicitudProyectoEntidadFinanciadoraAjena.empresa?.nombre
+        : element.item.solicitudProyectoEntidad.convocatoriaEntidadFinanciadora
+        ? element.item.solicitudProyectoEntidad.convocatoriaEntidadFinanciadora.empresa?.nombre :
+        element.item.solicitudProyectoEntidad.convocatoriaEntidadGestora ?
+        element.item.solicitudProyectoEntidad.convocatoriaEntidadGestora.empresa?.nombre : ''
+        : '' }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fuenteFinanciacion">
+      <mat-header-cell *matHeaderCellDef>
+        {{'csp.solicitud-desglose-presupuesto.entidades.entidades-financiadoras.fuente-financiacion' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <sgi-i18n-table-field [field]="element.level > 0 && element.childs.length ?
+          element.item.solicitudProyectoEntidad.solicitudProyectoEntidadFinanciadoraAjena ?
+          element.item.solicitudProyectoEntidad.solicitudProyectoEntidadFinanciadoraAjena.fuenteFinanciacion?.nombre
+          : element.item.solicitudProyectoEntidad.convocatoriaEntidadFinanciadora
+          ? element.item.solicitudProyectoEntidad.convocatoriaEntidadFinanciadora.fuenteFinanciacion?.nombre : ''
+          : ''">
+        </sgi-i18n-table-field>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="ajena">
+      <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.financiacion-ajena' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.level > 0 && element.childs.length ?
+        ((element.item.solicitudProyectoEntidad.solicitudProyectoEntidadFinanciadoraAjena ? 'label.si' : 'label.no') |
+        translate) : ''}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="conceptoGasto">
+      <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.concepto-gasto' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <sgi-i18n-table-field [field]="!!!element.childs.length ? element.item.conceptoGasto.nombre: ''">
+        </sgi-i18n-table-field>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="observaciones">
+
+      <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.observaciones' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <sgi-i18n-table-field [field]="!!!element.childs.length ? element.item.observaciones :
+        ''"></sgi-i18n-table-field>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="importePresupuestado">
+      <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.importe-presupuestado' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.item.importePresupuestado | number: '1.2-2'}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="importeSolicitado">
+      <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.importe-solicitado' | translate}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.item.importeSolicitado | number: '1.2-2'}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnas;" [class.expanded-row]="!!row.parent && !!!row.parent?.expanded">
+    </mat-row>
+  </mat-table>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button class="link-exportar" color="accent" mat-button type="button" (click)="openExportModal()" mat-raised-button
+    [disabled]="dataSource.data.length<1">
+    <mat-icon color="white">insert_chart_outlined</mat-icon>
+    {{'btn.export' | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
+    translate}}</button>
+</mat-dialog-actions>

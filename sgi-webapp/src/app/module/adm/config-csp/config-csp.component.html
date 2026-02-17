@@ -1,0 +1,90 @@
+<sgi-menu-content>
+  <ng-container *ngFor="let config of CONFIG_MAP | keyvalue: originalOrder">
+
+    <ng-container [ngSwitch]="config.value.type">
+      <ng-container *ngSwitchCase="ConfigType.TEXT">
+        <ng-container [ngSwitch]="config.value.module">
+          <ng-container *ngSwitchCase="ConfigModule.CNF">
+            <sgi-config-input-text-cnf [key]="config.key" [label]="config.value.label"
+              [required]="config.value.required" (error)="handleErrors($event)">
+            </sgi-config-input-text-cnf>
+          </ng-container>
+          <ng-container *ngSwitchCase="ConfigModule.CSP">
+            <sgi-config-input-text-csp [key]="config.key" [label]="config.value.label"
+              [description]="config.value.description" [required]="config.value.required"
+              (error)="handleErrors($event)">
+            </sgi-config-input-text-csp>
+          </ng-container>
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.I18N_TEXT">
+        <ng-container [ngSwitch]="config.value.module">
+          <ng-container *ngSwitchCase="ConfigModule.CNF">
+            <sgi-config-i18n-input-text-cnf [key]="config.key" [label]="config.value.label"
+              [description]="config.value.description" [required]="config.value.required"
+              (error)="handleErrors($event)">
+            </sgi-config-i18n-input-text-cnf>
+          </ng-container>
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.EMAILS">
+        <sgi-config-input-emails [key]="config.key" [label]="config.value.label" [required]="config.value.required"
+          (error)="handleErrors($event)">
+        </sgi-config-input-emails>
+      </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.EMAILS_UO">
+        <ng-container *ngFor="let unidadGestion of unidadesGestion$ | async">
+          <sgi-config-input-emails [key]="config.key + unidadGestion.id" [label]="config.value.label"
+            [labelParams]="{unidadGestion: unidadGestion.nombre}" [required]="config.value.required"
+            (error)="handleErrors($event)">
+          </sgi-config-input-emails>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.FILE">
+        <sgi-config-input-file [key]="config.key" [label]="config.value.label" (error)="handleErrors($event)">
+        </sgi-config-input-file>
+      </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.SELECT">
+        <ng-container [ngSwitch]="config.value.module">
+          <ng-container *ngSwitchCase="ConfigModule.CNF">
+            <sgi-config-select-cnf [key]="config.key" [label]="config.value.label" [required]="config.value.required"
+              [options$]="config.value.options" (error)="handleErrors($event)">
+            </sgi-config-select-cnf>
+          </ng-container>
+          <ng-container *ngSwitchCase="ConfigModule.CSP">
+            <sgi-config-select-csp [key]="config.key" [label]="config.value.label"
+              [description]="config.value.description" [required]="config.value.required"
+              [options$]="config.value.options" (error)="handleErrors($event)">
+            </sgi-config-select-csp>
+          </ng-container>
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.SELECT_MULTIPLE">
+        <ng-container [ngSwitch]="config.value.module">
+          <ng-container *ngSwitchCase="ConfigModule.CNF">
+            <sgi-config-select-multiple-cnf [key]="config.key" [label]="config.value.label"
+              [required]="config.value.required" [options$]="config.value.options" (error)="handleErrors($event)">
+            </sgi-config-select-multiple-cnf>
+          </ng-container>
+          <ng-container *ngSwitchCase="ConfigModule.CSP">
+            <sgi-config-select-multiple-csp [key]="config.key" [label]="config.value.label"
+              [required]="config.value.required" [options$]="config.value.options" (error)="handleErrors($event)">
+            </sgi-config-select-multiple-csp>
+          </ng-container>
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.CONFIG_GROUP_TITLE">
+        <h3 class="config-group-title">
+          {{config.value.label | translate:config.value.labelParams}}
+        </h3>
+      </ng-container>
+      <ng-container *ngSwitchDefault></ng-container>
+    </ng-container>
+
+  </ng-container>
+
+</sgi-menu-content>

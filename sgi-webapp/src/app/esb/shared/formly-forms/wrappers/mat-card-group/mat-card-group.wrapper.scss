@@ -1,0 +1,50 @@
+// TODO: Buscar alternativa para no usar ng-deep y no tener que cambiar la encapsulación del componente
+:host ::ng-deep {
+  
+	mat-card {
+		margin-bottom: 1rem;
+	}
+	mat-card-header>:first-child {
+		margin: 0 0 .5rem 0;
+	}
+	.mat-card-header-text>:first-child {
+		font-size: 1rem;
+	}
+  .section-label{
+    margin-top: 1rem;
+  }
+	formly-group {
+		.row-formly {
+			display: flex;
+			width: 100%;
+			column-gap: 1rem;
+		}
+		.flex-1 {
+			flex: 1;
+		}
+		.flex-2 {
+			flex: 2;
+		}
+    .flex-3 {
+      flex: 3;
+    }
+    .flex-4 {
+      flex: 4;
+    }
+    .flex-5 {
+      flex: 5;
+    }
+    .flex-6 {
+      flex: 6;
+    }
+    .flex-1-25 {
+      flex: 0 1 calc(25% - 0.5rem);
+    }
+    .flex-1-50 {
+      flex: 0 1 calc(50% - 0.5rem);
+    }
+    .flex-1-75 {
+      flex: 0 1 calc(75% - 0.5rem);
+    }
+	}
+}
