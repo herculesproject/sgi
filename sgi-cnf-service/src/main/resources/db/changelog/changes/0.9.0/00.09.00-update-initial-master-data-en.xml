@@ -1,0 +1,118 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+  <property name="defaultLang" value="" />
+
+  <changeSet context="!test" author="master" id="00.09.00-resources-update-en">
+
+    <!-- Update value if mach default_value -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-csp-certificado-autorizacion-proyecto-externo-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-csp-certificado-autorizacion-proyecto-externo.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-csp-certificado-autorizacion-proyecto-externo.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-csp-certificado-autorizacion-proyecto-externo-docx-en" />
+      </whereParams>
+    </update>
+
+    <!-- Update value if mach default_value -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-ficha-evaluador-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-eti-ficha-evaluador.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-ficha-evaluador.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-ficha-evaluador-docx-en" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-retrospectiva-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-eti-evaluacion-retrospectiva.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-retrospectiva.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-retrospectiva-docx-en" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-favorable-memoria-nueva-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-eti-evaluacion-favorable-memoria-nueva.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-favorable-memoria-nueva.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-nueva-docx-en" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-favorable-memoria-ratificacion-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-eti-evaluacion-favorable-memoria-ratificacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-favorable-memoria-ratificacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-ratificacion-docx-en" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx-en" />
+      </whereParams>
+    </update>
+
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-evaluacion-docx-en" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.9.0/blob/rep/en/rep-eti-evaluacion.docx" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-docx-en" />
+      </whereParams>
+    </update>
+
+  </changeSet>
+
+</databaseChangeLog>
