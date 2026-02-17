@@ -1,0 +1,82 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+  <property name="formularioM10Code" value="M10/2025/001" global="false" />
+  <property name="formularioM20Code" value="M20/2025/001" global="false" />
+  <property name="formularioM30Code" value="M30/2025/001" global="false" />
+  <property name="formularioSeguimientoAnualCode" value="SA/2025/001" global="false" />
+  <property name="formularioSeguimientoFinalCode" value="SF/2025/001" global="false" />
+  <property name="formularioRestrospectivaCode" value="R/2025/001" global="false" />
+
+  <changeSet context="dev" author="master" id="00.08.00-formularios-version-defecto">
+    <!-- Establece la nueva versión del formulario M10 por defecto -->
+    <update tableName="comite">
+      <column name="formulario_memoria_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')" />
+      <where>id=1</where>
+    </update>
+
+    <!-- Establece la nueva versión del formulario M20 por defecto -->
+    <update tableName="comite">
+      <column name="formulario_memoria_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')" />
+      <where>id=2</where>
+    </update>
+
+    <!-- Establece la nueva versión del formulario M30 por defecto -->
+    <update tableName="comite">
+      <column name="formulario_memoria_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')" />
+      <where>id=3</where>
+    </update>
+
+    <!-- Establece la nueva versión del formulario SA por defecto a todos los formularios (M10,M20,M30) -->
+    <update tableName="comite">
+      <column name="formulario_seguimiento_anual_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}')" />
+    </update>
+
+    <!-- Establece la nueva versión del formulario SF por defecto a todos los formularios (M10,M20,M30) -->
+    <update tableName="comite">
+      <column name="formulario_seguimiento_final_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoFinalCode}')" />
+    </update>
+
+    <!-- Establece la nueva versión del formulario R por defecto a todos los formularios (M10,M20,M30) -->
+    <update tableName="comite">
+      <column name="formulario_retrospectiva_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}')" />
+      <where>requiere_retrospectiva = :value</where>
+      <whereParams>
+        <param valueBoolean="true" />
+      </whereParams>
+    </update>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="00.08.00-update-name-comite-m10">
+  <!-- Cambio de nombre investigación, código y genero para el comité  M10 -->
+  <update tableName="comite">
+    <column name="codigo" value="CEISH" />
+    <where>:name=:value</where>
+    <whereParams>
+      <param name="id" valueNumeric="1" />
+    </whereParams>
+  </update>
+
+  <update tableName="comite_nombre">
+    <column name="value_" value="Comité de Ética en Investigación con Seres Humanos" />
+    <column name="genero" value="M" />
+    <where>:name=:value</where>
+    <whereParams>
+      <param name="comite_id" valueNumeric="1" />
+    </whereParams>
+  </update>
+</changeSet>
+
+</databaseChangeLog>

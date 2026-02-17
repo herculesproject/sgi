@@ -1,0 +1,32 @@
+package org.crue.hercules.sgi.eti.config;
+
+import org.crue.hercules.sgi.framework.problem.spring.boot.autoconfigure.EnableProblem;
+import org.crue.hercules.sgi.framework.spring.context.support.boot.autoconfigure.EnableApplicationContextSupport;
+import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * SgiWebConfig Fw
+ * 
+ * Framework Web configuration.
+ */
+@Configuration
+@EnableProblem
+@EnableApplicationContextSupport
+public class WebConfig extends SgiWebConfig {
+
+  /**
+   * Realiza el mapeo de objetos
+   * 
+   * @return ModelMapper
+   */
+  @Bean
+  public ModelMapper modelMapper() {
+    ModelMapper modelMapper = new ModelMapper();
+    modelMapper.getConfiguration().setAmbiguityIgnored(true);
+    return modelMapper;
+  }
+
+}
