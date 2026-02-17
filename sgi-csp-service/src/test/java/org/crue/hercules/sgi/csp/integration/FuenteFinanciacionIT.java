@@ -1,0 +1,285 @@
+package org.crue.hercules.sgi.csp.integration;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.controller.FuenteFinanciacionController;
+import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionInput;
+import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionOutput;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
+
+/**
+ * Test de integracion de FuenteFinanciacion.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class FuenteFinanciacionIT extends BaseIT {
+
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_ACTIVAR = "/activar";
+  private static final String CONTROLLER_BASE_PATH = FuenteFinanciacionController.MAPPING;
+
+  private HttpEntity<FuenteFinanciacionInput> buildRequest(HttpHeaders headers, FuenteFinanciacionInput entity)
+      throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s",
+            tokenBuilder.buildToken("user", "CSP-CON-V", "CSP-CON-E", "CSP-CON-C", "CSP-CON-INV-V", "CSP-SOL-V",
+                "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-B", "CSP-PRO-C", "CSP-SOL-R", "CSP-PRO-V", "CSP-PRO-E", "CSP-PRO-B",
+                "CSP-PRO-R", "CSP-FNT-V", "CSP-FNT-C", "CSP-FNT-E", "CSP-FNT-B", "CSP-FNT-R", "AUTH")));
+
+    HttpEntity<FuenteFinanciacionInput> request = new HttpEntity<>(entity, headers);
+    return request;
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void create_ReturnsFuenteFinanciacion() throws Exception {
+    FuenteFinanciacionInput fuenteFinanciacion = generarMockFuenteFinanciacionInput();
+
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, fuenteFinanciacion), FuenteFinanciacionOutput.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+    FuenteFinanciacionOutput fuenteFinanciacionCreado = response.getBody();
+    Assertions.assertThat(fuenteFinanciacionCreado.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacionCreado.getNombre(), Language.ES))
+        .as("getNombre()")
+        .isEqualTo(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacionCreado.getDescripcion(), Language.ES))
+        .as("getDescripcion()")
+        .isEqualTo(I18nHelper.getValueForLanguage(fuenteFinanciacion.getDescripcion(), Language.ES));
+    Assertions.assertThat(fuenteFinanciacionCreado.getFondoEstructural()).as("getFondoEstructural()")
+        .isEqualTo(fuenteFinanciacion.getFondoEstructural());
+    Assertions.assertThat(fuenteFinanciacionCreado.getTipoAmbitoGeografico().getId())
+        .as("getTipoAmbitoGeografico().getId()").isEqualTo(fuenteFinanciacion.getTipoAmbitoGeograficoId());
+    Assertions.assertThat(fuenteFinanciacionCreado.getTipoOrigenFuenteFinanciacion().getId())
+        .as("getTipoOrigenFuenteFinanciacion().getId()")
+        .isEqualTo(fuenteFinanciacion.getTipoOrigenFuenteFinanciacionId());
+    Assertions.assertThat(fuenteFinanciacionCreado.getActivo()).as("getActivo()").isTrue();
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_ReturnsFuenteFinanciacion() throws Exception {
+    Long idFuenteFinanciacion = 1L;
+    FuenteFinanciacionInput fuenteFinanciacion = generarMockFuenteFinanciacionInput();
+    List<I18nFieldValueDto> nombre = new ArrayList<>();
+    nombre.add(new I18nFieldValueDto(Language.ES, "nuevo-actualizado"));
+    fuenteFinanciacion.setNombre(nombre);
+
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, fuenteFinanciacion),
+        FuenteFinanciacionOutput.class, idFuenteFinanciacion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    FuenteFinanciacionOutput fuenteFinanciacionActualizado = response.getBody();
+    Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacionActualizado.getNombre(), Language.ES))
+        .as("getNombre()")
+        .isEqualTo(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacionActualizado.getDescripcion(), Language.ES))
+        .as("getDescripcion()")
+        .isEqualTo(I18nHelper.getValueForLanguage(fuenteFinanciacion.getDescripcion(), Language.ES));
+    Assertions.assertThat(fuenteFinanciacionActualizado.getFondoEstructural()).as("getFondoEstructural()")
+        .isEqualTo(fuenteFinanciacion.getFondoEstructural());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getTipoAmbitoGeografico().getId())
+        .as("getTipoAmbitoGeografico().getId()").isEqualTo(fuenteFinanciacion.getTipoAmbitoGeograficoId());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().getId())
+        .as("getTipoOrigenFuenteFinanciacion().getId()")
+        .isEqualTo(fuenteFinanciacion.getTipoOrigenFuenteFinanciacionId());
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void desactivar_ReturnFuenteFinanciacion() throws Exception {
+    Long idFuenteFinanciacion = 1L;
+
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), FuenteFinanciacionOutput.class, idFuenteFinanciacion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
+    Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-001");
+    Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
+        .isEqualTo(fuenteFinanciacion.getDescripcion());
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
+    Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
+        .isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
+        .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isFalse();
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void activar_ReturnFuenteFinanciacion() throws Exception {
+    Long idFuenteFinanciacion = 1L;
+
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_ACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        FuenteFinanciacionOutput.class, idFuenteFinanciacion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
+    Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacion.getDescripcion(), Language.ES))
+        .as("getDescripcion()")
+        .isEqualTo("descripcion-001");
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
+    Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
+        .isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
+        .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isTrue();
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findById_ReturnsFuenteFinanciacion() throws Exception {
+    Long idFuenteFinanciacion = 1L;
+
+    final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        FuenteFinanciacionOutput.class, idFuenteFinanciacion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
+    Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-001");
+    Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
+        .isEqualTo(fuenteFinanciacion.getDescripcion());
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
+    Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
+        .isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
+        .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isTrue();
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAll_WithPagingSortingAndFiltering_ReturnsFuenteFinanciacionSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "nombre.value,desc";
+    String filter = "descripcion.value=ke=00";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
+        .build(false).toUri();
+
+    final ResponseEntity<List<FuenteFinanciacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<FuenteFinanciacionOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<FuenteFinanciacionOutput> fuenteFinanciaciones = response.getBody();
+    Assertions.assertThat(fuenteFinanciaciones).hasSize(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllTodos_WithPagingSortingAndFiltering_ReturnsFuenteFinanciacionSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "nombre.value,desc";
+    String filter = "descripcion.value=ke=00";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<FuenteFinanciacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<FuenteFinanciacionOutput>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<FuenteFinanciacionOutput> fuenteFinanciaciones = response.getBody();
+    Assertions.assertThat(fuenteFinanciaciones).hasSize(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
+  private FuenteFinanciacionInput generarMockFuenteFinanciacionInput() {
+
+    List<I18nFieldValueDto> nombre = new ArrayList<>();
+    nombre.add(new I18nFieldValueDto(Language.ES, "nombre"));
+
+    List<I18nFieldValueDto> descripcion = new ArrayList<>();
+    descripcion.add(new I18nFieldValueDto(Language.ES, "descripcion"));
+
+    FuenteFinanciacionInput fuenteFinanciacion = new FuenteFinanciacionInput();
+    fuenteFinanciacion.setNombre(nombre);
+    fuenteFinanciacion.setDescripcion(descripcion);
+    fuenteFinanciacion.setFondoEstructural(true);
+    fuenteFinanciacion.setTipoAmbitoGeograficoId(1L);
+    fuenteFinanciacion.setTipoOrigenFuenteFinanciacionId(1L);
+    return fuenteFinanciacion;
+  }
+
+}

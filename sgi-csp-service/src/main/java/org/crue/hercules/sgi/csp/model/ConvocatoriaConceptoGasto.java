@@ -1,0 +1,120 @@
+package org.crue.hercules.sgi.csp.model;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * ConvocatoriaConceptoGasto
+ */
+
+@Entity
+@Table(name = "convocatoria_concepto_gasto")
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
+public class ConvocatoriaConceptoGasto extends BaseEntity {
+
+  /**
+   * Serial version
+   */
+  private static final long serialVersionUID = 1L;
+
+  /** Id */
+  @Id
+  @Column(name = "id", nullable = false)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "convocatoria_concepto_gasto_seq")
+  @SequenceGenerator(name = "convocatoria_concepto_gasto_seq", sequenceName = "convocatoria_concepto_gasto_seq", allocationSize = 1)
+  private Long id;
+
+  /** Convocatoria Id */
+  @Column(name = "convocatoria_id", nullable = false)
+  @NotNull
+  private Long convocatoriaId;
+
+  /** ConceptoGasto */
+  @ManyToOne
+  @JoinColumn(name = "concepto_gasto_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIACONCEPTOGASTO_CONCEPTOGASTO"))
+  @NotNull
+  private ConceptoGasto conceptoGasto;
+
+  /** Observaciones */
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "convocatoria_concepto_gasto_observaciones", joinColumns = @JoinColumn(name = "convocatoria_concepto_gasto_id"))
+  @Valid
+  @Builder.Default
+  private Set<ConvocatoriaConceptoGastoObservaciones> observaciones = new HashSet<>();
+
+  /** Importe máximo */
+  @Column(name = "importe_maximo", nullable = true)
+  @Min(0)
+  private Double importeMaximo;
+
+  /** Porcentaje máximo */
+  @Column(name = "porcentaje_maximo", nullable = true, precision = 5, scale = 2)
+  @Min(0)
+  @Max(100)
+  private BigDecimal porcentajeMaximo;
+
+  /** Permitido */
+  @Column(name = "permitido", nullable = true)
+  private Boolean permitido;
+
+  /** Mes inicial */
+  @Column(name = "mes_inicial", nullable = true)
+  @Min(1)
+  private Integer mesInicial;
+
+  /** Mes final */
+  @Column(name = "mes_final", nullable = true)
+  @Min(1)
+  private Integer mesFinal;
+
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIACONCEPTOGASTO_CONVOCATORIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Convocatoria convocatoria = null;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoriaConceptoGasto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @JsonIgnore
+  private final List<ConvocatoriaConceptoGastoCodigoEc> codigosEc = null;
+
+}

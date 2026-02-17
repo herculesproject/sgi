@@ -1,0 +1,431 @@
+package org.crue.hercules.sgi.csp.service;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoComentario;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
+import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
+import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
+import org.crue.hercules.sgi.csp.service.impl.ProyectoPeriodoSeguimientoDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
+@ExtendWith(MockitoExtension.class)
+class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
+
+  @Mock
+  private ProyectoPeriodoSeguimientoDocumentoRepository proyectoPeriodoSeguimientoDocumentoRepository;
+
+  private ProyectoPeriodoSeguimientoDocumentoService service;
+
+  @BeforeEach
+  void setUp() throws Exception {
+    service = new ProyectoPeriodoSeguimientoDocumentoServiceImpl(proyectoPeriodoSeguimientoDocumentoRepository);
+  }
+
+  @Test
+  void create_ReturnsProyectoPeriodoSeguimientoDocumento() {
+    // given: new ProyectoPeriodoSeguimientoDocumento
+    ProyectoPeriodoSeguimientoDocumento newProyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        null);
+
+    BDDMockito
+        .given(proyectoPeriodoSeguimientoDocumentoRepository
+            .save(ArgumentMatchers.<ProyectoPeriodoSeguimientoDocumento>any()))
+        .willAnswer(new Answer<ProyectoPeriodoSeguimientoDocumento>() {
+          @Override
+          public ProyectoPeriodoSeguimientoDocumento answer(InvocationOnMock invocation) throws Throwable {
+            ProyectoPeriodoSeguimientoDocumento givenData = invocation.getArgument(0,
+                ProyectoPeriodoSeguimientoDocumento.class);
+            ProyectoPeriodoSeguimientoDocumento newData = new ProyectoPeriodoSeguimientoDocumento();
+            BeanUtils.copyProperties(givenData, newData);
+            newData.setId(1L);
+            return newData;
+          }
+        });
+
+    // when: create ProyectoPeriodoSeguimientoDocumento
+    ProyectoPeriodoSeguimientoDocumento createdProyectoPeriodoSeguimientoDocumento = service
+        .create(newProyectoPeriodoSeguimientoDocumento);
+
+    // then: new ProyectoPeriodoSeguimientoDocumento is created
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento).isNotNull();
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getId()).isNotNull();
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId())
+        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId())
+        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId());
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getComentario())
+        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getComentario());
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getDocumentoRef())
+        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getDocumentoRef());
+    Assertions.assertThat(createdProyectoPeriodoSeguimientoDocumento.getNombre())
+        .isEqualTo(newProyectoPeriodoSeguimientoDocumento.getNombre());
+
+  }
+
+  @Test
+  void create_WithId_ThrowsIllegalArgumentException() {
+    // given: a ProyectoPeriodoSeguimientoDocumento with id filled
+    ProyectoPeriodoSeguimientoDocumento newProyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoPeriodoSeguimientoDocumento
+        () -> service.create(newProyectoPeriodoSeguimientoDocumento))
+        // then: throw exception as id can't be provided
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void create_WithoutProyectoPeriodoSeguimiento_ThrowsNotFoundException() throws Exception {
+    // given: solicitud id null
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update non existing ProyectoPeriodoSeguimientoDocumento
+        () -> service.create(proyectoPeriodoSeguimientoDocumento))
+        // then: NotFoundException is thrown
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void create_WithoutNombreDocumento_ThrowsIllegalArgumentException() {
+    // given: a ProyectoPeriodoSeguimientoDocumento with nombre documento null
+    ProyectoPeriodoSeguimientoDocumento newProyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        null);
+    newProyectoPeriodoSeguimientoDocumento.setNombre(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoPeriodoSeguimientoDocumento
+        () -> service.create(newProyectoPeriodoSeguimientoDocumento))
+        // then: throw exception as id can't be provided
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void create_WithoutDocumentoRef_ThrowsIllegalArgumentException() {
+    // given: a ProyectoPeriodoSeguimientoDocumento with documento ref null
+    ProyectoPeriodoSeguimientoDocumento newProyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        null);
+    newProyectoPeriodoSeguimientoDocumento.setDocumentoRef(null);
+
+    Assertions.assertThatThrownBy(
+        // when: create ProyectoPeriodoSeguimientoDocumento
+        () -> service.create(newProyectoPeriodoSeguimientoDocumento))
+        // then: throw exception as id can't be provided
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void update_WithExistingId_ReturnsProyectoPeriodoSeguimientoDocumento() {
+    // given: existing ProyectoPeriodoSeguimientoDocumento
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(proyectoPeriodoSeguimientoDocumento));
+
+    BDDMockito
+        .given(proyectoPeriodoSeguimientoDocumentoRepository
+            .save(ArgumentMatchers.<ProyectoPeriodoSeguimientoDocumento>any()))
+        .willAnswer(new Answer<ProyectoPeriodoSeguimientoDocumento>() {
+          @Override
+          public ProyectoPeriodoSeguimientoDocumento answer(InvocationOnMock invocation) throws Throwable {
+            ProyectoPeriodoSeguimientoDocumento givenData = invocation.getArgument(0,
+                ProyectoPeriodoSeguimientoDocumento.class);
+            Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+            comentarioDocumento
+                .add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES, "comentarios-modificado"));
+            givenData.setComentario(comentarioDocumento);
+            return givenData;
+          }
+        });
+
+    // when: update ProyectoPeriodoSeguimientoDocumento
+    ProyectoPeriodoSeguimientoDocumento updated = service.update(proyectoPeriodoSeguimientoDocumento);
+
+    // then: ProyectoPeriodoSeguimientoDocumento is updated
+    Assertions.assertThat(updated).isNotNull();
+    Assertions.assertThat(updated.getId()).isNotNull();
+    Assertions.assertThat(updated.getId()).isEqualTo(proyectoPeriodoSeguimientoDocumento.getId());
+    Assertions.assertThat(updated.getProyectoPeriodoSeguimientoId())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
+    Assertions.assertThat(updated.getTipoDocumento().getId())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getComentario(), Language.ES))
+        .isEqualTo("comentarios-modificado");
+    Assertions.assertThat(updated.getDocumentoRef()).isEqualTo(proyectoPeriodoSeguimientoDocumento.getDocumentoRef());
+    Assertions.assertThat(updated.getNombre()).isEqualTo(proyectoPeriodoSeguimientoDocumento.getNombre());
+  }
+
+  @Test
+  void update_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing id
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: update non existing ProyectoPeriodoSeguimientoDocumento
+        () -> service.update(proyectoPeriodoSeguimientoDocumento))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ProyectoPeriodoSeguimientoDocumentoNotFoundException.class);
+  }
+
+  @Test
+  void update_WithoutProyectoPeriodoSeguimiento_ThrowsNotFoundException() throws Exception {
+    // given: solicitud id null
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update non existing ProyectoPeriodoSeguimientoDocumento
+        () -> service.update(proyectoPeriodoSeguimientoDocumento))
+        // then: NotFoundException is thrown
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void update_WithoutNombreDocumento_ThrowsNotFoundException() throws Exception {
+    // given: nombre documento null
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+    proyectoPeriodoSeguimientoDocumento.setNombre(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update non existing ProyectoPeriodoSeguimientoDocumento
+        () -> service.update(proyectoPeriodoSeguimientoDocumento))
+        // then: NotFoundException is thrown
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void update_WithoutDocumentoRef_ThrowsNotFoundException() throws Exception {
+    // given: nombre documento null
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+    proyectoPeriodoSeguimientoDocumento.setDocumentoRef(null);
+
+    Assertions.assertThatThrownBy(
+        // when: update non existing ProyectoPeriodoSeguimientoDocumento
+        () -> service.update(proyectoPeriodoSeguimientoDocumento))
+        // then: NotFoundException is thrown
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void update_WithoutId_ThrowsIllegalArgumentException() {
+    // given: a ProyectoPeriodoSeguimientoDocumento without id filled
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        null);
+
+    Assertions.assertThatThrownBy(
+        // when: update ProyectoPeriodoSeguimientoDocumento
+        () -> service.update(proyectoPeriodoSeguimientoDocumento))
+        // then: throw exception as id must be provided
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void delete_WithExistingId_ReturnsProyectoPeriodoSeguimientoDocumento() {
+    // given: existing ProyectoPeriodoSeguimientoDocumento
+    Long id = 1L;
+
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(Boolean.TRUE);
+    BDDMockito.doNothing().when(proyectoPeriodoSeguimientoDocumentoRepository).deleteById(ArgumentMatchers.anyLong());
+
+    Assertions.assertThatCode(
+        // when: delete by existing id
+        () -> service.delete(id))
+        // then: no exception is thrown
+        .doesNotThrowAnyException();
+  }
+
+  @Test
+  void delete_WithoutId_ThrowsIllegalArgumentException() throws Exception {
+    // given: no id
+    Long id = null;
+
+    Assertions.assertThatThrownBy(
+        // when: delete
+        () -> service.delete(id))
+        // then: IllegalArgumentException is thrown
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.existsById(ArgumentMatchers.anyLong()))
+        .willReturn(Boolean.FALSE);
+
+    Assertions.assertThatThrownBy(
+        // when: delete
+        () -> service.delete(id))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ProyectoPeriodoSeguimientoDocumentoNotFoundException.class);
+  }
+
+  @Test
+  void findById_WithExistingId_ReturnsProyectoPeriodoSeguimientoDocumento() throws Exception {
+    // given: existing ProyectoPeriodoSeguimientoDocumento
+    ProyectoPeriodoSeguimientoDocumento givenProyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
+        1L);
+
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(givenProyectoPeriodoSeguimientoDocumento));
+
+    // when: find by id ProyectoPeriodoSeguimientoDocumento
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = service
+        .findById(givenProyectoPeriodoSeguimientoDocumento.getId());
+
+    // then: returns ProyectoPeriodoSeguimientoDocumento
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento).isNotNull();
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getId()).isNotNull();
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getId())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getId());
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId());
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getComentario())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getComentario());
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getDocumentoRef())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getDocumentoRef());
+    Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getNombre())
+        .isEqualTo(proyectoPeriodoSeguimientoDocumento.getNombre());
+  }
+
+  @Test
+  void findById_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing id
+    Long id = 1L;
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: find by non existing id
+        () -> service.findById(id))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ProyectoPeriodoSeguimientoDocumentoNotFoundException.class);
+  }
+
+  @Test
+  void findAll_ReturnsPage() {
+    // given: Una lista con 37 ProyectoPeriodoSeguimientoDocumento
+    Long solicitudId = 1L;
+    List<ProyectoPeriodoSeguimientoDocumento> proyectoPeriodoSeguimientoDocumentos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      proyectoPeriodoSeguimientoDocumentos.add(generarMockProyectoPeriodoSeguimientoDocumento(i));
+    }
+
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findAll(
+        ArgumentMatchers.<Specification<ProyectoPeriodoSeguimientoDocumento>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ProyectoPeriodoSeguimientoDocumento>>() {
+          @Override
+          public Page<ProyectoPeriodoSeguimientoDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > proyectoPeriodoSeguimientoDocumentos.size()
+                ? proyectoPeriodoSeguimientoDocumentos.size()
+                : toIndex;
+            List<ProyectoPeriodoSeguimientoDocumento> content = proyectoPeriodoSeguimientoDocumentos.subList(fromIndex,
+                toIndex);
+            Page<ProyectoPeriodoSeguimientoDocumento> page = new PageImpl<>(content, pageable,
+                proyectoPeriodoSeguimientoDocumentos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<ProyectoPeriodoSeguimientoDocumento> page = service.findAllByProyectoPeriodoSeguimiento(solicitudId, null,
+        paging);
+
+    // then: Devuelve la pagina 3 con los Programa del 31 al 37
+    Assertions.assertThat(page.getContent()).as("getContent().size()").hasSize(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = page.getContent()
+          .get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getId()).isEqualTo(i);
+    }
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoPeriodoSeguimientoDocumento
+   * 
+   * @param id id del ProyectoPeriodoSeguimientoDocumento
+   * @return el objeto ProyectoPeriodoSeguimientoDocumento
+   */
+  private ProyectoPeriodoSeguimientoDocumento generarMockProyectoPeriodoSeguimientoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "TipoDocumento" + (id != null ? id : 1)));
+
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento = new HashSet<>();
+    descripcionTipoDocumento.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-" + (id != null ? id : 1)));
+
+    TipoDocumento tipoDocumento = new TipoDocumento();
+    tipoDocumento.setId((id != null ? id : 1));
+    tipoDocumento.setNombre(nombreTipoDocumento);
+    tipoDocumento.setDescripcion(descripcionTipoDocumento);
+    tipoDocumento.setActivo(Boolean.TRUE);
+
+    Set<ProyectoPeriodoSeguimientoDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,
+        "Nombre-" + String.format("%03d", (id != null ? id : 1))));
+
+    Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES,
+        "comentario-" + String.format("%03d", (id != null ? id : 1))));
+
+    ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
+    proyectoPeriodoSeguimientoDocumento.setId(id);
+    proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
+    proyectoPeriodoSeguimientoDocumento.setNombre(nombreDocumento);
+    proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimientoDocumento.setComentario(comentarioDocumento);
+    proyectoPeriodoSeguimientoDocumento.setTipoDocumento(tipoDocumento);
+    proyectoPeriodoSeguimientoDocumento.setVisible(Boolean.TRUE);
+
+    return proyectoPeriodoSeguimientoDocumento;
+  }
+}
