@@ -16,7 +16,7 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../../coverage/sgi/framework'),
+      dir: require('path').join(__dirname, '../../coverage/framework'),
       subdir: '.',
       reporters: [
         { type: 'html' },
@@ -31,6 +31,21 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--no-sandbox'
+        ]
+      },
+      ChromeWayland: {
+        base: 'Chrome',
+        flags: [
+          '--enable-features=UseOzonePlatform',
+          '--ozone-platform=wayland'
+        ]
+      }
+    },
     singleRun: false,
     restartOnFileChange: true
   });

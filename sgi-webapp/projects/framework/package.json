@@ -1,7 +1,8 @@
 {
   "name": "@herculesproject/framework",
-  "version": "0.2.0-SNAPSHOT",
-  "license":"GPL-3.0-only",
+  "version": "0.0.0",
+  "license": "GPL-3.0-only",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/herculesproject/sgi.git",

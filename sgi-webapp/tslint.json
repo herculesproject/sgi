@@ -16,18 +16,6 @@
     "component-class-suffix": true,
     "contextual-lifecycle": true,
     "directive-class-suffix": true,
-    "directive-selector": [
-      true,
-      "attribute",
-      "sgi",
-      "camelCase"
-    ],
-    "component-selector": [
-      true,
-      "element",
-      "sgi",
-      "kebab-case"
-    ],
     "eofline": true,
     "import-blacklist": [
       true,

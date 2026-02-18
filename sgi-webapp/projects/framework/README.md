@@ -1,24 +1,8 @@
-# Framework
+![](../../doc/images/logos_feder.png)
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.12.
+# HÉRCULES - SGI 
+El objetivo del Proyecto SGI dentro del Proyecto HÉRCULES es crear un Prototipo de un Sistema de Gestión de Investigación (SGI) basado en datos abiertos semánticos que ofrezca una visión global de los datos de investigación del Sistema Universitario Español (SUE) para mejorar la gestión, el análisis y las posibles sinergias entre universidades y el gran público desarrollando e incorporando  soluciones que superen las actualmente disponibles en el mercado.
 
-## Code scaffolding
+## HÉRCULES SGI - Framework Angular
 
-Run `ng generate component component-name --project framework` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project framework`.
-> Note: Don't forget to add `--project framework` or else it will be added to the default project in your `angular.json` file. 
-
-## Build
-
-Run `ng build framework` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build framework`, go to the dist folder `cd dist/framework` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test framework` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+SGI Framework Angular contiene funcionalidades comunes que dan soporte a los módulos del sistema SGI.

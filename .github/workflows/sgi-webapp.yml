@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Use Node.js 14
         uses: actions/setup-node@v4
@@ -40,8 +40,28 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Run tests framework
+        run: npm run test-framework -- --watch=false --code-coverage
+
       - name: Run tests
         run: npm run test-ci -- --code-coverage
+
+      - name: SonarQube analysis framework
+        uses: SonarSource/sonarqube-scan-action@v5.2.0
+        with:
+          projectBaseDir: sgi-webapp
+          args: >
+            -Dsonar.organization=herculesproject
+            -Dsonar.projectKey=herculesproject_sgi_framework-angular
+            -Dsonar.sources=projects/framework
+            -Dsonar.tests=projects/framework
+            -Dsonar.inclusions=**/*.ts
+            -Dsonar.exclusions=**/*.spec.ts,test.ts
+            -Dsonar.test.inclusions=**/*.spec.ts,test.ts
+            -Dsonar.javascript.lcov.reportPaths=./coverage/framework/lcov.info
+            -Dsonar.branch.name=main
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: SonarQube analysis
         uses: SonarSource/sonarqube-scan-action@v5.2.0
@@ -50,8 +70,8 @@ jobs:
           args: >
             -Dsonar.organization=herculesproject
             -Dsonar.projectKey=herculesproject_sgi_webapp
-            -Dsonar.sources=./
-            -Dsonar.tests=./
+            -Dsonar.sources=src
+            -Dsonar.tests=src
             -Dsonar.inclusions=**/*.ts
             -Dsonar.exclusions=**/*.spec.ts,test.ts
             -Dsonar.test.inclusions=**/*.spec.ts,test.ts
@@ -61,14 +81,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build for publish
-        run: npm run build -- --prod
+        run: npm run build-prod
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-        
+
       - name: Prepare docker build
         id: prepare-build
         run: |
@@ -85,7 +105,7 @@ jobs:
             type=semver,pattern={{version}},value=${{ steps.prepare-build.outputs.VERSION }}
             type=sha
             type=raw,value=ci
-      
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -99,8 +119,7 @@ jobs:
     needs: build
     uses: herculesproject/sgi/.github/workflows/update-sgi-deploy-repo.yml@ci
     with:
-      service-name: 'sgi-webapp'
+      service-name: "sgi-webapp"
       service-version: ${{ needs.build.outputs.VERSION }}
       sha: ${{ github.sha }}
     secrets: inherit
-  
