@@ -1,13 +1,7 @@
 name: SGI Webapp
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - "sgi-webapp/**"
-      - ".github/workflows/sgi-webapp.yml"
-    branches:
-      - ci
+  workflow_call:
 
 defaults:
   run:
@@ -15,12 +9,8 @@ defaults:
 
 jobs:
   build:
+    name: Build & Test
     runs-on: ubuntu-latest
-    outputs:
-      VERSION: ${{ steps.prepare-build.outputs.VERSION }}
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,17 +24,49 @@ jobs:
       - name: Install chrome
         uses: browser-actions/setup-chrome@v2
 
-      - name: Install dependencias
+      - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build
+      - name: Build for production
+        run: npm run build -- --prod
 
-      - name: Run tests framework
+      - name: Run tests framework with coverage
         run: npm run test-framework -- --watch=false --code-coverage
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: npm run test-ci -- --code-coverage
+
+      - name: Upload build artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-build
+          path: sgi-webapp/dist/
+          retention-days: 1
+
+      - name: Upload coverage artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-coverage
+          path: sgi-webapp/coverage/
+          retention-days: 1
+
+  sonar:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: webapp-coverage
+          path: sgi-webapp/coverage/
 
       - name: SonarQube analysis framework
         uses: SonarSource/sonarqube-scan-action@v5.2.0
@@ -80,19 +102,32 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Build for publish
-        run: npm run build-prod
+  docker:
+    name: Docker Build & Push
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: webapp-build
+          path: sgi-webapp/dist/
+
+      - name: Prepare docker build
+        id: prepare-build
+        run: |
+          echo "VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')" >> $GITHUB_OUTPUT
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Prepare docker build
-        id: prepare-build
-        run: |
-          echo "VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')" >> $GITHUB_OUTPUT
 
       - name: Extract metadata (tags, labels) for Docker
         id: docker-metadata
@@ -113,13 +148,3 @@ jobs:
           push: true
           tags: ${{ steps.docker-metadata.outputs.tags }}
           labels: ${{ steps.docker-metadata.outputs.labels }}
-
-  call_update_sgi_deploy:
-    name: Update sgi-deploy repo
-    needs: build
-    uses: herculesproject/sgi/.github/workflows/update-sgi-deploy-repo.yml@ci
-    with:
-      service-name: "sgi-webapp"
-      service-version: ${{ needs.build.outputs.VERSION }}
-      sha: ${{ github.sha }}
-    secrets: inherit

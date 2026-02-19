@@ -3,12 +3,6 @@ name: Update sgi-deploy repo
 on:
   workflow_call:
     inputs:
-      service-name:
-        required: true
-        type: string
-      service-version:
-        required: true
-        type: string
       sha:
         required: true
         type: string
@@ -21,6 +15,17 @@ jobs:
   rollout-dev:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          path: source
+          sparse-checkout: VERSION
+          sparse-checkout-cone-mode: false
+
+      - name: Read version
+        id: version
+        run: echo "VERSION=$(cat source/VERSION | tr -d '[:space:]')" >> $GITHUB_OUTPUT
+
       # - name: Generate GitHub App token
       #   uses: actions/create-github-app-token@v2
       #   id: app-token
@@ -69,7 +74,7 @@ jobs:
           sha=${{ inputs.sha }}
 
           git add .
-          git commit -m "Rollout triggered by ${{ inputs.service-name }} build ${sha:0:7}" \
-               -m "Service version: ${{ inputs.service-version }}" \
+          git commit -m "Rollout triggered by commit ${sha:0:7}" \
+               -m "Version: ${{ steps.version.outputs.VERSION }}" \
                -m "Rollme value: ${{ steps.timestamp.outputs.TS }}"
           git push

@@ -1,0 +1,161 @@
+name: SGI CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - ci
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  sgi-starter-parent:
+    name: sgi-starter-parent
+    uses: ./.github/workflows/sgi-starter-parent.yml
+    secrets: inherit
+
+  sgi-framework-spring:
+    name: sgi-framework-spring
+    needs: sgi-starter-parent
+    uses: ./.github/workflows/sgi-framework-spring.yml
+    secrets: inherit
+
+  sgi-auth:
+    name: sgi-auth
+    uses: ./.github/workflows/sgi-auth.yml
+    secrets: inherit
+
+  # Java services need sgi-auth (Docker image for tests) and sgi-framework-spring and sgi-starter-parent (Maven dependencies)
+
+  sgi-cnf-service:
+    name: sgi-cnf-service
+    needs: [sgi-auth, sgi-framework-spring]
+    uses: ./.github/workflows/java-service.yml
+    with:
+      service-name: "sgi-cnf-service"
+      sonar-project-key: "herculesproject_sgi_cnf-service"
+    secrets: inherit
+
+  # sgi-com-service:
+  #   name: sgi-com-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-com-service"
+  #     sonar-project-key: "herculesproject_sgi_com-service"
+  #   secrets: inherit
+
+  # sgi-csp-service:
+  #   name: sgi-csp-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-csp-service"
+  #     sonar-project-key: "herculesproject_sgi_csp-service"
+  #   secrets: inherit
+
+  # sgi-eer-service:
+  #   name: sgi-eer-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-eer-service"
+  #     sonar-project-key: "herculesproject_sgi_eer-service"
+  #   secrets: inherit
+
+  # sgi-eti-service:
+  #   name: sgi-eti-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-eti-service"
+  #     sonar-project-key: "herculesproject_sgi_eti-service"
+  #   secrets: inherit
+
+  # sgi-pii-service:
+  #   name: sgi-pii-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-pii-service"
+  #     sonar-project-key: "herculesproject_sgi_pii-service"
+  #   secrets: inherit
+
+  # sgi-prc-service:
+  #   name: sgi-prc-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-prc-service"
+  #     sonar-project-key: "herculesproject_sgi_prc-service"
+  #   secrets: inherit
+
+  # sgi-rel-service:
+  #   name: sgi-rel-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-rel-service"
+  #     sonar-project-key: "herculesproject_sgi_rel-service"
+  #   secrets: inherit
+
+  # sgi-rep-service:
+  #   name: sgi-rep-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-rep-service"
+  #     sonar-project-key: "herculesproject_sgi_rep-service"
+  #   secrets: inherit
+
+  # sgi-tp-service:
+  #   name: sgi-tp-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-tp-service"
+  #     sonar-project-key: "herculesproject_sgi_tp-service"
+  #   secrets: inherit
+
+  # sgi-usr-service:
+  #   name: sgi-usr-service
+  #   needs: [sgi-auth, sgi-framework-spring]
+  #   uses: ./.github/workflows/java-service.yml
+  #   with:
+  #     service-name: "sgi-usr-service"
+  #     sonar-project-key: "herculesproject_sgi_usr-service"
+  #   secrets: inherit
+
+  sgi-webapp:
+    name: sgi-webapp
+    uses: ./.github/workflows/sgi-webapp.yml
+    secrets: inherit
+
+  update-deploy:
+    name: Update sgi-deploy
+    needs:
+      - sgi-auth
+      - sgi-framework-spring
+      - sgi-starter-parent
+      - sgi-cnf-service
+      # - sgi-com-service
+      # - sgi-csp-service
+      # - sgi-eer-service
+      # - sgi-eti-service
+      # - sgi-pii-service
+      # - sgi-prc-service
+      # - sgi-rel-service
+      # - sgi-rep-service
+      # - sgi-tp-service
+      # - sgi-usr-service
+      - sgi-webapp
+    if: >-
+      github.event_name == 'push' &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
+    uses: ./.github/workflows/update-sgi-deploy-repo.yml
+    with:
+      sha: ${{ github.sha }}
+    secrets: inherit
