@@ -2,7 +2,7 @@ name: Reportar Bug
 description: Tarea que describe una incidencia o problema encontrado
 title: "[BUG] "
 labels:
-  - "estado: pendiente-revisión"
+  - "para: triaje"
 body:
   - type: markdown
     attributes:
