@@ -1,6 +1,6 @@
 {
   "name": "sgi-webapp",
-  "version": "0.12.0-SNAPSHOT",
+  "version": "1.0.0-SNAPSHOT",
   "scripts": {
     "ng": "ng",
     "start": "ng build sgi-framework-angular && node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=4096 ng serve sgi-webapp --disable-host-check",

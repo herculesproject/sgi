@@ -7,12 +7,12 @@
   <parent>
     <groupId>io.github.herculesproject.sgi</groupId>
     <artifactId>sgi-starter-parent</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <groupId>io.github.herculesproject.sgi</groupId>
   <artifactId>sgi-framework-spring</artifactId>
-  <version>0.3.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>sgi-framework-spring</name>
   <description>SGI Framework</description>
