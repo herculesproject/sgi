@@ -11,19 +11,162 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+
+  # Detect which modules have changes.
+  # On PR and push without VERSION change: only run affected modules.
+  # On push with VERSION changed: force-all (all images must be rebuilt with the new version tag).
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      auth: ${{ steps.filter.outputs.auth }}
+      cnf: ${{ steps.filter.outputs.cnf }}
+      com: ${{ steps.filter.outputs.com }}
+      csp: ${{ steps.filter.outputs.csp }}
+      eer: ${{ steps.filter.outputs.eer }}
+      eti: ${{ steps.filter.outputs.eti }}
+      pii: ${{ steps.filter.outputs.pii }}
+      prc: ${{ steps.filter.outputs.prc }}
+      rel: ${{ steps.filter.outputs.rel }}
+      rep: ${{ steps.filter.outputs.rep }}
+      tp: ${{ steps.filter.outputs.tp }}
+      usr: ${{ steps.filter.outputs.usr }}
+      framework-spring: ${{ steps.filter.outputs.framework-spring }}
+      starter-parent: ${{ steps.filter.outputs.starter-parent }}
+      webapp: ${{ steps.filter.outputs.webapp }}
+      version-updated: ${{ steps.check-version.outputs.version-updated }}
+      changed-modules: ${{ steps.summary.outputs.changed-modules }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect path changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            version:
+              - 'VERSION'
+            auth:
+              - 'sgi-auth/**'
+              - '.github/workflows/sgi-auth.yml'
+            cnf:
+              - 'sgi-cnf-service/**'
+              - '.github/workflows/java-service.yml'
+            com:
+              - 'sgi-com-service/**'
+              - '.github/workflows/java-service.yml'
+            csp:
+              - 'sgi-csp-service/**'
+              - '.github/workflows/java-service.yml'
+            eer:
+              - 'sgi-eer-service/**'
+              - '.github/workflows/java-service.yml'
+            eti:
+              - 'sgi-eti-service/**'
+              - '.github/workflows/java-service.yml'
+            pii:
+              - 'sgi-pii-service/**'
+              - '.github/workflows/java-service.yml'
+            prc:
+              - 'sgi-prc-service/**'
+              - '.github/workflows/java-service.yml'
+            rel:
+              - 'sgi-rel-service/**'
+              - '.github/workflows/java-service.yml'
+            rep:
+              - 'sgi-rep-service/**'
+              - '.github/workflows/java-service.yml'
+            tp:
+              - 'sgi-tp-service/**'
+              - '.github/workflows/java-service.yml'
+            usr:
+              - 'sgi-usr-service/**'
+              - '.github/workflows/java-service.yml'
+            framework-spring:
+              - 'sgi-framework-spring/**'
+              - '.github/workflows/sgi-framework-spring.yml'
+            starter-parent:
+              - 'sgi-starter-parent/**'
+              - '.github/workflows/sgi-starter-parent.yml'
+            webapp:
+              - 'sgi-webapp/**'
+              - '.github/workflows/sgi-webapp.yml'
+
+      - name: Check version bump
+        id: check-version
+        run: |
+          if [[ "${{ github.event_name }}" != "pull_request" && "${{ steps.filter.outputs.version }}" == "true" ]]; then
+            echo "version-updated=true" >> $GITHUB_OUTPUT
+          else
+            echo "version-updated=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build changed modules summary
+        id: summary
+        run: |
+          VERSION_UPDATED="${{ steps.check-version.outputs.version-updated }}"
+          CHANGED=""
+
+          if [ "$VERSION_UPDATED" = "true" ]; then
+            CHANGED="ALL (version bump)"
+          else
+            for mod in cnf com csp eer eti pii prc rel rep tp usr auth framework-spring starter-parent webapp; do
+              case $mod in
+                auth) val="${{ steps.filter.outputs.auth }}" ;;
+                cnf) val="${{ steps.filter.outputs.cnf }}" ;;
+                com) val="${{ steps.filter.outputs.com }}" ;;
+                csp) val="${{ steps.filter.outputs.csp }}" ;;
+                eer) val="${{ steps.filter.outputs.eer }}" ;;
+                eti) val="${{ steps.filter.outputs.eti }}" ;;
+                pii) val="${{ steps.filter.outputs.pii }}" ;;
+                prc) val="${{ steps.filter.outputs.prc }}" ;;
+                rel) val="${{ steps.filter.outputs.rel }}" ;;
+                rep) val="${{ steps.filter.outputs.rep }}" ;;
+                tp)  val="${{ steps.filter.outputs.tp }}" ;;
+                usr) val="${{ steps.filter.outputs.usr }}" ;;
+                framework-spring) val="${{ steps.filter.outputs.framework-spring }}" ;;
+                starter-parent) val="${{ steps.filter.outputs.starter-parent }}" ;;
+                webapp) val="${{ steps.filter.outputs.webapp }}" ;;
+              esac
+              if [ "$val" = "true" ]; then
+                CHANGED="${CHANGED:+$CHANGED, }${mod^^}"
+              fi
+            done
+          fi
+
+          echo "changed-modules=${CHANGED:-none}" >> $GITHUB_OUTPUT
+          echo "### Changed modules: ${CHANGED:-none}" >> $GITHUB_STEP_SUMMARY
+
   sgi-starter-parent:
     name: sgi-starter-parent
+    needs: detect-changes
+    if: >-
+      needs.detect-changes.outputs.version-updated == 'true' ||
+      needs.detect-changes.outputs.starter-parent == 'true'
     uses: ./.github/workflows/sgi-starter-parent.yml
     secrets: inherit
 
   sgi-framework-spring:
     name: sgi-framework-spring
-    needs: sgi-starter-parent
+    needs: [detect-changes, sgi-starter-parent]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/sgi-framework-spring.yml
     secrets: inherit
 
   sgi-auth:
     name: sgi-auth
+    needs: detect-changes
+    if: >-
+      needs.detect-changes.outputs.version-updated == 'true' ||
+      needs.detect-changes.outputs.auth == 'true'
     uses: ./.github/workflows/sgi-auth.yml
     secrets: inherit
 
@@ -31,7 +174,18 @@ jobs:
 
   sgi-cnf-service:
     name: sgi-cnf-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.cnf == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-cnf-service"
@@ -40,7 +194,18 @@ jobs:
 
   sgi-com-service:
     name: sgi-com-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.com == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-com-service"
@@ -49,7 +214,18 @@ jobs:
 
   sgi-csp-service:
     name: sgi-csp-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.csp == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-csp-service"
@@ -58,7 +234,18 @@ jobs:
 
   sgi-eer-service:
     name: sgi-eer-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.eer == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-eer-service"
@@ -67,7 +254,18 @@ jobs:
 
   sgi-eti-service:
     name: sgi-eti-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.eti == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-eti-service"
@@ -76,7 +274,18 @@ jobs:
 
   sgi-pii-service:
     name: sgi-pii-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.pii == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-pii-service"
@@ -85,7 +294,18 @@ jobs:
 
   sgi-prc-service:
     name: sgi-prc-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.prc == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-prc-service"
@@ -94,7 +314,18 @@ jobs:
 
   sgi-rel-service:
     name: sgi-rel-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.rel == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-rel-service"
@@ -103,7 +334,18 @@ jobs:
 
   sgi-rep-service:
     name: sgi-rep-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.rep == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-rep-service"
@@ -112,7 +354,18 @@ jobs:
 
   sgi-tp-service:
     name: sgi-tp-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.tp == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-tp-service"
@@ -121,7 +374,18 @@ jobs:
 
   sgi-usr-service:
     name: sgi-usr-service
-    needs: [sgi-auth, sgi-framework-spring]
+    needs: [detect-changes, sgi-auth, sgi-framework-spring]
+    if: >-
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (
+        needs.detect-changes.outputs.version-updated == 'true' ||
+        needs.detect-changes.outputs.usr == 'true' ||
+        needs.detect-changes.outputs.auth == 'true' ||
+        needs.detect-changes.outputs.framework-spring == 'true' ||
+        needs.detect-changes.outputs.starter-parent == 'true'
+      )
     uses: ./.github/workflows/java-service.yml
     with:
       service-name: "sgi-usr-service"
@@ -130,12 +394,17 @@ jobs:
 
   sgi-webapp:
     name: sgi-webapp
+    needs: detect-changes
+    if: >-
+      needs.detect-changes.outputs.version-updated == 'true' ||
+      needs.detect-changes.outputs.webapp == 'true'
     uses: ./.github/workflows/sgi-webapp.yml
     secrets: inherit
 
   update-deploy:
     name: Update sgi-deploy
     needs:
+      - detect-changes
       - sgi-auth
       - sgi-framework-spring
       - sgi-starter-parent
@@ -152,10 +421,12 @@ jobs:
       - sgi-usr-service
       - sgi-webapp
     if: >-
+      always() &&
       github.event_name == 'push' &&
       !contains(needs.*.result, 'failure') &&
       !contains(needs.*.result, 'cancelled')
     uses: ./.github/workflows/update-sgi-deploy-repo.yml
     with:
       sha: ${{ github.sha }}
+      changed-modules: ${{ needs.detect-changes.outputs.changed-modules }}
     secrets: inherit

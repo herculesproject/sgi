@@ -6,6 +6,10 @@ on:
       sha:
         required: true
         type: string
+      changed-modules:
+        required: false
+        type: string
+        default: ''
 
 concurrency:
   group: update-sgi-deploy-repo
@@ -76,5 +80,6 @@ jobs:
           git add .
           git commit -m "Rollout triggered by commit ${sha:0:7}" \
                -m "Version: ${{ steps.version.outputs.VERSION }}" \
-               -m "Rollme value: ${{ steps.timestamp.outputs.TS }}"
+               -m "Rollme value: ${{ steps.timestamp.outputs.TS }}" \
+               -m "Changed modules: ${{ inputs.changed-modules }}"
           git push
