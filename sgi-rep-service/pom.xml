@@ -61,7 +61,7 @@
     <fr-opensagres-xdocreport.version>2.1.0</fr-opensagres-xdocreport.version>
     <org-commons-csv.version>1.11.0</org-commons-csv.version>
     <commons-io.version>2.16.1</commons-io.version>
-    <sgi-opensagres-xdocreport.version>2.1.0-sgi-SNAPSHOT</sgi-opensagres-xdocreport.version>
+    <sgi-opensagres-xdocreport.version>2.1.0-sgi</sgi-opensagres-xdocreport.version>
   </properties>
   <profiles>
     <profile>
