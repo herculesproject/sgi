@@ -20,6 +20,18 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
+  // A command string or list of command arguments to run on the host machine before the container is created.
+  // The command executes from the workspaceFolder locally.
+  "initializeCommand": [
+    // Create Docker sgi-network if it does not already exists
+    "/bin/bash",
+    "-i",
+    "-c",
+    "docker network inspect sgi-network >/dev/null 2>&1 || docker network create --driver bridge sgi-network"
+  ],
+  "runArgs": [
+    "--network=sgi-network"
+  ],
   // On Linux, the container user's UID/GID will be updated to match your local user.
   "updateRemoteUserUID": true,
   // A set of name-value pairs that sets or overrides environment variables for the container.
