@@ -171,7 +171,7 @@ public class AsistentesIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsAsistentesSubList() throws Exception {
+  void findAll_WithPaging_ReturnsAsistentesSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
 
     HttpHeaders headers = new HttpHeaders();
@@ -179,16 +179,26 @@ public class AsistentesIT extends BaseIT {
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ASISTENTES-EDITAR", "ETI-ASISTENTES-VER")));
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "3");
+    String sort = "id,asc";
 
-    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(ASISTENTE_CONTROLLER_BASE_PATH,
-        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<Asistentes>>() {
+    URI uri = UriComponentsBuilder
+        .fromUriString(ASISTENTE_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
+
+    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(
+        uri,
+        HttpMethod.GET,
+        buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Asistentes>>() {
         });
 
     // then: Respuesta OK, Asistentes retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Asistentes> asistentes = response.getBody();
-    Assertions.assertThat(asistentes.size()).isEqualTo(2);
+    Assertions.assertThat(asistentes).hasSize(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");

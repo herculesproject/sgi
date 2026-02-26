@@ -90,23 +90,33 @@ public class ComiteIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsComiteSubList() throws Exception {
+  void findAll_WithPaging_ReturnsComiteSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V", "ETI-CNV-V")));
+    String sort = "id,asc";
 
-    final ResponseEntity<List<Comite>> response = restTemplate.exchange(COMITE_CONTROLLER_BASE_PATH, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Comite>>() {
+    URI uri = UriComponentsBuilder
+        .fromUriString(COMITE_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
+
+    final ResponseEntity<List<Comite>> response = restTemplate.exchange(
+        uri,
+        HttpMethod.GET,
+        buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Comite>>() {
         });
 
     // then: Respuesta OK, ComiteS retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Comite> comites = response.getBody();
-    Assertions.assertThat(comites.size()).isEqualTo(3);
+    Assertions.assertThat(comites).hasSize(3);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");

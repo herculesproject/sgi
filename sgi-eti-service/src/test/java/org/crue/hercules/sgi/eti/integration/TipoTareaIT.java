@@ -66,13 +66,18 @@ public class TipoTareaIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsTipoTareaSubList() throws Exception {
+  void findAll_WithPaging_ReturnsTipoTareaSubList() throws Exception {
     // when: Obtiene la page=0 con pagesize=2
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "2");
+    String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(TIPO_TAREA_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder
+        .fromUriString(TIPO_TAREA_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
 
     final ResponseEntity<List<TipoTarea>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoTarea>>() {
@@ -81,7 +86,7 @@ public class TipoTareaIT extends BaseIT {
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoTarea> tiposTarea = response.getBody();
-    Assertions.assertThat(tiposTarea.size()).isEqualTo(2);
+    Assertions.assertThat(tiposTarea).hasSize(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");

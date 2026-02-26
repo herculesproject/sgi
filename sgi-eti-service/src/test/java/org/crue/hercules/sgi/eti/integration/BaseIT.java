@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.crue.hercules.sgi.framework.test.http.client.BufferingHttpComponentsClientHttpRequestFactory;
 import org.crue.hercules.sgi.framework.test.http.client.SgiClientHttpRequestInterceptors;
@@ -24,6 +25,7 @@ public class BaseIT {
 
   BaseIT() {
     Locale.setDefault(new Locale("es", "ES"));
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
   }
 
   @TestConfiguration

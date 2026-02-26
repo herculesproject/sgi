@@ -121,21 +121,31 @@ public class CargoComiteIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsCargoComiteSubList() throws Exception {
+  void findAll_WithPaging_ReturnsCargoComiteSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
+    String sort = "id,asc";
 
-    final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(CARGO_COMITE_CONTROLLER_BASE_PATH,
-        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<CargoComite>>() {
+    URI uri = UriComponentsBuilder
+        .fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
+
+    final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(
+        uri,
+        HttpMethod.GET,
+        buildRequest(headers, null),
+        new ParameterizedTypeReference<List<CargoComite>>() {
         });
 
     // then: Respuesta OK, CargoComites retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<CargoComite> cargoComites = response.getBody();
-    Assertions.assertThat(cargoComites.size()).isEqualTo(1);
+    Assertions.assertThat(cargoComites).hasSize(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("2");

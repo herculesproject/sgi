@@ -132,13 +132,18 @@ public class DictamenIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsDictamenSubList() throws Exception {
+  void findAll_WithPaging_ReturnsDictamenSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "2");
+    String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder
+        .fromUriString(DICTAMEN_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
 
     final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Dictamen>>() {
@@ -148,7 +153,7 @@ public class DictamenIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Dictamen> dictamenes = response.getBody();
-    Assertions.assertThat(dictamenes.size()).isEqualTo(2);
+    Assertions.assertThat(dictamenes).hasSize(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("6");

@@ -125,16 +125,25 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsTipoConvocatoriaReunionSubList() throws Exception {
+  void findAll_WithPaging_ReturnsTipoConvocatoriaReunionSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V")));
+    String sort = "id,asc";
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
 
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(
-        TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
+        uri,
+        HttpMethod.GET,
+        buildRequest(headers, null),
         new ParameterizedTypeReference<List<TipoConvocatoriaReunion>>() {
         });
 
@@ -143,7 +152,7 @@ public class TipoConvocatoriaReunionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoConvocatoriaReunion> tipoConvocatoriaReunions = response.getBody();
-    Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(1);
+    Assertions.assertThat(tipoConvocatoriaReunions).hasSize(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");

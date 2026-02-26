@@ -184,7 +184,7 @@ public class EstadoRetrospectivaIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsEstadoRetrospectivaSubList() throws Exception {
+  void findAll_WithPaging_ReturnsEstadoRetrospectivaSubList() throws Exception {
 
     // given: Datos existentes
     List<EstadoRetrospectiva> response = new LinkedList<>();
@@ -194,17 +194,25 @@ public class EstadoRetrospectivaIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
+    String sort = "id,asc";
 
-    final String url = new StringBuffer(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    URI uri = UriComponentsBuilder
+        .fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
 
     // when: Se buscan los datos paginados
-    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.exchange(url, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
+    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.exchange(
+        uri,
+        HttpMethod.GET,
+        buildRequest(headers, null),
+        new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
         });
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody().size()).isEqualTo(1);
+    Assertions.assertThat(result.getBody()).hasSize(1);
     Assertions.assertThat(result.getBody()).isEqualTo(response);
     Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("2");
     Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");

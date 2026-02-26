@@ -119,13 +119,15 @@ public class TipoActividadIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsTipoActividadSubList() throws Exception {
+  void findAll_WithPaging_ReturnsTipoActividadSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "2");
+    String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
 
     final ResponseEntity<List<TipoActividad>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoActividad>>() {
@@ -135,7 +137,7 @@ public class TipoActividadIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoActividad> tipoActividades = response.getBody();
-    Assertions.assertThat(tipoActividades.size()).isEqualTo(1);
+    Assertions.assertThat(tipoActividades).hasSize(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");

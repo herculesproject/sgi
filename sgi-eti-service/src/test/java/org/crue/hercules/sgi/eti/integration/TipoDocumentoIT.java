@@ -80,13 +80,18 @@ public class TipoDocumentoIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsTipoDocumentoSubList() throws Exception {
+  void findAll_WithPaging_ReturnsTipoDocumentoSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
+    String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder
+        .fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
 
     final ResponseEntity<List<TipoDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoDocumento>>() {
@@ -96,7 +101,7 @@ public class TipoDocumentoIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoDocumento> tipoDocumentos = response.getBody();
-    Assertions.assertThat(tipoDocumentos.size()).isEqualTo(5);
+    Assertions.assertThat(tipoDocumentos).hasSize(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("12");

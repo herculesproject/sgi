@@ -118,13 +118,18 @@ public class TipoComentarioIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsTipoComentarioSubList() throws Exception {
+  void findAll_WithPaging_ReturnsTipoComentarioSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
+    String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder
+        .fromUriString(TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
 
     final ResponseEntity<List<TipoComentario>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoComentario>>() {
@@ -134,7 +139,7 @@ public class TipoComentarioIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoComentario> tipoComentarios = response.getBody();
-    Assertions.assertThat(tipoComentarios.size()).isEqualTo(1);
+    Assertions.assertThat(tipoComentarios).hasSize(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("2");

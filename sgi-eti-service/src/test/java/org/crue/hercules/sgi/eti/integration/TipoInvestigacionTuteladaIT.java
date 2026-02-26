@@ -52,13 +52,18 @@ public class TipoInvestigacionTuteladaIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsTipoInvestigacionTuteladaSubList() throws Exception {
+  void findAll_WithPaging_ReturnsTipoInvestigacionTuteladaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "2");
+    String sort = "id,asc";
 
-    URI uri = UriComponentsBuilder.fromUriString(TIPO_INVESTIGACION_TUTELADA_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder
+        .fromUriString(TIPO_INVESTIGACION_TUTELADA_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
 
     final ResponseEntity<List<TipoInvestigacionTutelada>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoInvestigacionTutelada>>() {
@@ -69,7 +74,7 @@ public class TipoInvestigacionTuteladaIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoInvestigacionTutelada> tipoInvestigacionTuteladas = response.getBody();
-    Assertions.assertThat(tipoInvestigacionTuteladas.size()).isEqualTo(1);
+    Assertions.assertThat(tipoInvestigacionTuteladas).hasSize(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");

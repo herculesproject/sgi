@@ -125,21 +125,31 @@ public class RespuestaIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsRespuestaSubList() throws Exception {
+  void findAll_WithPaging_ReturnsRespuestaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
+    String sort = "id,asc";
 
-    final ResponseEntity<List<Respuesta>> response = restTemplate.exchange(RESPUESTA_CONTROLLER_BASE_PATH,
-        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<Respuesta>>() {
+    URI uri = UriComponentsBuilder
+        .fromUriString(RESPUESTA_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
+
+    final ResponseEntity<List<Respuesta>> response = restTemplate.exchange(
+        uri,
+        HttpMethod.GET,
+        buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Respuesta>>() {
         });
 
     // then: Respuesta OK, Respuestas retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Respuesta> respuestas = response.getBody();
-    Assertions.assertThat(respuestas.size()).isEqualTo(2);
+    Assertions.assertThat(respuestas).hasSize(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");

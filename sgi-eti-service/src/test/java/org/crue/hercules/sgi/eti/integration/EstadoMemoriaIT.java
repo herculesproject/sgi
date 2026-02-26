@@ -150,14 +150,25 @@ public class EstadoMemoriaIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsEstadoMemoriaSubList() throws Exception {
+  void findAll_WithPaging_ReturnsEstadoMemoriaSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    final ResponseEntity<List<EstadoMemoria>> response = restTemplate.exchange(ESTADO_MEMORIA_CONTROLLER_BASE_PATH,
-        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<EstadoMemoria>>() {
+    String sort = "id,asc";
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort)
+        .build(false)
+        .toUri();
+
+    final ResponseEntity<List<EstadoMemoria>> response = restTemplate.exchange(
+        uri,
+        HttpMethod.GET,
+        buildRequest(headers, null),
+        new ParameterizedTypeReference<List<EstadoMemoria>>() {
         });
 
     // then: Respuesta OK, EstadoMemorias retorna la información de la página
