@@ -10,7 +10,7 @@
 
   <groupId>io.github.herculesproject.sgi</groupId>
   <artifactId>sgi-framework-spring</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.5</version>
   <packaging>jar</packaging>
   <name>sgi-framework-spring</name>
   <description>SGI Framework</description>
