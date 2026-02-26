@@ -17,8 +17,8 @@ jobs:
       - name: Set up JDK 8
         uses: actions/setup-java@v4
         with:
-          java-version: '8'
-          distribution: 'temurin'
+          java-version: "8"
+          distribution: "temurin"
           cache: maven
 
       - name: Package
@@ -67,7 +67,25 @@ jobs:
             type=sha
             type=raw,value=ci
 
+      - name: Check if Docker image tag already exists
+        id: check-docker
+        run: |
+          VERSION="${{ steps.prepare-build.outputs.VERSION }}"
+          IMAGE="herculesproject/sgi-auth"
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+          else
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://hub.docker.com/v2/repositories/${IMAGE}/tags/${VERSION}")
+            if [ "$STATUS" = "200" ]; then
+              echo "exists=true" >> $GITHUB_OUTPUT
+              echo "::notice::Docker image ${IMAGE}:${VERSION} already exists, skipping push"
+            else
+              echo "exists=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Build and push Docker image
+        if: steps.check-docker.outputs.exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: "./sgi-auth"
@@ -86,16 +104,41 @@ jobs:
       - name: Set up JDK to deploy on Central
         uses: actions/setup-java@v4
         with:
-          java-version: '8'
-          distribution: 'temurin'
+          java-version: "8"
+          distribution: "temurin"
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      - name: Check if artifact already exists in Maven Central
+        id: check-maven
+        run: |
+          VERSION=$(cat VERSION | tr -d '[:space:]')
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+          else
+            URL="https://repo1.maven.org/maven2/io/github/herculesproject/sgi/sgi-auth/${VERSION}/sgi-auth-${VERSION}.pom"
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$STATUS" = "200" ]; then
+              echo "exists=true" >> $GITHUB_OUTPUT
+              echo "::notice::sgi-auth:${VERSION} already exists in Maven Central, skipping deploy"
+            else
+              echo "exists=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Deploy to Central
-        run: mvn -B deploy -P deployToCentral
+        if: steps.check-maven.outputs.exists != 'true'
+        run: |
+          mvn -B deploy -P deployToCentral 2>&1 | tee deploy.log || {
+            if grep -q "already exists" deploy.log; then
+              echo "::notice::Artifact already published in Maven Central, skipping"
+            else
+              exit 1
+            fi
+          }
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

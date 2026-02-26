@@ -123,13 +123,32 @@ jobs:
         run: |
           echo "VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')" >> $GITHUB_OUTPUT
 
+      - name: Check if Docker image tag already exists
+        id: check-docker
+        run: |
+          VERSION="${{ steps.prepare-build.outputs.VERSION }}"
+          IMAGE="herculesproject/sgi-webapp"
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+          else
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://hub.docker.com/v2/repositories/${IMAGE}/tags/${VERSION}")
+            if [ "$STATUS" = "200" ]; then
+              echo "exists=true" >> $GITHUB_OUTPUT
+              echo "::notice::Docker image ${IMAGE}:${VERSION} already exists, skipping push"
+            else
+              echo "exists=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Log in to Docker Hub
+        if: steps.check-docker.outputs.exists != 'true'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
+        if: steps.check-docker.outputs.exists != 'true'
         id: docker-metadata
         uses: docker/metadata-action@v5
         with:
@@ -142,6 +161,7 @@ jobs:
             type=raw,value=ci
 
       - name: Build and push Docker image
+        if: steps.check-docker.outputs.exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: "./sgi-webapp"

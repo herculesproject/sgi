@@ -74,7 +74,7 @@ jobs:
 
       - name: Read project version
         id: version
-        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(cat VERSION | tr -d '[:space:]')" >> $GITHUB_OUTPUT
 
       - name: Start-up SGI-Auth for Tests
         run: docker run --rm --name sgi-auth
@@ -134,7 +134,7 @@ jobs:
 
       - name: Read project version
         id: version
-        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(cat VERSION | tr -d '[:space:]')" >> $GITHUB_OUTPUT
 
       - name: Start-up SGI-Auth for Tests
         run: docker run --rm --name sgi-auth
@@ -242,7 +242,25 @@ jobs:
             type=sha
             type=raw,value=ci
 
+      - name: Check if Docker image tag already exists
+        id: check-docker
+        run: |
+          VERSION="${{ steps.prepare-build.outputs.VERSION }}"
+          IMAGE="herculesproject/${{ inputs.service-name }}"
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+          else
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://hub.docker.com/v2/repositories/${IMAGE}/tags/${VERSION}")
+            if [ "$STATUS" = "200" ]; then
+              echo "exists=true" >> $GITHUB_OUTPUT
+              echo "::notice::Docker image ${IMAGE}:${VERSION} already exists, skipping push"
+            else
+              echo "exists=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Build and push Docker image
+        if: steps.check-docker.outputs.exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: "./${{ inputs.service-name }}"
@@ -271,9 +289,34 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      - name: Check if artifact already exists in Maven Central
+        id: check-maven
+        run: |
+          VERSION=$(cat VERSION | tr -d '[:space:]')
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+          else
+            URL="https://repo1.maven.org/maven2/io/github/herculesproject/sgi/${{ inputs.service-name }}/${VERSION}/${{ inputs.service-name }}-${VERSION}.pom"
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$STATUS" = "200" ]; then
+              echo "exists=true" >> $GITHUB_OUTPUT
+              echo "::notice::${{ inputs.service-name }}:${VERSION} already exists in Maven Central, skipping deploy"
+            else
+              echo "exists=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Deploy to Central
+        if: steps.check-maven.outputs.exists != 'true'
         working-directory: ${{ inputs.service-name }}
-        run: mvn -B deploy -P deployToCentral -DskipTests
+        run: |
+          mvn -B deploy -P deployToCentral -DskipTests 2>&1 | tee deploy.log || {
+            if grep -q "already exists" deploy.log; then
+              echo "::notice::Artifact already published in Maven Central, skipping"
+            else
+              exit 1
+            fi
+          }
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
