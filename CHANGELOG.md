@@ -14,7 +14,7 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
-## 1.0.0 (2026-02-23)
+## 1.0.0 (2026-02-26)
 
 **Notas de actualización:** [1.0.0](/docs/upgrade/1.0.0.md)
 

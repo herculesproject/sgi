@@ -6,12 +6,12 @@
   <parent>
     <groupId>io.github.herculesproject.sgi</groupId>
     <artifactId>sgi-starter-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <groupId>io.github.herculesproject.sgi</groupId>
   <artifactId>sgi-rel-service</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>sgi-rel-service</name>
   <description>Servicio de relaciones entre módulos SGI HERCULES</description>
@@ -56,7 +56,7 @@
     <!-- Manifest data for the Apache Maven JAR Plugin -->
     <manifest.name>org/crue/hercules/sgi/rel</manifest.name>
     <!-- Versions -->
-    <sgi-framework-spring.version>1.0.0-SNAPSHOT</sgi-framework-spring.version>
+    <sgi-framework-spring.version>1.0.0</sgi-framework-spring.version>
   </properties>
 
   <profiles>
