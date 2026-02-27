@@ -12,7 +12,7 @@
 
   <groupId>io.github.herculesproject.sgi</groupId>
   <artifactId>sgi-starter-parent</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>sgi-starter-parent</name>
   <description>Parent pom providing dependency and plugin management for applications built with Maven</description>
