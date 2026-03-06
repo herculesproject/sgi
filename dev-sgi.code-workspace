@@ -37,15 +37,254 @@
       "path": "sgi-webapp"
     }
   ],
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "java",
+        "name": "sgi-cnf-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.cnf.CnfApplication",
+        "projectName": "sgi-cnf-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-cnf-service}/../.env.dev",
+          "${workspaceFolder:sgi-cnf-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-com-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.com.ComApplication",
+        "projectName": "sgi-com-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-com-service}/../.env.dev",
+          "${workspaceFolder:sgi-com-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-csp-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.csp.CspApplication",
+        "projectName": "sgi-csp-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-csp-service}/../.env.dev",
+          "${workspaceFolder:sgi-csp-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-eer-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.eer.EerApplication",
+        "projectName": "sgi-eer-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-eer-service}/../.env.dev",
+          "${workspaceFolder:sgi-eer-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-eti-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.eti.EtiApplication",
+        "projectName": "sgi-eti-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-eti-service}/../.env.dev",
+          "${workspaceFolder:sgi-eti-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-pii-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.pii.PiiApplication",
+        "projectName": "sgi-pii-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-pii-service}/../.env.dev",
+          "${workspaceFolder:sgi-pii-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-prc-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.prc.PrcApplication",
+        "projectName": "sgi-prc-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-prc-service}/../.env.dev",
+          "${workspaceFolder:sgi-prc-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-rel-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.rel.RelApplication",
+        "projectName": "sgi-rel-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-rel-service}/../.env.dev",
+          "${workspaceFolder:sgi-rel-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-rep-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.rep.RepApplication",
+        "projectName": "sgi-rep-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-rep-service}/../.env.dev",
+          "${workspaceFolder:sgi-rep-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-tp-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.tp.TpApplication",
+        "projectName": "sgi-tp-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-tp-service}/../.env.dev",
+          "${workspaceFolder:sgi-tp-service}/.env.dev"
+        ]
+      },
+      {
+        "type": "java",
+        "name": "sgi-usr-service",
+        "request": "launch",
+        "mainClass": "org.crue.hercules.sgi.usr.UsrApplication",
+        "projectName": "sgi-usr-service",
+        "args": "--spring.profiles.active=dev",
+        "vmArgs": [
+          "-Xmx256m",
+          "-Xss256k",
+          "-Duser.timezone=UTC"
+        ],
+        "envFile": [
+          "${workspaceFolder:sgi-usr-service}/../.env.dev",
+          "${workspaceFolder:sgi-usr-service}/.env.dev"
+        ]
+      },
+      {
+        "name": "sgi-webapp",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:4200",
+        "webRoot": "${workspaceFolder:sgi-webapp}",
+        "preLaunchTask": "Start sgi-webapp",
+        "postDebugTask": "Stop sgi-webapp"
+      },
+      {
+        "name": "sgi-webapp (Chrome only)",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:4200",
+        "webRoot": "${workspaceFolder}/sgi-webapp"
+      }
+    ],
+    "compounds": []
+  },
   "tasks": {
     "version": "2.0.0",
     "tasks": [
+      {
+        "type": "shell",
+        "command": "npm start",
+        "label": "Start sgi-webapp",
+        "isBackground": true,
+        "options": {
+          "cwd": "${workspaceFolder:sgi-webapp}",
+          "env": {
+            "SGI_ENV_FILE": "../.env.dev"
+          }
+        },
+        "problemMatcher": {
+          "owner": "custom",
+          "pattern": {
+            "regexp": "$^"
+          },
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".",
+            "endsPattern": "Angular Live Development Server is listening"
+          }
+        }
+      },
+      {
+        "label": "Stop sgi-webapp",
+        "type": "shell",
+        "command": "pkill -f 'ng serve sgi-webapp'",
+        "problemMatcher": []
+      },
       {
         "label": "Start sgi-auth",
         "type": "docker-run",
         "dockerRun": {
           "containerName": "sgi-auth",
           "image": "herculesproject/sgi-auth:${input:sgi-auth-version}",
+          "network": "sgi-dev-network",
           "env": {
             "KEYCLOAK_IMPORT": "/realm/sgi-realm.json",
             "KEYCLOAK_USER": "admin",
@@ -60,36 +299,36 @@
               "containerPort": 8080
             }
           ]
-        },
+        }
+      },
+      {
+        "label": "Stop sgi-auth",
+        "type": "shell",
+        "command": "docker stop sgi-auth 2>/dev/null; true",
+        "problemMatcher": []
       },
       {
         "label": "Start sgi-esb",
         "type": "docker-run",
         "dockerRun": {
           "containerName": "sgi-esb",
-          "image": "herculesproject/esb-wso2-mi:${input:sgi-esb-version}",
+          "image": "herculesproject/sgi-esb-reference-imp:${input:sgi-esb-version}",
+          "network": "sgi-dev-network",
           "env": {
             "SGI_ESB_AUTH_SERVER_REALM_ID": "sgi",
             "SGI_ESB_AUTH_SERVER_URL": "http://sgi-auth:8080/auth",
-            "SGI_ESB_SGDOC_SERVICE_URL": "",
-            "SGI_ESB_SGE_SERVICE_URL": "",
-            "SGI_ESB_SGE_API_KEY": "",
-            "SGI_ESB_SGP_SERVICE_URL": "",
-            "SGI_ESB_SGP_API_KEY": "",
-            "SGI_ESB_SGEMP_SERVICE_URL": "",
-            "SGI_ESB_SGEMP_API_KEY": "",
-            "SGI_ESB_SGO_SERVICE_URL": "",
-            "SGI_ESB_SGO_API_KEY": "",
-            "SGI_ESB_SGO_STANDALONE_SERVICE_URL": "",
-            "SGI_ESB_SGEPII_SERVICE_URL": "",
-            "SGI_ESB_SGEPII_API_KEY": "",
-            "SGI_ESB_SGICSP_SERVICE_URL": "",
-            "SGI_ESB_SGIPII_SERVICE_URL": "",
-            "SGI_ESB_SGIEER_SERVICE_URL": "",
-            "SGI_ESB_SGIPRC_SERVICE_URL": "",
-            "SGI_ESB_SGIUSR_SERVICE_URL": "",
-            "SGI_ESB_CVN_SERVICE_URL": "",
             "SGI_ESB_CONTEXT": "dev",
+            "SGI_ESB_SGDOC_SERVICE_URL": "http://sgi-sgdoc:4300",
+            "SGI_ESB_SGE_SERVICE_URL": "http://sgi-sge:4301",
+            "SGI_ESB_SGEMP_SERVICE_URL": "http://sgi-sgemp:4302",
+            "SGI_ESB_SGEPII_SERVICE_URL": "http://sgi-sge:4301",
+            "SGI_ESB_SGICSP_SERVICE_URL": "http://localhost:4281",
+            "SGI_ESB_SGIEER_SERVICE_URL": "http://localhost:4290",
+            "SGI_ESB_SGIPII_SERVICE_URL": "http://localhost:4283",
+            "SGI_ESB_SGIPRC_SERVICE_URL": "http://localhost:4289",
+            "SGI_ESB_SGIUSR_SERVICE_URL": "http://localhost:4282",
+            "SGI_ESB_SGO_SERVICE_URL": "http://sgi-sgo:4303",
+            "SGI_ESB_SGP_SERVICE_URL": "http://sgi-sgp:4304",
           },
           "remove": true,
           "ports": [
@@ -98,21 +337,157 @@
               "containerPort": 8290
             }
           ]
-        },
+        }
+      },
+      {
+        "label": "Start sgdoc",
+        "type": "docker-run",
+        "dockerRun": {
+          "containerName": "sgi-sgdoc",
+          "image": "herculesproject/sgi-external-sgdoc-reference-imp:${input:sgdoc-version}",
+          "network": "sgi-dev-network",
+          "remove": true,
+          "env": {
+            "SERVER_PORT": "4300",
+            "SPRING_PROFILES_ACTIVE": "dev"
+          }
+        }
+      },
+      {
+        "label": "Start sge",
+        "type": "docker-run",
+        "dockerRun": {
+          "containerName": "sgi-sge",
+          "image": "herculesproject/sgi-external-sge-reference-imp:${input:sge-version}",
+          "network": "sgi-dev-network",
+          "remove": true,
+          "env": {
+            "SERVER_PORT": "4301",
+            "SPRING_PROFILES_ACTIVE": "dev"
+          }
+        }
+      },
+      {
+        "label": "Start sgemp",
+        "type": "docker-run",
+        "dockerRun": {
+          "containerName": "sgi-sgemp",
+          "image": "herculesproject/sgi-external-sgemp-reference-imp:${input:sgemp-version}",
+          "network": "sgi-dev-network",
+          "remove": true,
+          "env": {
+            "SERVER_PORT": "4302",
+            "SPRING_PROFILES_ACTIVE": "dev"
+          }
+        }
+      },
+      {
+        "label": "Start sgo",
+        "type": "docker-run",
+        "dockerRun": {
+          "containerName": "sgi-sgo",
+          "image": "herculesproject/sgi-external-sgo-reference-imp:${input:sgo-version}",
+          "network": "sgi-dev-network",
+          "remove": true,
+          "env": {
+            "SERVER_PORT": "4303",
+            "SPRING_PROFILES_ACTIVE": "dev"
+          }
+        }
+      },
+      {
+        "label": "Start sgp",
+        "type": "docker-run",
+        "dockerRun": {
+          "containerName": "sgi-sgp",
+          "image": "herculesproject/sgi-external-sgp-reference-imp:${input:sgp-version}",
+          "network": "sgi-dev-network",
+          "remove": true,
+          "env": {
+            "SERVER_PORT": "4304",
+            "SPRING_PROFILES_ACTIVE": "dev"
+          }
+        }
+      },
+      {
+        "label": "Start sgi-esb stack",
+        "dependsOn": [
+          "Start sgp",
+          "Start sgdoc",
+          "Start sge",
+          "Start sgemp",
+          "Start sgo",
+          "Start sgi-esb"
+        ],
+        "dependsOrder": "parallel",
+        "problemMatcher": []
+      },
+      {
+        "label": "Stop sgi-esb stack",
+        "type": "shell",
+        "command": "docker stop sgi-esb sgi-sgp sgi-sgdoc sgi-sge sgi-sgemp sgi-sgo 2>/dev/null; true",
+        "problemMatcher": []
       }
     ],
     "inputs": [
       {
         "type": "promptString",
         "id": "sgi-auth-version",
-        "description": "sgi-auth to start",
-        "default": "0.6.0-SNAPSHOT"
+        "description": "sgi-auth version",
+        "default": "ci"
       },
       {
         "type": "promptString",
         "id": "sgi-esb-version",
-        "description": "sgi-esb to start",
-        "default": "0.9.0-um-SNAPSHOT"
+        "description": "sgi-esb version",
+        "default": "ci"
+      },
+      {
+        "type": "promptString",
+        "id": "sgdoc-version",
+        "description": "sgdoc version",
+        "default": "ci"
+      },
+      {
+        "type": "promptString",
+        "id": "sge-version",
+        "description": "sge version",
+        "default": "ci"
+      },
+      {
+        "type": "promptString",
+        "id": "sgemp-version",
+        "description": "sgemp version",
+        "default": "ci"
+      },
+      {
+        "type": "promptString",
+        "id": "sgo-version",
+        "description": "sgo version",
+        "default": "ci"
+      },
+      {
+        "type": "promptString",
+        "id": "sgp-version",
+        "description": "sgp version",
+        "default": "ci"
+      }
+    ]
+  },
+  "settings": {
+    "java.test.config": [
+      {
+        "name": "test-config",
+        "workingDirectory": "${workspaceFolder}",
+        "vmArgs": [
+          "-Xmx1028m",
+          "-Xss256k",
+          "-Duser.timezone=UTC",
+          "-Dspring.profiles.active=test",
+        ],
+        "env": {
+          "SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUERURI": "http://localhost:8080/auth/realms/sgi"
+        }
       }
     ]
   }

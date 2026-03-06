@@ -35,4 +35,11 @@ build/
 #.vscode
 #.devcontainer
 .project
-#*.code-workspace
+*.code-workspace
+!dev-sgi.code-workspace
+
+### Local environment config (generated from .example files) ###
+.env
+.env.*
+!.env.example
+sgi-webapp/src/environments/environment.ts

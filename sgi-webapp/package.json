@@ -3,7 +3,7 @@
   "version": "1.1.0-SNAPSHOT",
   "scripts": {
     "ng": "ng",
-    "start": "ng build sgi-framework-angular && node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=4096 ng serve sgi-webapp --disable-host-check",
+    "start": "ng build sgi-framework-angular && node ./generate-config.dev.js && NODE_OPTIONS=--max-old-space-size=4096 ng serve sgi-webapp --disable-host-check",
     "build": "ng build sgi-framework-angular && node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=8192 ng build sgi-webapp",
     "build-prod": "ng build --prod sgi-framework-angular && node ./generate-config.js && ng build sgi-webapp --prod",
     "test-framework": "ng test sgi-framework-angular --browsers=ChromeHeadlessCI",

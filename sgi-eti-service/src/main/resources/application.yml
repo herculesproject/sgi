@@ -41,6 +41,8 @@ spring:
     # Extra Hibernate properties
     properties:
       hibernate:
+        format_sql: false
+        generate_statistics: false
         # We use a H2 database with PostgreSQL compatibility mode
         dialect: org.crue.hercules.sgi.eti.repository.dialect.SgiH2Dialect
         # Set default Hibernate schema
@@ -232,7 +234,7 @@ spring:
       - dev-sqlserver
   datasource:
     # We use SQL Server database
-    url: jdbc:sqlserver://sqlserver:1433;databaseName=SGI
+    url: jdbc:sqlserver://sqlserver:1433;databaseName=SGI;trustServerCertificate=true
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: ETI_SGI
     password: ETI_SGI_2021
