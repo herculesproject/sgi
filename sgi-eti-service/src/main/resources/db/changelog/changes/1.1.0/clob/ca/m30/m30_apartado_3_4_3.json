@@ -1,0 +1,68 @@
+[
+  {
+    "key": "ap3_4_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.4.3 Ús confinat d'organismes modificats genèticament"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>En aquesta activitat, es fan tasques d'ús confinat d'organismes modificats genèticament?</p>"
+      },
+      {
+        "key": "tareasUsoConfinadoRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Adjunteu el full d'informació del transgènic de la casa comercial."
+      },
+      {
+        "template": "Tipus d'organismes modificats genèticament que es fa servir",
+        "hideExpression": "!model.tareasUsoConfinadoRadio || model.tareasUsoConfinadoRadio === 'no'"
+      },
+      {
+        "type": "multicheckbox",
+        "key": "tiposOMG",
+        "hideExpression": "!model.tareasUsoConfinadoRadio || model.tareasUsoConfinadoRadio === 'no'",
+        "templateOptions": {
+          "label": "Opcions:",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "microOrganismos",
+              "label": "Microorganismes"
+            },
+            {
+              "value": "animales",
+              "label": "Animals"
+            },
+            {
+              "value": "plantas",
+              "label": "Plantes"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

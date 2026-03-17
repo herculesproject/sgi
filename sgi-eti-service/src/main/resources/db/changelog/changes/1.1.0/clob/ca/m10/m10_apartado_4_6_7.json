@@ -1,0 +1,30 @@
+[
+  {
+    "key": "ap4_6_7",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.6.7 Protecció de la privadesa"
+    },
+    "hideExpression": "!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>Quines mesures s'adoptaran per assegurar la privadesa de cada alumne/a font davant del grup durant la recollida de dades, la realització de proves i/o revocació del consentiment?</p>"
+      },
+      {
+        "key": "proteccionPrivacidad",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Mesures",
+          "placeholder": "Mesures",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

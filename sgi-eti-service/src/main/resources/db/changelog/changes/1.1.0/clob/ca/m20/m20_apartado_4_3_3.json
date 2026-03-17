@@ -1,0 +1,28 @@
+[
+  {
+    "key": "ap4_3_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.3.3 Manteniment amb vida"
+    },
+    "hideExpression": "!formState.mainModel.ap4_3.ap4_3_2.reutilizacionRadio || formState.mainModel.ap4_3.ap4_3_2.reutilizacionRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "Si els animals han estat utilitzats anteriorment o seran reutilitzats amb posterioritat expliqueu si es donen les circumstàncies marcades per la llei o justifiqueu l'excepció"
+      },
+      {
+        "key": "excepcionReutilizacion",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Justificar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

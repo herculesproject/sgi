@@ -1,0 +1,22 @@
+[
+  {
+    "key": "ap5_2_2_4_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "5.2.2.4.3 Modificació genètica. Seqüència(es) o gen(ns) inserit(s), delecionat(s) o modificat(s). Funció(ns)"
+    },
+    "hideExpression": "!formState.mainModel.ap5_2.ap5_2_2.ap5_2_2_1.pregunta1OMGRadio || formState.mainModel.ap5_2.ap5_2_2.ap5_2_2_1.pregunta1OMGRadio === 'no'",
+    "fieldGroup": [
+      {
+        "key": "detallarModificacionGeneticaOMG",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Detallar",
+          "required": false
+        }
+      }
+    ]
+  }
+]

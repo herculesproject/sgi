@@ -1,0 +1,141 @@
+[
+  {
+    "key": "ap1_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "Severitat",
+      "expanded": true
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Quants animals s'han utilitzat en total?</p>"
+      },
+      {
+        "key": "numAnimalesUtilizados",
+        "type": "i18n-input",
+        "templateOptions": {
+          "label": "Nombre d'animals utilitzats",
+          "placeholder": "",
+          "description": "",
+          "required": true
+        }
+      },
+      {
+        "template": "<p>Quants animals han arribat fins al final de l'experiment?</p>"
+      },
+      {
+        "key": "numAnimalesFinal",
+        "type": "i18n-input",
+        "templateOptions": {
+          "label": "Nombre d'animals final",
+          "placeholder": "",
+          "description": "",
+          "required": true
+        }
+      },
+      {
+        "template": "<p>Quin nivell de severitat real han patit els animals, diferenciant si cal als uns dels altres, p.ex. els controls?</p>"
+      },
+      {
+        "key": "nivelSeveridadSufrido",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Descripció",
+          "label": "Descripció",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      },
+      {
+        "template": "<p>Quants animals s'han retirat de l'experiment perquè el procés tècnic no ha anat bé i s'han hagut de rebutjar?</p>"
+      },
+      {
+        "key": "numAnimalesRetirados",
+        "type": "i18n-input",
+        "templateOptions": {
+          "label": "Nombre d'animals retirats",
+          "placeholder": "",
+          "description": "",
+          "required": true
+        }
+      },
+      {
+        "template": "<p>Descriviu les raons, el moment i nivell de severitat assolit:</p>"
+      },
+      {
+        "key": "nivelSeveridadAlcanzado",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Descripció",
+          "label": "Descripció",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      },
+      {
+        "template": "<p>A quants animals s'ha aplicat el criteri de punt final?</p>"
+      },
+      {
+        "key": "numAnimalesPuntoFinal",
+        "type": "i18n-input",
+        "templateOptions": {
+          "label": "Nombre d'animals punt final",
+          "placeholder": "",
+          "description": "",
+          "required": true
+        }
+      },
+      {
+        "template": "<p>Senyaleu el moment d'aplicació:</p>"
+      },
+      {
+        "key": "aplicacion",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Descripció",
+          "label": "Descripció",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      },
+      {
+        "template": "<p>Descriviu qualsevol altra qüestió que considereu d'interès sobre els animals i el desenvolupament dels experiments de la vostra investigació.</p>"
+      },
+      {
+        "key": "descripcion",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Descripció",
+          "label": "Descripció",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      },
+      {
+        "template": "<p>Senyaleu les mesures adoptades per al compliment dels requisits ètics en la investigació.</p>"
+      },
+      {
+        "key": "medidas",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Descripció",
+          "label": "Descripció",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      }
+    ]
+  }
+]

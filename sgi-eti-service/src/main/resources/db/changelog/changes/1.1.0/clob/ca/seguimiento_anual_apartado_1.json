@@ -1,0 +1,29 @@
+[
+  {
+    "key": "ap1_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "Data d'inici de l'activitat de recerca",
+      "expanded": true
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Ompliu aquest punt en funció del comitè al qual s'adreça el vostre informe:<ul><li>Per al #nom_comite_M10_ca# data d'inici del reclutament.</li><li>Per al #nom_comite_M20_ca# data d'inici d'ús d'animals d'experimentació.</li><li>Per al #nom_de_com u OMG, SQP, SR.</li></ul></p>"
+      },
+      {
+        "key": "fechaInicio",
+        "type": "datepicker",
+        "templateOptions": {
+          "required": true,
+          "type": "text",
+          "label": "Data"
+        }
+      }
+    ]
+  }
+]

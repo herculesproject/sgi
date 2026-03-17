@@ -1,0 +1,90 @@
+[
+  {
+    "key": "ap5_2_2_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "5.2.2.3 Pregunta 3"
+    },
+    "hideExpression": "!formState.mainModel.ap5_2.ap5_2_2.ap5_2_2_1.pregunta1OMGRadio || formState.mainModel.ap5_2.ap5_2_2.ap5_2_2_1.pregunta1OMGRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "L'OMG emprat en l'activitat, es genera a la instal·lació?"
+      },
+      {
+        "key": "pregunta3OMG1Radio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "L'OMG emprat a l'activitat S'adquireix d'un tercer i únicament es manipula a la instal·lació sense que aquesta manipulació de lloc nous OMG?"
+      },
+      {
+        "key": "pregunta3OMG2Radio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "instalacionOrigenOMG",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!model.pregunta3OMG2Radio || model.pregunta3OMG2Radio === 'no'",
+        "templateOptions": {
+          "name": "Indiqueu la instal·lació d'origen i la referència d'autorització de primer ús confinat d'OMG de l'autoritat competent en cas que s'ubiqui al territori nacional.",
+          "required": true
+        }
+      },
+      {
+        "template": "Quin és el nivell de risc de l'OMG?",
+        "hideExpression": "!model.pregunta3OMG2Radio || model.pregunta3OMG2Radio === 'no'"
+      },
+      {
+        "key": "nivelRiesgoOMGRadio",
+        "type": "radio",
+        "hideExpression": "!model.pregunta3OMG2Radio || model.pregunta3OMG2Radio === 'no'",
+        "templateOptions": {
+          "required": true,
+          "options": [
+            {
+              "value": "nivelRiesgoGrupo1",
+              "label": "Grup 1"
+            },
+            {
+              "value": "nivelRiesgoGrupo2",
+              "label": "Grup 2"
+            },
+            {
+              "value": "nivelRiesgoGrupo3",
+              "label": "Grup 3"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

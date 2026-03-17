@@ -1,0 +1,109 @@
+[
+  {
+    "key": "ap3_5_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.5.2 Cultius cel·lulars"
+    },
+    "hideExpression": "!formState.mainModel.ap3_4.ap3_4_2.tareasAgentesBiologicosRadio || formState.mainModel.ap3_4.ap3_4_2.tareasAgentesBiologicosRadio === 'no'",
+    "fieldGroup": [
+      {
+        "type": "table-crud",
+        "key": "cultivosCelularesTable",
+        "templateOptions": {
+          "entity": "cultiu cel·lular",
+          "gender": "male"
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Cultiu cel·lular"
+          },
+          "fieldGroup": [
+            {
+              "key": "tipoCultivo",
+              "type": "select",
+              "templateOptions": {
+                "label": "Tipus de cultiu",
+                "order": 10,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "Línies cel·lulars ben caracteritzades d'origen humà o de simis"
+                  },
+                  {
+                    "value": "2",
+                    "label": "Línies cel·lulars ben caracteritzades d'origen no humà ni de simis, amb un risc d'infecció endògena baix amb patògens humans"
+                  },
+                  {
+                    "value": "3",
+                    "label": "Línies cel·lulars o ceps no totalment caracteritzats o autentificats"
+                  },
+                  {
+                    "value": "4",
+                    "label": "Cèl·lules amb patògens endògens i cèl·lules deliberadament infectades"
+                  },
+                  {
+                    "value": "5",
+                    "label": "Cèl·lules sanguínies, limfoides, teixit nerviós, etc. d'origen humà o simi"
+                  },
+                  {
+                    "value": "6",
+                    "label": "Una altra substància del procés d'experimentació"
+                  },
+                  {
+                    "value": "7",
+                    "label": "Cèl·lules sanguínies, limfoides, teixit nerviós, etc., d'origen no humà ni de simi"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "descripcionCaracteristicas",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Descripció/Característiques",
+                "order": 20
+              }
+            },
+            {
+              "key": "grupoRiesgo",
+              "type": "select",
+              "templateOptions": {
+                "label": "Grup de risc",
+                "order": 30,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "Grup 1"
+                  },
+                  {
+                    "value": "2",
+                    "label": "Grup 2"
+                  },
+                  {
+                    "value": "3",
+                    "label": "Grup 3"
+                  },
+                  {
+                    "value": "4",
+                    "label": "Grup 4"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "volumenMaximo",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Volum màxim de mostra que es maneja en cada cop o nombre d'animals",
+                "order": 40
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

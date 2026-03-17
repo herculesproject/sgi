@@ -1,0 +1,24 @@
+[
+  {
+    "key": "ap4_2_5",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.5 Criteris de punt final"
+    },
+    "fieldGroup": [
+      {
+        "template": "En funció de la quantificació dels paràmetres, indiqueu els criteris de punt final que s'aplicaran per procedir a l'eutanàsia de l'animal."
+      },
+      {
+        "key": "puntoFinal",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Criteris de punt final",
+          "required": true
+        }
+      }
+    ]
+  }
+]

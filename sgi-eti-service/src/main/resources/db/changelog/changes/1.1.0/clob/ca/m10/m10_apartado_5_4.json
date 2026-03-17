@@ -1,0 +1,41 @@
+[
+  {
+    "key": "ap5_4",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.4 Document d'acceptació de col·laboració"
+    },
+    "fieldGroup": [
+      {
+        "template": "Si el reclutament de les persones participants serà realitzat per algú aliè a l'equip investigador, disposa del document d'acceptació de col·laboració?"
+      },
+      {
+        "key": "documentoAceptacionColaboracion",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "No"
+            },
+            {
+              "value": "ACEPTACION_COLABORACION",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: veure apartat '3,4.2 Reclutament realitzat per personal aliè a l'equip investigador'.</p>"
+      }
+    ]
+  }
+]

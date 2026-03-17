@@ -1,0 +1,146 @@
+[
+  {
+    "template": "<p>La meva investigació comporta la recollida de dades personals d'éssers humans (a través de qüestionaris, entrevistes, grups de discussió, enregistraments d'àudio o vídeo, fotografies...).</p>"
+  },
+  {
+    "type": "radio",
+    "key": "pregunta_1",
+    "templateOptions": {
+      "label": "Resposta",
+      "color": "primary",
+      "options": [
+        {
+          "label": "No",
+          "value": false
+        },
+        {
+          "label": "Sí",
+          "value": true
+        }
+      ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
+    }
+  },
+  {
+    "template": "<p>La meva recerca permet identificar els participants (o permet que puguin arribar a ser identificables a partir de les dades recollides).</p>"
+  },
+  {
+    "type": "radio",
+    "key": "pregunta_2",
+    "templateOptions": {
+      "label": "Resposta",
+      "color": "primary",
+      "options": [
+        {
+          "label": "No",
+          "value": false
+        },
+        {
+          "label": "Sí",
+          "value": true
+        }
+      ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
+    }
+  },
+  {
+    "template": "<p>La meva investigació comporta l'estudi amb animals d'experimentació.</p>"
+  },
+  {
+    "type": "radio",
+    "key": "pregunta_3",
+    "templateOptions": {
+      "label": "Resposta",
+      "color": "primary",
+      "options": [
+        {
+          "label": "No",
+          "value": false
+        },
+        {
+          "label": "Sí",
+          "value": true
+        }
+      ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
+    }
+  },
+  {
+    "template": "<p>La meva investigació comporta la recollida i tractament de mostres biològiques -d'humans o animals- (saliva, sang, cabell, teixits...).</p>"
+  },
+  {
+    "type": "radio",
+    "key": "pregunta_4",
+    "templateOptions": {
+      "label": "Resposta",
+      "color": "primary",
+      "options": [
+        {
+          "label": "No",
+          "value": false
+        },
+        {
+          "label": "Sí",
+          "value": true
+        }
+      ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
+    }
+  },
+  {
+    "template": "<p>La meva investigació compta amb informe favorable però es faran canvis.</p>"
+  },
+  {
+    "type": "radio",
+    "key": "pregunta_5",
+    "templateOptions": {
+      "label": "Resposta",
+      "color": "primary",
+      "options": [
+        {
+          "label": "No",
+          "value": false
+        },
+        {
+          "label": "Sí",
+          "value": true
+        }
+      ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
+    }
+  },
+  {
+    "template": "<p>La meva investigació suposa treballar amb persones.</p>"
+  },
+  {
+    "type": "radio",
+    "key": "pregunta_6",
+    "templateOptions": {
+      "label": "Resposta",
+      "color": "primary",
+      "options": [
+        {
+          "label": "No",
+          "value": false
+        },
+        {
+          "label": "Sí",
+          "value": true
+        }
+      ]
+    },
+    "expressionProperties": {
+      "templateOptions.required": "formState.solicitud.estado.estado!=='BORRADOR' && formState.solicitud.estado.estado!=='DESISTIDA' && formState.solicitud.estado.estado!=='RENUNCIADA'"
+    }
+  }
+]

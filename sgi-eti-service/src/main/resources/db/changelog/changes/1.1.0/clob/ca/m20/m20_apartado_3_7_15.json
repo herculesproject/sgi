@@ -1,0 +1,117 @@
+[
+  {
+    "key": "ap3_7_15",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.15 Relació i protocol de substàncies i agents biològics administrades incloses anestèsia i analgèsia"
+    },
+    "fieldGroup": [
+      {
+        "template": "Especificar a continuació el principi actiu i pautes de TOTES les substàncies administrades, incloses anestèsia, analgèsia i protocol d'eutanàsia programada i no programada (si escau)."
+      },
+      {
+        "type": "table-crud",
+        "key": "principioActivoTable",
+        "templateOptions": {
+          "entity": "principi actiu",
+          "gender": "male"
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Principi actiu"
+          },
+          "fieldGroup": [
+            {
+              "key": "Tipo",
+              "type": "select",
+              "templateOptions": {
+                "label": "Tipus",
+                "order": 10,
+                "options": [
+                  {
+                    "label": "Preanestèsia per a procediment/intervenció quirúrgica",
+                    "value": "1"
+                  },
+                  {
+                    "label": "Anestèsia",
+                    "value": "2"
+                  },
+                  {
+                    "label": "Anestèsia intraoperatòria",
+                    "value": "3"
+                  },
+                  {
+                    "label": "Anestèsia post-operatòria",
+                    "value": "4"
+                  },
+                  {
+                    "label": "Analgèsia en intervenció no quirúrgica",
+                    "value": "5"
+                  },
+                  {
+                    "label": "Una altra substància del procediment d'experimentació",
+                    "value": "6"
+                  },
+                  {
+                    "label": "Eutanàsia programada",
+                    "value": "7"
+                  },
+                  {
+                    "label": "Eutanàsia no programada",
+                    "value": "8"
+                  },
+                  {
+                    "label": "Eutanàsia (programada i no programada)",
+                    "value": "9"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "producto",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Producte (principi actiu)",
+                "order": 20
+              }
+            },
+            {
+              "key": "viaAdministracion",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Via administració",
+                "order": 30
+              }
+            },
+            {
+              "key": "dosis",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Dosi",
+                "order": 40
+              }
+            },
+            {
+              "key": "volumen",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Volum",
+                "order": 50
+              }
+            },
+            {
+              "key": "pauta",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Pauta",
+                "order": 60
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "key": "ap5_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.2 Document de cessió de dades"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Si hi ha documents de cessió de dades, com poden ser del professor a l'alumne per realitzar la investigació tutelada, de personal clínic al personal investigador de la Universitat, de biobancs, etc. s'hi deuen incloure.</p>"
+      },
+      {
+        "key": "documentoCesion",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "No"
+            },
+            {
+              "value": "CESION_DATOS",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

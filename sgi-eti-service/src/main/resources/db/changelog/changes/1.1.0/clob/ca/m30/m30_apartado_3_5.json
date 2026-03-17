@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap3_5",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.5 Dades referents als agents biològics, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "La classificació del tipus dels agents biològics susceptibles d'originar qualsevol tipus d'infecció, al·lèrgia o toxicitat en humans als quals estiguin o puguin estar exposats el personal es fa d'acord amb la taula i els criteris de classificació continguts en el <a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#anii' target='_blank'>annex II del Reial decret 664/1997</a> i les seves actualitzacions. <p>Si un agent no consta a la taula s'haurà d'estimar el seu risc d'infecció tenint en compte les definicions següents:</p><br><ul><li><b>Grup 1:</b> aquell que resulta poc probable que causi una malaltia en l'ésser humà, els animals i/o el medi ambient.</li><li><b>Grup 2:</b> i/o el medi ambient i pot suposar un perill per a les persones exposades, però és poc probable que es propagui a la col·lectivitat i hi ha una profilaxi o un tractament eficaç. profilaxi o un tractament eficaç.</li><li><b>Grup 4:</b> aquell que causa una malaltia greu en l'ésser humà, els animals i/o el medi ambient, suposa un perill seriós per a les persones exposades, amb moltes probabilitats que es propagui a la col·lectivitat i sense que hi hagi una profilaxi o un tractament eficaç.</li></li> <b>perillositat superior</b>.<p>La classificació dels agents patògens animals no zoonòtics es fa d'acord amb els criteris de l'Organització Mundial de Sanitat Animal (OIE, 2010a,b).</p><p>La classificació dels agents patògens vegetals es fa d'acord amb els criteris del RD 739/2021 sobre vegetals</p>. (WORLD ORGANISATION FOR ANIMAL HEALTH) (2010a). Handbook on Import Risk Analysis for Animals and Animal Products. Volum 1: Introduction and qualitative risk analysis, Second Edition. OIE, Paris, França.</p><p>OIE (WORLD ORGANISATION FOR ANIMAL HEALTH) (2010b). Handbook on Import Risk Analysis for Animals and Animal Products. Volum 2: Quantitative Risk Assessment, Second Edition. OIE, París, França.</p>"
+      }
+    ]
+  }
+]

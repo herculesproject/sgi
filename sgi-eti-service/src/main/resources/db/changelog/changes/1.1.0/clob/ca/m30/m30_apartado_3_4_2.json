@@ -1,0 +1,74 @@
+[
+  {
+    "key": "ap3_4_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.4.2 Exposició deliberada"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>En aquesta activitat es fan tasques en què hi ha intenció deliberada d'utilitzar agents biològics, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules?</p>"
+      },
+      {
+        "key": "tareasAgentesBiologicosRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Tipus d'agent biològic, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules que s'utilitzen",
+        "hideExpression": "!model.tareasAgentesBiologicosRadio || model.tareasAgentesBiologicosRadio === 'no'"
+      },
+      {
+        "type": "multicheckbox",
+        "key": "exposicionNointencionada",
+        "hideExpression": "!model.tareasAgentesBiologicosRadio || model.tareasAgentesBiologicosRadio === 'no'",
+        "templateOptions": {
+          "label": "Opcions:",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "microorganismos",
+              "label": "Microorganismes"
+            },
+            {
+              "value": "cultivoscelulares",
+              "label": "Cultius cel·lulars"
+            },
+            {
+              "value": "endoparasitos",
+              "label": "Endoparàsits"
+            },
+            {
+              "value": "sustanciasquímicaspeligrosas",
+              "label": "Substàncies Químiques Perilloses"
+            },
+            {
+              "value": "sustanciasradiactivas",
+              "label": "Substàncies Radioactives"
+            },
+            {
+              "value": "nanoparticulas",
+              "label": "Nanopartícules"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

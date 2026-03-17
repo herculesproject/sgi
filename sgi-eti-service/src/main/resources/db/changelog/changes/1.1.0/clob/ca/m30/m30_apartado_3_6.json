@@ -1,0 +1,25 @@
+[
+  {
+    "key": "ap3_6",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.6 Freqüència i periodicitat dús"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Descriure a continuació la freqüència dús dels agents biològics, organismes modificats genèticament especificats, és a dir, nombre de vegades al dia oa la setmana que saccedirà a la mostra per a manipulació, cultiu etc., durada daquesta manipulació, i si aquesta acció es repetirà de forma periòdica (per exemple nombre de vegades a la setmana o al mes, nombre de mesos a lany, etc.)."
+      },
+      {
+        "key": "frecuenciaPeriodicidad",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Descriure",
+          "required": true
+        }
+      }
+    ]
+  }
+]

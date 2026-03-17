@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap4_2_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.1 Lloc on es realitzarà el maneig d'agents biològics o organismes modificats genèticament"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>La manipulació d'agents biològics o materials susceptibles de contenir-los requereix unes condicions específiques del lloc de treball d'acord amb el grau de perillositat de l'agent i el nivell de risc que garanteixin la seguretat.<br>El tipus de laboratori ha de ser adequat al nivell de risc. En cas d'exposició a més d'un agent biològic es tindrà en compte <b>el de risc més alt</b>.</p><ul><li>Nivell de contenció C1: Laboratori bàsic</li><li>Nivell de contenció C2: Laboratori bàsic amb cabina de seguretat biològica o altres dispositius apropiats de protecció personal o contenció física.</li> amb cabina de seguretat biològica o altres dispositius apropiats de protecció personal o contenció física</li><li>Nivell de contenció C4: Laboratori estanc de contenció màxima</li></ul><p>Per a més informació sobre mesures i nivells de contenció consulteu el <b><a href='https://boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#anv' target='_blank'>Annex V del RD 664-97</a></b>.</p>"
+      }
+    ]
+  }
+]

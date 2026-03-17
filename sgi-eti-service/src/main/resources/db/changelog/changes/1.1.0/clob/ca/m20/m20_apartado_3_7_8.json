@@ -1,0 +1,54 @@
+[
+  {
+    "key": "ap3_7_8",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.8 Administració d'isòtops radioactius"
+    },
+    "fieldGroup": [
+      {
+        "template": "El procés d¿experimentació inclou l¿administració d¿isòtops radioactius al¿animal?"
+      },
+      {
+        "key": "administracionIsotoposRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "tipoIsotopo",
+        "type": "i18n-input",
+        "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
+        "templateOptions": {
+          "label": "Tipus d'isòtop",
+          "required": true,
+          "placeholder": "Tipus"
+        }
+      },
+      {
+        "key": "administracionIsotopo",
+        "type": "i18n-input",
+        "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
+        "templateOptions": {
+          "label": "Dosi i via dadministració",
+          "required": true,
+          "placeholder": "Dosi"
+        }
+      }
+    ]
+  }
+]

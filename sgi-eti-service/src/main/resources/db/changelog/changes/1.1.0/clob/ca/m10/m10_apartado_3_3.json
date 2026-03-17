@@ -1,0 +1,25 @@
+[
+  {
+    "key": "ap3_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.3 Referències de publicacions científiques"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Citar de forma completa (autor, títol, publicació, data, etc) les referències més rellevants utilitzades per a la redacció del projecte (màxim 10 referències)</p>"
+      },
+      {
+        "key": "referenciasPublicaciones",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Referències",
+          "required": true
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "key": "ap1_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "1.2 Justificació de lús danimals"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Exposar breument la necessitat d'utilitzar animals.</p>"
+      },
+      {
+        "key": "justificacion",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Justificació",
+          "required": true
+        }
+      }
+    ]
+  }
+]

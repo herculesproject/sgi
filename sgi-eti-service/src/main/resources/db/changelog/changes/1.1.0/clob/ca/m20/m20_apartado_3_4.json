@@ -1,0 +1,38 @@
+[
+  {
+    "key": "ap3_4",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.4 Tipus de projecte"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Tipus de projectes.</p><p>1.- Projectes de tipus I: Aquells projectes en què es donin simultàniament les tres circumstàncies següents:<ul><li>a) Impliquen exclusivament procediments classificats com &lt;&lt;sense recuperació&gt;&gt;, &lt;&lt;lleus&gt; o &lt;&lt;moderats&gt;&gt;.</li><li>b) No utilitzen primats.</li><li>c) Es realitzen per complir requisits legals o reglamentaris, o amb fins de producció o diagnòstic per mètodes establerts.</li></ul></p><p>Els projectes tipus I podran ser tramitats per un procediment simplificat i un procediment simplificat. retrospectiva.</p></br><p>2.- Projectes de tipus II: Aquells projectes en què es donin simultàniament les circumstàncies següents:<ul><li>a) Impliquen exclusivament procediments classificats com &lt;&lt;sense recuperació&gt;&gt;, &lt;&lt;lleus&gt;&gt; o &lt;&lt;moderats&gt;&gt;.</li><li>b) No utilitzen primats.</li></ul></p><p>Els projectes tipus II quedaran subjectes al procediment d'autorització i podran no ser sotmesos a avaluació retrospectiva.</p></br><p>3.- Projectes de tipus III: Els projectes diferents dels tipus. Sense perjudici de les autoritzacions addicionals a què puguin estar condicionats determinats projectes, tots els projectes tipus III quedaran subjectes al procediment dautorització i seran sotmesos posteriorment a una avaluació retrospectiva.</p>"
+      },
+      {
+        "key": "tipoProyecto",
+        "type": "select",
+        "templateOptions": {
+          "label": "Seleccioneu",
+          "required": true,
+          "options": [
+            {
+              "label": "Tipus 1",
+              "value": "1"
+            },
+            {
+              "label": "Tipus 2",
+              "value": "2"
+            },
+            {
+              "label": "Tipus 3",
+              "value": "3"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

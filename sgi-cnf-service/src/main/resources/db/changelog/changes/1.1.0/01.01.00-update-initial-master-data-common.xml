@@ -1,0 +1,26 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="!test" author="master" id="01.01.00-config-i18n">
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateConfigValue">
+      <param name="configName" value="i18n-languages-priority" />
+      <param name="valueClobContent" value="[&quot;es&quot;, &quot;en&quot;, &quot;eu&quot;, &quot;ca&quot;]" />
+    </customChange>
+
+    <update tableName="config">
+    <column name="default_value" value="[&quot;es&quot;, &quot;en&quot;, &quot;eu&quot;, &quot;ca&quot;]" />
+    <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="i18n-languages-priority" />
+      </whereParams>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>

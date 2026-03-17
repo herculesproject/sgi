@@ -1,0 +1,35 @@
+[
+  {
+    "key": "ap1_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "Equip investigador",
+      "expanded": true
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Qualsevol canvi a l'equip investigador ha de ser notificat al comitè d'ètica corresponent.</p>"
+      },
+      {
+        "template": "Descriviu breument si hi ha hagut canvis en l'equip investigador (alta o baixa de membres) o en les tasques dels membres i la seva justificació."
+      },
+      {
+        "key": "equipoInvestigador",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Descripció",
+          "label": "Descripció",
+          "required": false,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      }
+    ]
+  }
+]

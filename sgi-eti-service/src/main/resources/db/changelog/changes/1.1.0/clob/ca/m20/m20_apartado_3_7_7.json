@@ -1,0 +1,70 @@
+[
+  {
+    "key": "ap3_7_7",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.7 Agents biològics"
+    },
+    "fieldGroup": [
+      {
+        "template": "El procés d¿experimentació inclou la inoculació d¿agents biològics?"
+      },
+      {
+        "key": "agentesBiologicosRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Si el procés d'experimentació requereix treballar amb agents biològics (AB) o organismes modificats genèticament (OMG) en un laboratori de nivell de contenció 2 o superior, cal sol·licitar l'avaluació al #nom_comite_M30_ca#.</p>"
+      },
+      {
+        "key": "tipoAgenteBiologico",
+        "type": "i18n-input",
+        "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
+        "templateOptions": {
+          "label": "Tipus d'agent biològic",
+          "required": true,
+          "placeholder": "Tipus"
+        }
+      },
+      {
+        "key": "nivelBioseguridad",
+        "type": "i18n-input",
+        "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
+        "templateOptions": {
+          "label": "Nivell de bioseguretat",
+          "required": true,
+          "placeholder": "Nivell"
+        }
+      },
+      {
+        "key": "administracion",
+        "type": "i18n-input",
+        "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
+        "templateOptions": {
+          "label": "Dosi i via dadministració",
+          "required": true,
+          "placeholder": "Dosi"
+        }
+      }
+    ]
+  }
+]

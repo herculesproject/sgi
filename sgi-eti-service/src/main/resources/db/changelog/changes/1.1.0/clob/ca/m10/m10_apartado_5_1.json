@@ -1,0 +1,41 @@
+[
+  {
+    "key": "ap5_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.1 Document de consentiment"
+    },
+    "fieldGroup": [
+      {
+        "template": "El vostre projecte requereix document de consentiment del subjecte font i/o el seu representant?"
+      },
+      {
+        "key": "documentoConsentimiento",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "No"
+            },
+            {
+              "value": "CONSENTIMIENTO",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: veure apartat '4.4 Informació i consentiment'.</p>"
+      }
+    ]
+  }
+]

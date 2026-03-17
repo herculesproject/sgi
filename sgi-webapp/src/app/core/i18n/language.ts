@@ -9,9 +9,10 @@ export class Language {
   public static readonly ES = new Language('es', 'spa', marker('language.es'));
   public static readonly EN = new Language('en', 'eng', marker('language.en'));
   public static readonly EU = new Language('eu', 'eus', marker('language.eu'));
+  public static readonly CA = new Language('ca', 'cat', marker('language.ca'));
 
   public static values(): Language[] {
-    return [this.ES, this.EN, this.EU];
+    return [this.ES, this.EN, this.EU, this.CA];
   }
 
   public static fromCode(code: string): Language {

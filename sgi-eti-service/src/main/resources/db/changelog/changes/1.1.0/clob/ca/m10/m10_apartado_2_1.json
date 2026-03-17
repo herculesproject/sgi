@@ -1,0 +1,101 @@
+[
+  {
+    "key": "ap2_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "2.1 Personal que durà a terme les tasques amb éssers humans, les seues mostres i/o les seues dades"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>A continuació es mostren les dades de totes les persones integrants de l'equip d'investigador, inclòs el sol·licitant. Afegir en aquest apartat qualsevol altra persona que col·labori en el projecte com a reclutadors, enquestadors, etc.. En el cas de projecte tutelat afegir al tutor o director del mateix. Disseny metodològic (afegir totes les tasques necessàries)</li><li>Formació i experiència prèvia en cada tasca en particular (realització d'enquestes, reclutament, presa de mostres, tractament de dades, treball al laboratori, direcció de tesis, etc.). href='#MODULE_PATH#/peticions-avaluacio/#PETICION_EVALUACION_ID#/tasques' target='_blank'><b>Assignació de tasques</b></a> de la <b>Sol·licitud d'avaluació</b>. Accediu a aquest punt del menú per fer les modificacions necessàries.</p>",
+        "templateOptions": {
+          "replaceTemplatePlaceholders": true
+        }
+      },
+      {
+        "type": "table-crud",
+        "key": "equipoInvestigador",
+        "templateOptions": {
+          "entity": "equip investigador",
+          "gender": "male",
+          "disabled": true
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Equip investigador"
+          },
+          "fieldGroup": [
+            {
+              "key": "nombre",
+              "type": "input",
+              "templateOptions": {
+                "label": "Nom",
+                "order": 10,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
+              }
+            },
+            {
+              "key": "apellidos",
+              "type": "input",
+              "templateOptions": {
+                "label": "Cognoms",
+                "order": 20,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.apellidos"
+              }
+            },
+            {
+              "key": "email",
+              "type": "input",
+              "templateOptions": {
+                "label": "E-mail",
+                "order": 30,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.emails?.find((e)=>e.principal)?.email"
+              }
+            },
+            {
+              "key": "vinculacion",
+              "type": "input",
+              "templateOptions": {
+                "label": "Vinculació",
+                "order": 40,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.vinculacion?.categoriaProfesional?.nombre"
+              }
+            },
+            {
+              "key": "nivelAcademico",
+              "type": "input",
+              "templateOptions": {
+                "label": "Nivell acadèmic",
+                "order": 50,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona.datosAcademicos?.nivelAcademico?.nombre"
+              }
+            },
+            {
+              "key": "tarea",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Tasca",
+                "order": 60,
+                "expressionModelValue": "formState.tareas[$1].nombre"
+              }
+            },
+            {
+              "key": "experiencia",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Experiència",
+                "order": 70,
+                "expressionModelValue": "formState.tareas[$1].formacion"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

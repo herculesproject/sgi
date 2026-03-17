@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap3_7",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.7 Procés d'experimentació a què serà sotmès l'animal"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Denominem 'procés d'experimentació' al conjunt o successió de procediments/intervencions a què és sotmès l'animal des del moment en què s'inicia la preparació de l'animal per a la seva utilització fins que 'ja no s'hagin de fer observacions ulteriors sobre ell' i 'hagi estat sacrificat, reallotjat o reintegrat a un '."
+      }
+    ]
+  }
+]

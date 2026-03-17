@@ -1,5 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import localeCa from '@angular/common/locales/ca';
 import localeEs from '@angular/common/locales/es';
 import localeEu from '@angular/common/locales/eu';
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
@@ -69,6 +70,7 @@ export class SgiTranslateLoader implements TranslateLoader {
 // Load supported locales
 registerLocaleData(localeEs);
 registerLocaleData(localeEu);
+registerLocaleData(localeCa);
 
 const appInitializerFn = (appConfig: ConfigService) => {
   return () => {

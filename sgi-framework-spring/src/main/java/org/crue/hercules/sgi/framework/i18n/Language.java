@@ -13,7 +13,10 @@ public enum Language {
   /* English */
   EN("en"),
   /* Basque */
-  EU("eu");
+  EU("eu"),
+  /* Català */
+  CA("ca");
+
 
   private String code;
   private Locale locale;

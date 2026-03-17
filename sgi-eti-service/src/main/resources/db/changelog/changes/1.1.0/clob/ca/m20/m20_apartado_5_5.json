@@ -1,0 +1,30 @@
+[
+  {
+    "key": "ap5_5",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "5.5 Resum no tècnic (RNT)"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>El Reial decret 118/2021, de 23 de febrer, pel qual es modifica el Reial decret 53/2013, d'1 de febrer, dictamina que la persona responsable del projecte amb animals ha de redactar un resum anònim no tècnic (RNT) del projecte i les seves eventuals actualitzacions, que es presentarà a la Comissió Europea> en el termini. la propietat intel·lectual i la informació confidencial quedin protegides, l'RNT del projecte no contindrà cap dada de caràcter personal i inclourà, almenys, informació sobre els objectius del projecte, inclosos els perjudicis i els beneficis previstos, així com el nombre i tipus d'animals que s'utilitzaran, demostrant el compliment del requisit de reemplaçament, reducció i refinament.</p><p aquest s'ha de sotmetre a una avaluació retrospectiva i, en aquest cas, establir-ne el termini. L'RNT del projecte s'haurà d'actualitzar amb els resultats de l'avaluació retrospectiva en un termini de sis mesos a partir de la seva finalització.</p><p>Una vegada autoritzat el projecte, l'òrgan competent publicarà l'RNT a la pàgina web del Ministeri d'Agricultura, Pesca i Alimentació. Així mateix, l'RNT es publicarà a la base de dades ALURES - Animal use reporting EU System.</p><p>L'RNT s'ha d'adjuntar a l'apartat de Documentació. Consulteu amb la Secretaria Tècnica del Comitè d'Ètica per a més detalls sobre el contingut o la plantilla d'aquest RNT.</p>"
+      },
+      {
+        "key": "resumenNoTecnico",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": "RESUMEN_RNT",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

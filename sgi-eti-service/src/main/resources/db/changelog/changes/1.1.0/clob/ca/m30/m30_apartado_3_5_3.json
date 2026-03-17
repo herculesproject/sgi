@@ -1,0 +1,97 @@
+[
+  {
+    "key": "ap3_5_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.5.3 Material biològic"
+    },
+    "hideExpression": "!formState.mainModel.ap3_4.ap3_4_1 || !formState.mainModel.ap3_4.ap3_4_1.agentesBiologicosRadio || formState.mainModel.ap3_4.ap3_4_1.agentesBiologicosRadio === 'no'",
+    "fieldGroup": [
+      {
+        "type": "table-crud",
+        "key": "materialBiologicoTable",
+        "templateOptions": {
+          "entity": "material biològic",
+          "gender": "male"
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Material biològic"
+          },
+          "fieldGroup": [
+            {
+              "key": "tipoMaterial",
+              "type": "select",
+              "templateOptions": {
+                "label": "Tipus de material",
+                "order": 10,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "Cria i maneig d'animals"
+                  },
+                  {
+                    "value": "2",
+                    "label": "Teixit, sang i/o fluids animals"
+                  },
+                  {
+                    "value": "3",
+                    "label": "Teixit, sang i/o fluids humans"
+                  },
+                  {
+                    "value": "4",
+                    "label": "Altres"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "descripcionCaracteristicas",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Descripció/Característiques",
+                "order": 20
+              }
+            },
+            {
+              "key": "grupoRiesgo",
+              "type": "select",
+              "templateOptions": {
+                "label": "Grup de risc",
+                "order": 30,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "Grup 1"
+                  },
+                  {
+                    "value": "2",
+                    "label": "Grup 2"
+                  },
+                  {
+                    "value": "3",
+                    "label": "Grup 3"
+                  },
+                  {
+                    "value": "4",
+                    "label": "Grup 4"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "volumenMaximo",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Volum màxim de mostra que es maneja en cada cop o nombre d'animals",
+                "order": 40
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

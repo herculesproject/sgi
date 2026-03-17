@@ -1,0 +1,46 @@
+[
+  {
+    "key": "ap3_6_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.6.3 Animals protegits o en perill dextinció"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Les espècies amenaçades i en perill d'extinció poden consultar-se a la pàgina de la CITES (<a target='_blank' href='https://cites.org/esp/app/appendices.php'>Annex A del Reglament (CE) núm. 338/97</a>).</p><p>La regulació target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a20'>article 20</a> del RD 53/13, segons el qual només es poden utilitzar aquests animals una de les finalitats següents:<ul><li>a) Prevenció, profilaxi, diagnòstic o tractament de malalties, mala salut o altres anomalies o els seus efectes en els éssers humans, els animals o les plantes</li><li>b) La protecció del medi natural en interès de la salut o el benestar dels éssers humans o els animals.</li><li>c) La investigació espècies.</li></ul></li><li>S'ha justificat científicament que aquesta finalitat no es pot aconseguir utilitzant animals d'altres espècies.</li></ul><p>En aquest apartat també s'inclou l'ús de primats com a animal d'experimentació, per a la qual cosa cal tenir en compte el que disposa el <strong>Reial Decret 1386/2018</b> 53/2013.</p>"
+      },
+      {
+        "template": "Són animals protegits o en perill d'extinció?"
+      },
+      {
+        "key": "animalesProtegidosRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: recordeu que les excepcions requereixen aportar el document corresponent a l'apartat '5.4 Situacions especials'.</p>"
+      }
+    ]
+  }
+]

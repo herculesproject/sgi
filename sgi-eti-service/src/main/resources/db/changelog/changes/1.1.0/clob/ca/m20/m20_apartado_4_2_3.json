@@ -1,0 +1,48 @@
+[
+  {
+    "key": "ap4_2_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.3 Severitat global"
+    },
+    "fieldGroup": [
+      {
+        "template": "Tenint en compte la severitat acumulada Com qualificaríeu la severitat global de tot el procés?"
+      },
+      {
+        "key": "severidadGlobal",
+        "type": "select",
+        "templateOptions": {
+          "label": "Severitat",
+          "order": 40,
+          "options": [
+            {
+              "value": "1",
+              "label": "No recuperació"
+            },
+            {
+              "value": "2",
+              "label": "Lleu"
+            },
+            {
+              "value": "3",
+              "label": "Moderada"
+            },
+            {
+              "value": "4",
+              "label": "Severa"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Valoreu la severitat global segons l'escala següent: 1. No recuperació, 2. Lleu, 3. Moderada, 4. Severa</p>"
+      }
+    ]
+  }
+]

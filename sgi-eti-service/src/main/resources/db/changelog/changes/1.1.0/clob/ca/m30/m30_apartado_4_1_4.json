@@ -1,0 +1,25 @@
+[
+  {
+    "key": "ap4_1_4",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.1.4 Efectes nocius que puguin derivar-se de lús dagents i/o material biològic"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Descriure breument la malaltia o els efectes nocius que puguin derivar-se de l'ús d'agents i/o material biològic</p>"
+      },
+      {
+        "key": "efectosNocivos",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Descriure",
+          "required": true
+        }
+      }
+    ]
+  }
+]

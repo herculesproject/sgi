@@ -1,0 +1,82 @@
+[
+  {
+    "key": "ap4_2_1_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.1.2 Un altre centre o lloc aliè a la Universitat"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Les tasques amb agents biològics o organismes modificats genèticament es realitzen a dependències d'un altre centre o lloc?</p>"
+      },
+      {
+        "key": "tareasAgentesBiologicos",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "especificarAgenteBiologico",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
+        "templateOptions": {
+          "name": "Especificar",
+          "required": true
+        }
+      },
+      {
+        "template": "Justificar la necessitat de realitzar les tasques en aquest lloc",
+        "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'"
+      },
+      {
+        "key": "justificarTareas",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
+        "templateOptions": {
+          "name": "Justificar",
+          "required": true
+        }
+      },
+      {
+        "template": "Si disposeu d'acreditació indiqueu agència i adjunteu-ne còpia",
+        "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'"
+      },
+      {
+        "key": "disponeAcreditacion",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
+        "templateOptions": {
+          "name": "Indicar:",
+          "required": true
+        }
+      },
+      {
+        "key": "fechaAcreditacion",
+        "type": "datepicker",
+        "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
+        "templateOptions": {
+          "required": true,
+          "type": "text",
+          "label": "Data d'acreditació:"
+        }
+      },
+      {
+        "template": "<p>Es recorda que l'informe del Comitè només és vàlid per a tasques desenvolupades en Instal·lacions de la Universitat, per personal de la Universitat o per qualsevol altre que, en aplicació de la normativa vigent, hi desenvolupi les tasques. NOTA: La instal·lació haurà de complir els requisits de contenció per a AB i/o OMGs i, si escau, l'autorització/comunicació corresponent.</p>"
+      }
+    ]
+  }
+]

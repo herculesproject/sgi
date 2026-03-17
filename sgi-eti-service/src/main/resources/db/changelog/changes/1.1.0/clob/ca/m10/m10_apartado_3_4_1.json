@@ -1,0 +1,62 @@
+[
+  {
+    "key": "ap3_4_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.4.1 Procés de reclutament"
+    },
+    "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>Descriure el procés de reclutament: presentació del projecte i obtenció de consentiment del subjecte font i/o el seu representant legal d'acord amb l'esquema següent:</p><ul><li>qui (persona/es encarregada/es)</li><li>com (conversa, vídeo, fulletó..)</li><li>on es realitzaran <li>d'informació (moment en què es duen a terme; per exemple: quan la persona participant acudeixi a la consulta).</li></ul>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>S'entén per 'procés de reclutament' totes aquelles accions encaminades a captar les persones que participaran en l'estudi com a subjectes de recerca.</p><p>Aquest procés inclou la informació al possible participant, el seu convenciment i posterior obtenció i signatura del consentiment.</p><p>El procés de reclutament és posterior a la definició metodològic.</p><p>El procés de reclutament és una part essencial de la investigació perquè afecta directament aspectes ètics com la voluntarietat, l'equitat i el respecte.</p>"
+      },
+      {
+        "key": "descripcionProcesoReclutamiento",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Procés de reclutament",
+          "required": true
+        }
+      },
+      {
+        "template": "<p>Data prevista d'inici del reclutament</p>"
+      },
+      {
+        "key": "fechaReclutamiento",
+        "type": "datepicker",
+        "templateOptions": {
+          "required": true,
+          "type": "text",
+          "label": "Data prevista"
+        },
+        "validators": {
+          "validation": [
+            {
+              "name": "date-is-after",
+              "options": {
+                "compareTo": "formStateProperty",
+                "formStateProperty": "memoria.peticionEvaluacion.fechaInicio",
+                "message": "Ha de ser posterior a la data d'inici del projecte (dades generals sol·licitud avaluació)"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Afegir a l'apartat '5.7 Documentació addicional' tots els documents que s'utilitzaran per a reclutament de subjectes d'estudi (per exemple anuncis, tríptics, etc., amb el text íntegre).</p><p>Si el procés es realitzarà fora de les instal·lacions de la universitat afegir a l'apartat '5.3' el Document d'autorització del centre etc).</p><p>Recordeu que el projecte <strong>no es pot iniciar sense haver obtingut l'informe favorable</strong> del comitè; per tant, les dates han de ser coherents. La data d'inici de reclutament no pot ser anterior a la data d'obtenció de l'informe favorable.</p></div>"
+      }
+    ]
+  }
+]

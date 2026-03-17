@@ -1,0 +1,74 @@
+[
+  {
+    "key": "ap3_6_5",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.6.5 Període del projecte durant el qual es faran servir els animals"
+    },
+    "fieldGroup": [
+      {
+        "key": "fechaUsoAnimalesDesde",
+        "type": "datepicker",
+        "templateOptions": {
+          "required": true,
+          "type": "text",
+          "label": "Des de"
+        },
+        "validators": {
+          "validation": [
+            {
+              "name": "date-is-between",
+              "options": {
+                "compareTo": "formStateProperties",
+                "formStateProperties": [
+                  "memoria.peticionEvaluacion.fechaInicio",
+                  "memoria.peticionEvaluacion.fechaFin"
+                ],
+                "message": "Deu estar compresa entre les dates d'inici i fi del projecte (dades generals sol·licitud avaluació)"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "fechaUsoAnimalesHasta",
+        "type": "datepicker",
+        "templateOptions": {
+          "required": true,
+          "type": "text",
+          "label": "Fins"
+        },
+        "validators": {
+          "validation": [
+            {
+              "name": "date-is-between",
+              "options": {
+                "compareTo": "formStateProperties",
+                "formStateProperties": [
+                  "memoria.peticionEvaluacion.fechaInicio",
+                  "memoria.peticionEvaluacion.fechaFin"
+                ],
+                "message": "Deu estar compresa entre les dates d'inici i fi del projecte (dades generals sol·licitud avaluació)"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "validators": {
+      "validation": [
+        {
+          "name": "date-is-after",
+          "options": {
+            "compareTo": "formStateProperty",
+            "errorPath": "fechaUsoAnimalesHasta",
+            "formStateProperty": "mainModel.ap3_6.ap3_6_5.fechaUsoAnimalesDesde",
+            "message": "La data ha de ser posterior a la data indicada al camp des de"
+          }
+        }
+      ]
+    }
+  }
+]

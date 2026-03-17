@@ -1,0 +1,61 @@
+[
+  {
+    "key": "ap3_7",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.7 Trajectòria completa dels agents biològics i/o organismes modificats genèticament"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Descriure a continuació el recorregut que segueixen els agents biològics, organismes modificats genèticament des de la seva obtenció fins a la seva eliminació:</p>"
+      },
+      {
+        "key": "mododeObtencion",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Mode d'obtenció",
+          "required": true
+        }
+      },
+      {
+        "key": "transporte",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Transport",
+          "required": true
+        }
+      },
+      {
+        "key": "recepcion",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Recepció",
+          "required": true
+        }
+      },
+      {
+        "key": "almacenamiento",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Emmagatzematge",
+          "required": true
+        }
+      },
+      {
+        "key": "eliminacion",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Eliminació",
+          "required": true
+        }
+      }
+    ]
+  }
+]

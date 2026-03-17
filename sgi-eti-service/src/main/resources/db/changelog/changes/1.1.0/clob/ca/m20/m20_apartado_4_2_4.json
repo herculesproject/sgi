@@ -1,0 +1,24 @@
+[
+  {
+    "key": "ap4_2_4",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.4 Protocol de supervisió"
+    },
+    "fieldGroup": [
+      {
+        "template": "Elaborar un protocol sobre com serà la supervisió de l'animal i quantificar els paràmetres que se supervisaran, indicant en quin moment del procediment/intervenció començarà el control i quina serà la durada i la freqüència de la supervisió."
+      },
+      {
+        "key": "protocoloSupervision",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Protocol de supervisió",
+          "required": true
+        }
+      }
+    ]
+  }
+]

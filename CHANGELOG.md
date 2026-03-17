@@ -13,6 +13,8 @@
        ### Fixed            Corrección de errores
        ### Security         Correcciones de vulnerabilidades
 -->
+### Added
+- Añadido soporte para el idioma catalán.
 
 ## 1.0.0 (2026-02-26)
 

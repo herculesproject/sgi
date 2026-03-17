@@ -1,0 +1,110 @@
+[
+  {
+    "key": "ap4_1_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.1.2 Característiques del risc dels agents biològics i/o material biològic"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Els agents biològics i/o material biològic que s'utilitzen, impliquen algun tipus d'efecte potencialment nociu?</p>"
+      },
+      {
+        "key": "agentesBiologicos",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "grupoDiana",
+        "type": "multicheckbox",
+        "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
+        "templateOptions": {
+          "label": "Grup diana:",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "serHumamno",
+              "label": "Ésser humà"
+            },
+            {
+              "value": "animales",
+              "label": "Animals"
+            },
+            {
+              "value": "medioambiente",
+              "label": "Medi ambient"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Tipus d'efecte nociu",
+        "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'"
+      },
+      {
+        "key": "efectoNocivo",
+        "type": "multicheckbox",
+        "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
+        "templateOptions": {
+          "label": "Tipus:",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "infeccioso",
+              "label": "Infecciós"
+            },
+            {
+              "value": "toxico",
+              "label": "Tòxic"
+            },
+            {
+              "value": "alergico",
+              "label": "Al·lèrgic"
+            },
+            {
+              "value": "radiactivo",
+              "label": "Radioactiu"
+            },
+            {
+              "value": "otro",
+              "label": "Un altre"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Indiqueu el tipus d'efecte nociu",
+        "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))"
+      },
+      {
+        "key": "tipoEfectoNocivo",
+        "type": "i18n-textarea",
+        "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))",
+        "templateOptions": {
+          "label": "Indicar:",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

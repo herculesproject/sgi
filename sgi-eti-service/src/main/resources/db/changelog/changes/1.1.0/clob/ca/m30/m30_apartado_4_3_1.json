@@ -1,0 +1,125 @@
+[
+  {
+    "key": "ap4_3_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.3.1 Vacunació"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Quina vacunació s'ofereix al personal que gestionarà els agents biològics i/o organismes modificats genèticament?</p>"
+      },
+      {
+        "key": "vacunacionCheck",
+        "type": "multicheckbox",
+        "templateOptions": {
+          "label": "Quins",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "tetanos",
+              "label": "Tètans"
+            },
+            {
+              "value": "hepatitis",
+              "label": "Hepatitis"
+            },
+            {
+              "value": "otras",
+              "label": "Altres"
+            },
+            {
+              "value": "noNecesariaVacunacion",
+              "label": "No cal vacunació"
+            }
+          ]
+        },
+        "validators": {
+          "validation": [
+            {
+              "name": "multicheckbox-restricted",
+              "options": {
+                "message": "Les respostes \"${option1}\" i \"${option2}\" no són compatibles",
+                "restrictions": {
+                  "notValidCombinations": [
+                    {
+                      "option": "tetanos",
+                      "incompatibleOptions": [
+                        "noNecesariaVacunacion"
+                      ]
+                    },
+                    {
+                      "option": "hepatitis",
+                      "incompatibleOptions": [
+                        "noNecesariaVacunacion"
+                      ]
+                    },
+                    {
+                      "option": "otras",
+                      "incompatibleOptions": [
+                        "noNecesariaVacunacion"
+                      ]
+                    },
+                    {
+                      "option": "noNecesariaVacunacion",
+                      "incompatibleOptions": [
+                        "tetanos",
+                        "hepatitis",
+                        "otras"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "otrasTexto",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.some((c) => c === 'otras') || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
+        "templateOptions": {
+          "placeholder": "Especificar",
+          "label": "Especificar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "key": "noNecesariaVacunacionTexto",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.vacunacionCheck || model.vacunacionCheck.length>1 || !model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
+        "templateOptions": {
+          "placeholder": "Justificar",
+          "label": "Justificar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "template": "Organisme responsable de la vacunació",
+        "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.length>0 || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')"
+      },
+      {
+        "key": "organismoSanitario",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.length>0 || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
+        "templateOptions": {
+          "label": "Organisme:",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

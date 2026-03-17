@@ -1,0 +1,89 @@
+[
+  {
+    "key": "ap4_2_3_5",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.3.5 Gestió de residus"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>¿Es contempla gestió externa de residus perillosos o biològics?</p>"
+      },
+      {
+        "key": "gestionResiduos",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Especificar gestió externa o justificar en cas positiu",
+        "hideExpression": "!model.gestionResiduos || model.gestionResiduos === 'no'"
+      },
+      {
+        "key": "residuosGenerar",
+        "type": "multicheckbox",
+        "hideExpression": "!model.gestionResiduos || model.gestionResiduos === 'no'",
+        "templateOptions": {
+          "label": "Quins",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "biosanitarios",
+              "label": "Residus biosanitaris"
+            },
+            {
+              "value": "quimicos",
+              "label": "Residus d'origen químic"
+            },
+            {
+              "value": "radiactivos",
+              "label": "Residus radioactius"
+            },
+            {
+              "value": "animales",
+              "label": "Residus d´animals d´experimentació"
+            },
+            {
+              "value": "otros",
+              "label": "Altres. Especificar"
+            }
+          ]
+        }
+      },
+      {
+        "key": "otrasTexto",
+        "type": "i18n-textarea",
+        "hideExpression": "model.gestionResiduos === 'no' || (!model.residuosGenerar || !model.residuosGenerar.find((c) => c === 'otros'))",
+        "templateOptions": {
+          "placeholder": "Altres. Especificar",
+          "label": "Altres. Especificar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Un residu perillós és el que presenta una o diverses de les següents característiques de perillositat: explosiu, cancerigen, comburent, corrosiu, inflamable, infecciós, irritant, tòxic, nociu, mutagènic i/o ecotòxic. Si un residu no presenta alguna de les anteriors característiques, no serà considerat residu perillós i, per tant, la seva gestió es realitzarà juntament amb la resta de residus urbans. <strong>(SANDACH)</strong>.</p>"
+      }
+    ]
+  }
+]

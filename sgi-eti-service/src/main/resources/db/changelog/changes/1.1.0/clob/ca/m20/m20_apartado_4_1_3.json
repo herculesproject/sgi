@@ -1,0 +1,24 @@
+[
+  {
+    "key": "ap4_1_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.1.3 Elecció de l'espècie"
+    },
+    "fieldGroup": [
+      {
+        "template": "Explicar els motius d'elecció de l'espècie, incloent-hi les raons per les quals no es planteja substituir-la per una altra espècie amb menor capacitat de sentir dolor, patiment, angoixa o dany durador (art. 24 RD 53/2013)"
+      },
+      {
+        "key": "motivosEleccion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Motius d'elecció",
+          "required": true
+        }
+      }
+    ]
+  }
+]

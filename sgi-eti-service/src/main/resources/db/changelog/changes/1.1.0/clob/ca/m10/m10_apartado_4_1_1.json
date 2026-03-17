@@ -1,0 +1,108 @@
+[
+  {
+    "key": "ap4_1_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.1.1 Tipus de riscos o molèsties"
+    },
+    "hideExpression": "!formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio || formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>Senyaleu a continuació el tipus de riscos i/o molèsties que s'ocasionaran al subjecte de recerca a causa de les intervencions o proves que se us realitzaran per al projecte.</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>La consideració de risc o molèstia ha de realitzar-se en un sentit ampli, ja que no només cal tenir en compte els riscos físics per a la salut (com en el cas de proves invasives, per exemple) sinó també possibles danys psicològics (per exemple quan es tracten 'temes sensibles') o les molèsties ocasionades per la simple intromissió en la initimitat."
+      },
+      {
+        "type": "multicheckbox",
+        "key": "tipoRiesgosOMolestiasCheck",
+        "templateOptions": {
+          "label": "Opcions",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "riesgoFisico",
+              "label": "Risc físic"
+            },
+            {
+              "value": "riesgoPsicologico",
+              "label": "Risc Psicològic"
+            },
+            {
+              "value": "intromisionIntimidad",
+              "label": "Intromissió a la intimitat"
+            },
+            {
+              "value": "usoTiempo",
+              "label": "Ús del seu temps"
+            },
+            {
+              "value": "sinRiesgoPorTratarseDeDatos",
+              "label": "Sense risc per tractar-se de dades/mostres anònimes"
+            }
+          ]
+        },
+        "validators": {
+          "validation": [
+            {
+              "name": "multicheckbox-restricted",
+              "options": {
+                "message": "Les respostes \"${option1}\" i \"${option2}\" no són compatibles",
+                "restrictions": {
+                  "notValidCombinations": [
+                    {
+                      "option": "riesgoFisico",
+                      "incompatibleOptions": [
+                        "sinRiesgoPorTratarseDeDatos"
+                      ]
+                    },
+                    {
+                      "option": "riesgoPsicologico",
+                      "incompatibleOptions": [
+                        "sinRiesgoPorTratarseDeDatos"
+                      ]
+                    },
+                    {
+                      "option": "intromisionIntimidad",
+                      "incompatibleOptions": [
+                        "sinRiesgoPorTratarseDeDatos"
+                      ]
+                    },
+                    {
+                      "option": "usoTiempo",
+                      "incompatibleOptions": [
+                        "sinRiesgoPorTratarseDeDatos"
+                      ]
+                    },
+                    {
+                      "option": "sinRiesgoPorTratarseDeDatos",
+                      "incompatibleOptions": [
+                        "riesgoFisico",
+                        "riesgoPsicologico",
+                        "intromisionIntimidad",
+                        "usoTiempo"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: els possibles danys/molèsties s'han de relacionar amb les intervencions descrites detalladament a l'apartat <strong>'3.4.3 Descripció de les intervencions o proves'</strong></p><p>Recordeu que el/la participant ha de ser informat degudament de les molèsties i els possibles riscos i beneficis de la investigació i ha de ser informat del document '4.4.2 Informació obligatòria mínima').</p><p>Per obtenir més informació sobre la informació mínima exigida consultar el <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target 14/2007.</p>"
+      }
+    ]
+  }
+]

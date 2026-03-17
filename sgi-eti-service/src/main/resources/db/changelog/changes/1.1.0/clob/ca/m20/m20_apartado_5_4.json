@@ -1,0 +1,40 @@
+[
+  {
+    "key": "ap5_4",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "5.4 Situacions especials, excepcionals o salvaguardes legals"
+    },
+    "fieldGroup": [
+      {
+        "template": "El projecte requereix sol·licitud sobre situacions especials, excepcions o salvaguardes legals?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Totes les situacions especials o excepcions requeriran la redacció per part del/la Responsable del Projecte d'una Sol·licitud Raonada (abans Sol·licitud Prèvia i Expressa) explicant el motiu de l'excepció i la seva justificació que es remetrà al Comitè Habilitat ia l'Òrgan Competent.</p><p>Aquestes situacions estan previstes al 7, 9.1, 19, 20, 21, 22, 23, 25.3 i 25.5, 26 i 29) i en línies generals tenen a veure amb:</p><ul><li>Realització de procediments en què no s'utilitza anestèsia, analgèsia o altres mètodes destinats a eliminar incompatibles amb els resultats perseguits pel procediment o per estar contraindicada.</li><li>Utilització d'animals de les espècies incloses al <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20132 I</a> del RD 53/2013 que no hagin nascut ni hagin estat expressament criats en centres oficialment reconeguts.</li><li>Utilització d'animals de les espècies no incloses al <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#ani'>annex I</a> del RD 53/2013 que no procedeixin de centres de cria o subministrament.</li><li usuaris</li><li>Alliberament dels animals durant el procediment</li><li>Utilització d'animals salvatges capturats a la natura, d'animals rodamóns, d'animals procedents de centres de protecció animal oficials o d'animals protegits o en perill d'extinció.</li><li>Execució de procediments en què l'animal pot patir un dolor greu o prolongat</li> els procediments en què s'han utilitzat animals capturats a la natura</li><li>Utilització de primats no humans.</li></ul>"
+      },
+      {
+        "key": "solicitudSituacionesEspeciales",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "No"
+            },
+            {
+              "value": "SOLICITUD_RAZONADA",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

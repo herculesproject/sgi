@@ -1,0 +1,91 @@
+[
+  {
+    "key": "ap5_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "5.3 Avaluació retrospectiva"
+    },
+    "fieldGroup": [
+      {
+        "template": "El projecte requereix avaluació retrospectiva?"
+      },
+      {
+        "key": "evaluacionRetrospectivaRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Requereixen <strong>avaluació retrospectiva</strong> els <strong>projectes Tipus III</strong> que, en línies generals, són aquells que inclouen:</p><ul><li>procediments/intervencions de classificació «severa» que impliquen dolor sever, patiment o angoixa per a l'animal i que pot ser durador. de primats no humans</li><li>alguna excepció o situació especial que requereixi la pertinent sol·licitud de l'apartat 5.4</li></ul><p>També requeriran avaluació retrospectiva els projectes de Tipus II amb intervencions qualificades de “moderades” l'avaluació de les quals així ho determini.</p><p>Per a més informació sobre avaluació retrospectiva consulteu els articles' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#a31'>31</a>, <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#a35'>35</a> i <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#dasegunda'>Disposició addicional segona</a> del RD 53/2013)</p>"
+      },
+      {
+        "template": "Motiu de l'avaluació",
+        "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'"
+      },
+      {
+        "type": "multicheckbox",
+        "key": "motivoEvaluacionRetrospectivaCheck",
+        "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'",
+        "templateOptions": {
+          "label": "Seleccionar",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "intervencionesSeveras",
+              "label": "El projecte inclou intervencions classificades com a «severes» que impliquen dolor sever, patiment o angoixa per a l'animal i que pot ser durador i que no pot experimentar una millora"
+            },
+            {
+              "value": "primatesNoHumanos",
+              "label": "Utilització de primats no humans"
+            },
+            {
+              "value": "otros",
+              "label": "Altres motius."
+            }
+          ]
+        }
+      },
+      {
+        "key": "especificarMotivo",
+        "type": "i18n-input",
+        "hideExpression": "!model.motivoEvaluacionRetrospectivaCheck || !model.motivoEvaluacionRetrospectivaCheck.find((m) => m === 'otros')",
+        "templateOptions": {
+          "label": "Especificar",
+          "required": true,
+          "placeholder": "Especificar"
+        }
+      },
+      {
+        "template": "Data de l'avaluació retrospectiva (seguiment)",
+        "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'"
+      },
+      {
+        "key": "fechaEvRetrospectiva",
+        "type": "datepicker",
+        "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'",
+        "templateOptions": {
+          "label": "Data",
+          "required": false
+        }
+      }
+    ]
+  }
+]

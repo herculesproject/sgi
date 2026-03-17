@@ -1,0 +1,31 @@
+[
+  {
+    "key": "ap5_9",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "hideExpression": "formState.memoria.tipo !== 'RATIFICACION'",
+    "templateOptions": {
+      "label": "5.9 Informe del Comitè o Comissió de lorganisme extern"
+    },
+    "fieldGroup": [
+      {
+        "template": "Recordeu que heu d'adjuntar l'informe d'aprovació atorgat pel comitè o comissió corresponent de l'organisme extern amb què es desenvolupa el projecte"
+      },
+      {
+        "key": "informeRatificacion",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": "INFORME_EXTERNO",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

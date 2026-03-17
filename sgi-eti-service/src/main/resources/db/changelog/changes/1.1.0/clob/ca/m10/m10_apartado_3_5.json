@@ -1,0 +1,90 @@
+[
+  {
+    "key": "ap3_5",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.5 Mostres biològiques dorigen humà"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>En aquesta activitat es fan servir mostres biològiques d'origen humà?</p>"
+      },
+      {
+        "key": "muestrasBiologicasRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "label": "Trieu opció:",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "type": "multicheckbox",
+        "key": "muestrasBiologicasCheck",
+        "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'",
+        "templateOptions": {
+          "label": "Quins",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "celulasgerminales",
+              "label": "Cèl·lules germinals"
+            },
+            {
+              "value": "celulassomaticas",
+              "label": "Cèl·lules somàtiques"
+            },
+            {
+              "value": "sangre",
+              "label": "Sang"
+            },
+            {
+              "value": "fluidos",
+              "label": "Fluids"
+            },
+            {
+              "value": "organos",
+              "label": "Òrgans"
+            },
+            {
+              "value": "tejidos",
+              "label": "Teixits"
+            },
+            {
+              "value": "lineasCelulares",
+              "label": "Línies cel·lulars troncals embrionàries*"
+            },
+            {
+              "value": "celulasTejidos",
+              "label": "Cèl·lules i teixits d'origen embrionari humà*"
+            },
+            {
+              "value": "embrionesFetos",
+              "label": "Embrions i fetus humans*"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Recordeu que la manipulació de teixits/sang/fluids humans requereix avaluació del #nom_comite_M30_ca#.</p><p>Les opcions marcades amb asterisc (*) requereixen l'informe previ favorable de la Comissió de Garanties abans de la seva utilització</p>",
+        "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'"
+      }
+    ]
+  }
+]

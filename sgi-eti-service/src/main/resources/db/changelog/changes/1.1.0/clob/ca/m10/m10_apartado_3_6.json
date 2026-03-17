@@ -1,0 +1,57 @@
+[
+  {
+    "key": "ap3_6",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.6 Dades de caràcter personal"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>En aquesta activitat s'utilitzen dades de caràcter personal?</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Dada personal és qualsevol informació numèrica, alfabètica, gràfica, fotogràfica, acústica o de qualsevol altre tipus sobre els possibles participants.</p>"
+      },
+      {
+        "key": "caracterPersonalRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "label": "Trieu opció:",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "numeroDatosCaracterPersonal",
+        "type": "i18n-input",
+        "hideExpression": "!model.caracterPersonalRadio || model.caracterPersonalRadio === 'no'",
+        "templateOptions": {
+          "label": "Indicar el nombre de dades",
+          "required": true,
+          "placeholder": "Nombre de dades"
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>AJUDA: El Reglament UE 2016/679 i la Llei Orgànica 3/2018, de Protecció de Dades Personals i garantia dels drets digitals, obliguen a registrar un Tractament de Dades. Poseu-vos en contacte amb la Secretaria Tècnica del Comitè d'Ètica per informar-vos dels procediments que regeixen a la Universitat.</p>"
+      }
+    ]
+  }
+]

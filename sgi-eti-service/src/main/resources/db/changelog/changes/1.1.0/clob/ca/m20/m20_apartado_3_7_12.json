@@ -1,0 +1,73 @@
+[
+  {
+    "key": "ap3_7_12",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.12 Eutanàsia"
+    },
+    "fieldGroup": [
+      {
+        "template": "Explicar a continuació un mètode d'eutanàsia (programada i/o no programada) que s'utilitzarà."
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "El RD 53/13 dedica el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Annex III</a>, punts 1 i 3."
+      },
+      {
+        "key": "explicarMetodoEutanasia",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Explicar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "template": "Quin mètode es farà servir per confirmar la mort de l'animal?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Podeu consultar els mètodes per completar l'eutanàsia al <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Annex III</a>"
+      },
+      {
+        "key": "confirmarMuerte",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Explicar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "template": "Temps màxim estimat des de la finalització del procés dexperimentació fins al sacrifici."
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "El RD 53/2013 en el seu <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a25'>article 25.6. mesures adequades per minimitzar el patiment de l'animal”. D'això se'n pot deduir que l'aplicació de l'eutanàsia s'ha de fer sense demora injustificada."
+      },
+      {
+        "key": "tiempoProceso",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Temps",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

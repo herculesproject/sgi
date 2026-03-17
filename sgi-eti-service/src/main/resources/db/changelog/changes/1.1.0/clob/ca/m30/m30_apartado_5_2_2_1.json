@@ -1,0 +1,39 @@
+[
+  {
+    "key": "ap5_2_2_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "5.2.2.1 Pregunta 1"
+    },
+    "fieldGroup": [
+      {
+        "template": "L'activitat que es presenta a avaluació implica ús confinat d'organismes modificats genèticament (OMG)?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "OMG és qualsevol organisme el material genètic del qual ha estat modificat d'una manera que no es produeix de manera natural sempre que s'utilitzin les tècniques que reglamentàriament s'estableixin. Per ser considerat OMG, les modificacions han de tenir caràcter permanent."
+      },
+      {
+        "key": "pregunta1OMGRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

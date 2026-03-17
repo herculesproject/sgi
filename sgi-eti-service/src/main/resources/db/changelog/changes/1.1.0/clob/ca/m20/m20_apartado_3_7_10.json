@@ -1,0 +1,67 @@
+[
+  {
+    "key": "ap3_7_10",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.10 Privació d'aliment i/o aigua"
+    },
+    "fieldGroup": [
+      {
+        "template": "L'animal serà privat d'aliment i beguda en algun moment?"
+      },
+      {
+        "key": "privacionRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "tipoPrivacionCheck",
+        "type": "multicheckbox",
+        "hideExpression": "!model.privacionRadio || model.privacionRadio === 'no'",
+        "templateOptions": {
+          "label": "Seleccionar",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "privacionAlimento",
+              "label": "Privació d'aliment"
+            },
+            {
+              "value": "privacionAgua",
+              "label": "Privació d´aigua"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Descriure a continuació la pauta de la privació d'aliment i/o aigua indicant l'hora d'inici i la durada (en hores)",
+        "hideExpression": "!model.privacionRadio || model.privacionRadio === 'no'"
+      },
+      {
+        "key": "describirPrivacion",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!model.privacionRadio || model.privacionRadio === 'no'",
+        "templateOptions": {
+          "name": "Descriure",
+          "required": true
+        }
+      }
+    ]
+  }
+]

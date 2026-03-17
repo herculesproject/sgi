@@ -1,0 +1,54 @@
+[
+  {
+    "key": "ap3_7_11",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.11 Destinació final"
+    },
+    "fieldGroup": [
+      {
+        "template": "Quina és la destinació final de l'animal un cop acabat tot el procés d'experimentació?"
+      },
+      {
+        "key": "destinoFinalCheck",
+        "type": "multicheckbox",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "eutanasia",
+              "label": "Eutanàsia"
+            },
+            {
+              "value": "muerte",
+              "label": "El procés implica la mort de l'animal"
+            },
+            {
+              "value": "mantenimiento",
+              "label": "Manteniment amb vida"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Ha d'indicar, a l'apartat corresponent, el nombre d'animals per a cada destinació."
+      },
+      {
+        "key": "justificarMantenimiento",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!model.destinoFinalCheck || !model.destinoFinalCheck.some(destino => destino === 'mantenimiento')",
+        "templateOptions": {
+          "name": "Justificar",
+          "required": true
+        }
+      }
+    ]
+  }
+]

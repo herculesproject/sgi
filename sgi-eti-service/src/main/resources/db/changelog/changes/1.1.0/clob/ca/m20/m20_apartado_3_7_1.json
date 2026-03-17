@@ -1,0 +1,109 @@
+[
+  {
+    "key": "ap3_7_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.1 Procediments/Intervencions que es faran a l'animal"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Anomenem 'procediments/intervencions' les manipulacions (quirúrgiques o no), proves o observacions a què és sotmès l'animal al llarg del procés d'experimentació.</p>"
+      },
+      {
+        "template": "<p>Descriure <strong>PORMENORITZADAMENT</strong> (i <strong>numerats</strong>) tots els procediments/intervencions a què l'animal és sotmès al llarg del procés d'experimentació. Detallar especialment aquelles en què es preveu que pugui patir 'un nivell de dolor, patiment, angoixa o dany durador, equivalent o superior al causat per la introducció d'una agulla d'acord amb la bona pràctica veterinària'.</p>"
+      },
+      {
+        "key": "descripcionProcedimientoIntervencion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Descripció del procediment/intervenció",
+          "required": false
+        }
+      },
+      {
+        "template": "<p>Indicar la durada de cada procediment/intervenció, freqüència de realització, nombre d'animals de cada procediment i categoria de severitat.</p></br><p>La classificació de la severitat que es preveu que l'animal pugui experimentar dolor, patiment o ansietat, es realitza d'acord amb la següent classificació:<ul><li><strong>Sense recuperació</strong>: els procediments la qual l'animal no recuperarà la consciència han de classificar-se com de no recuperació.</li><li><strong>Lleu</strong>: els procediments/intervencions en animals a conseqüència de les quals és probable que experimenti dolor, patiment o angoixa lleus de curta de durada, així com els procediments/intervencions sense alteració significativa del benestar o de l'estat general dels animals lleus.</li><li><strong>Moderada</strong>: els procediments/intervencions en animals a conseqüència de les quals és probable que experimentin dolor, patiment o angoixa moderats de curta durada però duradors, així com els procediments/intervencions que poguessin causar una alteració moderada del benestar o l'estat general dels animals han de classificar-se com a moderades.</li><li><strong>Severa</strong>: els procediments/intervencions en animals a conseqüència de les quals és probable que experimentin dolor, patiment o angoixa intensos, o moderats però duradors, així com els procediments/intervencions que poguessin causar una alteració greu del benestar o de l'estat general dels animals."
+      },
+      {
+        "type": "table-crud",
+        "key": "procedimientoIntervencionMedidaCorrectoraTable",
+        "templateOptions": {
+          "entity": "procediment/intervenció",
+          "gender": "male"
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Mesura correctora"
+          },
+          "fieldGroup": [
+            {
+              "key": "numeroProcedimiento",
+              "type": "input",
+              "templateOptions": {
+                "label": "Nº Procediment/ Intervenció",
+                "required": true,
+                "order": 10
+              }
+            },
+            {
+              "key": "frecuenciaRealizacion",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Freqüència realització",
+                "required": true,
+                "order": 30
+              }
+            },
+            {
+              "key": "numeroAnimales",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Nombre d'animals",
+                "required": true,
+                "order": 40
+              }
+            },
+            {
+              "key": "categoriaSeveridad",
+              "type": "select",
+              "templateOptions": {
+                "label": "Categoria de severitat",
+                "required": true,
+                "order": 50,
+                "options": [
+                  {
+                    "value": "Sin recuperación",
+                    "label": "Sense recuperació"
+                  },
+                  {
+                    "value": "Leve",
+                    "label": "Lleu"
+                  },
+                  {
+                    "value": "Moderada",
+                    "label": "Moderada"
+                  },
+                  {
+                    "value": "Severa",
+                    "label": "Severa"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "warn-div"
+        ],
+        "hideExpression": "!model.procedimientoIntervencionMedidaCorrectoraTable.length > 0",
+        "template": "<p>Si modifiqueu els procediments/intervencions o la vostra severitat, recordeu revisar i actualitzar la taula de l'apartat 4.2.1</p>"
+      }
+    ]
+  }
+]

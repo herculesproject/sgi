@@ -1,0 +1,48 @@
+[
+  {
+    "key": "ap4_2_3_4",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.3.4 Mètodes de descontaminació/desinfecció"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>S'apliquen o contemplen mètodes de descontaminació/desinfecció del material contaminat?</p>"
+      },
+      {
+        "key": "metodosDesinfeccion",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Especificar els mètodes o justificar en cas negatiu"
+      },
+      {
+        "key": "especificarLimitar",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Especificar:",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,141 @@
+[
+  {
+    "key": "ap2_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "2.1 Personal que durà a terme les tasques amb animals"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>A continuació es mostren totes les persones integrants de l'equip investigador. Afegir en aquest apartat qualsevol altra persona que col·labori en el projecte realitzant tasques relacionades amb els animals d'experimentació. cada procediment/intervenció i/o eutanàsia, aplicació del protocol de supervisió, etc.)</li></ul></p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>La normativa respecte a l'experimentació animal està en revisió contínua. Actualment la capacitació necessària per a l'experimentació animal s'especifica a l'ordre ministerial Ordre <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2015-3564' target='_blank'>ECC/566/2015</a>. Ja no es parla de categories A, B, C i D sinó de 'funcions'. De manera simplificada l'equivalència entre totes dues és la següent:<br>Es pot trobar informació sobre cursos de capacitació autoritzats a les pàgines de la <a href='https://secal.es' target='_blank'>SECAL</a> i <a href='https://www.animalaria.org' target='_blank'>ANIMAL A: Funció ai b</li><li>Categoria B: Funció by c</li><li>Categoria C: Funció ci d</li><li>Categoria D1: Funció i</li><li>Categoria D2: Funció fi b</li></ul></p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: recordeu que cal aportar còpia de totes les acreditacions de l'equip investigador a l'apartat '5.1. Acreditacions' perquè quedin arxivades juntament amb la memòria del projecte.</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: A cada sol·licitud només hi ha d'haver una persona amb funció 'd', que a més serà la persona que sol·licita l'avaluació.</p><p>La resta dels integrants de l'equip, tindran la funció 'b' o 'c' en funció que realitzin l'eutanàsia ('b') o els procediments/intervencions ('c'), i n'hi haurà tants com a personal. Aquells que encara no han realitzat el TBS treball sota supervisió (requerit per a l'obtenció de l'acreditació) no es poden incloure com a integrants de l'equip en aquesta sol·licitud, fins que hagin finalitzat el TBS i hagin obtingut la capacitació."
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Aquesta secció s'emplena automàticament a partir de les dades introduïdes a l'apartat <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tasques' target='_blank'><b>Assignació de tasques</b></a> de la <b>Sol·licitud d'avaluació</b> Accediu a aquest punt del menú per realitzar les modificacions necessàries.",
+        "templateOptions": {
+          "replaceTemplatePlaceholders": true
+        }
+      },
+      {
+        "type": "table-crud",
+        "key": "equipoInvestigador",
+        "templateOptions": {
+          "entity": "equip investigador",
+          "gender": "male",
+          "disabled": true
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Equip investigador"
+          },
+          "fieldGroup": [
+            {
+              "key": "nombre",
+              "type": "input",
+              "templateOptions": {
+                "label": "Nom",
+                "order": 10,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
+              }
+            },
+            {
+              "key": "apellidos",
+              "type": "input",
+              "templateOptions": {
+                "label": "Cognoms",
+                "order": 20,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.apellidos"
+              }
+            },
+            {
+              "key": "email",
+              "type": "input",
+              "templateOptions": {
+                "label": "E-mail",
+                "order": 30,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.emails?.find((e)=>e.principal)?.email"
+              }
+            },
+            {
+              "key": "vinculacion",
+              "type": "input",
+              "templateOptions": {
+                "label": "Vinculació",
+                "order": 40,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.vinculacion?.categoriaProfesional?.nombre"
+              }
+            },
+            {
+              "key": "nivelAcademico",
+              "type": "input",
+              "templateOptions": {
+                "label": "Nivell acadèmic",
+                "order": 50,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona.datosAcademicos?.nivelAcademico?.nombre"
+              }
+            },
+            {
+              "key": "tarea",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Tasca",
+                "order": 60,
+                "expressionModelValue": "formState.tareas[$1].tipoTarea?.nombre"
+              }
+            },
+            {
+              "key": "experiencia",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Formació específica o experiència",
+                "order": 70,
+                "expressionModelValue": "formState.tareas[$1].formacionEspecifica?.nombre"
+              }
+            },
+            {
+              "key": "organismo",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Organisme acreditador",
+                "order": 80,
+                "expressionModelValue": "formState.tareas[$1].organismo"
+              }
+            },
+            {
+              "key": "anio",
+              "type": "input",
+              "templateOptions": {
+                "type": "number",
+                "label": "Any",
+                "order": 90,
+                "expressionModelValue": "formState.tareas[$1].anio"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

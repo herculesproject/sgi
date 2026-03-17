@@ -1,0 +1,54 @@
+[
+  {
+    "key": "ap3_7_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.3 Referències de publicacions científiques"
+    },
+    "fieldGroup": [
+      {
+        "template": "Els procediments/intervencions segueixen alguna línia directriu oficial?"
+      },
+      {
+        "key": "siguenDirectrizOficialRadio",
+        "type": "radio",
+        "className": "vertical-radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "si",
+              "label": "Sí, s'especifica a continuació"
+            },
+            {
+              "value": "noConDisenioSimilar",
+              "label": "No, però es faciliten referències de publicacions científiques amb un disseny similar"
+            },
+            {
+              "value": "noSinDisenioSimilar",
+              "label": "No, no hi ha publicacions amb un disseny similar"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: citar les referències més rellevants (màxim 10 línies) de forma completa (autor, títol, publicació, data etc.) i facilitar els documents a l'apartat '5.6 Documentació addicional'.</p>"
+      },
+      {
+        "key": "especificarDirectriz",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!model.siguenDirectrizOficialRadio || model.siguenDirectrizOficialRadio === 'noSinDisenioSimilar'",
+        "templateOptions": {
+          "name": "Especificar",
+          "required": true
+        }
+      }
+    ]
+  }
+]

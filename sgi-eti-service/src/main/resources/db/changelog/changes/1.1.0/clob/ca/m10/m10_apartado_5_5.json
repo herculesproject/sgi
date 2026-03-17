@@ -1,0 +1,47 @@
+[
+  {
+    "key": "ap5_5",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.5 Informe de la Comissió de Garanties"
+    },
+    "fieldGroup": [
+      {
+        "template": "El projecte requereix informe previ favorable de la Comissió de Garanties?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Requeriran l'informe previ favorable de la Comissió de Garanties per a la Donació i Utilització de Cèl·lules i Teixits Humans, els projectes de recerca que versin en tot o en part sobre les matèries següents:</p><ul><li>La investigació amb preembrions humans per a la derivació de línies cel·lulars, per a la investigació embriològica i per a altres usos de recerca assistida.</li><li>La investigació amb cèl·lules troncals embrionàries humanes.</li><li>L'activació d'ovòcits mitjançant transferència nuclear per al seu ús amb fins terapèutics o de recerca.</li><li>Qualsevol altra tècnica que, utilitzant en tot o en part mostres biològiques d'origen humà, pugui donar lloc a l'obtenció de la cèl·lula e. embrionaris obtinguts per qualsevol dels procediments assenyalats a l'article <3.2. material cel·lular d'origen embrionari humà o un altre de funcionalment semblant.</li><li>La investigació amb línies de cèl·lules troncals embrionàries que provinguin d'un altre país, intracomunitari o extracomunitari. Aquest origen vindrà especificat en el projecte presentat a informe.</li></ul><p>Per a més informació consultar el <a href='https://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a35' target= 14/2007</a></p>"
+      },
+      {
+        "key": "informeComisionGarantiasRadio",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "No"
+            },
+            {
+              "value": "INFORME_GARANTIAS",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: només es podrà constestar <b>Sí</b> si a l'apartat '3.5 Mostres biològiques d'origen humà' s'ha seleccionat alguna de les opcions marcades amb asterisc <b>*</b>.</p>"
+      }
+    ]
+  }
+]

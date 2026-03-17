@@ -1,0 +1,31 @@
+[
+  {
+    "key": "ap4_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.2 Selecció equitativa de la mostra"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Justificar l'elecció de la mostra d'estudi i descriure les mesures que garanteixen l'equitat en el procés de reclutament.<p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>No s'ha de confondre la <strong>selecció equitativa</strong> dels subjectes amb els <strong>criteris de selecció</strong> ja descrits a l'apartat de metodologia.</p><p>La selecció equitativa de la mostra es relaciona amb un dels principis bàsics de l'ètica en la investigació: <strong>justícia</strong>. reclutament dels subjectes d'estudi es faci per raons relacionades amb els interrogants científics inclosos en la investigació i que no amagui altres interessos o motius no científics, com per exemple: fàcil disponibilitat, proximitat, amistat, facilitat en l'obtenció del consentiment, no requerir autoritzacions, reservar les investigacions amb més risc per a col·lectius discriminats, etc.</p><p </p><ul><li>Que la investigació suposi beneficis potencials per als subjectes o població seleccionats.</li><li>Que els subjectes o poblacions potencialment beneficiàries no siguin exclosos de la selecció si no hi ha raons científiques per fer-ho.</li><li>Que la distribució de càrregues i beneficis sigui justa perquè les investigacions que impliquin risc no recaiguin sobre subjectes altres.</li></ul><p>Per a més informació sobre la selecció equitativa de la mostra consulteu:</p><ul><li><a href='http://www.bioeticayderecho.ub.edu/archivos/norm/InformeBelmont.pdf' target='_blank'>Informe Belmont</a></li><li href='https://www.unesco.org/en/ethics-science-technology/bioethics-and-human-rights' target='_blank'>Declaració Universal sobre Bioètica i Drets Humans (UNESCO) en éssers humans</a></li><li>Document de la CIOMS '<a href='https://cioms.ch/publications/product/pautas-eticas-internacionales-para-la-investigacion-relacionada-con-la-salud-con-seres-humanos/' target='_blank'>Pautes ètiques internacionals per a la recerca biomèdica en éssers humans</a>'</li></li>"
+      },
+      {
+        "key": "equitativaMuestra",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Justificació",
+          "required": true
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,78 @@
+[
+  {
+    "key": "ap3_4_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.4.2 Reclutament realitzat per personal aliè a l'equip investigador"
+    },
+    "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>¿El reclutament serà realitzat per algú aliè a l'equip investigador?</p>"
+      },
+      {
+        "key": "reclutamientoPersonalAjenoRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "<p>Rep algun tipus de compensació?</p>",
+        "hideExpression": "!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'no'"
+      },
+      {
+        "key": "tipoCompensacionRadio",
+        "type": "radio",
+        "hideExpression": "!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'no'",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "tipoCompensacionTexto",
+        "type": "i18n-textarea",
+        "hideExpression": "(!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'no') || ((!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'si') && (!model.tipoCompensacionRadio || model.tipoCompensacionRadio === 'no'))",
+        "templateOptions": {
+          "label": "Tipus de compensació",
+          "placeholder": "Tipus de compensació",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Si el reclutament es realitza des dun centre aliè a la Universitat, i que a més autoritza la realització del dit projecte a les seves instal·lacions, amb els seus associats, etc. heu d'afegir a l'apartat '5.3.' el document d'autorització del centre on es detallarà la tasca de reclutament.</p>"
+      }
+    ]
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "key": "ap3_4_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.4.1 Exposició no intencionada o incidental"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>En aquesta activitat, es realitzen tasques en què hi pot haver exposició no intencionada o incidental a agents biològics?</p>"
+      },
+      {
+        "key": "agentesBiologicosRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Tipus de material biològic que s'utilitza",
+        "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'"
+      },
+      {
+        "type": "multicheckbox",
+        "key": "muestrasBiologicasCheck",
+        "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
+        "templateOptions": {
+          "label": "Opcions:",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "criaymanejoanimales",
+              "label": "Cria i maneig d'animals"
+            },
+            {
+              "value": "tejidossangrefluidosanimales",
+              "label": "Teixits/sang/fluids animals"
+            },
+            {
+              "value": "tejidossangrefluidoshumanos",
+              "label": "Teixits/sang/fluids humans"
+            },
+            {
+              "value": "otros",
+              "label": "Altres"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Indicar el tipus de material biològic",
+        "hideExpression": "!((model.agentesBiologicosRadio && model.agentesBiologicosRadio === 'si') && (model.muestrasBiologicasCheck && model.muestrasBiologicasCheck.find((m) => m === 'otros')))"
+      },
+      {
+        "key": "tipoMaterialBiologico",
+        "type": "i18n-textarea",
+        "hideExpression": "!((model.agentesBiologicosRadio && model.agentesBiologicosRadio === 'si') && (model.muestrasBiologicasCheck && model.muestrasBiologicasCheck.find((m) => m === 'otros')))",
+        "templateOptions": {
+          "label": "Indicar:",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

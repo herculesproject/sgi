@@ -1,0 +1,87 @@
+[
+  {
+    "key": "ap4_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.3 Protecció de grups especialment vulnerables"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Es tracta de persones especialment vulnerables? (menors, persones legalment incapacitades, etc.)</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Són persones especialment vulnerables aquelles que de manera absoluta o relativa no poden protegir els seus propis interessos. Es considera que aquesta capacitat es veu alterada quan es dóna alguna d'aquestes circumstàncies:</p><ul><li>Està limitada la seva autonomia o autogestió per agents interns (ex. menors, algunes malalties psíquiques greus, etc.), o externs (persones institucionalitzades, relacions de subordinació, recepció de subsidis en condicions de garantia de condicions en la seva precisió en condicions de la seva precisió en condicions de la seva atenció en condicions de la seva cura en condicions de la seva necessitat en condicions de la seva atenció a les condicions d'accés a les condicions d'accés a les condicions de seguretat i no discriminació (ex. persones en risc d'exclusió, amb alguna discapacitat, etc.)</li><ul><p>Per a més informació sobre grups especialment vulnerables i les seves implicacions ètiques consulteu el document de la CIOMS <a href='https://cioms.ch/publications/product/pautas-eticas-internacionales-para-la-investigacion-relacionada-con-la-salud-con-seres-humanos/' target='_blank'>Pautes ètiques internacionals per a la investigació biomèdica en éssers humans</a> (pauta 1"
+      },
+      {
+        "key": "gruposVulnerablesRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "label": "Trieu opció:",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Especificar col·lectius de persones especialment vulnerables",
+        "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'"
+      },
+      {
+        "key": "especificarColectivoVulnerables",
+        "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Especificar",
+          "required": true
+        }
+      },
+      {
+        "template": "Justificar per què no es planteja la utilització de persones menys vulnerables",
+        "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'"
+      },
+      {
+        "key": "justificarPersonasMenosVulnerables",
+        "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Justificar",
+          "required": true
+        }
+      },
+      {
+        "template": "<p>Especificar en què poden beneficiar els resultats d'aquestes investigacions a aquestes persones o col·lectius</p><p>especialment vulnerables.</p>",
+        "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'"
+      },
+      {
+        "key": "especificarBeneficiosInvestigacionVulnerables",
+        "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Especificar",
+          "required": true
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: recordeu que la condició especial d'aquestes persones s'ha de tenir en compte i obliga a:</p><ul><li>Cuidar al màxim qüestions com la voluntarietat, informació, consentiment, procés de reclutament, etc. (veure apartats 3.4.1, 4.1 i 4.2).</li><li>En cas de menors de 12 anys s'ha d'incloure la signatura dels dos progenitors al document de consentiment, entre 12 i 18 anys s'ha d'incorporar també l'assentiment del menor, i en persones legalment incapacitades, s'ha d'incloure la signatura2. mínima)</li></ul><p>Per a més informació sobre protecció de grups vulnerables consultar els <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a20' target='_blank'>article 2 14/2007.</p>",
+        "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'"
+      }
+    ]
+  }
+]

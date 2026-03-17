@@ -1,0 +1,306 @@
+[
+  {
+    "key": "ap1_1_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "1.1.1 Final específic del projecte"
+    },
+    "fieldGroup": [
+      {
+        "template": "Indicar la fi específica del projecte:"
+      },
+      {
+        "key": "finEspecificoProyecto",
+        "type": "select",
+        "templateOptions": {
+          "label": "Seleccioneu",
+          "required": true,
+          "options": [
+            {
+              "label": "[PB1] Investigació Bàsica. Oncologia",
+              "value": "PB1"
+            },
+            {
+              "label": "[PB2] Investigació Bàsica. Sistema cardiovascular, sanguini i limfàtic",
+              "value": "PB2"
+            },
+            {
+              "label": "[PB3] Investigació Bàsica. Sistema nerviós",
+              "value": "PB3"
+            },
+            {
+              "label": "[PB4] Investigació Bàsica. Sistema respiratori",
+              "value": "PB4"
+            },
+            {
+              "label": "[PB5] Investigació Bàsica. Sistema gastrointestinal, fetge inclòs",
+              "value": "PB5"
+            },
+            {
+              "label": "[PB6] Investigació Bàsica. Sistema musculoesquelètic",
+              "value": "PB6"
+            },
+            {
+              "label": "[PB7] Investigació Bàsica. Sistema immunitari",
+              "value": "PB7"
+            },
+            {
+              "label": "[PB8] Investigació Bàsica. Sistema urogenital-reproductor",
+              "value": "PB8"
+            },
+            {
+              "label": "[PB9] Investigació Bàsica. Òrgans sensorials (pell/ulls/oïdes)",
+              "value": "PB9"
+            },
+            {
+              "label": "[PB10] Investigació Bàsica. Sistema endocrí/metabolisme",
+              "value": "PB10"
+            },
+            {
+              "label": "[PB11] Investigació Bàsica. Sistema multisistèmic",
+              "value": "PB11"
+            },
+            {
+              "label": "[PB12] Investigació Bàsica. Etologia/Comportament animal/Biologia animal",
+              "value": "PB12"
+            },
+            {
+              "label": "[PB13] Investigació Bàsica. Altres",
+              "value": "PB13"
+            },
+            {
+              "label": "[PT21] Investigació translacional i aplicada. Càncer humà",
+              "value": "PT21"
+            },
+            {
+              "label": "[PT22] Investigació translacional i aplicada. Malalties infeccioses humanes",
+              "value": "PT22"
+            },
+            {
+              "label": "[PT23] Investigació translacional i aplicada. Malalties cardiovasculars humanes",
+              "value": "PT23"
+            },
+            {
+              "label": "[PT24] Investigació translacional i aplicada. Malalties nervioses i mentals humanes",
+              "value": "PT24"
+            },
+            {
+              "label": "[PT25] Investigació translacional i aplicada. Malalties respiratòries humanes",
+              "value": "PT25"
+            },
+            {
+              "label": "[PT26] Investigació translacional i aplicada. Malalties gastrointestinals, incloses hepàtiques",
+              "value": "PT26"
+            },
+            {
+              "label": "[PT27] Investigació translacional i aplicada. Malalties musculoesquelètiques humanes",
+              "value": "PT27"
+            },
+            {
+              "label": "[PT28] Investigació translacional i aplicada. Malalties immunològiques humanes",
+              "value": "PT28"
+            },
+            {
+              "label": "[PT29] Investigació translacional i aplicada. Malalties humanes urogenitals i de laparell reproductor",
+              "value": "PT29"
+            },
+            {
+              "label": "[PT30] Investigació translacional i aplicada. Malalties humanes dels òrgans dels sentits (pell/ulls/oïdes)",
+              "value": "PT30"
+            },
+            {
+              "label": "[PT31] Investigació translacional i aplicada. Malalties humanes endocrines i metabòliques",
+              "value": "PT31"
+            },
+            {
+              "label": "[PT32] Investigació translacional i aplicada. Altres malalties humanes",
+              "value": "PT32"
+            },
+            {
+              "label": "[PT33] Investigació translacional i aplicada. Malalties dels animals",
+              "value": "PT33"
+            },
+            {
+              "label": "[PT34] Investigació translacional i aplicada. Benestar dels animals",
+              "value": "PT34"
+            },
+            {
+              "label": "[PT35] Investigació translacional i aplicada. Diagnòstic de malalties",
+              "value": "PT35"
+            },
+            {
+              "label": "[PT36] Investigació translacional i aplicada. Malalties de les plantes",
+              "value": "PT36"
+            },
+            {
+              "label": "[PT37] Investigació translacional i aplicada. Toxicologia i ecotoxicologia no reglamentàries",
+              "value": "PT37"
+            },
+            {
+              "label": "[PE40] Protecció del medi ambient natural en interès de la salut o el benestar dels éssers humans o dels animals",
+              "value": "PE40"
+            },
+            {
+              "label": "[PS41] Preservació d'espècies",
+              "value": "PS41"
+            },
+            {
+              "label": "[PE42] Ensenyament superior o formació per a l'adquisició, el manteniment o la millora de les competències professionals",
+              "value": "PE42"
+            },
+            {
+              "label": "[PF43] Investigacions forenses",
+              "value": "PF43"
+            },
+            {
+              "label": "[PG43] Manteniment de colònies d'animals genèticament alterats, no utilitzats en altres procediments",
+              "value": "PG43"
+            },
+            {
+              "label": "[PR51] Utilització reglamentària i producció rutinària. Productes sanguinis",
+              "value": "PR51"
+            },
+            {
+              "label": "[PR52] Utilització reglamentària i producció rutinària. Anticossos monoclonals",
+              "value": "PR52"
+            },
+            {
+              "label": "[PR53] Utilització reglamentària i producció rutinària. Altres",
+              "value": "PR53"
+            },
+            {
+              "label": "[PR61] Utilització reglamentària/control de qualitat. Assajos de seguretat dels lots",
+              "value": "PR61"
+            },
+            {
+              "label": "[PR62] Utilització reglamentària/control de qualitat. Assajos de pirogenicitat",
+              "value": "PR62"
+            },
+            {
+              "label": "[PR63] Utilització reglamentària/control de qualitat. Assajos de potència dels lots",
+              "value": "PR63"
+            },
+            {
+              "label": "[PR64] Utilització reglamentària/control de qualitat. Altres controls de qualitat",
+              "value": "PR64"
+            },
+            {
+              "label": "[PR71] Utilització reglamentària. Altres controls d'eficàcia i de tolerància",
+              "value": "PR71"
+            },
+            {
+              "label": "[PR81] Utilització reglamentària/Toxicitat i seguretat/aguda i sub-aguda. LD50, LC50",
+              "value": "PR81"
+            },
+            {
+              "label": "[PR82] Utilització reglamentària/Toxicitat i seguretat/aguda i subaguda. Altres mètodes letals",
+              "value": "PR82"
+            },
+            {
+              "label": "[PR83] Utilització reglamentària/Toxicitat i seguretat/Aguda i subaguda. Mètodes no letals",
+              "value": "PR83"
+            },
+            {
+              "label": "[PR84] Utilització reglamentària/Toxicitat i seguretat. Irritació/corrosió cutània",
+              "value": "PR84"
+            },
+            {
+              "label": "[PR85] Utilització reglamentària/Toxicitat i seguretat. Sensibilització cutània",
+              "value": "PR85"
+            },
+            {
+              "label": "[PR86] Utilització reglamentària/Toxicitat i seguretat. Irritació/corrosió ocular",
+              "value": "PR86"
+            },
+            {
+              "label": "[PR87] Utilització reglamentària/Toxicitat i seguretat/Toxicitat per dosis repetides. Fins a 28 dies",
+              "value": "PR87"
+            },
+            {
+              "label": "[PR88] Utilització reglamentària/Toxicitat i seguretat/Toxicitat per dosis repetides. Entre 29 i 90 dies",
+              "value": "PR88"
+            },
+            {
+              "label": "[PR89] Utilització reglamentària/Toxicitat i seguretat/Toxicitat per dosis repetides. Més de 90 dies",
+              "value": "PR89"
+            },
+            {
+              "label": "[PR90] Utilització reglamentària/Toxicitat i seguretat. Carcinogenicitat",
+              "value": "PR90"
+            },
+            {
+              "label": "[PR91] Utilització reglamentària/Toxicitat i seguretat. Genotoxicitat",
+              "value": "PR91"
+            },
+            {
+              "label": "[PR92] Utilització reglamentària/Toxicitat i seguretat. Toxicitat reproductiva",
+              "value": "PR92"
+            },
+            {
+              "label": "[PR93] Utilització reglamentària/Toxicitat i seguretat. Toxicitat del desenvolupament",
+              "value": "PR93"
+            },
+            {
+              "label": "[PR94] Utilització reglamentària/Toxicitat i seguretat. Neurotoxicitat",
+              "value": "PR94"
+            },
+            {
+              "label": "[PR95] Utilització reglamentària/Toxicitat i seguretat. Cinètica",
+              "value": "PR95"
+            },
+            {
+              "label": "[PR96] Utilització reglamentària/Toxicitat i seguretat. Farmacodinàmica (inclosa la farmacologia de seguretat)",
+              "value": "PR96"
+            },
+            {
+              "label": "[PR97] Utilització reglamentària/Toxicitat i seguretat. Fototoxicitat",
+              "value": "PR97"
+            },
+            {
+              "label": "[PR98] Utilització reglamentària/Toxicitat i seguretat/Ecotoxicitat. Toxicitat aguda",
+              "value": "PR98"
+            },
+            {
+              "label": "[PR99] Utilització reglamentària/Toxicitat i seguretat/Ecotoxicitat. Toxicitat crònica",
+              "value": "PR99"
+            },
+            {
+              "label": "[PR100] Utilització reglamentària/Toxicitat i seguretat/Ecotoxicitat. Toxicitat reproductiva",
+              "value": "PR100"
+            },
+            {
+              "label": "[PR101] Utilització reglamentària/Toxicitat i seguretat/Ecotoxicitat. Activitat endocrina",
+              "value": "PR101"
+            },
+            {
+              "label": "[PR102] Utilització reglamentària/Toxicitat i seguretat/Ecotoxicitat. Bioacumulació",
+              "value": "PR102"
+            },
+            {
+              "label": "[PR103] Utilització reglamentària/Toxicitat i seguretat/Ecotoxicitat. Altres",
+              "value": "PR103"
+            },
+            {
+              "label": "[PR104] Utilització reglamentària/Toxicitat i seguretat. Assajos de seguretat a l'àmbit de l'alimentació humana i animal",
+              "value": "PR104"
+            },
+            {
+              "label": "[PR105] Utilització reglamentària/Toxicitat i seguretat. Seguretat dels animals destinataris",
+              "value": "PR105"
+            },
+            {
+              "label": "[PR106] Utilització reglamentària/Toxicitat i seguretat. Altres",
+              "value": "PR106"
+            },
+            {
+              "label": "[PN107] Fins aliens a la UE",
+              "value": "PN107"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,94 @@
+[
+  {
+    "key": "ap3_5_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.5.2 Destinació de les mostres d'origen humà"
+    },
+    "hideExpression": "!formState.mainModel.ap3_5.muestrasBiologicasRadio || formState.mainModel.ap3_5.muestrasBiologicasRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "Què farà amb les mostres d'origen humà un cop ja no siguin necessàries per a aquest projecte?"
+      },
+      {
+        "type": "multicheckbox",
+        "key": "destinoMuestrasCheck",
+        "templateOptions": {
+          "label": "Destinació",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "destruccion",
+              "label": "Destrucció"
+            },
+            {
+              "value": "conservacion",
+              "label": "Conservació anonimitzada per a utilització posterior"
+            },
+            {
+              "value": "cesionBiobanco",
+              "label": "Cessió gratuïta a Biobanc"
+            },
+            {
+              "value": "usoColeccionMuestras",
+              "label": "Ús integrat en col·lecció de mostres"
+            },
+            {
+              "value": "incorporacionColeccionMuestras",
+              "label": "Incorporació a una col·lecció de mostres"
+            }
+          ]
+        }
+      },
+      {
+        "key": "especificarCesionBiobanco",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'cesionBiobanco')",
+        "templateOptions": {
+          "label": "Especificar cessió a Biobanc",
+          "placeholder": "Especificar cessió a Biobanc",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "key": "especificarUsoColeccionMuestras",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'usoColeccionMuestras')",
+        "templateOptions": {
+          "label": "Especificar col·lecció i registre",
+          "placeholder": "Especificar col·lecció i registre",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "key": "especificarIncorporacionColeccionMuestras",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'incorporacionColeccionMuestras')",
+        "templateOptions": {
+          "label": "Especificar incorporació a col·lecció",
+          "placeholder": "Especificar incorporació a col·lecció",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Recordeu que el/la participant té dret a conèixer i decidir la destinació de les vostres mostres i n'ha de ser informat al <strong>document de consentiment</strong> (apartat 4.4.8 Dret a decidir sobre la destinació de les mostres').</p><p>Per obtenir més informació sobre la informació mínima exigida consulta el <a> href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a59' target='_blank'>article 59</a> de la LIB 14/2007.</p>"
+      }
+    ]
+  }
+]
