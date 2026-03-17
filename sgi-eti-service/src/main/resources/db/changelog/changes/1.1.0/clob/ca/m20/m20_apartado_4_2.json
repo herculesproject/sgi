@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap4_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "4.2 Refinament"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>S'entén per refinament la utilització de sistemes que permetin disminuir la severitat del dany infringit als animals així com alleujar o reduir el possible dolor o malestar que hagin de patir. Entre aquestes estratègies s'inclou la classificació de la severitat, el control del patiment, l'ús de mesures corretores com ara anestèsia i analgèsia així com l'eutanàsia humanitària programada i no programada.</p>"
+      }
+    ]
+  }
+]

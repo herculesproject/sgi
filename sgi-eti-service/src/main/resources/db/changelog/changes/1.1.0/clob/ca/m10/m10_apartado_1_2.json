@@ -1,0 +1,26 @@
+[
+  {
+    "key": "ap1_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "1.2 Justificació de lús déssers humans"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Exposar breument la necessitat d'utilitzar éssers humans, les mostres o les dades, relacionant-la amb els beneficis que s'esperen respecte a l'augment del coneixement o millora de les condicions de vida.</p><p>Si a més s'espera que beneficiï la població estudiada, explicar com ho farà.</p>"
+      },
+      {
+        "key": "justificacion",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Justificació",
+          "required": true
+        }
+      }
+    ]
+  }
+]

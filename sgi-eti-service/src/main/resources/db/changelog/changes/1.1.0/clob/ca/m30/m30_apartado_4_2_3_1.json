@@ -1,0 +1,50 @@
+[
+  {
+    "key": "ap4_2_3_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.3.1 Control de l'exposició"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>A més de per a les persones que fan les tasques amb agents biològics i/o organismes modificats genèticament, hi ha risc d'exposició per a altres persones?</p>"
+      },
+      {
+        "key": "riesgoExposicion",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Especificar els qui (equip de manteniment, personal de neteja, personal de l'animalari, etc.) o justificar en cas negatiu.",
+        "hideExpression": "!model.riesgoExposicion"
+      },
+      {
+        "key": "especificarQuienes",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.riesgoExposicion",
+        "templateOptions": {
+          "label": "Especificar:",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

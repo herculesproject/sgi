@@ -1,0 +1,97 @@
+[
+  {
+    "key": "ap3_4",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.4 Intervencions o proves en éssers humans"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>En aquesta activitat es realitzen intervencions o proves en éssers humans?</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>A efectes d'aquest formulari es consideren intervencions o proves els treballs concrets que requereixin la <strong>concurrència directa de l'ésser humà</strong> subjecte de l'experimentació; bé perquè se n'obtingui les mostres biològiques (de forma invasiva o no) o dades de caràcter personal o hagi de realitzar algun test, enquesta, exercici, etc.. </p>"
+      },
+      {
+        "template": "<p>Intervencions o proves en éssers humans</p>"
+      },
+      {
+        "key": "intervencionesSeresHumanosRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "intervencionesSeresHumanosCheck",
+        "type": "multicheckbox",
+        "hideExpression": "!model.intervencionesSeresHumanosRadio || model.intervencionesSeresHumanosRadio === 'no'",
+        "templateOptions": {
+          "label": "Quins",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "entrevistasEncuestas",
+              "label": "Entrevistes, enquestes, qüestionaris, etc."
+            },
+            {
+              "value": "obtencionImagenes",
+              "label": "Obtencio d'imatges, so o similars (fotos, vídeos, enregistraments, RX, ECO, ect)"
+            },
+            {
+              "value": "pruebasFisicas",
+              "label": "Proves físiques"
+            },
+            {
+              "value": "pruebasPsiquicas",
+              "label": "Proves psíquiques"
+            },
+            {
+              "value": "obtencionNoInvasivas",
+              "label": "Obtenció no invasives de mostres"
+            },
+            {
+              "value": "obtencionInvasivas",
+              "label": "Obtenció invasives de mostres"
+            },
+            {
+              "value": "otras",
+              "label": "Altres. Especificar"
+            }
+          ]
+        }
+      },
+      {
+        "key": "otrasTexto",
+        "type": "i18n-textarea",
+        "hideExpression": "!((model.intervencionesSeresHumanosRadio && model.intervencionesSeresHumanosRadio === 'si') && (model.intervencionesSeresHumanosCheck && model.intervencionesSeresHumanosCheck.find((c)=> c === 'otras')))",
+        "templateOptions": {
+          "placeholder": "Altres. Especificar",
+          "label": "Altres. Especificar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "key": "ap5_4",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "5.4 Protocol dactuació en cas daccident biològic o amb substàncies químiques perilloses"
+    },
+    "fieldGroup": [
+      {
+        "template": "A continuació heu de redactar un Protocol d'actuació en cas d'accident biològic o d'accident amb substàncies químiques perilloses, específic per a aquesta memòria i aportar-lo a l'apartat corresponent de 'Documentació'"
+      },
+      {
+        "key": "protocoloActuacion",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": "PROTOCOLO_ACTUACION",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

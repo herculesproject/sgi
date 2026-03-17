@@ -1,0 +1,30 @@
+[
+  {
+    "key": "ap5_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "5.1 Acreditacions"
+    },
+    "fieldGroup": [
+      {
+        "template": "Recordeu que heu d'aportar còpia de totes les acreditacions de l'equip investigador perquè quedin arxivades juntament amb la memòria del projecte."
+      },
+      {
+        "key": "acreditaciones",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": "ACREDITACIONES",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

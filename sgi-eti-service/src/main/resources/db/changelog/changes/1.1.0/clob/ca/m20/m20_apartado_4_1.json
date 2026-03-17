@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap4_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "4.1 Reemplaçament"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Una de les principals eines de què disposen els/les investigadors/es per complir amb el reemplaçament és l'ús de mètodes alternatius. Per mètodes alternatius s'entén aquells que <u>no impliquen l'ús d'animals</u>, permeten <u>reduir el nombre d'animals</u> a utilitzar o <u>substituir-los</u> per altres espècies amb menys grau de patiment.</p><p>Es pot trobar més informació sobre mètodes alternatius a les pàgines web de la <atar' href='https://joint-research-centre.ec.europa.eu/eu-reference-laboratory-alternatives-animal-testing-eurl-ecvam_en'>ECVAM</a> i <a target='_blank' href='http://www.remanet.net/'>REMA</a>.</p>"
+      }
+    ]
+  }
+]

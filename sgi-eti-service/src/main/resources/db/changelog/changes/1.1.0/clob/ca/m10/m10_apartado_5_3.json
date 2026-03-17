@@ -1,0 +1,47 @@
+[
+  {
+    "key": "ap5_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.3 Document dautorització"
+    },
+    "fieldGroup": [
+      {
+        "template": "Si part del vostre projecte es realitza fora de les instal·lacions de la Universitat, disposa del corresponent document d'autorització emès per la persona responsable del centre o lloc?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>En general qualsevol faceta d'un estudi que es realitzi fora de les instal·lacions de la Universitat requerirà de l'autorització o acord signat per part del responsable del Centre o instal·lacions on es realitzi aquesta fase del projecte, inclòs el reclutament de subjectes per a l'estudi, distribució d'informació sobre el projecte, presa de mostres, realització d'enquestes, realització de proves físiques o psicològiques, etc."
+      },
+      {
+        "key": "documentoAutorizacion",
+        "type": "documento",
+        "templateOptions": {
+          "label": "Indicar",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "No"
+            },
+            {
+              "value": "AUTORIZACION",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: descriure als apartats '3.4.1 Procés de reclutament i/o 3.5.3 Descripció de les intervencions'.</p>"
+      }
+    ]
+  }
+]

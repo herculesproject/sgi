@@ -1,0 +1,128 @@
+[
+  {
+    "key": "ap2_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "2.1 Personal que durà a terme les tasques amb agents biològics i/o organismes modificats genèticament"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>S'han d'indicar totes les persones que col·laborin en el projecte fent tasques relacionades amb els agents biològics i/o organismes modificats genèticament.</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Aquesta secció s'emplena automàticament a partir de les dades introduïdes a l'apartat <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tasques' target='_blank'><b>Assignació de tasques</b></a> de la <b>Sol·licitud d'avaluació</b> Accediu a aquest punt del menú per realitzar les modificacions necessàries.",
+        "templateOptions": {
+          "replaceTemplatePlaceholders": true
+        }
+      },
+      {
+        "type": "table-crud",
+        "key": "equipoInvestigador",
+        "templateOptions": {
+          "entity": "equip investigador",
+          "gender": "male",
+          "disabled": true
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Equip investigador"
+          },
+          "fieldGroup": [
+            {
+              "key": "nombre",
+              "type": "input",
+              "templateOptions": {
+                "label": "Nom",
+                "order": 10,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
+              }
+            },
+            {
+              "key": "apellidos",
+              "type": "input",
+              "templateOptions": {
+                "label": "Cognoms",
+                "order": 20,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.apellidos"
+              }
+            },
+            {
+              "key": "email",
+              "type": "input",
+              "templateOptions": {
+                "label": "E-mail",
+                "order": 30,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.emails?.find((e)=>e.principal)?.email"
+              }
+            },
+            {
+              "key": "vinculacion",
+              "type": "input",
+              "templateOptions": {
+                "label": "Vinculació",
+                "order": 40,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.vinculacion?.categoriaProfesional?.nombre"
+              }
+            },
+            {
+              "key": "nivelAcademico",
+              "type": "input",
+              "templateOptions": {
+                "label": "Nivell acadèmic",
+                "order": 50,
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona.datosAcademicos?.nivelAcademico?.nombre"
+              }
+            },
+            {
+              "key": "tarea",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Tasca",
+                "order": 60,
+                "expressionModelValue": "formState.tareas[$1].nombre"
+              }
+            },
+            {
+              "key": "experiencia",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Formació en risc biològic",
+                "order": 70,
+                "expressionModelValue": "formState.tareas[$1].formacion"
+              }
+            },
+            {
+              "key": "organismo",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Organisme acreditador",
+                "order": 80,
+                "expressionModelValue": "formState.tareas[$1].organismo"
+              }
+            },
+            {
+              "key": "anio",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Any",
+                "order": 90,
+                "expressionModelValue": "formState.tareas[$1].anio"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Recordeu que heu d'aportar còpia de totes les acreditacions de l'equip investigador a l'apartat '5.1 Acreditacions' perquè quedin arxivades al costat de la memòria del projecte.</p>"
+      }
+    ]
+  }
+]

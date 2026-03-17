@@ -1,0 +1,48 @@
+[
+  {
+    "key": "ap4_2_3_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.3.3 Mesures de protecció"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>¿Es preveuen mesures segures per a la manipulació dels agents biològics i/o organismes modificats genèticament?</p>"
+      },
+      {
+        "key": "medidasSeguras",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Especificar les mesures o justificar per què no es contemplen en cas negatiu:"
+      },
+      {
+        "key": "especificarLimitar",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Especificar:",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

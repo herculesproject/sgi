@@ -1,0 +1,38 @@
+[
+  {
+    "key": "ap3_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.3 Títol descriptiu"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Aquesta secció s'emplena automàticament a partir de les dades introduïdes al camp <b>Títol descriptiu</b> de l'apartat <a href='#MODULE_PATH#/memorias/#MEMORIA_ID#/dades-generales' target='_blank'><b>Dades generals</b></a> d'aquesta <b> animal. Accediu a aquest punt del menú per realitzar les modificacions necessàries.",
+        "templateOptions": {
+          "replaceTemplatePlaceholders": true
+        }
+      },
+      {
+        "template": "<p>Títol descriptiu del procés experimental.</p>"
+      },
+      {
+        "key": "tituloDescriptivo",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Títol descriptiu",
+          "label": "Títol descriptiu",
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10",
+          "disabled": true,
+          "expressionModelValue": "formState.memoria.titulo"
+        }
+      }
+    ]
+  }
+]

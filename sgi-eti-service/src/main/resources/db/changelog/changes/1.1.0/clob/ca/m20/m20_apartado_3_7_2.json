@@ -1,0 +1,30 @@
+[
+  {
+    "key": "ap3_7_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.2 Durada del procés d'experimentació"
+    },
+    "fieldGroup": [
+      {
+        "template": "Quant de temps dura el procés d'experimentació a què cada animal és sotmès (en dies)?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>La durada s'ha de comptar des del moment en què s'inicia la preparació d'un animal per utilitzar-lo en el procés d'experimentació fins que 'ja no s'hagin de fer observacions ulteriors sobre ell' i 'hagi estat sacrificat, reallotjat o reintegrat a un hàbitat o sistema zootècnic convenient'.</p>"
+      },
+      {
+        "key": "duracionProcesoExperimentacion",
+        "type": "i18n-input",
+        "templateOptions": {
+          "label": "Temps (dies)",
+          "placeholder": "Temps en dies"
+        }
+      }
+    ]
+  }
+]

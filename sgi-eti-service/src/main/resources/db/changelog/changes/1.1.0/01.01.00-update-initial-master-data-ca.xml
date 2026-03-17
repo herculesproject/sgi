@@ -1,0 +1,1645 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+  <property name="defaultLang" value="" />
+
+  <property name="formularioM10Code" value="M10/2026/001" global="false" />
+  <property name="formularioM20Code" value="M20/2026/001" global="false" />
+  <property name="formularioM30Code" value="M30/2026/001" global="false" />
+  <property name="formularioSeguimientoAnualCode" value="SA/2026/001" global="false" />
+  <property name="formularioSeguimientoFinalCode" value="SF/2026/001" global="false" />
+  <property name="formularioRestrospectivaCode" value="R/2026/001" global="false" />
+
+  <!-- FORMULARIO M10 -->
+  <changeSet context="!test" author="master" id="01.01.00-bloques-apartados-m10-ca">
+    <!-- Bloques-->
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') and orden=1 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="VALOR SOCIAL I JUSTIFICACIÓ" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')and orden=2 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="QUALIFICACIÓ DE L'EQUIP INVESTIGADOR" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')and orden=3 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="VALIDESA CIENTÍFICA I METODOLÒGICA" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')and orden=4 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="ASPECTES ÈTICS ESPECÍFICS" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')and orden=5 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="COMPLIMENT DE LA DOCUMENTACIÓ" />
+    </insert>
+
+    <!-- Apartados -->
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Valor social del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Justificació de lús déssers humans" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_1_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Personal que durà a terme les tasques amb éssers humans, les seues mostres i/o les seues dades" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_2_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Objectius científics del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Disseny metodològic del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Referències de publicacions científiques" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Intervencions o proves en éssers humans" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Procés de reclutament" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_4_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Reclutament realitzat per personal aliè a l'equip investigador" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_4_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Descripció de les intervencions o proves" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_4_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Incentius per a la participació" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_4_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Destí de les mostres d'origen humà" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Origen de les mostres" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_5_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Destí de les mostres d'origen humà" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_5_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Dades de caràcter personal" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_3_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Ponderació dels riscos o molèsties" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Tipus de riscos o molèsties" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Valoració dels riscos o molèsties" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_1_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Minimització del risc o molèsties superiors al mínim" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_1_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Assegurament del dany" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_1_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Selecció equitativa de la mostra" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Protecció de grups especialment vulnerables" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Informació i consentiment" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Tipus de consentiment" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_4_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Informació obligatòria mínima" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_4_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Estudis genètics" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Resultat de l'estudi genètic" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_5_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Consell genètic" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_5_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="No-discriminació per motius genètics" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_5_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Estudiants com a subjectes d'investigació" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Justificació de l'ús d'estudiants" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Benefici formatiu per a l'estudiant" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Vinculació acadèmica amb l'equip investigador" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Incentius acadèmics" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Ús de temps lectiu" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Activitats alternatives" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Protecció de la privacitat" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_4_6_7.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Document de consentiment" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Document de cessió de dades" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Document d'autorització" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Document d'acceptació de col·laboració" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Informe de la Comissió de Garanties" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Acord de transferència de mostres" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Documentació addicional" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_7.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 8 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Aclariments al comitè" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_8.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 9 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Informe del Comitè o Comissió de l'organisme extern" />
+      <column name="esquema" valueClobFile="clob/ca/m10/m10_apartado_5_9.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'CONSENTIMIENTO')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Document de consentiment" />
+    </insert>
+
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'CESION_DATOS')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Document de cessió de dades" />
+    </insert>
+
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'AUTORIZACION')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Document d'autorització" />
+    </insert>
+
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'ACEPTACION_COLABORACION')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Document d'acceptació de col·laboració" />
+    </insert>
+
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'INFORME_GARANTIAS')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Informe de la Comissió de Garanties" />
+    </insert>
+
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'ACUERDO_TRANSFERENCIA')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Acord de transferència de mostres" />
+    </insert>
+
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'INFORME_EXTERNO')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Informe del comitè o comissió de l'organisme extern" />
+    </insert>
+
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Documentació addicional" />
+    </insert>
+
+    <!-- Report -->
+    <insert tableName="formulario_report">
+      <column name="formulario_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}')" />
+      <column name="lang" value="ca" />
+      <column name="value_" valueBlobFile="blob/ca/rep-eti-memoria-formulario-M10.docx" />
+    </insert>
+  </changeSet>
+
+  <!-- FORMULARIO M20 -->
+  <changeSet context="!test" author="master" id="01.01.00-bloques-apartados-m20-ca">
+    <!-- Bloques -->
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') and orden=1 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="VALOR SOCIAL I JUSTIFICACIÓ" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') and orden=2 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="QUALIFICACIÓ DE L'EQUIP INVESTIGADOR" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') and orden=3 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="VALIDESA CIENTÍFICA I METODOLÒGICA" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') and orden=4 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="ASPECTES ÈTICS ESPECÍFICS" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') and orden=5 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="COMPLIMENT DE LA DOCUMENTACIÓ" />
+    </insert>
+
+    <!-- Apartados -->
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Valor social del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 1 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Fi específic del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_1_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Justificació de l'ús d'animals" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_1_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Personal que durà a terme les tasques amb animals" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_2_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Objectius científics del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Disseny metodològic del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Títol descriptiu" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Tipus de projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Lloc on es realitzaran els procediments/intervencions amb els animals" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Dades sobre els animals d'experimentació" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Definició" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_6_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Animals modificats genèticament" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_6_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Animals protegits o en perill d'extinció" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_6_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Nombre d'animals a utilitzar" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_6_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Període del projecte durant el qual s'utilitzaran els animals" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_6_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Procés d'experimentació al qual serà sotmès l'animal" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Procediments/Intervencions que es realitzaran a l'animal" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Durada del procés d'experimentació" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Referències de publicacions científiques" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Procediments/Intervencions quirúrgiques" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Analgesi" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Anestèsia" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Administració de substàncies" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_7.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 8 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Agents biològics" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_8.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 9 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Administració d'isòtops radioactius" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_9.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 10 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Extracció de sang" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_10.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 11 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Privació d'aliment i/o aigua" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_11.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 12 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Destí final" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_12.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 13 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Eutanàsia" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_13.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 14 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Manteniment amb vida" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_3_7_14.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Substitució" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Mètodes alternatius" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Fonts consultades per a la recerca de mètodes alternatius" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_1_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Elecció de l'espècie" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_1_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Refinament" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Valoració de la severitat i mesures correctores davant del dolor, sofriment o l'angoixa de l'animal" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_2_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="No aplicació de mesures correctores" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_2_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Severitat global" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_2_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Protocol de supervisió" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_2_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Criteris de punt final" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_2_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Reducció" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Justificació de la mida mostral i tractament estadístic" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_3_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Reutilització" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_3_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Excepcions de reutilització" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_4_3_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Acreditacions" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_5_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Informe veterinari" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_5_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Avaluació retrospectiva" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_5_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Situacions especials, excepcionals o salvaguardies legals" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_5_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Resum no tècnic (RNT)" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_5_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Documentació addicional" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_5_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Aclariments al comitè" />
+      <column name="esquema" valueClobFile="clob/ca/m20/m20_apartado_5_7.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'ACREDITACIONES')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Acreditacions" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'INFORME_VETERINARIO')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Informe veterinari" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'SOLICITUD_RAZONADA')" />
+      <column name="lang" value="ca" />
+      <column name="value_"
+        value="Sol·licitud Raonada adreçada al Comitè Habilitat i a l'Òrgan Competent" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'RESUMEN_RNT')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Resum anònim no tècnic RNT" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Documentació addicional" />
+    </insert>
+
+    <!-- Report -->
+    <insert tableName="formulario_report">
+      <column name="formulario_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}')" />
+      <column name="lang" value="ca" />
+      <column name="value_" valueBlobFile="blob/ca/rep-eti-memoria-formulario-M20.docx" />
+    </insert>
+  </changeSet>
+
+  <!-- FORMULARIO M30 -->
+  <changeSet context="!test" author="master" id="01.01.00-bloques-apartados-m30-ca">
+    <!-- Bloques -->
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') and orden=1 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="VALOR SOCIAL I JUSTIFICACIÓ" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') and orden=2 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="QUALIFICACIÓ DE L'EQUIP INVESTIGADOR" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') and orden=3 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="VALIDESA CIENTÍFICA I METODOLÒGICA" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') and orden=4 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="ASPECTES ÈTICS ESPECÍFICS" />
+    </insert>
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') and orden=5 )" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="COMPLIMENT DE LA DOCUMENTACIÓ" />
+    </insert>
+
+    <!-- Apartados -->
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Valor social del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Justificació de l'ús d'agents biològics" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_1_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Personal que realitzarà les tasques amb agents biològics i/o organismes modificats genèticament" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_2_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Objectius científics del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Disseny metodològic del projecte" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Referències de publicacions científiques" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Tipus d'exposició" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Exposició no intencionada o incidental" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_4_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Exposició deliberada" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_4_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Ús confinat d'organismes modificats genèticament" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_4_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Substàncies químiques perilloses" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_4_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Substàncies radioactives" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_4_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Dades referents als agents biològics, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Microorganismes/paràsits" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_5_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Cultius cel·lulars" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_5_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Material biològic" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_5_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Organisme modificat genèticament" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_5_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Freqüència i periodicitat d'ús" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_6.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Trajectòria completa dels agents biològics, organismes modificats genèticament, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_3_7.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Avaluació del risc" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Nivell de risc" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Característiques del risc dels agents biològics i/o material biològic, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_1_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Característiques del risc dels organismes modificats genèticament" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_1_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Efectes nocius derivats de l'ús d'agents, material biològic, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_1_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Tractament profilàctic disponible" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_1_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Mesures tècniques de seguretat" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Lloc on es durà a terme la manipulació d'agents biològics, organismes modificats genèticament, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Laboratori de la Universitat" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_1_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Altres centres o llocs aliens a la Universitat" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_1_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Substitució" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Reducció de riscos" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Control de l'exposició" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_3_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Mesures de reducció de l'exposició" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_3_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Mesures de protecció" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_3_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Mètodes de descontaminació/desinfecció" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_3_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Gestió de residus" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_2_3_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Vigilància i protecció de la salut" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Vacunació" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_3_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Mesures especials de protecció" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_4_3_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Acreditacions" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Comunicació de l'ús d'agents biològics i autorització per dur a terme la utilització confinada d'organismes modificats genèticament" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Comunicació de l'ús d'agents biològics" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Autorització per dur a terme la utilització confinada d'organismes modificats genèticament" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id =(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Pregunta 1" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id =(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Pregunta 2" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id =(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Pregunta 3" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id =(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Pregunta 4" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Organisme receptor del qual deriva l'OMG. Especificar nom científic i comú" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_4_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Organisme(s) donant(s): Especificar el nom científic i comú" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_4_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Modificació genètica. Seqüència(s) o gen(s) insertat(s), delecionat(s) o modificat(s). Funció(s)" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_4_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 5 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="En cas d'utilitzar un vector víric, aportar la informació pertinent inclòs en enllaç si s'adquireix comercialment" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_2_2_4_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Assegurança d'accidents i responsabilitat civil" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre"
+        value="Protocol d'actuació en cas d'accident biològic o amb substàncies químiques perilloses" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Documentació addicional" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_5.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Aclariments al comitè" />
+      <column name="esquema" valueClobFile="clob/ca/m30/m30_apartado_5_6.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'ACREDITACIONES')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Acreditacions" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'USO_AGENTES')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Notificació d'ús d'agents biològics" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'SEGURO_RESPONSABILIDAD')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Assegurança de responsabilitat" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'PROTOCOLO_ACTUACION')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Protocol d'actuació" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'AUTORIZACION_CONFINADA')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Autorització ús confinat OMG" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Documentació addicional" />
+    </insert>
+
+    <!-- Report -->
+    <insert tableName="formulario_report">
+      <column name="formulario_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')" />
+      <column name="lang" value="ca" />
+      <column name="value_" valueBlobFile="blob/ca/rep-eti-memoria-formulario-M30.docx" />
+    </insert>
+  </changeSet>
+
+  <!-- FORMULARIO SEGUIMIENTO-ANUAL -->
+  <changeSet context="!test" author="master" id="01.01.00-bloques-apartados-seguimiento-anual-ca">
+    <!-- Bloques -->
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}'))" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Seguimiento Anual" />
+    </insert>
+
+    <!-- Apartados -->
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Fecha de inicio de la actividad de investigación" />
+      <column name="esquema" valueClobFile="clob/ca/seguimiento_anual_apartado_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Equipo investigador" />
+      <column name="esquema" valueClobFile="clob/ca/seguimiento_anual_apartado_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Diseño metodológico" />
+      <column name="esquema" valueClobFile="clob/ca/seguimiento_anual_apartado_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Aspectos éticos específicos" />
+      <column name="esquema" valueClobFile="clob/ca/seguimiento_anual_apartado_4.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Aclaraciones al comité" />
+      <column name="esquema" valueClobFile="clob/ca/seguimiento_anual_apartado_5.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Seguimiento Anual" />
+    </insert>
+
+    <!-- Report -->
+    <insert tableName="formulario_report">
+      <column name="formulario_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}')" />
+      <column name="lang" value="ca" />
+      <column name="value_" valueBlobFile="blob/ca/rep-eti-memoria-formulario-SA.docx" />
+    </insert>
+  </changeSet>
+
+  <!-- FORMULARIO SEGUIMIENTO-FINAL -->
+  <changeSet context="!test" author="master" id="01.01.00-bloques-apartados-seguimiento-final-ca">
+    <!-- Bloques -->
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoFinalCode}'))" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Seguimiento Final" />
+    </insert>
+
+    <!-- Apartados -->
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoFinalCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Descripción y resumen" />
+      <column name="esquema" valueClobFile="clob/ca/seguimiento_final.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoFinalCode}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Seguimiento Final" />
+    </insert>
+
+    <!-- Report -->
+    <insert tableName="formulario_report">
+      <column name="formulario_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoFinalCode}')" />
+      <column name="lang" value="ca" />
+      <column name="value_" valueBlobFile="blob/ca/rep-eti-memoria-formulario-SF.docx" />
+    </insert>
+  </changeSet>
+
+  <!-- FORMULARIO RETROSPECTIVA -->
+  <changeSet context="!test" author="master" id="01.01.00-bloques-retrospectiva-ca">
+    <!-- Bloques -->
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}'))" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Retrospectiva" />
+    </insert>
+    <!-- Apartados -->
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Objetivos" />
+      <column name="esquema" valueClobFile="clob/ca/retrospectiva_apartado_1.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Supervisión" />
+      <column name="esquema" valueClobFile="clob/ca/retrospectiva_apartado_2.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Severidad" />
+      <column name="esquema" valueClobFile="clob/ca/retrospectiva_apartado_3.json" />
+    </insert>
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}')))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Reducción, reemplazo y refinamiento" />
+      <column name="esquema" valueClobFile="clob/ca/retrospectiva_apartado_4.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Retrospectiva" />
+    </insert>
+
+    <!-- Report -->
+    <insert tableName="formulario_report">
+      <column name="formulario_id"
+        valueComputed="(select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}')" />
+      <column name="lang" value="ca" />
+      <column name="value_" valueBlobFile="blob/ca/rep-eti-memoria-formulario-R.docx" />
+    </insert>
+  </changeSet>
+
+  <!-- Comentarios generales -->
+  <changeSet context="!test" author="master" id="01.01.00-bloques-comentario-general-ca">
+    <insert tableName="bloque_nombre">
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where orden = '0' and formulario_id is null)" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="COMENTARIOS GENERALES" />
+    </insert>
+
+    <insert tableName="apartado_definicion">
+      <column name="apartado_id"
+        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = '0' and formulario_id is null))" />
+      <column name="lang" value="ca" />
+      <column name="nombre" value="Comentarios generales" />
+      <column name="esquema" valueClobFile="clob/ca/apartado_comentarios_generales.json" />
+    </insert>
+  </changeSet>
+
+  <!-- FORMULARIO CHECKLIST -->
+  <changeSet context="!test" author="master" id="01.01.00-formly-checklist-ca">
+    <insert tableName="formly_definicion">
+      <column name="formly_id"
+        valueComputed="(select id from ${schemaPrefix}formly where nombre = 'CHECKLIST')" />
+      <column name="lang" value="ca" />
+      <column name="esquema" valueClobFile="clob/ca/checklist.json" />
+    </insert>
+  </changeSet>
+
+  <!-- Comite nombre -->
+  <changeSet context="!test" author="master" id="01.01.00-comine-nombre-ca">
+    <insert tableName="comite_nombre">
+      <column name="comite_id" valueNumeric="1" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Comitè d'Ètica en Investigació amb Éssers Humans" />
+      <column name="genero" value="M" />
+    </insert>
+    <insert tableName="comite_nombre">
+      <column name="comite_id" valueNumeric="2" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Comitè d'Ètica d'Experimentació Animal" />
+      <column name="genero" value="M" />
+    </insert>
+    <insert tableName="comite_nombre">
+      <column name="comite_id" valueNumeric="3" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Comitè d'Ètica de Bioseguretat en Experimentació" />
+      <column name="genero" value="M" />
+    </insert>
+  </changeSet>
+
+  <!-- Formacion Especifica Nombre -->
+  <changeSet context="!test" author="master" id="01.01.00-formacion-especifica-nombre-ca">
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="1" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="A: Cura dels animals" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="2" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="B: Eutanàsia dels animals" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="3" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="C: Realització dels procediments" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="4" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="D: Disseny dels projectes i procediments" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="5" />
+      <column name="lang" value="ca" />
+      <column name="value_"
+        value="E: Responsable de la supervisió &lt;&lt;in situ&gt;&gt; del benestar i cura dels animals" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="6" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="F: Veterinari designat" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="7" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="G: Sense especificar" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="8" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="H: No requereix" />
+    </insert>
+  </changeSet>
+
+  <!-- Tipo Tarea Nombre -->
+  <changeSet context="!test" author="master" id="01.01.00-tipo-tarea-nombre-ca">
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="1" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Disseny de projecte i procediments" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="2" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Eutanàsia" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="3" />
+      <column name="lang" value="ca" />
+      <column name="value_" value="Manipulació d'animals o realització de procediments" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>

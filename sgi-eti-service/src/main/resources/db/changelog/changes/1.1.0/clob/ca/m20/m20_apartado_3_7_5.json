@@ -1,0 +1,46 @@
+[
+  {
+    "key": "ap3_7_5",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.5 Analgèsia"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Hauran d'utilitzar-se analgèsics o altres mètodes idonis per garantir, en la mesura del possible, que el dolor, el patiment, l'angoixa o la lesió siguin mínims. La seva aplicació, quan sigui procedent, ha de ser realitzada o supervisada per un veterinari (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a26'>art, 2 53/13</a>).</p><p>Sempre que sigui compatible amb les finalitats del procediment/intervenció, quan es prevegi que un animal patirà dolor després d'haver-se recuperat de l'anestèsia, se li aplicarà un tractament analgèsic preventiu i pal·liatiu, o un altre mètode adequat per calmar el dolor (<a target=' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a26'>art, 26.5 RD 53/13</a>).</p>"
+      },
+      {
+        "template": "S'utilitzarà analgèsia en algun moment del procés d'experimentació?"
+      },
+      {
+        "key": "analgesiaRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: recordeu que les excepcions requereixen aportar el document corresponent a l'apartat '5.4 Situacions especials'.</p>"
+      }
+    ]
+  }
+]

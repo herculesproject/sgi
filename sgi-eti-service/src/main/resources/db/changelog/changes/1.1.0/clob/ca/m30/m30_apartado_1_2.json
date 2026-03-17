@@ -1,0 +1,31 @@
+[
+  {
+    "key": "ap1_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "1.2 Justificació de lús dagents biològics"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Exposar breument la necessitat dutilització de tots els agents biològics i/o organismes modificats genèticament que es descriuen en lactivitat de recerca.</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Agents biològics: Els agents biològics es defineixen a l'article 2 del Reial Decret 664/199, de 12 de maig</a> a agents biològics durant el treball com 'els microorganismes, amb inclusió dels genèticament modificats, els cultius cel·lulars i els endoparàsits humans, susceptibles d'originar qualsevol tipus d'infecció, al·lèrgia o toxicitat'.</p>"
+      },
+      {
+        "key": "justificacion",
+        "className": "descripcion",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Justificació",
+          "required": true
+        }
+      }
+    ]
+  }
+]

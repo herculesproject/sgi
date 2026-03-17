@@ -1,0 +1,130 @@
+[
+  {
+    "key": "ap3_5_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.5.1 Microorganismes/paràsits"
+    },
+    "hideExpression": "!formState.mainModel.ap3_4.ap3_4_2.tareasAgentesBiologicosRadio || formState.mainModel.ap3_4.ap3_4_2.tareasAgentesBiologicosRadio === 'no'",
+    "fieldGroup": [
+      {
+        "type": "table-crud",
+        "key": "microorganismosParasitosTable",
+        "templateOptions": {
+          "entity": "microorganisme/paràsit",
+          "gender": "male"
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Microorganisme/Paràsit"
+          },
+          "fieldGroup": [
+            {
+              "key": "nombre",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Nom",
+                "order": 10
+              }
+            },
+            {
+              "key": "tipo",
+              "type": "select",
+              "templateOptions": {
+                "label": "Tipus",
+                "order": 20,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "Bacteris i afins"
+                  },
+                  {
+                    "value": "2",
+                    "label": "Virus"
+                  },
+                  {
+                    "value": "3",
+                    "label": "Paràsits"
+                  },
+                  {
+                    "value": "4",
+                    "label": "Fongs"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "grupoRiesgo",
+              "type": "select",
+              "templateOptions": {
+                "label": "Grup de risc",
+                "order": 30,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "Grup 1"
+                  },
+                  {
+                    "value": "2",
+                    "label": "Grup 2"
+                  },
+                  {
+                    "value": "3",
+                    "label": "Grup 3"
+                  },
+                  {
+                    "value": "4",
+                    "label": "Grup 4"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "multicheckbox",
+              "key": "notasAdicionalesCheck",
+              "templateOptions": {
+                "label": "Notes addicionals",
+                "type": "array",
+                "order": 40,
+                "options": [
+                  {
+                    "value": "A",
+                    "label": "A: Possibles efectes al·lèrgics"
+                  },
+                  {
+                    "value": "D",
+                    "label": "D: La llista dels treballadors exposats a l'agent s'ha de conservar durant més de deu anys després de la darrera exposició"
+                  },
+                  {
+                    "value": "T",
+                    "label": "T: Producció de toxines"
+                  },
+                  {
+                    "value": "V",
+                    "label": "V: Vacuna eficaç disponible"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "volumenMaximo",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Volum màxim de cada cultiu",
+                "order": 50
+              }
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Notes addicionals: <strong>A</strong>: Possibles efectes al·lèrgics; <strong>D</strong>: La llista dels treballadors exposats a l'agent s'ha de conservar durant més de deu anys després de la darrera exposició; <strong>T</strong>: Producció de toxines; <strong>V</strong>: Vacuna eficaç disponible"
+      }
+    ]
+  }
+]

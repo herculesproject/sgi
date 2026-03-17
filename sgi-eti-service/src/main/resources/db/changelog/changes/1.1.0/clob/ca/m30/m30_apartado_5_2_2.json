@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap5_2_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "5.2.2 Autorització per dur a terme la utilització confinada d'organismes modificats genèticament"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Consulteu amb la Secretaria Tècnica del Comitè d'Ètica el procediment per a la notificació d'activitats d'utilització confinada d'organismes modificats genèticament.</p>"
+      }
+    ]
+  }
+]

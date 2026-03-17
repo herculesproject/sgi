@@ -1,0 +1,23 @@
+[
+  {
+    "key": "ap5_8",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "5.8 Aclariments al comitè"
+    },
+    "fieldGroup": [
+      {
+        "template": "Incloeu a continuació qualsevol altre aclariment que es consideri necessari per al comitè"
+      },
+      {
+        "key": "aclaracionesComite",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Aclariments"
+        }
+      }
+    ]
+  }
+]

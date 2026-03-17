@@ -1,0 +1,33 @@
+[
+  {
+    "key": "ap3_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.2 Disseny metodològic del projecte"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Aquesta secció s'emplena automàticament a partir de les dades introduïdes al camp <b>Disseny metodològic</b> de l'apartat <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/dades-generales' target='_blank'><b>Dades generals</b></a>. Accediu a aquest punt del menú per realitzar les modificacions necessàries",
+        "templateOptions": {
+          "replaceTemplatePlaceholders": true
+        }
+      },
+      {
+        "key": "disenoMetodologico",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Disseny metodològic",
+          "disabled": true,
+          "required": true,
+          "expressionModelValue": "formState.memoria.peticionEvaluacion.disMetodologico"
+        }
+      }
+    ]
+  }
+]

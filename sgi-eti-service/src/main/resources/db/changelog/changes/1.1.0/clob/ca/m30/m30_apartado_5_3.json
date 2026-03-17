@@ -1,0 +1,16 @@
+[
+  {
+    "key": "ap5_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "5.3 Assegurança d'accidents i responsabilitat civil"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Participar en una activitat de recerca que impliqui risc biològic pot suposar riscos per a l'ésser humà i el medi ambient. Consulteu amb la Secretaria Tècnica del Comitè d'Ètica la necessitat de contractació d'una assegurança de responsabilitat civil.</p>"
+      }
+    ]
+  }
+]

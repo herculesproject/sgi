@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap3_4",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.4 Tipus dexposició"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>L'exposició als agents biològics pot ser de dos tipus.</p><br><ul><li>Exposició per intenció deliberada d'utilitzar o manipular un agent biològic, que constitueix el propòsit principal del treball. Activitats d'aquest tipus serien les desenvolupades amb animals deliberadament infectats o als laboratoris l'activitat principal dels quals constitueix treballar amb agents biològics. Altres activitats enquadrades en aquest grup serien, per exemple, les relacionades amb les indústries de biotecnologia: indústries farmacèutiques (per obtenir antibiòtics, enzims, vacunes virals); indústria alimentària (cervesa, formatges, iogurt); etc.</li><li>Exposició no intencionada o incidental al propòsit principal del treball. En aquest cas l'activitat no implica la manipulació, ni el treball en contacte directe o l'ús deliberat de l'agent biològic, però sí que hi ha un risc de contaminació per agents biològics. Aquest seria el cas del treball en contacte amb éssers humans o animals o els seus productes (teixits, sang o fluids), així com el contacte amb elements o mitjans on aquest agent viu o pot sobreviure (materials, aigua, sòl, aliments, residus...), que servirien com a font d'exposició.</li></ul><p>En aquesta memòria s'inclou a més l'exposició a OMG en tasques."
+      }
+    ]
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "key": "ap4_3_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.3.2 Reutilització"
+    },
+    "fieldGroup": [
+      {
+        "template": "Els animals han estat o seran reutilitzats en un altre projecte de recerca?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Un animal que ja hagi estat utilitzat no haurà de ser sotmès a nous processos experimentals o cap procediment quan en el seu lloc pot ser utilitzat un altre animal al qual no se li hagi realitzat cap procediment/intervenció, llevat que es donin les condicions següents:<br><ul><li>a) Que la severitat de les intervenciomes anteriors fos <u>lleu</u> o <u>moderada</u> general i del benestar de l'animal</li><li>c) Que els/les nous/noves procediments/intervencions estiguin classificades com <u>lleus</u>, <u>moderades</u> o <u>sense recuperació</u> i</li><li>d) Que s'ajusti al dictamen veterinari tenint en compte l'experiència durant la vida de l'animal la lletra a), i amb l'examen veterinari previ de l'animal, l'autoritat competent pot autoritzar la reutilització d'un animal sempre que aquest animal no hagi estat sotmès més d'una vegada a procediments/intervencions que li hagi provocat angoixa i dolor severs o un patiment equivalent. Per a més informació sobre la reutilització d'animals vegeu l'art. 29 i annex X.10 del RD 53-13"
+      },
+      {
+        "key": "reutilizacionRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Reutilitzat",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "anteriorPosteriorCheck",
+        "type": "multicheckbox",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no'",
+        "templateOptions": {
+          "label": "Seleccionar",
+          "required": true,
+          "type": "array",
+          "options": [
+            {
+              "value": "anterior",
+              "label": "Procedeixen d´un projecte ANTERIOR"
+            },
+            {
+              "value": "posterior",
+              "label": "Podran ser utilitzats en un projecte POSTERIOR"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Codi de referència del projecte anterior",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')"
+      },
+      {
+        "key": "codigoRefProyectoAnterior",
+        "type": "i18n-input",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')",
+        "templateOptions": {
+          "label": "Codi",
+          "placeholder": "Codi"
+        }
+      },
+      {
+        "template": "Grau de severitat global del projecte anterior",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')"
+      },
+      {
+        "key": "gradoSeveridadProyectoAnterior",
+        "type": "select",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')",
+        "templateOptions": {
+          "label": "Seleccionar",
+          "options": [
+            {
+              "label": "No recuperació",
+              "value": "1"
+            },
+            {
+              "label": "Lleu",
+              "value": "2"
+            },
+            {
+              "label": "Moderada",
+              "value": "3"
+            },
+            {
+              "label": "Severa",
+              "value": "4"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Codi de referència del projecte posterior",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')"
+      },
+      {
+        "key": "codigoRefProyectoPosterior",
+        "type": "i18n-input",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')",
+        "templateOptions": {
+          "label": "Codi",
+          "placeholder": "Codi"
+        }
+      },
+      {
+        "template": "Grau de severitat global del projecte posterior",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')"
+      },
+      {
+        "key": "gradoSeveridadProyectoPosterior",
+        "type": "select",
+        "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')",
+        "templateOptions": {
+          "label": "Seleccionar",
+          "options": [
+            {
+              "label": "No recuperació",
+              "value": "1"
+            },
+            {
+              "label": "Lleu",
+              "value": "2"
+            },
+            {
+              "label": "Moderada",
+              "value": "3"
+            },
+            {
+              "label": "Severa",
+              "value": "4"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Requereix informe veterinari que cal adjuntar a l'apartat 5.2</p>"
+      }
+    ]
+  }
+]

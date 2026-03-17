@@ -172,19 +172,21 @@ public abstract class SgiDocxReportService {
   protected PdfOptions createCustomPdfOptions() {
     PdfOptions pdfOptions = PdfOptions.create();
     Language lang = SgiLocaleContextHolder.getLanguage();
-    byte[] fontBytes = sgiApiConfService
-        .getResource("rep-font-" + lang.getCode());
-    if (ObjectUtils.isNotEmpty(fontBytes)) {
-      String nameFont = "custom-font-" + lang.getCode() + ".otf";
-      try {
+    try {
+      byte[] fontBytes = sgiApiConfService
+          .getResource("rep-font-" + lang.getCode());
+      if (ObjectUtils.isNotEmpty(fontBytes)) {
+        String nameFont = "custom-font-" + lang.getCode() + ".otf";
+
         BaseFont baseFont = BaseFont.createFont(nameFont, BaseFont.IDENTITY_H,
             BaseFont.EMBEDDED, true, fontBytes, null);
 
         pdfOptions.fontProvider((familyName, encoding, size, style, color) -> new Font(baseFont, size, style, color));
-      } catch (Exception e) {
-        // Si falla la fuente se coge la de por defecto del sistema
-        log.warn(e.getMessage(), e);
+
       }
+    } catch (Exception e) {
+      // Si falla la fuente se coge la de por defecto del sistema
+      log.warn(e.getMessage(), e);
     }
     return pdfOptions;
   }

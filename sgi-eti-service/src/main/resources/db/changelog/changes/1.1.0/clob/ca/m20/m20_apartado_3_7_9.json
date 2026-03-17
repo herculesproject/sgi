@@ -1,0 +1,98 @@
+[
+  {
+    "key": "ap3_7_9",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.7.9 Extracció de sang"
+    },
+    "fieldGroup": [
+      {
+        "template": "S'extraurà sang animal?"
+      },
+      {
+        "key": "extraccionSangreRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "type": "table-crud",
+        "key": "extraccionSangreTable",
+        "hideExpression": "!field.parent.model.extraccionSangreRadio || field.parent.model.extraccionSangreRadio === 'no'",
+        "templateOptions": {
+          "entity": "extracció sang",
+          "gender": "female"
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Extracció sang"
+          },
+          "fieldGroup": [
+            {
+              "key": "lugarAnatomico",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Lloc anatòmic",
+                "order": 10
+              }
+            },
+            {
+              "key": "volumen",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Volum",
+                "order": 20
+              }
+            },
+            {
+              "key": "pauta",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Pauta",
+                "order": 30
+              }
+            },
+            {
+              "key": "analgesiaAnestesia",
+              "type": "select",
+              "templateOptions": {
+                "label": "Analgèsia/Anestèsia",
+                "order": 40,
+                "options": [
+                  {
+                    "label": "Analgèsia",
+                    "value": "1"
+                  },
+                  {
+                    "label": "Anestèsia",
+                    "value": "2"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: en cas dutilitzar analgèsia/anestèsia especificar pauta en lapartat corresponent (3.7.6 i 3.7.14).</p>"
+      }
+    ]
+  }
+]

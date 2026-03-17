@@ -1,0 +1,32 @@
+[
+  {
+    "key": "ap3_4_3",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.4.3 Descripció de les intervencions o proves"
+    },
+    "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>Descriure totes les intervencions o proves a les quals se sotmetrà al subjecte d'estudi per obtenir les mostres o les dades especificant el lloc, la persona encarregada de realitzar-les, la durada i la freqüència.</p>"
+      },
+      {
+        "key": "descripcionIntervenciones",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Intervencions o proves",
+          "required": true
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Recordeu que la persona participant té dret a conèixer totes les intervencions o proves que se us faran o afecten a la vostra participació i n'ha de ser informat en el document de consentiment (apartat '4.4.4 Informació sobre les intervencions o proves').</p><p>Per obtenir més informació sobre la informació mínima exigida consultar el <a> href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>article 15</a> de la LIB 14/2007.</p><p>. documents (qüestionaris, entrevistes, enquestes, etc.) que s'utilitzaran com a instrument de recollida de dades.</b></p>"
+      }
+    ]
+  }
+]

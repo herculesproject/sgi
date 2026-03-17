@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ap4_3",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "4.3 Reducció"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "S'entén per reducció l'ús de qualsevol estratègia encaminada a utilitzar el nombre mínim d'animals necessari per assolir l'objectiu proposat."
+      }
+    ]
+  }
+]

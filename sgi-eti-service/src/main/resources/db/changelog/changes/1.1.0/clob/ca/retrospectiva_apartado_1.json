@@ -1,0 +1,54 @@
+[
+  {
+    "key": "ap1_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "Objectius",
+      "expanded": true
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>Senyaleu si s'han assolit els objectius del projecte de recerca.</p>"
+      },
+      {
+        "key": "cumpleObjetivosRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            },
+            {
+              "value": "parcialmente",
+              "label": "Parcialment"
+            }
+          ]
+        }
+      },
+      {
+        "template": "<p>Justifiqueu la resposta:</p>"
+      },
+      {
+        "key": "justificar",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Justificació",
+          "label": "Justificació",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      }
+    ]
+  }
+]

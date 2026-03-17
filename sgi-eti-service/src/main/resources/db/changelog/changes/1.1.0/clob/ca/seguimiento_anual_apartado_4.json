@@ -1,0 +1,35 @@
+[
+  {
+    "key": "ap1_4",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "Aspectes ètics específics",
+      "expanded": true
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>La descripció respecte als aspectes ètics específics dependrà del comitè a què s'adreça l'informe anual i recollirà el que ha passat l'any objecte de l'informe. #nom_comite_M20_ca# el desenvolupament i els problemes sorgits al voltant del reemplaçament, al refinament ia la reducció.</li><li>Per al #nom_comite_M30_ca# el desenvolupament i els problemes sorgits al voltant de la prevenció dels riscos per a la salut o per al medi ambient relacionats amb els agents biològics</> ."
+      },
+      {
+        "template": "Descriviu breument com es van desenvolupant els aspectes ètics del projecte i assenyaleu els problemes trobats i les seves solucions, si n'hi ha hagut."
+      },
+      {
+        "key": "aspectosEticos",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "placeholder": "Descripció",
+          "label": "Descripció",
+          "required": false,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "20"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,48 @@
+[
+  {
+    "key": "ap4_2_3_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.3.2 Mesures de reducció de l'exposició"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>¿Es preveuen mesures per limitar i reduir al mínim el nombre de persones exposades?</p>"
+      },
+      {
+        "key": "limitarPersonasExpuestas",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Especificar quines mesures o justificar en cas negatiu"
+      },
+      {
+        "key": "especificarLimitar",
+        "type": "i18n-textarea",
+        "templateOptions": {
+          "label": "Especificar:",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

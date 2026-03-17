@@ -1,0 +1,43 @@
+[
+  {
+    "key": "ap4_1_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.1.1 Nivell de risc"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p> Assenyalar el nivell de risc global de lactivitat. En cas de maneig de diversos agents de diferent nivell de risc, considereu el de nivell superior</p>"
+      },
+      {
+        "key": "nivelRiesgo",
+        "type": "radio",
+        "className": "vertical-radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "nivel_1",
+              "label": "Nivell I: Risc individual i poblacional escàs o nul. Microorganismes que tenen poques probabilitats de provocar malalties a l'ésser humà o als animals."
+            },
+            {
+              "value": "nivel_2",
+              "label": "Nivell II: risc individual moderat, risc poblacional baix. Els agents patògens que poden provocar malalties humanes o animals però que tenen poques probabilitats de comportar un risc greu per al personal de laboratori, la població, el bestiar o el medi ambient. L'exposició al laboratori pot provocar una infecció greu, però hi ha mesures preventives i terapèutiques eficaces i el risc de propagació és limitat."
+            },
+            {
+              "value": "nivel_3",
+              "label": "Nivell III: risc individual elevat, risc poblacional baix. Agents patògens que solen provocar malalties humanes o animals greus, però que ordinari no es propaguen d'un individu a un altre. Hi ha mesures preventives i terapèutiques eficaces."
+            },
+            {
+              "value": "nivel_4",
+              "label": "Nivell IV: Risc individual i poblacional elevat. Agents patògens que solen provocar malalties greus a l'ésser humà o als animals i que es transmeten fàcilment d'un individu a un altre, directament o indirectament. Normalment no hi ha mesures preventives i terapèutiques eficaces."
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

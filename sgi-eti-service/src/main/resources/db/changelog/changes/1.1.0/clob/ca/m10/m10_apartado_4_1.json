@@ -1,0 +1,21 @@
+[
+  {
+    "key": "ap4_1",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.1 Ponderació dels riscos o molèsties"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>El balanç entre riscos i beneficis és una de les qüestions bàsiques en ètica de la investigació.</p><p>És responsabilitat de l'investigador o investigadora principal (IP) ponderar amb prudència el risc a què se sotmet els/les participants en relació amb els beneficis esperables per a ells (prèviament descrits a l'apartat 1.2 d'un risc que no ha de justificar ni justificar). ni tan sols si és acceptat voluntàriament. El benestar i la integritat de l'individu prevalen sobre el benefici esperable.</p><p>Per a més informació sobre el balanç risc/benefici consulteu el document de la CIOMS <a href='https://cioms.ch/publications/product/pautas-eticas-internacionales-para-la-investigacion-relacionada-con-la-sal- target='_blank'>Pautes ètiques internacionals per a la recerca biomèdica en éssers humans</a></p>"
+      }
+    ],
+    "hideExpression": "!formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio || formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio === 'no'"
+  }
+]

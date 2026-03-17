@@ -1,0 +1,53 @@
+[
+  {
+    "key": "ap4_6_5",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.6.5 Ús de temps lectiu"
+    },
+    "hideExpression": "!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>Les proves en què participaran els estudiants com a subjectes de recerca es realitzaran durant el temps lectiu?</p>"
+      },
+      {
+        "key": "usoTiempoLectivoRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "label": "Trieu opció:",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "Horari i durada",
+        "hideExpression": "!model.usoTiempoLectivoRadio || model.usoTiempoLectivoRadio === 'no'"
+      },
+      {
+        "key": "horarioYduracion",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.usoTiempoLectivoRadio || model.usoTiempoLectivoRadio === 'no'",
+        "templateOptions": {
+          "label": "Especificar",
+          "placeholder": "Especificar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "key": "ap4_2_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.2 No aplicació de mesures correctores"
+    },
+    "fieldGroup": [
+      {
+        "template": "En cas de no aplicar mesures correctores en algun procediment/intervenció justifiqueu la raó"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Per a més informació sobre mesures correctores (anestèsia i analgèsia) vegeu Art. 26 del RD 53/13."
+      },
+      {
+        "key": "justificarRazon",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Justificar",
+          "required": false
+        }
+      }
+    ]
+  }
+]

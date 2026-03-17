@@ -1,0 +1,86 @@
+[
+  {
+    "key": "ap3_6_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.6.2 Animals modificats genèticament"
+    },
+    "fieldGroup": [
+      {
+        "template": "Alguns dels animals utilitzats són modificats genèticament?"
+      },
+      {
+        "key": "animalesModificadosGeneticamenteRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Requereix informe del #nom_comite_M30_ca#.</p>"
+      },
+      {
+        "template": "¿Impliquen riscos per a la salut humana, animal o per al medi ambient?",
+        "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'"
+      },
+      {
+        "key": "implicanRiesgosRadio",
+        "type": "radio",
+        "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "template": "La modificació genètica pot donar lloc a una progènia o una línia animal que experimenti dolor, patiment, angoixa o dany durador equivalent o superior al causat per la introducció d'una agulla?",
+        "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'"
+      },
+      {
+        "key": "experimentaDolorRadio",
+        "type": "radio",
+        "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

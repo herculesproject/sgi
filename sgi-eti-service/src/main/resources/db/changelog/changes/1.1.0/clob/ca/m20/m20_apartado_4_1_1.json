@@ -1,0 +1,55 @@
+[
+  {
+    "key": "ap4_1_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.1.1 Mètodes alternatius"
+    },
+    "fieldGroup": [
+      {
+        "template": "Quins són els motius pels quals no es planteja aplicar mètodes alternatius als proposats?"
+      },
+      {
+        "key": "metodoAlternativoMotivoRadio",
+        "type": "radio",
+        "className": "vertical-radio",
+        "templateOptions": {
+          "label": "Motiu",
+          "required": true,
+          "options": [
+            {
+              "value": "sonMetodosAlternativos",
+              "label": "Els mètodes proposats ja són mètodes alternatius"
+            },
+            {
+              "value": "existen",
+              "label": "No hi ha mètodes alternatius als proposats"
+            },
+            {
+              "value": "noValidados",
+              "label": "Hi ha mètodes alternatius però no estan validats"
+            },
+            {
+              "value": "otros",
+              "label": "Altres motius"
+            }
+          ]
+        }
+      },
+      {
+        "key": "especificarMotivo",
+        "type": "i18n-textarea",
+        "hideExpression": "!model.metodoAlternativoMotivoRadio || model.metodoAlternativoMotivoRadio === 'sonMetodosAlternativos' || model.metodoAlternativoMotivoRadio === 'existen' || model.metodoAlternativoMotivoRadio === 'noValidados'",
+        "templateOptions": {
+          "label": "Especificar",
+          "required": true,
+          "autosize": true,
+          "autosizeMinRows": "1",
+          "autosizeMaxRows": "10"
+        }
+      }
+    ]
+  }
+]

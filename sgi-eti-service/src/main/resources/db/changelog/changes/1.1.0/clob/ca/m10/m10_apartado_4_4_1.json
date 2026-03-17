@@ -1,0 +1,52 @@
+[
+  {
+    "key": "ap4_4_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.4.1 Tipus de consentiment"
+    },
+    "hideExpression": "!formState.mainModel.ap4_4.informacionConsentimientoRadio || formState.mainModel.ap4_4.informacionConsentimientoRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>Tasca per a la qual se sol·licita el consentiment</p>"
+      },
+      {
+        "type": "multicheckbox",
+        "key": "tipoConsentimientoCheck",
+        "templateOptions": {
+          "label": "Tasca",
+          "type": "array",
+          "required": true,
+          "options": [
+            {
+              "value": "intervencionesInvasivas",
+              "label": "Per realitzar a la persona participant intervencions invasives"
+            },
+            {
+              "value": "intervencionesNoInvasivas",
+              "label": "Per realitzar a la persona participant intervencions no invasives"
+            },
+            {
+              "value": "usoMuestrasProyectoActual",
+              "label": "Per a l'ús de les mostres i/o les dades de la persona participant al projecte actual"
+            },
+            {
+              "value": "usoMuestrasProyectosPosteriores",
+              "label": "Per emmagatzematge i ús de les mostres i/o les dades en projectes posteriors"
+            },
+            {
+              "value": "cesion",
+              "label": "Per cessió"
+            }
+          ]
+        }
+      },
+      {
+        "template": "<p>En els apartats següents es fa un repàs a la informació que es facilitarà al subjecte participant i pot servir de llista de revisió per a l'investigador responsable.</p>"
+      }
+    ]
+  }
+]

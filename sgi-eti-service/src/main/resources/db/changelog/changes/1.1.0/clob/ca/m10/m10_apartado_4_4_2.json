@@ -1,0 +1,18 @@
+[
+  {
+    "key": "ap4_4_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.4.2 Informació obligatòria mínima"
+    },
+    "hideExpression": "!formState.mainModel.ap4_4.informacionConsentimientoRadio || formState.mainModel.ap4_4.informacionConsentimientoRadio === 'no'",
+    "fieldGroup": [
+      {
+        "template": "<p>Els objectius del Consentiment Informat són:<ul><li>Informar els potencials subjectes participants de l'activitat de recerca, del i dels riscos i beneficis potencials, de la mateixa.</li><li>Assegurar-se que les persones han comprès aquesta informació i poden prendre decisions de manera voluntària sobre la seva participació en la investigació.</li><li>Trasmetre'ls represàlies de cap tipus.</li></ul></p><p>El document de consentiment informat (DCI) serveix per ratificar l'acceptació del participant: Ha de ser escrit i específic, no massa llarg ni complex ni amb paraules tècniques, frases molt llargues o lletra molt petita o que contingui informació enganyosa o poc clara. En el cas dels menors d'edat, a partir dels 12 anys i fins als 18, han de signar un document d'assentiment adaptat al seu llenguatge i els seus representants legals (pares/tutors) han de signar el DCI.</p><p>Consulteu amb la Secretaria Tècnica del Comitè d'Ètica les pautes d'elaboració del DCI.</p>"
+      }
+    ]
+  }
+]

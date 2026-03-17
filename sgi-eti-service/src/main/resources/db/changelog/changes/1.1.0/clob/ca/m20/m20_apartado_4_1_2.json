@@ -1,0 +1,32 @@
+[
+  {
+    "key": "ap4_1_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.1.2 Fonts consultades per cercar mètodes alternatius"
+    },
+    "fieldGroup": [
+      {
+        "template": "Descriure les fonts consultades i els criteris de cerca utilitzats"
+      },
+      {
+        "key": "fuentes",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Fonts consultades",
+          "required": true
+        }
+      },
+      {
+        "key": "criteriosBusqueda",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Criteris de cerca",
+          "required": true
+        }
+      }
+    ]
+  }
+]

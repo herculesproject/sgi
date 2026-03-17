@@ -1,0 +1,34 @@
+[
+  {
+    "key": "ap3_4_5",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "3.4.5 Substàncies radioactives"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>En aquesta activitat, s'utilitzen substàncies radioactives?</p>"
+      },
+      {
+        "key": "sustanciasRadiactivas",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

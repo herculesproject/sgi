@@ -1,0 +1,49 @@
+[
+  {
+    "key": "ap4_2_2",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.2 Substitució"
+    },
+    "fieldGroup": [
+      {
+        "template": "Podria realitzar-se aquesta activitat de recerca amb un agent/material biològic, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules de risc inferior per a la salut o el medi ambient?"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Quan la naturalesa de l'activitat ho permeti, l'investigador/a ha d'evitar, tenint en compte la informació tècnica i científica disponible, la utilització de materials/agents biològics perillosos mitjançant la substitució per altres agents que, en funció de les condicions d'utilització, no siguin perillosos, substàncies químiques perilloses, substàncies radioactives i/o nanopartícules per a la seguretat o salut dels/de les treballadors/es. href='https://boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a5' target='_blank'>(Article 5 RD664/1997)</a></b>."
+      },
+      {
+        "key": "realizarseInvestigacion",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Trieu opció:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "especificarRealizarseInvestigacion",
+        "type": "i18n-ckeditor",
+        "hideExpression": "!(model.realizarseInvestigacion && model.realizarseInvestigacion === 'si')",
+        "templateOptions": {
+          "name": "Justificar:",
+          "required": true
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,108 @@
+[
+  {
+    "key": "ap4_2_1_1",
+    "wrappers": [
+      "title-div"
+    ],
+    "templateOptions": {
+      "label": "4.2.1.1 Laboratori de la Universitat"
+    },
+    "fieldGroup": [
+      {
+        "template": "<p>A continuació especificar a quin local de la Universitat es realitzaran les tasques amb agents, material biològic i/o organismes modificats genèticament</p>"
+      },
+      {
+        "type": "table-crud",
+        "key": "laboratorioLocalTable",
+        "templateOptions": {
+          "entity": "local",
+          "gender": "male"
+        },
+        "fieldArray": {
+          "templateOptions": {
+            "text": "Local"
+          },
+          "fieldGroup": [
+            {
+              "key": "codPatrimonial",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Codi del local",
+                "order": 10
+              }
+            },
+            {
+              "key": "nivelContencion",
+              "type": "select",
+              "templateOptions": {
+                "label": "Nivell contenció",
+                "order": 20,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "C1"
+                  },
+                  {
+                    "value": "2",
+                    "label": "C2"
+                  },
+                  {
+                    "value": "3",
+                    "label": "C3"
+                  },
+                  {
+                    "value": "4",
+                    "label": "C4"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "ubicacion",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "Ubicació",
+                "order": 30
+              }
+            },
+            {
+              "key": "certificadoIdoneidad",
+              "type": "select",
+              "templateOptions": {
+                "label": "Certificat idoneïtat",
+                "order": 40,
+                "options": [
+                  {
+                    "value": "1",
+                    "label": "Sí"
+                  },
+                  {
+                    "value": "2",
+                    "label": "No"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "numeroRegistroServicioPrevencion",
+              "type": "i18n-input",
+              "templateOptions": {
+                "label": "No. Reg. Servei Prevenció",
+                "order": 50
+              }
+            },
+            {
+              "key": "fecha",
+              "type": "datepicker",
+              "templateOptions": {
+                "label": "Data",
+                "luxonFormat": "shortDate",
+                "order": 60
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

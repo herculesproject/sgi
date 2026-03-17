@@ -1,0 +1,41 @@
+[
+  {
+    "key": "ap3_2",
+    "wrappers": [
+      "expansion-panel"
+    ],
+    "templateOptions": {
+      "label": "3.2 Disseny metodològic del projecte"
+    },
+    "fieldGroup": [
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Aquesta secció s'emplena automàticament a partir de les dades introduïdes al camp <b>Disseny metodològic</b> de l'apartat <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/dades-generales' target='_blank'><b>Dades generals</b></a>. Accediu a aquest punt del menú per realitzar les modificacions necessàries.",
+        "templateOptions": {
+          "replaceTemplatePlaceholders": true
+        }
+      },
+      {
+        "key": "disenoMetodologico",
+        "type": "i18n-ckeditor",
+        "templateOptions": {
+          "name": "Disseny metodològic",
+          "disabled": true,
+          "required": true,
+          "expressionModelValue": "formState.memoria.peticionEvaluacion.disMetodologico"
+        }
+      },
+      {
+        "template": "<h5>Procés d'experimentació</h5><p>Els apartats que vénen a continuació ajudaran a precisar el procés d'experimentació a què l'animal és sotmès. En els casos que la complexitat del projecte ho requereixi (per exemple si s'utilitzen diverses espècies diferents d'animals o si hi ha diversos grups d'animals sotmesos a diferents processos d'experimentació) es poden utilitzar diverses memòries.</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "Per afegir una memòria nova heu d'accedir a l'apartat <b>Memòries</b> de la <b>Sol·licitud d'avaluació</b>"
+      }
+    ]
+  }
+]
