@@ -51,8 +51,8 @@ Benvolgut/da investigador/a,
 
 Un cop avaluades les revisions mínimes sol·licitades a continuació, us informem que ja podeu descarregar l'informe corresponent a l'aplicació ${data.enlaceAplicacion}.
 
-- Tipus d'activitat: ${data.tipoActividad}
-- Títol: ${data.tituloSolicitudEvaluacion}
+- Tipus d'activitat: ${sgi.getFieldValue(data.tipoActividad)}
+- Títol: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
 - Referència CEID: ${data.referenciaMemoria}
 - Comitè: ${data.comiteCodigo}
 

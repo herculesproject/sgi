@@ -50,8 +50,8 @@ Us informem que properament s'obrirà la següent fase de la convocatòria a bai
 
 - Convocatòria: <#if CSP_CONV_FASE_TITULO?has_content && CSP_CONV_FASE_TITULO != "[]">${sgi.getFieldValue(CSP_CONV_FASE_TITULO)}<#else>-</#if>
 - Fase: <#if CSP_CONV_TIPO_FASE?has_content && CSP_CONV_TIPO_FASE != "[]">${sgi.getFieldValue(CSP_CONV_TIPO_FASE)}<#else>-</#if>
-- Obertura: ${CSP_CONV_FASE_FECHA_INICIO?string("dd/MM/yyyy")} a les ${CSP_CONV_FASE_FECHA_INICIO?string("HH:mm")}h
-- Tancament: ${CSP_CONV_FASE_FECHA_FIN?string("dd/MM/yyyy")} a les ${CSP_CONV_FASE_FECHA_FIN?string("HH:mm")}h
+- Obertura: ${sgi.formatDate(CSP_CONV_FASE_FECHA_INICIO, "SHORT")} a les ${sgi.formatTime(CSP_CONV_FASE_FECHA_INICIO, "SHORT")}h
+- Tancament: ${sgi.formatDate(CSP_CONV_FASE_FECHA_FIN, "SHORT")} a les ${sgi.formatTime(CSP_CONV_FASE_FECHA_FIN, "SHORT")}h
 
 <#if CSP_CONV_FASE_OBSERVACIONES?has_content && CSP_CONV_FASE_OBSERVACIONES != "[]">
 En aquesta fase s'han indicat les següents observacions:

@@ -62,8 +62,6 @@ Benvolgut/da investigador/a,
 
 Properament donarà inici el període de presentació de justificació per al soci de projecte referenciat més avall.
 
-Podeu procedir a fer la justificació a través del següent enllaç: ${data.enlaceAplicacion}
-
 - Data d'inici de període de justificació: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}
 - Entitat sòcia: ${data.nombreEntidad}
 - Projecte en el qual col·labora: ${sgi.getFieldValue(data.titulo)}

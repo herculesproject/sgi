@@ -56,7 +56,7 @@ Benvolgut/da investigador/a,
 Us informem que properament finalitzarà el termini de presentació de la documentació de seguiment científic del projecte sota indicat:
 
 - Projecte: ${sgi.getFieldValue(data.titulo)}
-- Data de fi de presentació de documentació: ${data.fechaFin?string("dd/MM/yyyy")}, ${data.fechaFin?string("HH:mm")}h
+- Data de fi de presentació de documentació: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}h
 - Període de seguiment: ${data.numPeriodo}
 
 Podeu revisar la informació a través de l'aplicació: ${data.enlaceAplicacion}

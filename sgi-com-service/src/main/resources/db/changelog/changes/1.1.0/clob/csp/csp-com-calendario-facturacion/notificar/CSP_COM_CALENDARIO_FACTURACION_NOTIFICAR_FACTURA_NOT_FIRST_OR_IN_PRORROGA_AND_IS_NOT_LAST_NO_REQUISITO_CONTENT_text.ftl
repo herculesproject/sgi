@@ -69,13 +69,14 @@ Estimat/da investigador/a,
 Seguint el calendari de facturació del contracte referenciat més avall, està prevista la factura del contracte referenciat més avall. Per poder emetre-la i enviar-la a l'empresa, cal que ens confirmeu que els treballs progressen adequadament.
 
 - Empresa/es: ${data.entidadesFinanciadoras?join(", ")}
-- Títol del contracte: ${data.tituloProjecto}
+- Títol del contracte: ${sgi.getFieldValue(data.tituloProyecto)}
 - Codi/s de projecte/s associat/s: ${data.codigosSge?join(", ")}
 - Núm.: ${data.numPrevision}
 
-Tot esperant la vostra resposta, rebeu una cordial salutació,
+Cal que valideu la factura des de l'aplicació, accedint mitjançant l'enllaç següent: ${data.enlaceAplicacion}
 
-Oficina de Transferència de Resultats de Recerca  
+Tot esperant la vostra resposta, rebeu una cordial salutació,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado  
 Email unidad responsable
 </#macro>
 

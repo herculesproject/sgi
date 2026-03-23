@@ -54,8 +54,8 @@ Email unidad responsable
 <p>Benvolgut/da investigador/a,</p>
 <p>Un cop avaluades les revisions mínimes sol·licitades a continuació, us informem que ja podeu descarregar l'informe corresponent a l'aplicació: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-- Tipus d'activitat: ${data.tipoActividad}<br>
-- Títol: ${data.tituloSolicitudEvaluacion}<br>
+- Tipus d'activitat: ${sgi.getFieldValue(data.tipoActividad)}<br>
+- Títol: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
 - Referència CEID: ${data.referenciaMemoria}<br>
 - Comitè: ${data.comiteCodigo}
 </p>

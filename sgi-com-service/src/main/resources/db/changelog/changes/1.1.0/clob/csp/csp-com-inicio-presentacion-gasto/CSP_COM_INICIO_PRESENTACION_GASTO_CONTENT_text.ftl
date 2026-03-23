@@ -27,6 +27,10 @@ Próximamente se inician los periodos de presentación de la justificación econ
 - Fin del periodo de presentación de justificación: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </#list>
 Puede revisar la información a través de la aplicación: ${data.enlaceAplicacion}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -37,6 +41,10 @@ Please be advised that the periods for the submission of the justification for t
 - End of the period for submission of justification:  <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </#list>
 You can review the information through the application: ${data.enlaceAplicacion}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -47,8 +55,11 @@ Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuen 
 - Justifikazioa aurkezteko epearen amaiera: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </#list>
 Informazioa berrikus dezakezu aplikazioaren bidez: ${data.enlaceAplicacion}
-</#macro>
 
+Jaso agur bero bat.
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
+</#macro>
 <#macro renderCa>
 <#setting locale="ca">
 Benvolgut/da investigador/a,

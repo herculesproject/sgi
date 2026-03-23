@@ -63,7 +63,7 @@ Email unidad responsable
 <p>Benvolgut/da investigador/a,</p>
 <p>Us informem que properament s'iniciarà el termini de presentació de la documentació de seguiment científic del projecte sota indicat:</p>
 <p>
-- Projecte: ${sgi.getFieldValue(data.titulo)?no_esc}<br>
+- Projecte: ${sgi.getFieldValue(data.titulo)}<br>
 - Data d'inici de presentació de documentació: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
 - Període de seguiment: ${data.numPeriodo}
 </p>

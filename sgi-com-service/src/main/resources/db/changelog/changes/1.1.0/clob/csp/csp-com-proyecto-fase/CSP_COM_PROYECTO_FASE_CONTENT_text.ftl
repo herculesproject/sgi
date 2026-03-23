@@ -50,15 +50,15 @@ Benvolgut/da investigador/a,
 
 Us informem que properament començarà la següent fase del projecte baix referenciat:
 
-- Convocatòria: <#if CSP_PRO_FASE_TITULO_CONVOCATORIA?has_content && CSP_PRO_FASE_TITULO_CONVOCATORIA != "[]">${CSP_PRO_FASE_TITULO_CONVOCATORIA}<#else>-</#if>
-- Fase: <#if CSP_PRO_TIPO_FASE?has_content && CSP_PRO_TIPO_FASE != "[]">${CSP_PRO_TIPO_FASE}<#else>-</#if>
-- Projecte: ${CSP_PRO_FASE_TITULO_PROYECTO}
+- Convocatòria: <#if CSP_PRO_FASE_TITULO_CONVOCATORIA?has_content && CSP_PRO_FASE_TITULO_CONVOCATORIA != "[]">${sgi.getFieldValue(CSP_PRO_FASE_TITULO_CONVOCATORIA)}<#else>-</#if>
+- Fase: <#if CSP_PRO_TIPO_FASE?has_content && CSP_PRO_TIPO_FASE != "[]">${sgi.getFieldValue(CSP_PRO_TIPO_FASE)}<#else>-</#if>
+- Projecte: ${sgi.getFieldValue(CSP_PRO_FASE_TITULO_PROYECTO)}
 - Obertura: ${sgi.formatDate(CSP_PRO_FASE_FECHA_INICIO, "SHORT")}, ${sgi.formatTime(CSP_PRO_FASE_FECHA_INICIO, "SHORT")}
 - Tancament: ${sgi.formatDate(CSP_PRO_FASE_FECHA_FIN, "SHORT")}, ${sgi.formatTime(CSP_PRO_FASE_FECHA_FIN, "SHORT")}
 
 <#if CSP_PRO_FASE_OBSERVACIONES?has_content && CSP_PRO_FASE_OBSERVACIONES != "[]">
 En aquesta fase, s'han indicat les següents observacions:
-${CSP_PRO_FASE_OBSERVACIONES}
+${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </#if>
 
 Rebi una cordial salutació,

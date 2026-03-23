@@ -81,9 +81,10 @@ Un cop signat el contracte baix referenciat, s'ha d'emetre la factura correspone
 
 En relació als treballs que ha realitzat en el marc d'aquest contracte, envieu-nos si us plau un correu electrònic o informe de conclusió sobre els serveis que ha prestat a la/les empresa per conèixer la seva opinió, grau d'execució i compliment dels treballs finalitzats.
 
-Tot esperant la vostra resposta, rebeu una cordial salutació,
+Cal que valideu la factura des de l'aplicació, accedint mitjançant l'enllaç següent: ${data.enlaceAplicacion}
 
-Oficina de Transferència de Resultats de Recerca  
+Tot esperant la vostra resposta, rebeu una cordial salutació,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado  
 Email unidad responsable
 </#macro>
 

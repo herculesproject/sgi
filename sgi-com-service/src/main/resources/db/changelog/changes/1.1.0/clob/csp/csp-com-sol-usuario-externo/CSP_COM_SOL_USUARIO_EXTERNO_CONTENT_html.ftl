@@ -38,7 +38,7 @@ Email unidad responsable
 <#macro renderEu>
 <#setting locale="eu">
 <p>Ikertzaile agurgarria:</p>
-<p>Honen bidez jakinarazten dizugu behean aipatutako deialdiari lotuta aurkeztu duzun eskaera “Zirriborroa” egoeran sortu dela.</p>
+<p>Honen bidez jakinarazten dizugu behean aipatutako deialdiari lotuta aurkeztu duzun eskaera "Zirriborroa" egoeran sortu dela.</p>
 <p>- Deialdia: ${sgi.getFieldValue(data.tituloConvocatoria)}</p>
 <p>Aplikaziotik kontsulta dezakezu eskaeraren egoera, jarraibide hauek betez:</p>
 <p>

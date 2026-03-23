@@ -58,13 +58,13 @@ Email unidad responsable
 <p>Estimat/da membre del Comitè,</p>
 <p>Us convoquem a la reunió del ${ETI_COMITE}, que se celebrarà:</p>
 <p>
-- Dia: ${sgi.formatDate(data.fechaEvaluacion, "FULL")}<br>
-- Hora: ${data.horaInicio}:${data.minutoInicio} h (primera convocatòria); <#if data.horaInicioSegunda??>${data.horaInicioSegunda}:${data.minutoInicioSegunda} h (segona convocatòria)</#if><br>
-- Tipus de convocatòria: ${sgi.getFieldValue(data.tipoConvocatoria)}<br>
-- Lloc: <#if data.videoconferencia?string == "true">Videoconferència<#else>${sgi.getFieldValue(data.lugar)}</#if>
+- Dia: ${sgi.formatDate(ETI_CONVOCATORIA_REUNION_FECHA_EVALUACION, "FULL")}<br>
+- Hora: ${ETI_CONVOCATORIA_REUNION_HORA_INICIO}:${ETI_CONVOCATORIA_REUNION_MINUTO_INICIO} h (primera convocatòria); <#if ETI_CONVOCATORIA_REUNION_HORA_INICIO_SEGUNDA??>${ETI_CONVOCATORIA_REUNION_HORA_INICIO_SEGUNDA}:${ETI_CONVOCATORIA_REUNION_MINUTO_INICIO_SEGUNDA} h (segona convocatòria)</#if><br>
+- Tipus de convocatòria: ${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_TIPO_CONVOCATORIA)}<br>
+- Lloc: <#if ETI_CONVOCATORIA_REUNION_VIDEOCONFERENCIA?string == "true">Videoconferència<#else>${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_LUGAR)}</#if>
 </p>
 <p>L'ordre del dia de la reunió serà el següent:</p>
-<p>${sgi.getFieldValue(data.ordenDelDia)}</p>
+<p>${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA)}</p>
 <p>
 Rebi una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>

@@ -86,9 +86,10 @@ Seguint el calendari de facturació del contracte referenciat més avall, s'ha d
 <p>
 En relació amb els treballs que ha realitzat en el marc d'aquest contracte, és aconsellable que ens remeti còpia dels informes finals lliurats a la/les empresa/es, objecte del contracte, per conèixer del desenvolupament, execució i compliment dels treballs.
 </p>
+<p>Cal que valideu la factura des de l'aplicació, accedint mitjançant l'enllaç següent: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
 Tot esperant la vostra resposta, rebeu una cordial salutació,<br>
-Oficina de Transferència de Resultats de Recerca<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
 </#macro>

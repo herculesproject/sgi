@@ -44,7 +44,7 @@ Benvolgut/da investigador/a,
 
 Properament finalitzarà el període de presentació de justificació per al soci de projecte referenciat més avall. Podeu procedir a realitzar la justificació a través del següent enllaç: ${data.enlaceAplicacion}
 
-- Data de finalització de període de justificació: ${data.fechaFin?string("dd/MM/yyyy")}, ${data.fechaFin?string("HH:mm")}h
+- Data de finalització de període de justificació: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}h
 - Entitat col·laboradora: ${data.nombreEntidad}
 - Projecte: ${sgi.getFieldValue(data.titulo)}
 - Període: ${data.numPeriodo}

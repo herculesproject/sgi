@@ -81,14 +81,15 @@ Un cop signat el contracte referenciat a continuació, s'ha d'emetre la correspo
 - Títol del contracte:${sgi.getFieldValue(data.tituloProyecto)}<br>
 - Codi/s de projecte/s associat/s: ${data.codigosSge?join(", ")}<br>
 - Núm.: ${data.numPrevision}<br>
-- Lliurament: ${data.tipoFacturacion}
+- Lliurament: ${sgi.getFieldValue(data.tipoFacturacion)}
 </p>
 <p>
 Pel que fa als treballs que ha realitzat en el marc d'aquest contracte, envieu-nos si us plau un correu electrònic o informe de conclusió sobre els serveis que ha prestat a l'empresa per conèixer la seva opinió, grau d'execució i compliment dels treballs finalitzats.
 </p>
+<p>Cal que valideu la factura des de l'aplicació, accedint mitjançant l'enllaç següent: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
 Tot esperant la vostra resposta, rebeu una cordial salutació,<br>
-Oficina de Transferència de Resultats de Recerca<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
 </#macro>

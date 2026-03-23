@@ -44,10 +44,9 @@
 <#macro renderCa>
 <#setting locale="ca">
 <p>Benvolgut/da investigador/a,</p>
-<p>Properament finalitzarà el període de presentació de justificació per al soci de projecte referenciat més avall. Podeu procedir a realitzar la justificació a través del següent enllaç: 
-<a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
+<p>Properament finalitzarà el període de presentació de justificació per al soci de projecte referenciat més avall. Podeu procedir a realitzar la justificació a través del següent enllaç: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
-- Data de finalització de període de justificació: ${data.fechaFin?string("dd/MM/yyyy")}, ${data.fechaFin?string("HH:mm")}h<br>
+- Data de finalització de període de justificació: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}h<br>
 - Entitat col·laboradora: ${data.nombreEntidad}<br>
 - Projecte: ${sgi.getFieldValue(data.titulo)}<br>
 - Període: ${data.numPeriodo}

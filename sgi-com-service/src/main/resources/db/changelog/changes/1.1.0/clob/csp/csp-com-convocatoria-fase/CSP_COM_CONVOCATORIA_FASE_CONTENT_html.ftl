@@ -55,8 +55,8 @@ ${sgi.getFieldValue(CSP_CONV_FASE_OBSERVACIONES)}
 <p>
 - Convocatòria: <#if CSP_CONV_FASE_TITULO?has_content && CSP_CONV_FASE_TITULO != "[]">${sgi.getFieldValue(CSP_CONV_FASE_TITULO)}<#else>-</#if><br>
 - Fase: <#if CSP_CONV_TIPO_FASE?has_content && CSP_CONV_TIPO_FASE != "[]">${sgi.getFieldValue(CSP_CONV_TIPO_FASE)}<#else>-</#if><br>
-- Obertura: ${CSP_CONV_FASE_FECHA_INICIO?string("dd/MM/yyyy")} a les ${CSP_CONV_FASE_FECHA_INICIO?string("HH:mm")}h<br>
-- Tancament: ${CSP_CONV_FASE_FECHA_FIN?string("dd/MM/yyyy")} a les ${CSP_CONV_FASE_FECHA_FIN?string("HH:mm")}h
+- Obertura: ${sgi.formatDate(CSP_CONV_FASE_FECHA_INICIO, "SHORT")} a les ${sgi.formatTime(CSP_CONV_FASE_FECHA_INICIO, "SHORT")}h<br>
+- Tancament: ${sgi.formatDate(CSP_CONV_FASE_FECHA_FIN, "SHORT")} a les ${sgi.formatTime(CSP_CONV_FASE_FECHA_FIN, "SHORT")}h
 </p>
 <#if CSP_CONV_FASE_OBSERVACIONES?has_content && CSP_CONV_FASE_OBSERVACIONES != "[]">
 <p>

@@ -4,8 +4,8 @@
 <p>Estimado/a investigador/a,</p>
 <p>Le informamos de que es necesario someter su investigación a evaluación ante el comité de ética, por lo que se ha creado una solicitud de petición de evaluación asociada a la solicitud:</p>
 <p>
-- Solicitud de convocatoria: ${CSP_SOLICITUD_CODIGO?esc}<br>
-- Código de referencia: ${ETI_PETICION_EVALUACION_CODIGO?esc}
+- Solicitud de convocatoria: ${CSP_SOLICITUD_CODIGO}<br>
+- Código de referencia: ${ETI_PETICION_EVALUACION_CODIGO}
 </p>
 <p>
 Reciba un cordial saludo,<br>
@@ -18,8 +18,8 @@ Email unidad responsable
 <p>Dear researcher,</p>
 <p>Please be advised that your research needs to be submitted to the ethics committee for evaluation. Therefore, an evaluation request has been created associated to your application:</p>
 <p>
-- Call request: ${CSP_SOLICITUD_CODIGO?esc}<br>
-- Reference code: ${ETI_PETICION_EVALUACION_CODIGO?esc}
+- Call request: ${CSP_SOLICITUD_CODIGO}<br>
+- Reference code: ${ETI_PETICION_EVALUACION_CODIGO}
 </p>
 <p>
 Yours sincerely,<br>
@@ -32,8 +32,8 @@ Email unidad responsable
 <p>Ikertzaile agurgarria:</p>
 <p>Honen bidez jakinarazten dizugu beharrezkoa dela etika batzordeak zure ikerketa ebaluatzea; horregatik, ebaluazio eskaera bat sortu da eskaera honi lotuta:</p>
 <p>
-- Deialdi eskaera: ${CSP_SOLICITUD_CODIGO?esc}<br>
-- Erreferentzia kodea: ${ETI_PETICION_EVALUACION_CODIGO?esc}
+- Deialdi eskaera: ${CSP_SOLICITUD_CODIGO}<br>
+- Erreferentzia kodea: ${ETI_PETICION_EVALUACION_CODIGO}
 </p>
 <p>
 Jaso agur bero bat.<br>
@@ -47,8 +47,8 @@ Email unidad responsable
 <p>Benvolgut/da investigador/a,</p>
 <p>Us informem que cal sotmetre la vostra investigació a avaluació davant el CEID, per la qual cosa s'ha creat una sol·licitud de petició d'avaluació associada a la sol·licitud:</p>
 <p>
-- Sol·licitud de convocatòria: ${CSP_SOLICITUD_CODIGO?esc}<br>
-- Codi de referència: ${ETI_PETICION_EVALUACION_CODIGO?esc}
+- Sol·licitud de convocatòria: ${CSP_SOLICITUD_CODIGO}<br>
+- Codi de referència: ${ETI_PETICION_EVALUACION_CODIGO}
 </p>
 <p>
 Rebi una salutació cordial,<br>

@@ -63,7 +63,7 @@
 <p>Els períodes de presentació de la documentació de justificació són els següents:</p>
 <#list data.proyectos as proyecto>
 <p>
-- Projecte: ${sgi.getFieldValue(proyecto.titulo)?no_esc}<br>
+- Projecte: ${sgi.getFieldValue(proyecto.titulo)}<br>
 - Inici del període de presentació de justificació: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}<br>
 - Final del període de presentació de justificació: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </p>
