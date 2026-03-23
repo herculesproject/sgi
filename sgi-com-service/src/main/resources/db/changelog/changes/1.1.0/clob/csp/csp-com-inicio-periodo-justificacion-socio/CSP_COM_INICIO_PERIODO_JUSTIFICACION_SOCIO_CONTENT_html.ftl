@@ -20,6 +20,11 @@
 - Proyecto en el que colabora: ${sgi.getFieldValue(data.titulo)}<br>
 - Periodo que se debe justificar: ${data.numPeriodo}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -29,6 +34,11 @@
 - Partner entity: ${data.nombreEntidad}<br>
 - Collaboration project: ${sgi.getFieldValue(data.titulo)}<br>
 - Period to be justified: ${data.numPeriodo}
+</p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -40,14 +50,17 @@
 - Zer proiektutan kolaboratzen duen: ${sgi.getFieldValue(data.titulo)}<br>
 - Justifikatu beharreko aldia: ${data.numPeriodo}
 </p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
-
 <#macro renderCa>
 <#setting locale="ca">
 <p>Benvolgut/da investigador/a,</p>
 <p>Properament donarà inici el període de presentació de justificació per al soci de projecte referenciat més avall.</p>
 <p>
-Podeu procedir a fer la justificació a través del següent enllaç: <a href="${data.enlaceAplicacion}">${data.enlaceAplicacion}</a><br>
 - Data d'inici de període de justificació: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
 - Entitat sòcia: ${data.nombreEntidad}<br>
 - Projecte en el qual col·labora: ${sgi.getFieldValue(data.titulo)}<br>

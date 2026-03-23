@@ -64,7 +64,7 @@ Email unidad responsable
 <p>Us informem que properament finalitzarà el termini de presentació de la documentació de seguiment científic del projecte sota indicat:</p>
 <p>
 - Projecte: ${sgi.getFieldValue(data.titulo)}<br>
-- Data de fi de presentació de documentació: ${data.fechaFin?string("dd/MM/yyyy")}, ${data.fechaFin?string("HH:mm")}h<br>
+- Data de fi de presentació de documentació: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}h<br>
 - Període de seguiment: ${data.numPeriodo}
 </p>
 <p>Podeu revisar la informació a través de l'aplicació: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>

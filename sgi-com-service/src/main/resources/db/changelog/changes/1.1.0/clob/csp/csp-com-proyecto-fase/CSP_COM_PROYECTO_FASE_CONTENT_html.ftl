@@ -56,16 +56,16 @@ ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 <p>Benvolgut/da investigador/a,</p>
 <p>Us informem que properament començarà la següent fase del projecte baix referenciat:</p>
 <p>
-- Convocatòria: <#if CSP_PRO_FASE_TITULO_CONVOCATORIA?has_content && CSP_PRO_FASE_TITULO_CONVOCATORIA != "[]">${CSP_PRO_FASE_TITULO_CONVOCATORIA}<#else>-</#if><br>
-- Fase: <#if CSP_PRO_TIPO_FASE?has_content && CSP_PRO_TIPO_FASE != "[]">${CSP_PRO_TIPO_FASE}<#else>-</#if><br>
-- Projecte: ${CSP_PRO_FASE_TITULO_PROYECTO}<br>
+- Convocatòria: <#if CSP_PRO_FASE_TITULO_CONVOCATORIA?has_content && CSP_PRO_FASE_TITULO_CONVOCATORIA != "[]">${sgi.getFieldValue(CSP_PRO_FASE_TITULO_CONVOCATORIA)}<#else>-</#if><br>
+- Fase: <#if CSP_PRO_TIPO_FASE?has_content && CSP_PRO_TIPO_FASE != "[]">${sgi.getFieldValue(CSP_PRO_TIPO_FASE)}<#else>-</#if><br>
+- Projecte: ${sgi.getFieldValue(CSP_PRO_FASE_TITULO_PROYECTO)}<br>
 - Obertura: ${sgi.formatDate(CSP_PRO_FASE_FECHA_INICIO, "SHORT")}, ${sgi.formatTime(CSP_PRO_FASE_FECHA_INICIO, "SHORT")}<br>
 - Tancament: ${sgi.formatDate(CSP_PRO_FASE_FECHA_FIN, "SHORT")}, ${sgi.formatTime(CSP_PRO_FASE_FECHA_FIN, "SHORT")}
 </p>
 <#if CSP_PRO_FASE_OBSERVACIONES?has_content && CSP_PRO_FASE_OBSERVACIONES != "[]">
 <p>
 En aquesta fase, s'han indicat les següents observacions:<br>
-${CSP_PRO_FASE_OBSERVACIONES}
+${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </p>
 </#if>
 <p>

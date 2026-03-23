@@ -35,9 +35,9 @@ Benvolgut/da investigador/a,
 
 Us informem que ha estat registrada la notificació de creació del projecte al Curriculum Vitae Normalitzat (CVN). A continuació s'inclouen els detalls del registre:
 
-- Data del registre: ${data.fechaCreacion?datetime.iso?string("dd/MM/yyyy")}
-- Projecte: ${sgi.getFieldValue(data.tituloProyecto)}
-- CVN de: ${data.nombreApellidosCreador}
+- Data prevista de pagament: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}
+- Soci col·laborador: ${data.nombreEntidadColaboradora}
+- Projecte: ${sgi.getFieldValue(data.titulo)}
 
 Rebi una salutació cordial,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado

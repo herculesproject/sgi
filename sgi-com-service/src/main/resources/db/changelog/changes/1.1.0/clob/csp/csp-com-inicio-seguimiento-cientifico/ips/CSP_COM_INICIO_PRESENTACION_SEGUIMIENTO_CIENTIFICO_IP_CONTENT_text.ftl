@@ -55,7 +55,7 @@ Benvolgut/da investigador/a,
 
 Us informem que properament s'iniciarà el termini de presentació de la documentació de seguiment científic del projecte sota indicat:
 
-- Projecte: ${sgi.getFieldValue(data.titulo)?no_esc}
+- Projecte: ${sgi.getFieldValue(data.titulo)}
 - Data d'inici de presentació de documentació: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}
 - Període de seguiment: ${data.numPeriodo}
 

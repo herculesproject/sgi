@@ -52,8 +52,8 @@ Benvolgut/da investigador/a,
 Davant l'absència de resposta a les correccions sol·licitades pel comitè indicat a continuació, us informem que la situació de la vostra sol·licitud passarà a arxivada. En cas de voler reprendre la sol·licitud, n'haureu de començar una de nova.
 
 - Comitè: ${data.comiteCodigo}
-- Tipus d'activitat: ${data.tipoActividad}
-- Títol: ${data.tituloSolicitudEvaluacion}
+- Tipus d'activitat: ${sgi.getFieldValue(data.tipoActividad)}
+- Títol: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
 - Referència CEID: ${data.referenciaMemoria}
 
 Rebeu una salutació cordial,

@@ -55,8 +55,8 @@ Email unidad responsable
 <p>Davant l'absència de resposta a les correccions sol·licitades pel comitè indicat a continuació, us informem que la situació de la vostra sol·licitud passarà a arxivada. En cas de voler reprendre la sol·licitud, n'haureu de començar una de nova.</p>
 <p>
 - Comitè: ${data.comiteCodigo}<br>
-- Tipus d'activitat: ${data.tipoActividad}<br>
-- Títol: ${data.tituloSolicitudEvaluacion}<br>
+- Tipus d'activitat: ${sgi.getFieldValue(data.tipoActividad)}<br>
+- Títol: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
 - Referència CEID: ${data.referenciaMemoria}
 </p>
 <p>

@@ -70,16 +70,14 @@ Email unidad responsable
 Un cop signat el contracte assocat al/els projecte/s baix referenciat/s més avall, cal que confirmi si poden ser emesa:
 </p>
 <p>
-${data.entidadesFinanciadoras?join(", ")}
-</p>
-<p>
 - Empresa/s: ${data.entidadesFinanciadoras?join(", ")}<br>
 - Títol del contracte: ${sgi.getFieldValue(data.tituloProyecto)}
 - Codi/s de projecte/s associat/s: ${data.codigosSge?join(", ")}
 - Núm.: ${data.numPrevision}
 </p>
+<p>És necessari que valideu la factura des de l'aplicació, accedint mitjançant l'enllaç següent: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>Rebi una salutació cordial,<br>
-Oficina de Transferència de Resultats de Recerca<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p></#macro>
 

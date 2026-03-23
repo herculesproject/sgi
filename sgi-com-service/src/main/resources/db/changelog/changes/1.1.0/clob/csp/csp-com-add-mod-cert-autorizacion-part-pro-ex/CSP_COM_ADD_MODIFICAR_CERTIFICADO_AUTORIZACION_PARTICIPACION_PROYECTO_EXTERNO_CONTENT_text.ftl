@@ -41,7 +41,7 @@ Email unidad responsable
 Benvolgut/da investigador/a,
 Us informem que teniu disponible per a baixar l'autorització de participació en el projecte extern referenciat més avall. Podeu fer la descàrrega des de l'aplicació, accedint mitjançant el següent enllaç: ${data.enlaceAplicacion}.
 
-- Projecte extern: ${data.tituloProyectoExt}
+- Projecte extern: ${sgi.getFieldValue(data.tituloProyectoExt)}
 
 Rebi una salutació cordial,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado

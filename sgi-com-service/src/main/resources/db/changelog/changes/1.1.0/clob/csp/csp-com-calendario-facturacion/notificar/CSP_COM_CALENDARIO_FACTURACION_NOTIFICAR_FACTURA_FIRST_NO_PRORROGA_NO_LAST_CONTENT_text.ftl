@@ -10,6 +10,8 @@ Una vez firmado el contrato asociado al/los proyecto/s abajo referenciado/s más
 - Código/s de proyecto/s asociado/s: ${data.codigosSge?join(", ")}
 - N.º de previsión: ${data.numPrevision}
 
+Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}
+
 En espera de su respuesta, reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
@@ -24,6 +26,8 @@ Having signed the contract associated with the below project(s), you need to con
 - Title of the contract: ${sgi.getFieldValue(data.tituloProyecto)}
 - Associated project code(s): ${data.codigosSge?join(", ")}
 - Forecast no.: ${data.numPrevision}
+
+You need to confirm whether the relevant invoice can be issued, by following this link: ${data.enlaceAplicacion}
 
 We look forward to hearing from you. Kind regards,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -40,6 +44,8 @@ Behean aipatutako proiektuekin lotutako kontratua sinatu ostean, adierazita dago
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}
 - Aurreikuspen zk.: ${data.numPrevision}
 
+Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: ${data.enlaceAplicacion}
+
 Zure erantzunaren zain, jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
@@ -48,9 +54,7 @@ Email unidad responsable
 <#macro renderCa><#setting locale="ca">
 Benvolgut/da investigador/a,
 
-Un cop signat el contracte assocat al/els projecte/s baix referenciat/s més avall, cal que confirmi si poden ser emesa:
-
-${data.entidadesFinanciadoras?join(", ")}
+Un cop signat el contracte assocat al/els projecte/s baix referenciat/s més avall, cal que confirmi si poden ser emesa: ${data.enlaceAplicacion}
 
 - Empresa/es: ${data.entidadesFinanciadoras?join(", ")}
 - Títol del contracte: ${sgi.getFieldValue(data.tituloProyecto)}
@@ -58,8 +62,7 @@ ${data.entidadesFinanciadoras?join(", ")}
 - Núm.: ${data.numPrevision}
 
 Rebi una salutació cordial,
-
-Oficina de Transferència de Resultats de Recerca  
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
 

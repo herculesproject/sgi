@@ -62,14 +62,14 @@ Estimat/da membre del Comitè,
 
 Us convoquem a la reunió del ${ETI_COMITE}, que se celebrarà: 
 
-- Dia: ${sgi.formatDate(data.fechaEvaluacion, "FULL")}
-- Hora: ${data.horaInicio}:${data.minutoInicio} h (primera convocatòria); <#if data.horaInicioSegunda??>${data.horaInicioSegunda}:${data.minutoInicioSegunda} h (segona convocatòria)</#if>
-- Tipus de convocatòria: ${sgi.getFieldValue(data.tipoConvocatoria)}
-- Lloc: <#if data.videoconferencia?string == "true">Videoconferència<#else>${sgi.getFieldValue(data.lugar)}</#if>
+- Dia: ${sgi.formatDate(ETI_CONVOCATORIA_REUNION_FECHA_EVALUACION, "FULL")}
+- Hora: ${ETI_CONVOCATORIA_REUNION_HORA_INICIO}:${ETI_CONVOCATORIA_REUNION_MINUTO_INICIO} h (primera convocatòria); <#if ETI_CONVOCATORIA_REUNION_HORA_INICIO_SEGUNDA??>${ETI_CONVOCATORIA_REUNION_HORA_INICIO_SEGUNDA}:${ETI_CONVOCATORIA_REUNION_MINUTO_INICIO_SEGUNDA} h (segona convocatòria)</#if>
+- Tipus de convocatòria: ${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_TIPO_CONVOCATORIA)}
+- Lloc: <#if ETI_CONVOCATORIA_REUNION_VIDEOCONFERENCIA?string == "true">Videoconferència<#else>${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_LUGAR)}</#if>
 
 L'ordre del dia de la reunió serà el següent:
 
-${sgi.getFieldValue(data.ordenDelDia)}
+${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA)}
 
 Rebi una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado

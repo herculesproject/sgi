@@ -76,11 +76,12 @@ Seguint el calendari de facturació del contracte referenciat més avall, està 
 - Títol del contracte:${sgi.getFieldValue(data.tituloProyecto)}
 - Codi/s de projecte/s associat/s: ${data.codigosSge?join(", ")}
 - Núm.: ${data.numPrevision}
-- Tipus facturació: ${data.tipoFacturacion}
+- Tipus facturació: ${sgi.getFieldValue(data.tipoFacturacion)}
+
+Cal que confirmis si es pot emetre la factura corresponent, seguint aquest enllaç: ${data.enlaceAplicacion}
 
 Tot esperant la vostra resposta, rebeu una cordial salutació,
-
-Oficina de Transferència de Resultats de Recerca  
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado  
 Email unidad responsable
 </#macro>
 

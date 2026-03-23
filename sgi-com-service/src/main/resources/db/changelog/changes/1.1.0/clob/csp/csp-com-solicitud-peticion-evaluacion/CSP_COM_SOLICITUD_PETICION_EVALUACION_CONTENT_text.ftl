@@ -36,8 +36,8 @@ Email unidad responsable
 <#setting locale="ca">
 Benvolgut/da investigador/a,
 Us informem que cal sotmetre la vostra investigació a avaluació davant el CEID, per la qual cosa s'ha creat una sol·licitud de petició d'avaluació associada a la sol·licitud:
-- Sol·licitud de convocatòria: ${CSP_SOLICITUD_CODIGO?esc}
-- Codi de referència: ${ETI_PETICION_EVALUACION_CODIGO?esc}
+- Sol·licitud de convocatòria: ${CSP_SOLICITUD_CODIGO}
+- Codi de referència: ${ETI_PETICION_EVALUACION_CODIGO}
 
 Rebi una salutació cordial,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
