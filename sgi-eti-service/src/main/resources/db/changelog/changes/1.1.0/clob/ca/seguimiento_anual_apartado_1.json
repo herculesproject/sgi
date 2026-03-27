@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Ompliu aquest punt en funció del comitè al qual s'adreça el vostre informe:<ul><li>Per al #nom_comite_M10_ca# data d'inici del reclutament.</li><li>Per al #nom_comite_M20_ca# data d'inici d'ús d'animals d'experimentació.</li><li>Per al #nom_de_com u OMG, SQP, SR.</li></ul></p>"
+        "template": "<p>Ompliu aquest punt en funció del comitè al qual s'adreça el vostre informe:<ul><li>Per al #nombre_comite_M10_ca# data d'inici del reclutament.</li><li>Per al #nombre_comite_M20_ca# data d'inici d'ús d'animals d'experimentació.</li><li>Per al #nom_de_com u OMG, SQP, SR.</li></ul></p>"
       },
       {
         "key": "fechaInicio",

@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Si el procés d'experimentació requereix treballar amb agents biològics (AB) o organismes modificats genèticament (OMG) en un laboratori de nivell de contenció 2 o superior, cal sol·licitar l'avaluació al #nom_comite_M30_ca#.</p>"
+        "template": "<p>Si el procés d'experimentació requereix treballar amb agents biològics (AB) o organismes modificats genèticament (OMG) en un laboratori de nivell de contenció 2 o superior, cal sol·licitar l'avaluació al #nombre_comite_M30_ca#.</p>"
       },
       {
         "key": "tipoAgenteBiologico",

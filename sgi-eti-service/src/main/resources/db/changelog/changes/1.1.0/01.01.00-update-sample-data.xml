@@ -61,4 +61,128 @@
       </whereParams>
     </update>
   </changeSet>
+
+  <!-- Comite M10 (CEISH) -->
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m10-ca">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M10_ca#', 'CEISH')
+        WHERE esquema LIKE '%#nombre_comite_M10_ca#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m10-es">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M10_es#', 'CEISH')
+        WHERE esquema LIKE '%#nombre_comite_M10_es#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m10-en">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M10_en#', 'CEISH')
+        WHERE esquema LIKE '%#nombre_comite_M10_en#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m10-eu">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M10_eu#', 'CEISH')
+        WHERE esquema LIKE '%#nombre_comite_M10_eu#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <!-- Comite M20 (CEEA) -->
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m20-ca">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M20_ca#', 'CEEA')
+        WHERE esquema LIKE '%#nombre_comite_M20_ca#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m20-es">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M20_es#', 'CEEA')
+        WHERE esquema LIKE '%#nombre_comite_M20_es#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m20-en">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M30_en#', 'CEEA')
+        WHERE esquema LIKE '%#nombre_comite_M20_en#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m20-eu">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M20_eu#', 'CEEA')
+        WHERE esquema LIKE '%#nombre_comite_M20_eu#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <!-- Comite M30 (CBE) -->
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m30-ca">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M30_ca#', 'CBE')
+        WHERE esquema LIKE '%#nombre_comite_M30_ca#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m30-es">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M30_es#', 'CBE')
+        WHERE esquema LIKE '%#nombre_comite_M30_es#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m30-en">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M30_en#', 'CBE')
+        WHERE esquema LIKE '%#nombre_comite_M30_en#%'
+      ]]>
+    </sql>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="01.01.00-nombre-comite-m30-eu">
+    <sql>
+      <![CDATA[
+        UPDATE ${schemaPrefix}apartado_definicion
+        SET esquema = REPLACE(esquema, '#nombre_comite_M30_eu#', 'CBE')
+        WHERE esquema LIKE '%#nombre_comite_M30_eu#%'
+      ]]>
+    </sql>
+  </changeSet>
+
 </databaseChangeLog>

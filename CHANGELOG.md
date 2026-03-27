@@ -14,7 +14,10 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 ### Added
-- Añadido soporte para el idioma catalán.
+- Añadido soporte para el idioma catalán ([#23](https://github.com/herculesproject/sgi/issues/23)).
+
+### Changed
+- [ETI] Añadir reemplazo de placeholders de nombre de comité en esquemas Formly para el contexto dev ([#36](https://github.com/herculesproject/sgi/issues/36)).
 
 ## 1.0.0 (2026-02-26)
 
