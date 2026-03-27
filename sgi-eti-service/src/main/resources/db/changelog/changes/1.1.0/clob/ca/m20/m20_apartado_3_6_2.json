@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Requereix informe del #nom_comite_M30_ca#.</p>"
+        "template": "<p>Nota: Requereix informe del #nombre_comite_M30_ca#.</p>"
       },
       {
         "template": "¿Impliquen riscos per a la salut humana, animal o per al medi ambient?",

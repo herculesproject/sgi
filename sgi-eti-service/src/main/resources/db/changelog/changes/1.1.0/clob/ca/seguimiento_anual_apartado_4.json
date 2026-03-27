@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La descripció respecte als aspectes ètics específics dependrà del comitè a què s'adreça l'informe anual i recollirà el que ha passat l'any objecte de l'informe. #nom_comite_M20_ca# el desenvolupament i els problemes sorgits al voltant del reemplaçament, al refinament ia la reducció.</li><li>Per al #nom_comite_M30_ca# el desenvolupament i els problemes sorgits al voltant de la prevenció dels riscos per a la salut o per al medi ambient relacionats amb els agents biològics</> ."
+        "template": "<p>La descripció respecte als aspectes ètics específics dependrà del comitè a què s'adreça l'informe anual i recollirà el que ha passat l'any objecte de l'informe. #nombre_comite_M20_ca# el desenvolupament i els problemes sorgits al voltant del reemplaçament, al refinament ia la reducció.</li><li>Per al #nombre_comite_M30_ca# el desenvolupament i els problemes sorgits al voltant de la prevenció dels riscos per a la salut o per al medi ambient relacionats amb els agents biològics</> ."
       },
       {
         "template": "Descriviu breument com es van desenvolupant els aspectes ètics del projecte i assenyaleu els problemes trobats i les seves solucions, si n'hi ha hagut."

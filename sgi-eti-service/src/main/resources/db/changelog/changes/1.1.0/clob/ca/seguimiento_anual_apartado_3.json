@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La descripció respecte al disseny metodològic dependrà del comitè a què es dirigeix l'informe anual.<ul><li>Per al #nom_comite_M10_ca#, descrivint la mostra actual (característiques i mida) i el desenvolupament del projecte, indicant si han sorgit problemes i com s'han resolt.</li><li>Per al #nom_ total d'animals utilitzats fins ara) i el desenvolupament del projecte, indicant si han sorgit problemes i com s'han resolt.</li><li>Per al #nom_comite_M30_ca#, el desenvolupament del projecte, indicant si han sorgit problemes i com s'han resolt."
+        "template": "<p>La descripció respecte al disseny metodològic dependrà del comitè a què es dirigeix l'informe anual.<ul><li>Per al #nombre_comite_M10_ca#, descrivint la mostra actual (característiques i mida) i el desenvolupament del projecte, indicant si han sorgit problemes i com s'han resolt.</li><li>Per al #nom_ total d'animals utilitzats fins ara) i el desenvolupament del projecte, indicant si han sorgit problemes i com s'han resolt.</li><li>Per al #nombre_comite_M30_ca#, el desenvolupament del projecte, indicant si han sorgit problemes i com s'han resolt."
       },
       {
         "template": "Descriviu breument com es va desenvolupant metodològicament el projecte i assenyaleu els problemes trobats i les seves solucions, si n'hi ha hagut."

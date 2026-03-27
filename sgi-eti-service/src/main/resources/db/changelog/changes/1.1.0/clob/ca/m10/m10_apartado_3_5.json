@@ -82,7 +82,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Recordeu que la manipulació de teixits/sang/fluids humans requereix avaluació del #nom_comite_M30_ca#.</p><p>Les opcions marcades amb asterisc (*) requereixen l'informe previ favorable de la Comissió de Garanties abans de la seva utilització</p>",
+        "template": "<p>Nota: Recordeu que la manipulació de teixits/sang/fluids humans requereix avaluació del #nombre_comite_M30_ca#.</p><p>Les opcions marcades amb asterisc (*) requereixen l'informe previ favorable de la Comissió de Garanties abans de la seva utilització</p>",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'"
       }
     ]
