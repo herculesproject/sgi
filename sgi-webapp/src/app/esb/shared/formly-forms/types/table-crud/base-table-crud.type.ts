@@ -77,16 +77,41 @@ export abstract class BaseTableCRUDTypeComponent extends FieldArrayType implemen
   }
 
   protected buildColumnInfo(fieldConfig: FormlyFieldConfig): FieldsToRender[] {
-    const toRender: FieldsToRender[] = fieldConfig.fieldGroup.map(fieldGroup => {
-      return {
-        name: fieldGroup.templateOptions.label,
-        key: fieldGroup.key,
-        type: fieldGroup.type,
-        format: fieldGroup.templateOptions.luxonFormat,
-        order: +fieldGroup.templateOptions.order,
-        options: fieldGroup.templateOptions.options
-      };
-    });
+    const toRender: FieldsToRender[] = fieldConfig.fieldGroup
+      .filter(fieldGroup => {
+        const hideInTable = fieldGroup.templateOptions?.hideInTable;
+        if (hideInTable === undefined || hideInTable === null) {
+          return true;
+        }
+
+        // Si es booleano
+        if (typeof hideInTable === 'boolean') {
+          return !hideInTable;
+        }
+
+        // Si es string (expression)
+        if (typeof hideInTable === 'string') {
+          try {
+            const fn = new Function('model', 'formState', `return (${hideInTable});`);
+            return !fn(this.model, this.formState);
+          } catch (e) {
+            console.warn('Error evaluating hideInTable expression', hideInTable, e);
+            return true;
+          }
+        }
+
+        return true;
+      })
+      .map(fieldGroup => {
+        return {
+          name: fieldGroup.templateOptions.label,
+          key: fieldGroup.key,
+          type: fieldGroup.type,
+          format: fieldGroup.templateOptions.luxonFormat,
+          order: +fieldGroup.templateOptions.order,
+          options: fieldGroup.templateOptions.options
+        };
+      });
 
     if (!this.to.disabled) {
       toRender.push({
@@ -122,16 +147,22 @@ export abstract class BaseTableCRUDTypeComponent extends FieldArrayType implemen
 
   remove(row: any) {
     super.remove(row);
+    this.refreshColumns();
     this.table.renderRows();
   }
 
   add(index?: number, model?: any) {
     super.add(index, model);
+    this.refreshColumns();
     this.table.renderRows();
   }
 
   addItem(): void {
     this.openDialog();
+  }
+
+  private refreshColumns() {
+    this.fieldsToRender = this.buildColumnInfo(this.field.fieldArray);
   }
 
   abstract editItem(rowIndex: number): void;

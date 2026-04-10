@@ -15,6 +15,7 @@
 -->
 ### Added
 - Añadido soporte para el idioma catalán ([#23](https://github.com/herculesproject/sgi/issues/23)).
+- Añadidos nuevos componentes para poder ser utilizados en los formularios de memoria ([#33](https://github.com/herculesproject/sgi/issues/33)).
 
 ### Changed
 - [ETI] Añadir reemplazo de placeholders de nombre de comité en esquemas Formly para el contexto dev ([#36](https://github.com/herculesproject/sgi/issues/36)).
