@@ -59,6 +59,10 @@
             <sgi-i18n-table-field [field]="model[i][currentField.key]"></sgi-i18n-table-field>
           </p>
 
+          <p *ngSwitchCase="'i18n-ckeditor'">
+            <sgi-i18n-table-ckeditor [field]="model[i][currentField.key]"></sgi-i18n-table-ckeditor>
+          </p>
+
           <p *ngSwitchDefault>{{model[i][currentField.key]}}</p>
         </td>
       </ng-container>

@@ -15,6 +15,7 @@ import { I18nCkeditorTypeComponent } from './types/i18n-ckeditor';
 import { I18nInputTypeComponent } from './types/i18n-input';
 import { I18nTextareaTypeComponent } from './types/i18n-textarea.type';
 import { SelectEntityTypeComponent } from './types/select-entity.type';
+import { SelectMiembrosEquipoTypeComponent } from './types/select-miembro-equipo.type';
 import { SelectProcedimientosTypeComponent } from './types/select-procedimientos.type';
 import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
 import { dateIsAfter, dateIsBetween } from './validators/date.validator';
@@ -58,6 +59,7 @@ export function validatorFactory(
     PanelWrapperComponent,
     SelectEntityTypeComponent,
     SelectProcedimientosTypeComponent,
+    SelectMiembrosEquipoTypeComponent,
     SubtitleDivWrapperComponent,
     TipoValorSocialComponent,
     TitleDivWrapperComponent,
@@ -104,6 +106,11 @@ export function validatorFactory(
         {
           name: 'i18n-ckeditor',
           component: I18nCkeditorTypeComponent,
+          wrappers: ['form-field'],
+        },
+        {
+          name: 'selector-miembros-equipo',
+          component: SelectMiembrosEquipoTypeComponent,
           wrappers: ['form-field'],
         },
       ],

@@ -20,6 +20,7 @@ import { NGXLogger } from 'ngx-logger';
       [errorStateMatcher]="errorStateMatcher"
       [aria-labelledby]="_getAriaLabelledby()"
       [disableOptionCentering]="to.disableOptionCentering"
+      [matTooltip]="to.tooltip"
     >
     <ng-container *ngIf="optionsFiltered | formlySelectOptions: field | async as selectOptions">
         <ng-container *ngFor="let item of selectOptions">

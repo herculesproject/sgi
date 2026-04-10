@@ -13,6 +13,7 @@ import { FieldType } from '@ngx-formly/material/form-field';
       [formlyAttributes]="field"
       [placeholder]="to.placeholder"
       [tabindex]="to.tabindex"
+      [matTooltip]="to.tooltip"
       >
     </sgi-i18n-input>
   `

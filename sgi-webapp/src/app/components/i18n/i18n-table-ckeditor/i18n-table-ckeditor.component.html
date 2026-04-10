@@ -1,0 +1,7 @@
+<ng-container *ngIf="value; else empty">
+  <div [innerHTML]="value"></div>
+</ng-container>
+
+<ng-template #empty>
+  <span></span>
+</ng-template>
