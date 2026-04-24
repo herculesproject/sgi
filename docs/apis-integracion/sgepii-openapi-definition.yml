@@ -1,0 +1,524 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Gestión Económica de Protección Industrial e Intelectual (SGEPII)
+  description: |-
+    API de integración del **Sistema de Gestión Económica (SGE)** con el **SGI**.
+
+    Se entiende por SGE el sistema universitario que centraliza la gestión de datos económicos en general o de las actividades de investigación en particular (gastos y facturas recibidas, facturas emitidas, ingresos, reservas de crédito, presupuestos). 
+    El SGI no realiza la gestión de datos económicos derivados de las actividades de investigación (proyectos, contratos, grupos y propiedad industrial e intelectual) 
+    sino que se precisa de una integración con el sistema de gestión económica (SGE). Fruto de esta integración se muestran una serie de datos en el SGI que permiten reflejar el estado económico de las actividades mencionadas. 
+    Estos datos económicos recopilados del SGE corporativo no son almacenados en el SGI, por lo que no es posible realizar ningún tipo de cálculo que permita obtener resultados adicionales a los que puedan ser remitidos por el SGE a partir de los servicios de integración definidos.
+    El SGI dispone de un interface de integración predefinido para poder recuperar del SGE la información necesaria. 
+    En el caso  que existan limitaciones para que el SGE implemente este interface predefinido, se deberá desarrollar la capa intermedia de adaptación necesaria en el ESB del SGI
+    Los puntos más importantes del SGI en los que se muestran datos procedentes de la integración económica son:
+      - CSP - Ejecución económica. Existen otros apartados del módulo CSP donde también se requieren datos procedentes de la integración económica, a partir de los que se realiza la configuración necesaria para presentar la información en este apartado de Ejecución económica. (API a parte SGE)
+      - PII - Repartos
+
+  version: 0.1.0
+
+tags:
+  - name: gastos-invencion
+    description: Servicios destinados a la recuperación de los gastos registrados en el sistema de gestión económica correspondientes a las invenciones
+  - name: ingresos-invencion
+    description: Servicios destinados a la recuperación de los ingresos registrados en el sistema de gestión económica correspondientes a los contratos vinculados a invenciones
+
+paths:
+  /gastos-invencion:
+    get:
+      tags:
+        - gastos-invencion
+      summary: Devuelve la lista con los gastos asociados a una invención
+      description: |-
+          Devuelve la lista de gastos de una invención filtrados y ordenados.
+          La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+          El filtro por tipo de operación puede tomar los siguientes valores:
+          -**GAS** (Ejecución económica - Gastos). Se devuelven todos los gastos asociados a la invención.
+          -**REP** (Ejecución económica - Repartos - Gastos a deducir) Se devuelve el conjunto de gastos asociados a la invención únicamente aquellos que se deban tener en cuenta para el reparto de regalía.
+
+          ### Búsquedas necesarias que deben soportarse
+          - `invencionId`: El identificador de la invención
+          - `tipoOperacion`: El tipo de operación (GAS/REP)
+
+          ### Módulos del SGI donde se utiliza
+          - PII: **Invención ➜ Ejecución económica ➜ Gastos**, **Invención ➜ Ejecución económica ➜ Repartos**
+
+          ### Consideraciones para la implementación
+          - La implementación de este servicio es **obligatoria** para poder hacer uso de los apartados de Ejecución Económicas- Gastos y Ejecución Económica - Repartos del módulo de PII.
+      operationId: findAllGastosInvencion
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - invencionId
+            - tipoOperacion
+          schema:
+            type: string
+            example: invencionId==1;tipoOperacion=ik=GAS
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: id,asc
+      responses:
+        200:
+          description: Devuelve la lista de gastos
+          headers:
+            X-Page-Count:
+              description: Nº total de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página actual
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DatoEconomicoGastoOutput"
+        204:
+          description: No existen datos económicos de gasto que cumplan los criterios de búsqueda.
+        400:
+          description: Parámetros no válidos (ej. sintaxis RSQL inválida o parámetros de paginación fuera de rango).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /gastos-invencion/columnas:
+    get:
+      tags:
+        - gastos-invencion
+      summary: Devuelve el listado de las columnas dinámicas seleccionadas para representar los gastos asociados a invenciones
+      description: |-
+        Devuelve el listado de las columnas dinámicas configuradas para los gastos asociados a invenciones.
+        **Nota importante:** el servicio realiza internamente un filtro **implícito por `tipoOperacion=GAS`**, por lo que sólo devuelve columnas asociadas a gastos de ejecución económica.
+        
+        ### Búsquedas necesarias que deben soportarse
+        - No es necesario ningún filtro de búsqueda.
+
+        ### Módulos del SGI donde se utiliza
+        - PII: **Invención ➜ Ejecución económica ➜ Gastos**, **Invención ➜ Ejecución económica ➜ Repartos**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es obligatoria para poder hacer uso de los apartados de Ejecución Económicas - Gastos y Ejecución Económica - Repartos del módulo de PII.
+        - El filtro por `tipoOperacion` está **fijado internamente a `GAS`**; no se deben enviar otros valores.
+      operationId: findAllColumnasGastosInvencion
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de columnas dinámicas de gasto.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColumnaOutput"
+        204:
+          description: No hay columnas disponibles.
+        400:
+          description: Parámetros no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /gastos-invencion/{id}:
+    get:
+      tags:
+        - gastos-invencion
+      summary: Detalle de un gasto asociado a invención
+      description: |-
+        Devuelve el detalle completo de una gasto asociado a una invención identificado por su `id`.
+
+        El detalle incluye:
+        - Información general del gasto.
+        - Lista de campos dinámicos asociados al gasto.
+        - Documentos asociados al gasto.
+
+        Las columnas dinámicas devueltas corresponden a la definición completa de columnas de **gastos** (modo no reducido).
+
+        ### Módulos del SGI donde se utiliza
+        - PII: **Invención ➜ Ejecución económica ➜ Gastos ➜ Detalle**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es obligatoria para poder hacer uso de los apartados de Ejecución Económicas - Gastos y Ejecución Económica - Repartos del módulo de PII.
+      operationId: findGastoInvencionById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del gasto de la invención
+          required: true
+          schema:
+            type: string
+            example: G1
+      responses:
+        200:
+          description: Devuelve el detalle del gasto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatoEconomicoGastoDetalleOutput"
+        404:
+          description: Factura emitida no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /ingresos-invencion:
+    get:
+      tags:
+        - ingresos-invencion
+      summary: Devuelve la lista con los ingresos asociados a una invención
+      description: |-
+        Listado de ingresos asociados a una invención. La asociación en el SGI se realizará a través de contratos de CSP (proyectos) y el identificador de proyecto a enviar al SGE ha de ser el del proyecto económico.
+        Devuelve la lista de ingresos de la invención filtrada y ordenada.
+
+        ### Búsquedas necesarias que deben soportarse
+        - `proyectoId`: La referencia del proyecto en el sistema de gestión económica.
+
+        ### Módulos del SGI donde se utiliza
+        - PII: **Invención ➜ Ejecución económica ➜ Ingresos**, **Invención ➜ Ejecución económica ➜ Repartos ➜ Detalle**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **obligatoria** para poder hacer uso de los apartados de Ejecución Económicas - Ingresos y Ejecución Económica - Repartos del módulo de PII.
+        - El filtro por `tipoOperacion` está **fijado internamente a `ING`**.
+      operationId: findAllIngresosInvencion
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - proyectoId
+          schema:
+            type: string
+            example: proyectoId==P1
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: id,asc
+      responses:
+        200:
+          description: Devuelve la lista de ingresos
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DatoEconomicoIngresoOutput"
+        204:
+          description: No existen datos económicos de ingreso que cumplan los criterios de búsqueda.
+        400:
+          description: Parámetros no válidos (ej. sintaxis RSQL inválida o parámetros de paginación fuera de rango).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /ingresos-invencion/columnas:
+    get:
+      tags:
+        - ingresos-invencion
+      summary: Devuelve el listado de las columnas dinámicas seleccionadas para representar los ingresos asociados a invenciones
+      description: |-
+        Devuelve la lista de columnas dinámicas configuradas para los ingresos asociados a invenciones.
+        **Nota importante:** el servicio realiza internamente un filtro **implícito por `tipoOperacion=ING`**, por lo que solo devuelve columnas asociadas a ingresos de invenciones.
+        
+        ### Búsquedas necesarias que deben soportarse
+        - No es necesario ningún filtro de búsqueda.
+
+        ### Módulos del SGI donde se utiliza
+        - PII: **Invención ➜ Ejecución económica ➜ Ingresos**, **Invención ➜ Ejecución económica ➜ Repartos ➜ Detalle**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **obligatoria** para el módulo PII.
+        - El filtro por `tipoOperacion` está **fijado internamente a `ING`**; no se deben enviar otros valores.
+      operationId: findAllColumnasIngresosInvencion
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+
+            Se puede buscar por los siguientes campos:
+            - proyectoId
+          schema:
+            type: string
+            example: proyectoId==P1
+      responses:
+        200:
+          description: Devuelve la lista de columnas dinámicas de ingreso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColumnaOutput"
+        204:
+          description: No hay columnas disponibles.
+        400:
+          description: Parámetros no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+components:
+  schemas:
+    ColumnaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+          description: Identificador único de la columna
+        nombre:
+          type: string
+          example: "Concepto"
+          description: Nombre visible de la columna
+        acumulable:
+          type: boolean
+          example: false
+          description: Indica si la columna es acumulable (sumable) o no
+    DatoEconomicoGastoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        columnas:
+          type: object
+          description: |-
+            Mapa dinámico de columnas configuradas.
+            La clave representa el identificador de la columna y el valor puede ser numérico o null dependiendo del tipo de dato.
+          additionalProperties:
+            nullable: true
+            oneOf:
+              - type: number
+              - type: string
+    DatoEconomicoIngresoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        proyectoId:
+          type: string
+          example: P1
+        columnas:
+          type: object
+          description: |-
+            Mapa dinámico de columnas configuradas.
+            La clave representa el identificador de la columna y el valor puede ser numérico o null dependiendo del tipo de dato.
+          additionalProperties:
+            nullable: true
+            oneOf:
+              - type: number
+              - type: string
+    DatoEconomicoGastoDetalleOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: E1
+          description: Identificador del dato económico en el SGE
+        campos:
+          type: array
+          description: Lista de campos dinámicos del dato económico
+          items:
+            type: object
+            properties:
+              nombre:
+                type: string
+                description: Nombre del campo.
+                example: Número previsión
+              valor:
+                description: |-
+                  Valor del campo.
+                  El valor será normalmente un **String**, salvo en aquellos campos que representen importes o valores acumulables, donde se enviará un **valor numérico** sin separador de miles y con el punto como separador decimal.
+                oneOf:
+                  - type: string
+                  - type: number
+                example: DE-1
+        documentos:
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentoOutput"
+          description: Lista de documentos asociados al dato económico, si los hubiera
+    DocumentoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: D1
+        nombre:
+          type: string
+          example: Documento 1
+        nombreFichero:
+          type: string
+          example: docucumento1.pdf
+
+    BadRequestError:
+      type: object
+      description: Este error se produce cuando el sistema recibe una petición incorrecta y no existe un error más especifico.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:bad-request
+        title:
+          type: string
+          description: Descripción del error.
+          example: Bad Request
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 400
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Page index must not be less than zero
+    NotFoundError:
+      type: object
+      description: Este error se produce cuando el recurso solicitado no existe.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:not-found
+        title:
+          type: string
+          description: Descripción del error.
+          example: Not Found
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 404
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No se ha encontrado '{NOMBRE_RECURSO}' con el identificador '{IDENTIFICADOR_RECURSO}'
+          
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, for documentation purposes only
+

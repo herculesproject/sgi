@@ -1,0 +1,1102 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Gestión de Empresas (SGEMP)
+  description: |-
+    API de integración del **Sistema de Gestión de Empresas (SGEMP)** con el **SGI**.
+
+    Aunque el nombre del sistema hace referencia a "empresas", el **SGEMP** abarca de forma genérica
+    cualquier **entidad, organismo o institución** que financie o participe en las actividades de
+    investigación gestionadas por el SGI. En este contexto, el término *empresa* debe entenderse
+    en un sentido más amplio, incluyendo tanto entidades públicas como privadas, con o sin ánimo de lucro.
+
+    El SGI **no almacena datos propios** de estas entidades. Todos los datos deben recuperarse de los
+    sistemas corporativos correspondientes. Dependiendo de la organización interna de la Universidad,
+    la información puede proceder de uno o varios sistemas fuente. 
+
+    Por ejemplo:
+    - Si la Universidad mantiene relación económica con la entidad, esta puede estar registrada en el **Sistema de Gestión Económica**.
+    - Si no existe relación económica, puede estar registrada en un sistema corporativo auxiliar.
+
+    Bajo la denominación **Sistema de Gestión de Empresas (SGEMP)** se agrupa, por tanto, cualquier sistema
+    del que la Universidad deba extraer los datos relativos a empresas, entidades u organismos que el SGI requiera.
+  version: 0.1.0
+  contact: {}
+
+tags:
+  - name: datos-contacto
+    description: Datos de contacto de la entidad.
+  - name: empresas
+    description: Operaciones con entidades (creación, actualización y búsquedas).
+  - name: empresas-public
+    description: Operaciones públicas para la consulta de entidades (sin autenticación desde el SGI).
+  - name: tipos-identificador
+    description: Listado de tipos de identificadores de entidades.
+
+paths:
+  /datos-contacto/empresa/{id}:
+    get:
+      tags:
+        - datos-contacto
+      summary: Datos de contacto de la entidad
+      description: |-
+        Devuelve los datos de contacto correspondientes al identificador de la entidad proporcionado.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Entidades ➜ Gestora**
+
+        ### Consideraciones para la implementación
+        - Los datos de contacto de las entidades en el SGI tienen carácter **exclusivamente informativo**.  
+        - Este servicio solo se utiliza en la pantalla **Proyecto ➜ Entidades ➜ Gestora** del módulo CSP para visualizar la dirección postal de la entidad.
+      operationId: findDatosContactoByEmpresaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único de la entidad en el SGEMP.
+          required: true
+          schema:
+            type: string
+            example: E1
+      responses:
+        200:
+          description: Devuelve los datos de contacto de la entidad.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatosContactoOutput"
+        204:
+          description: La entidad existe pero no tiene datos de contacto registrados.
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Entidad no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+  /empresas:
+    get:
+      tags:
+        - empresas
+      summary: Devuelve una lista paginada y filtrada de entidades
+      description: |-
+        Devuelve una lista paginada y filtrada de entidades (empresas) que cumplen los criterios proporcionados.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de empresas.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+
+        ### Consideraciones para la implementación
+        - Los datos de las entidades en el SGI tienen carácter **exclusivamente informativo**.  
+        - Es **obligatorio** garantizar que el campo `id` sea único y estable, y que las referencias a `tipoIdentificador` y `padreId` (si se utilizan) correspondan a valores existentes.  
+        - Dado su uso informativo, si algún dato no puede obtenerse de los sistemas corporativos, puede definirse una estrategia adecuada para completarlo (por ejemplo, valores por defecto o inferidos), siempre que se mantenga la coherencia con el resto de la información.
+        - Aunque el soporte completo de búsquedas RSQL es opcional, **se recomienda implementarlo** para mantener la compatibilidad futura con el SGI.
+
+        ### Búsquedas necesarias que deben soportarse
+        - **Búsqueda general** (buscador de empresas):  
+          Filtra por número de identificación, nombre o razón social.  
+          Ejemplo:  
+          ```
+          numeroIdentificacion=ik=ejemplo,nombre=ik=ejemplo,razonSocial=ik=ejemplo
+          ```
+        - **Por identificadores** (listados internos del SGI):  
+          ```
+          id=in=(E1,E2,E3)
+          ```
+        - **Por padreId** (opcional según implantación):  
+          Devuelve únicamente las entidades principales (sin entidad padre). Este filtro puede utilizarse desde el formulario de alta o modificación de empresas.
+          ```
+          padreId=na=""
+          ```
+        - **Por país** (opcional según implantación):  
+          Devuelve las entidades pertenecientes a un país concreto. Se utiliza en el listado de proyectos del módulo CSP para filtrar aquellos proyectos que tengan entre sus socios entidades de ese país. La disponibilidad de este filtro es configurable según la implantación.
+          ```
+          paisId==P1
+          ```
+      operationId: findAllEmpresas
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Número de página (la primera página es la 0).
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Número de elementos por página.
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - `id`: Identificador único de la entidad en el SGEMP.
+            - `nombre`: Nombre de la entidad.
+            - `razonSocial`: Razón social de la entidad.
+            - `numeroIdentificacion`: Número de identificación fiscal de la entidad del tipo indicado en 'tipoIdentificador'.
+            - `padreId`: Identificador de la entidad padre o entidad principal. Estará informado en el caso de entidades que son subentidad de otra. (**Opcional** según implantación)
+            - `paisId`: Identificador del país de la entidad. (**Opcional** según implantación)
+          schema:
+            type: string
+            example: numeroIdentificacion=ik=uni,nombre=ik=uni,razonSocial=ik=uni
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de entidades (respuesta paginada).
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmpresaOutput"
+        204:
+          description: No hay entidades para los criterios de búsqueda utilizados.
+        400:
+          description: Parámetros no válidos (ej. sintaxis RSQL inválida o parámetros de paginación fuera de rango).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Entidad no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /empresas/{id}:
+    get:
+      tags:
+        - empresas
+      summary: Detalle de la entidad
+      description: |-
+        Devuelve el detalle de la entidad correspondiente al `id`.
+          
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes **, **Convocatoria ➜ Entidades ➜ Financiadoras **, **Solicitud ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio**, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**,  **Solicitud ➜ Proyecto ➜ Presupuesto por entidades**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Listado**, **Solicitudes Autorización ➜ Datos generales**, **Ejecución económica ➜ Seguimiento justificación ➜ Resumen**, **Ejecución económica ➜ Seguimiento justificación ➜ Resumen**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Asociar autorización**, **Facturas previstas pendientes de emitir**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Configuración económica ➜ Amortización de fondos**, **Proyecto ➜ Socios ➜ Listado**, **Proyecto ➜ Socios ➜ Datos generales**, **Proyecto ➜ Socios ➜ Periodo justificación ➜ Documentos** 
+        - EER: **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Equipo inventor**, **Invención ➜ Ejecución económica ➜ Contratos**, **Invención ➜ Ejecución económica ➜ Repartos**, **Invención ➜ Solicitud protección ➜ Datos generales**  
+
+        ### Consideraciones para la implementación
+        - Los datos de las entidades en el SGI tienen carácter **exclusivamente informativo**.  
+        - Es **obligatorio** garantizar que el campo `id` sea único y estable, y que las referencias a `tipoIdentificador` y `padreId` (si se utilizan) correspondan a valores existentes.  
+        - Dado su uso informativo, si algún dato no puede obtenerse de los sistemas corporativos, puede definirse una estrategia adecuada para completarlo (por ejemplo, valores por defecto o inferidos), siempre que se mantenga la coherencia con el resto de la información.
+      operationId: findEmpresaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la entidad.
+          required: true
+          schema:
+            type: string
+            example: E1
+      responses:
+        200:
+          description: Devuelve la entidad.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmpresaOutput"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Entidad no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+  /empresas/modificadas-ids:
+    get:
+      tags:
+        - empresas
+      summary: Listado de identificadores de entidades modificadas (servicio de pasarela)
+      description: |-
+        Devuelve un listado con los identificadores de entidades que han tenido modificaciones en sus datos identificativos o de contacto.
+
+        ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es opcional y sólo se requiere si el SGI se utiliza como pasarela entre el sistema de gestión de empresas corporativo y cualquier otro sistema externo. Permite identificar las empresas/entidades que han experimentado cambios en sus datos en el sistema de gestión de empresas corporativos.
+      operationId: findAllEmpresasModificadasIds
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL:
+            - fechaModificacion
+          schema:
+            type: string
+            example: fechaModificacion=ge="2022-01-01T00:00:00Z"
+        - name: s
+          x-sgi-pageable: false
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: fechaModificacion,asc
+      responses:
+        200:
+          description: Devuelve la lista de identificadores (strings).
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - E1
+                - E4
+                - E9
+        204:
+          description: No hay identificadores que cumplan los criterios.
+  /empresas/formly:
+    post:
+      tags:
+        - empresas
+      summary: Crea una nueva entidad
+      description: |-
+        Crea una nueva entidad utilizando el formato definido en el **Formly** de alta.
+        La creación puede realizarse de forma **síncrona**, si los cambios pueden aplicarse automáticamente, o de forma **asíncrona**, si requieren algún tipo de validación o aprobación para su traslado a los sistemas corporativos.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de empresas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde la acción **Solicitar alta de entidad** del buscador de entidades.  
+        - Su implementación es **opcional** si no se asigna a los usuarios el permiso para crear (**ESB-EMP-C**) entidades, o si se desactiva la opción **Alta de empresas** en **Configuración ➜ Configuración global** del módulo Administración.  
+        - La definición del **cuerpo de la solicitud** debe estar **alineada con la estructura del formulario dinámico (Formly)** de alta, permitiendo capturar los campos definidos para la creación de entidades.  
+        - El **esquema del cuerpo de la solicitud** puede adaptarse en función de las necesidades de cada implantación o de los sistemas corporativos de origen.
+      operationId: createEmpresaFormly
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: |-
+          Datos de la nueva entidad. (Los campos y sus requisitos pueden variar según la implantación, en función del diseño de los formularios dinámicos y de las necesidades del sistema corporativo de origen).
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmpresaFormlyCreateInput"
+      responses:
+        200:
+          description: Devuelve el identificador de la entidad creada (creación síncrona).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: E2
+        202:
+          description: Solicitud de creación procesada correctamente (creación asíncrona).
+        400:
+          description: Datos de la entidad incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /empresas/formly/create:
+    get:
+      tags:
+        - empresas
+      summary: Formly para la creación de una entidad
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para la creación de entidades en el SGI.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de empresas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Se utiliza desde la acción **Solicitar alta de entidad** del buscador de entidades.
+        - Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+        - Si se requiere añadir **validadores personalizados**, es necesario **incluirlos previamente en el SGI** para que puedan ser reconocidos y utilizados en los formularios dinámicos.
+
+        ### Validadores personalizados disponibles
+        - `date-is-after`: Valida que la fecha del campo sea posterior a otra fecha o campo.  
+        - `date-is-between`: Valida que la fecha esté entre dos valores o campos.  
+        - `email`: Valida el formato de correo electrónico.  
+        - `email-principal-unique`: Valida que exista un único correo electrónico principal.  
+        - `field-array-max`: Valida que el número de elementos de una lista no supere el límite definido.  
+        - `multicheckbox-restricted`: Valida que ciertos valores de selección múltiple no sean simultáneamente seleccionados.  
+        - `oneRowRequired`: Comprueba que exista al menos una fila en una tabla.
+      operationId: getEmpresaFormlyCreate
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para crear una entidad.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                    - key: nombre
+                      type: input
+                      templateOptions:
+                        label: Nombre de la entidad
+                        required: true
+                    - key: tipoIdentificador
+                      type: select
+                      templateOptions:
+                        label: Tipo de identificador
+                        options:
+                          - { label: CIF, value: "CIF" }
+                          - { label: VAT, value: "VAT" }
+                        required: true
+                    - key: numeroIdentificacion
+                      type: input
+                      templateOptions:
+                        label: Número de identificación
+                        required: true
+                    - key: razonSocial
+                      type: input
+                      templateOptions:
+                        label: Razón social
+                    - key: datosEconomicos
+                      type: checkbox
+                      templateOptions:
+                        label: Incluye datos económicos
+                    - key: direccion
+                      type: input
+                      templateOptions:
+                        label: Dirección postal
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /empresas/formly/update:
+    get:
+      tags:
+        - empresas
+      summary: Formly para la edición de una entidad
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para la edición de entidades en el SGI.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de empresas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Se utiliza en la pantalla **Proyecto ➜ Entidades ➜ Financiadoras** del módulo CSP, desde la acción **Ver detalle de entidad**, así como desde la acción **Editar** del buscador de entidades.  
+        - El SGI rellena el formulario con los datos obtenidos de `GET /empresas/formly/{id}`. Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+        - Si se requiere añadir **validadores personalizados**, es necesario **incluirlos previamente en el SGI** para que puedan ser reconocidos y utilizados en los formularios dinámicos.
+
+        ### Validadores personalizados disponibles
+        - `date-is-after`: Valida que la fecha del campo sea posterior a otra fecha o campo.  
+        - `date-is-between`: Valida que la fecha esté entre dos valores o campos.  
+        - `email`: Valida el formato de correo electrónico.  
+        - `email-principal-unique`: Valida que exista un único correo electrónico principal.  
+        - `field-array-max`: Valida que el número de elementos de una lista no supere el límite definido.  
+        - `multicheckbox-restricted`: Valida que ciertos valores de selección múltiple no sean simultáneamente seleccionados.  
+        - `oneRowRequired`: Comprueba que exista al menos una fila en una tabla.
+      operationId: getEmpresaFormlyUpdate
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para modificar una entidad.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                    - key: nombre
+                      type: input
+                      templateOptions:
+                        label: Nombre de la entidad
+                        required: true
+                    - key: tipoIdentificador
+                      type: select
+                      templateOptions:
+                        label: Tipo de identificador
+                        options:
+                          - { label: CIF, value: "CIF" }
+                          - { label: VAT, value: "VAT" }
+                        required: true
+                    - key: numeroIdentificacion
+                      type: input
+                      templateOptions:
+                        label: Número de identificación
+                        required: true
+                    - key: razonSocial
+                      type: input
+                      templateOptions:
+                        label: Razón social
+                    - key: datosEconomicos
+                      type: checkbox
+                      templateOptions:
+                        label: Incluye datos económicos
+                    - key: direccion
+                      type: input
+                      templateOptions:
+                        label: Dirección postal
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /empresas/formly/view:
+    get:
+      tags:
+        - empresas
+      summary: Formly para la visualización del detalle de una entidad
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para visualizar el detalle de una entidad en el SGI.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de empresas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Se utiliza en la pantalla **Proyecto ➜ Entidades ➜ Financiadoras** del módulo CSP, desde la acción **Ver detalle de entidad**, así como desde la acción **Ver** del buscador de entidades.  
+        - El SGI rellena el formulario con los datos obtenidos de `GET /empresas/formly/{id}`. Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+      operationId: getEmpresaFormlyView
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para visualizar una entidad.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                    - key: nombre
+                      type: input
+                      templateOptions:
+                        label: Nombre
+                        disabled: true
+                    - key: numeroIdentificacion
+                      type: input
+                      templateOptions:
+                        label: Número de Identificación
+                        disabled: true
+                    - key: razonSocial
+                      type: input
+                      templateOptions:
+                        label: Razón Social
+                        disabled: true
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /empresas/formly/{id}:
+    get:
+      tags:
+        - empresas
+      summary: Detalle de la entidad para el Formly
+      description: |-
+        Devuelve el detalle de la entidad correspondiente al `id` en el formato utilizado por los formularios dinámicos (**Formly**).
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de empresas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Los datos de las entidades en el SGI tienen carácter **exclusivamente informativo**.  
+        - Este servicio se utiliza en la pantalla **Proyecto ➜ Entidades ➜ Financiadoras** del módulo CSP, desde la acción **Ver detalle de entidad**, así como desde las acciones **Ver** y **Editar** del buscador de entidades.  
+        - Su implementación es **opcional** si no se asignan a los usuarios permisos para modificar (**ESB-EMP-E**) o ver (**ESB-EMP-V**) el detalle de las entidades, o si los formularios se diseñan para no mostrar información de la entidad (por ejemplo, mostrando un mensaje informativo con el sistema corporativo desde el que se puede realizar la operación).  
+        - La definición del objeto de respuesta de este endpoint debe estar **alineada con la estructura de los formularios dinámicos (Formly)**, para permitir visualizar y editar los campos que se deseen mantener.  
+        - El esquema de la respuesta puede adaptarse en cada implantación en función de las necesidades y del diseño de los formularios Formly en los que se utilice.
+      operationId: findEmpresaFormlyById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la entidad.
+          required: true
+          schema:
+            type: string
+            example: E1
+      responses:
+        200:
+          description: Devuelve el detalle de la entidad para el Formly.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmpresaFormlyOutput"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Entidad no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+    put:
+      tags:
+        - empresas
+      summary: Actualiza los datos de la entidad
+      description: |-
+        Actualiza los datos de la entidad correspondiente al `id`.  
+        La actualización puede realizarse de forma **síncrona**, si los cambios pueden aplicarse automáticamente, o de forma **asíncrona**, si requieren algún tipo de validación o aprobación para su traslado a los sistemas corporativos.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde la acción **Editar** del buscador de entidades.  
+        - Su implementación es **opcional** si no se asigna a los usuarios el permiso para modificar (**ESB-EMP-E**) entidades, o si se desactiva la opción **Modificación de empresas** en **Configuración ➜ Configuración global** del módulo Administración.  
+        - La definición del **cuerpo de la solicitud** debe estar **alineada con la estructura del formulario dinámico (Formly)** de modificación, para permitir editar los campos definidos en cada implantación.  
+        - El **esquema del cuerpo de la solicitud** puede adaptarse en función de las necesidades de cada implantación o de los sistemas corporativos de origen.
+      operationId: updateEmpresaFormly
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la entidad.
+          required: true
+          schema:
+            type: string
+            example: E1
+      requestBody:
+        description: |-
+          Datos actualizados de la entidad (Los campos y sus requisitos pueden variar según la implantación, en función del diseño de los formularios dinámicos y de las necesidades del sistema corporativo de origen).
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmpresaFormlyUpdateInput"
+      responses:
+        202:
+          description: Solicitud de actualización procesada correctamente (actualización asíncrona).
+        204:
+          description: Entidad actualizada correctamente (actualización síncrona).
+        400:
+          description: Datos de la entidad incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Entidad no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+  /empresasFast:
+    get:
+      tags:
+        - empresas
+      summary: Búsqueda rápida de entidades
+      description: |-
+        Versión optimizada del endpoint `GET /empresas`, diseñada para su uso en componentes de **autocompletado** (buscadores rápidos).
+
+        Devuelve un máximo de **11 registros** (paginación fija, página 0 y ordenados alfabéticamente).  
+        Si se devuelven más de 10 resultados, el SGI mostrará el mensaje:
+        *“Demasiados resultados, por favor refine la búsqueda”*, indicando al usuario que existen más coincidencias.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde las pantallas que incorporan el **buscador de entidades**, cuando el usuario escribe directamente en el campo de búsqueda.
+        - La búsqueda replica la lógica del buscador general de empresas, pero **sin utilizar sintaxis RSQL**. Internamente realiza una búsqueda por coincidencia parcial (OR) sobre los campos:
+          - `numeroIdentificacion`
+          - `nombre`
+          - `razonSocial`
+        - En función de los tiempos de respuesta del endpoint `GET /empresas`, puede ser recomendable implementar una **versión optimizada** de esta consulta.
+        - Alternativamente, puede reutilizarse la implementación del buscador general (`GET /empresas`) transformando el parámetro `busqueda` para aplicar los filtros sobre los campos indicados, o permitiendo buscar directamente por dicho parámetro.
+      operationId: findAllEmpresasFast
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: busqueda
+          in: query
+          required: true
+          description: Texto para búsqueda en los campos `nombre`, `razonSocial` y `numeroIdentificacion`.
+          schema:
+            type: string
+            example: Universidad de
+      responses:
+        200:
+          description: Devuelve la lista de entidades coincidentes con la búsqueda.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmpresaOutput"
+        204:
+          description: No hay entidades para los criterios de búsqueda utilizados.
+  /public/empresas/{id}:
+    get:
+      tags:
+        - empresas-public
+      summary: Detalle público de la entidad
+      description: |-
+        Versión pública del endpoint `GET /empresas/{id}`.
+
+        Devuelve los mismos datos básicos de la entidad, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findEmpresaPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la entidad.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el detalle de la entidad.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmpresaOutput"
+        404:
+          description: Entidad no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+  /tipos-identificador:
+    get:
+      tags:
+        - tipos-identificador
+      summary: Listado de tipos de identificador de entidades
+      description: |-
+        Devuelve el listado de tipos de identificador empleados para identificar a una entidad.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado**, **Convocatoria ➜ Datos generales**, **Convocatoria ➜ Entidades ➜ Convocantes**, **Convocatoria ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Listado, **Solicitud ➜ Proyecto ➜ Entidades ➜ Financiadoras**, **Solicitud ➜ Proyecto ➜ Presupuesto por entidades ➜ Datos generales**, **Solicitud ➜ Proyecto ➜ Socio ➜ Datos generales**, **Solicitud RRHH ➜ Solicitante**, **Solicitudes Autorización ➜ Datos generales**, **Participación proyectos externos ➜ Listado notificaciones CVN**, **Participación proyectos externos ➜ Notificaciones CVN ➜ Datos generales**, **Proyecto ➜ Listado**, **Proyecto ➜ Entidades ➜ Convocantes**, **Proyecto ➜ Entidades ➜ Financiadoras**, **Proyecto ➜ Entidades ➜ Gestoras**, **Proyecto ➜ Socios ➜ Datos generales**, **Ejecución económica ➜ Listado**
+        - EER: **Empresas de explotación de resultados ➜ Listado**, Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**
+        - PII: **Invención ➜ Informes de patentabilidad**, **Invención ➜ Titularidad ➜ Titular**, **Invención ➜ Solicitud protección ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza únicamente desde el **formulario dinámico (Formly)** de empresas.
+        - Su implementación es **opcional** si no se incluye este campo en los formularios o si no está habilitada la funcionalidad de alta o modificación de empresas.
+      operationId: findAllTiposIdentificador
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de tipos de identificador ordenados alfabéticamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TipoIdentificadorOutput"
+        204:
+          description: No hay tipos de identificador disponibles.
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+
+components:
+  schemas:
+    DatosContactoOutput:
+      type: object
+      description: Datos de contacto de una entidad.
+      required:
+        - direccion
+      properties:
+        direccion:
+          type: string
+          description: |-
+            Dirección postal completa. Puede ser un texto libre o la concatenación de diferentes campos (calle, localidad, etc.)
+          example: Calle Gran Vía, 28, 3º B, 28013 Madrid
+    EmpresaFormlyCreateInput:
+      type: object
+      description: |-
+        Ejemplo de estructura de datos utilizada para el **alta de entidades** mediante el formulario dinámico (**Formly**).
+        Los campos y sus requisitos pueden variar según la implantación, en función del diseño de los formularios dinámicos y de las necesidades del sistema corporativo de origen.
+      properties:
+        nombre:
+          type: string
+          description: Nombre de la entidad.
+          example: Empresa 1
+        tipoIdentificador:
+          $ref: "#/components/schemas/TipoIdentificadorOutput"
+        numeroIdentificacion:
+          type: string
+          description: Número de identificación de la entidad.
+          example: A91109917
+        razonSocial:
+          type: string
+          description: Razón social de la entidad.
+          example: RazonSocial 1
+        datosEconomicos:
+          type: boolean
+          description: Indicador que señala si existen datos económicos disponibles en el SGEMP.
+          example: true
+        padreId:
+          type: string
+          nullable: true
+          description: Identificador de la entidad principal si es una subentidad.
+          example: null
+        direccion:
+          type: string
+          nullable: true
+          description: |-
+            Dirección postal completa. Puede ser un texto libre o la concatenación de diferentes campos (calle, localidad, etc.)
+          example: Calle Gran Vía, 28, 3º B, 28013 Madrid
+    EmpresaFormlyUpdateInput:
+      type: object
+      description: |-
+        Ejemplo de estructura de datos utilizada para la **actualización de entidades** mediante el formulario dinámico (**Formly**).
+        Los campos y sus requisitos pueden variar según la implantación, en función del diseño de los formularios dinámicos y de las necesidades del sistema corporativo de origen.
+      properties:
+        id:
+          type: string
+          description: Identificador único de la entidad en SGEMP.
+          example: E1
+        nombre:
+          type: string
+          description: Nombre de la entidad.
+          example: Empresa 1
+        tipoIdentificador:
+          $ref: "#/components/schemas/TipoIdentificadorOutput"
+        numeroIdentificacion:
+          type: string
+          description: Número de identificación de la entidad.
+          example: A91109917
+        razonSocial:
+          type: string
+          description: Razón social de la entidad.
+          example: RazonSocial 1
+        datosEconomicos:
+          type: boolean
+          description: Indicador que señala si existen datos económicos disponibles en el SGEMP.
+          example: true
+        padreId:
+          type: string
+          nullable: true
+          description: Identificador de la entidad principal si es una subentidad.
+          example: null
+        direccion:
+          type: string
+          nullable: true
+          description: |-
+            Dirección postal completa. Puede ser un texto libre o la concatenación de diferentes campos (calle, localidad, etc.)
+          example: Calle Gran Vía, 28, 3º B, 28013 Madrid
+    EmpresaFormlyOutput:
+      type: object
+      description: |-
+        Ejemplo de representación de la entidad usada para rellenar formularios (Formly).
+      properties:
+        id:
+          type: string
+          description: Identificador único de la entidad en SGEMP.
+          example: E1
+        nombre:
+          type: string
+          description: Nombre de la entidad.
+          example: Empresa 1
+        tipoIdentificador:
+          $ref: "#/components/schemas/TipoIdentificadorOutput"
+        numeroIdentificacion:
+          type: string
+          description: Número de identificación fiscal de la entidad del tipo indicado en `tipoIdentificador`.
+          example: A91109917
+        razonSocial:
+          type: string
+          description: Razón social de la entidad.
+          example: RazonSocial 1
+        datosEconomicos:
+          type: boolean
+          description: Indicador que señala si existen datos económicos disponibles en el SGEMP.
+          example: true
+        padreId:
+          type: string
+          nullable: true
+          description: Identificador de la entidad padre o entidad principal. Estará informado en el caso de entidades que son subentidad de otra.
+          example: null
+    EmpresaOutput:
+      type: object
+      description: |-
+        Datos de la entidad.
+      required:
+        - id
+        - nombre
+        - tipoIdentificador
+        - numeroIdentificacion
+        - razonSocial
+        - datosEconomicos
+      properties:
+        id:
+          type: string
+          description: Identificador único de la entidad en SGEMP.
+          example: E1
+        nombre:
+          type: string
+          description: Nombre de la entidad.
+          example: Empresa 1
+        tipoIdentificador:
+          $ref: "#/components/schemas/TipoIdentificadorOutput"
+        numeroIdentificacion:
+          type: string
+          description: Número de identificación fiscal de la entidad del tipo indicado en `tipoIdentificador`.
+          example: A91109917
+        razonSocial:
+          type: string
+          description: Razón social de la entidad.
+          example: RazonSocial 1
+        datosEconomicos:
+          type: boolean
+          description: Indicador que señala si existen datos económicos disponibles en el SGEMP.
+          example: true
+        padreId:
+          type: string
+          nullable: true
+          description: Identificador de la entidad padre o entidad principal. Estará informado en el caso de entidades que son subentidad de otra.
+          example: null
+    TipoIdentificadorOutput:
+      type: object
+      description: Tipo de identificador.
+      required:
+        - id
+        - nombre
+      properties:
+        id:
+          type: string
+          description: Identificador del tipo de identificador.
+          example: I1
+        nombre:
+          type: string
+          description: Nombre legible del tipo de identificador.
+          example: CIF
+
+    AccessDeniedError:
+      type: object
+      description: Este error se produce cuando el usuario no tiene permiso para acceder al recurso solicitado.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:access-denied
+        title:
+          type: string
+          description: Descripción del error.
+          example: Forbidden
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 403
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Access is denied
+    NotFoundError:
+      type: object
+      description: Este error se produce cuando el recurso solicitado no existe.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:not-found
+        title:
+          type: string
+          description: Descripción del error.
+          example: Not Found
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 404
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No se ha encontrado '{NOMBRE_RECURSO}' con el identificador '{IDENTIFICADOR_RECURSO}'
+    UnauthorizedError:
+      type: object
+      description: Este error se produce cuando el usuario no está autenticado (Token JWT inválido, expirado o ausente).
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:authentication
+        title:
+          type: string
+          description: Descripción del error.
+          example: Unauthorized
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 401
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No token found
+    BadRequestError:
+      type: object
+      description: Este error se produce cuando el sistema recibe una petición incorrecta y no existe un error más especifico.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:bad-request
+        title:
+          type: string
+          description: Descripción del error.
+          example: Bad Request
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 400
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Page index must not be less than zero
+  responses:
+    UnauthorizedErrorResponse:
+      description: Token JWT inválido, expirado o ausente
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnauthorizedError"
+    AccessDeniedErrorResponse:
+      description: El usuario no tiene permiso para acceder al recurso solicitado.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccessDeniedError"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,3392 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Gestión Económica (SGE)
+  description: |-
+    API de integración del **Sistema de Gestión Económica (SGE)** con el **SGI**.
+
+    Se entiende por SGE el sistema universitario que centraliza la gestión de datos económicos en general o de las actividades de investigación en particular (gastos y facturas recibidas, facturas emitidas, ingresos, reservas de crédito, presupuestos). 
+    El SGI no realiza la gestión de datos económicos derivados de las actividades de investigación (proyectos, contratos, grupos y propiedad industrial e intelectual) 
+    sino que se precisa de una integración con el sistema de gestión económica (SGE). Fruto de esta integración se muestran una serie de datos en el SGI que permiten reflejar el estado económico de las actividades mencionadas. 
+    Estos datos económicos recopilados del SGE corporativo no son almacenados en el SGI, por lo que no es posible realizar ningún tipo de cálculo que permita obtener resultados adicionales a los que puedan ser remitidos por el SGE a partir de los servicios de integración definidos.
+    El SGI dispone de un interface de integración predefinido para poder recuperar del SGE la información necesaria. 
+    En el caso  que existan limitaciones para que el SGE implemente este interface predefinido, se deberá desarrollar la capa intermedia de adaptación necesaria en el ESB del SGI
+    Los puntos más importantes del SGI en los que se muestran datos procedentes de la integración económica son:
+      - CSP - Ejecución económica. Existen otros apartados del módulo CSP donde también se requieren datos procedentes de la integración económica, a partir de los que se realiza la configuración necesaria para presentar la información en este apartado de Ejecución económica.
+      - PII - Repartos (API SGE-PII)
+
+  version: 0.1.0
+  contact: {}
+
+tags:
+  - name: codigos-economicos-gastos
+    description: Códigos económicos gastos
+  - name: codigos-economicos-gastos-public
+    description: Códigos económicos gastos (endpoints accesibles sin autentificación)
+  - name: codigos-economicos-ingresos
+    description: Códigos económicos ingresos
+  - name: documentos
+    description: Documentos
+  - name: ejecucion-economica
+    description: Ejecución económica
+  - name: facturas-emitidas
+    description: Facturas emitidas
+  - name: facturas-previstas
+    description: Facturas previstas
+  - name: facturas-previstas-emitidas
+    description: Facturas previstas emitidas
+  - name: facturas-previstas-pendientes
+    description: Facturas previstas pendientes de emitir
+  - name: gastos
+    description: Gastos
+  - name: periodos-amortizacion
+    description: Periodos de amortización
+  - name: partidas-presupuestarias-gastos
+    description: Partidas presupuestarias gastos
+  - name: partidas-presupuestarias-gastos-public
+    description: Partidas presupuestarias gastos (endpoints accesibles sin autentificación)
+  - name: partidas-presupuestarias-ingresos
+    description: Partidas presupuestarias ingresos
+  - name: partidas-presupuestarias-ingresos-public
+    description: Partidas presupuestarias ingresos (endpoints accesibles sin autentificación)
+  - name: proyectos
+    description: Grupo de servicios para establecer la relación entre los proyectos del SGI y los proyectos económicos/orgánicas/centros de coste/etc. del sistema de gestión económica
+  - name: seguimiento-justificacion
+    description: Servicios para el apartado seguimiento de justificación. Este apartado del SGI que puede ser deshabilitado sólo tiene sentido si la universidad dispone de una sistema o herramienta desde la que pueden agrupar los gastos de acuerdo a los periodos de justificación de los proyectos de investigación
+  - name: solicitudes-proyecto
+    description: Solicitudes de creación de proyecto económico/orgánica/centro de coste sobre el sistema de gestión económica
+
+paths:
+  /codigos-economicos-gastos:
+    get:
+      tags:
+        - codigos-economicos-gastos
+      summary: Lista de códigos económicos de tipo gasto
+      description: |-
+        Devuelve los códigos económicos de tipo gasto ordenados alfabéticamente de forma ascendente por el campo `nombre`. Con el término "código económico" se hace referencia a los tipos de gastos, códigos contables, números de cuenta, económicas, etc. que se utilicen en el sistema de gestión económico (SGE) para realizar el apunte de gastos, facturas o ingresos. El SGI hace uso del listado de códigos económicos del SGE para poder establecer la correspondencia con los conceptos de gastos definidos por la convocatoria. Establecer esta correspondencia es algo opcional. Hacerlo permitirá que en el apartado de Ejecución económica se muestren de forma agrupada, por los conceptos de gasto de la convocatoria, el listado de gastos y resto de operaciones contables. La correspondencia entre los conceptos de gasto de la convocatoria y los códigos económicos del SGE se puede definir en el apartado Elegibilidad de la convocatoria y/o del proyecto.
+        
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Elegibilidad ➜ Códigos económicos**, **Proyecto ➜ Elegibilidad ➜ Códigos económicos**, **Proyecto ➜ Presupuesto ➜ Anualidad ➜ Gastos ➜ Partida de gastos**
+
+        ### Consideraciones para la implementación
+        - Este servicio será necesario para la implantación del módulo CSP.
+        - Se devolverán todos los códigos económicos de gastos con la siguiente información para cada uno de ellos:
+          - Referencia (identificador).
+          - Nombre del código económico (será la cadena numérica o alfanumérica que identifica al tipo de gasto en el SGE).
+          - Fecha de inicio de validez (en el SGI se corresponde con el campo fecha de fin de la correspondencia con un concepto de gasto).
+          - Fecha fin de validez (en el SGI se corresponde con el campo fecha de fin de la correspondencia con un concepto de gasto).
+      operationId: findAllCodigosEconomicosGasto
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de códigos económicos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CodigoEconomicoGastoOutput"
+        204:
+          description: No hay códigos económicos.
+
+  /codigos-economicos-gastos/{id}:
+    get:
+      tags:
+        - codigos-economicos-gastos
+      summary: Detalles del código económico de tipo gasto
+      description: |-
+        Devuelve la información detallada del código económico de gasto identificado por el parámetro `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Elegibilidad ➜ Códigos económicos**, **Proyecto ➜ Elegibilidad ➜ Códigos económicos**, **Proyecto ➜ Presupuesto ➜ Anualidad ➜ Gastos**, **Proyecto ➜ Presupuesto ➜ Anualidad ➜ Gastos ➜ Partida de gastos**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza para mostrar información sobre un código económico de tipo gasto de acuerdo a su definición en el SGE.
+      operationId: findCodigoEconomicoGastoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único del código económico de gasto
+          required: true
+          schema:
+            type: string
+            example: CG1
+      responses:
+        200:
+          description: Devuelve el código económico
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CodigoEconomicoGastoOutput"
+        404:
+          description: Código económico no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+
+  /public/codigos-economicos-gastos/{id}:
+    get:
+      tags:
+        - codigos-economicos-gastos-public
+      summary: Detalles del código económico de tipo gasto
+      description: |-
+        Versión pública del endpoint `GET /codigos-economicos-gastos/{id}`.
+
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Convocatoria ➜ Elegibilidad ➜ Códigos económicos**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findPublicCodigoEconomicoGastoById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único del código económico de gasto
+          required: true
+          schema:
+            type: string
+            example: CG1
+      responses:
+        200:
+          description: Devuelve el código económico
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CodigoEconomicoGastoOutput"
+        404:
+          description: Código económico no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+
+  /codigos-economicos-ingresos:
+    get:
+      tags:
+        - codigos-economicos-ingresos
+      summary: Lista de códigos económicos de tipo ingreso
+      description: |-
+        Devuelve los códigos económicos de tipo ingreso ordenados alfabéticamente de forma ascendente por el campo `nombre`. Con el término "código económico" se hace referencia a los tipos de gastos, códigos contables, números de cuenta, económicas, etc. que se utilicen en el sistema de gestión económico (SGE) para realizar el apunte de gastos, facturas o ingresos. El SGI hace uso del listado de códigos económicos del SGE para poder establecer la correspondencia con los conceptos de gastos definidos por la convocatoria. Establecer esta correspondencia es algo opcional. Hacerlo permitirá que en el apartado de Ejecución económica se muestren de forma agrupada, por los conceptos de gasto de la convocatoria, el listado de gastos y resto de operaciones contables. La correspondencia entre los conceptos de gasto de la convocatoria y los códigos económicos del SGE se puede definir en el apartado Elegibilidad de la convocatoria y/o del proyecto.
+        
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Presupuesto ➜ Anualidad ➜ Ingresos ➜ Partida de gastos**
+
+        ### Consideraciones para la implementación
+        - Este servicio será necesario para la implantación del módulo CSP.
+        - Se devolverán todos los códigos económicos de ingresos con la siguiente información para cada uno de ellos:
+          - Referencia (identificador).
+          - Nombre del código económico (será la cadena numérica o alfanumérica que identifica al tipo de ingreso en el SGE).
+          - Fecha de inicio de validez (inicio de la vigencia del código en caso de que la tuviese).
+          - Fecha fin de validez (fin de la vigencia del código en caso de que la tuviese).
+      operationId: findAllCodigosEconomicosIngreso
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de códigos económicos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CodigoEconomicoIngresoOutput"
+        204:
+          description: No hay códigos económicos.
+        400:
+          description: Parametros no validos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /codigos-economicos-ingresos/{id}:
+    get:
+      tags:
+        - codigos-economicos-ingresos
+      summary: Detalles del código económico de tipo ingreso
+      description: |-
+        Devuelve la información detallada del código económico de ingreso identificado por el parámetro `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Presupuesto ➜ Anualidad ➜ Ingresos**, **Proyecto ➜ Presupuesto ➜ Anualidad ➜ Ingresos ➜ Partida de gastos**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza para mostrar información sobre un código económico de tipo ingreso de acuerdo a su definición en el SGE.
+      operationId: findCodigoEconomicoIngresoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único del código económico de ingreso
+          required: true
+          schema:
+            type: string
+            example: CI1
+      responses:
+        200:
+          description: Devuelve el código económico
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CodigoEconomicoIngresoOutput"
+        404:
+          description: Código económico no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /documentos/{id}/archivo:
+    get:
+      tags:
+        - documentos
+      summary: Binario del documento
+      description: |-
+        Devuelve el binario del documento económico correspondiente al `id`.
+        Este endpoint **solo devuelve el archivo**, no los metadatos del documento.
+
+        El identificador del documento se obtiene a través del endpoint de detalle del dato económico: `GET /ejecucion-economica/{id}`. Dentro de la respuesta, en el campo `documentos`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Facturas y justificantes ➜ Facturas y gastos ➜ Detalle**, **Ejecución económica ➜ Facturas y justificantes ➜ Viajes y dietas ➜ Detalle**, **Ejecución económica ➜ Facturas y justificantes ➜ Personal contratado ➜ Detalle**, **Ejecución económica ➜ Clasificacion de gastos ➜ Detalle, **Ejecución económica ➜ Facturas emitidas ➜ Detalle
+
+        ### Consideraciones para la implementación
+        - El documento es dependiente de una operación económica (gasto).
+        - En caso que el SGE no disponga de la posibilidad de implementar el servicio, el listado de documentos asociados al gasto se mostraría vacío.
+      operationId: findDocumentoArchivoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único del documento
+          required: true
+          schema:
+            type: string
+            example: D1
+      responses:
+        200:
+          description: Devuelve el documento
+          headers:
+            Content-Disposition:
+              description: Indica que la respuesta es un adjunto descargable
+              schema:
+                type: string
+                example: attachment; filename="documento1.pdf"
+            Content-Type:
+              description: Tipo de contenido del archivo
+              schema:
+                type: string
+                example: application/octet-stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        404:
+          description: Documento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /ejecucion-economica:
+    get:
+      tags:
+        - ejecucion-economica
+      summary: Devuelve la lista con los datos económicos pedidos según el campo tipoOperacion.
+      description: |-
+        Devuelve la lista de operaciones económicas filtradas y ordenadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+        Aunque el parámetro `q` no es obligatorio a nivel técnico, el campo `tipoOperacion` dentro del filtro es obligatorio.
+
+        ### Búsquedas necesarias que deben soportarse
+        - `proyectoId`
+        - `anualidad`
+        - `tipoOperacion` (obligatorio)
+        - `reducida` (no filtra, solo afecta a columnas devueltas)
+        - `fechaPago`
+        - `fechaDevengo`
+        - `fechaFactura`
+
+        El **tipoOperacion** puede tomar los siguientes valores:
+        - **EPA** (Ejecución presupestaria - Estado actual)
+        - **EPG** (Ejecución presupestaria - Gastos)
+        - **EPI** (Ejecución presupestaria - Ingresos)
+        - **FJF** (Facturas y justificantes - Facturas y gastos)
+        - **FJV** (Facturas y justificantes - Viajes y dietas)
+        - **FJP** (Facturas y justificantes - Personal contratado)
+        - **DOG** (Detalle de operaciones - Gastos)
+        - **DOI** (Detalle de operaciones - Ingresos)
+        - **DOM** (Detalle de operaciones - Modificaciones)
+
+        El campo **reducida** puede tomar los siguientes valores:
+        - `true`: sólo se envían las columnas a mostrar en la pantalla principal
+        - `false`:  se envían todas las columnas (para su exportación)
+        Si no se informa, se considera `false`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Ejecución presupuestaria ➜ Estado actual**, **Ejecución económica ➜ Ejecución presupuestaria ➜ Gastos**, **Ejecución económica ➜ Ejecución presupuestaria ➜ Ingresos**, **Ejecución económica ➜ Detalle operaciones ➜ Gastos**, **Ejecución económica ➜ Detalle operaciones ➜ Ingresos**, **Ejecución económica ➜ Detalle operaciones ➜ Modificaciones**, **Ejecución económica ➜ Facturas y justificantes ➜ Facturas y gastos**, **Ejecución económica ➜ Facturas y justificantes ➜ Viajes y dietas**, **Ejecución económica ➜ Facturas y justificantes ➜ Personal contratado**  
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. En caso que el SGE no posibilite la implementación de este servicio se podría establecer una configuración en el SGI para deshabilitar el apartado de Ejecución Económica. Esto supondría que no se podría realizar el seguimiento de los datos económicos de proyectos y grupos desde el SGI. También se podrían deshabilitar apartados individuales de Ejecución Económica según la disponibilidad de los tipos de operación asociados.
+      operationId: findAllEjecucionEconomica
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. 
+            - `proyectoId`
+            - `anualidad`
+            - `tipoOperacion` (obligatorio)
+            - `reducida` (no filtra, solo afecta a columnas devueltas)
+            - `fechaPago`
+            - `fechaDevengo`
+            - `fechaFactura`
+            - `fechaContabilizacion`
+          type: string
+          example: proyectoId==P1;tipoOperacion=="FJF";reducida==false
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: anualidad,asc
+    responses:
+      200:
+        description: Lista de datos económicos
+        headers:
+          X-Page-Count:
+            description: Número total de páginas
+            schema:
+              type: integer
+              example: 2
+          X-Page-Total-Count:
+            description: Número de elementos en la página actual
+            schema:
+              type: integer
+              example: 5
+          X-Total-Count:
+            description: Número total de elementos
+            schema:
+              type: integer
+              example: 12
+          X-Page-Size:
+            description: Tamaño de página
+            schema:
+              type: integer
+              example: 5
+          X-Page:
+            description: Página actual
+            schema:
+              type: integer
+              example: 0
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/DatoEconomicoOutput"
+        204:
+          description: No hay datos económicos para los criterios de busqueda utilizados.
+        400:
+          description: Parámetros no válidos (ej. sintaxis RSQL inválida o parámetros de paginación fuera de rango).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /ejecucion-economica/columnas:
+    get:
+      tags:
+        - ejecucion-economica
+      summary: Devuelve la lista de columnas dinámicas de los datos económicos asociadas a un tipo de operación
+      description: |-
+        Devuelve la lista de columnas dinámicas configuradas para un determinado `tipoOperacion`.
+        La selección de columnas se realiza exclusivamente en función del campo `tipoOperacion`.
+        
+        ### Búsquedas necesarias que deben soportarse
+        - `tipoOperacion` (obligatorio)
+          Ejemplo:
+          tipoOperacion=="FJF"
+
+        El **tipoOperacion** puede tomar los siguientes valores:
+        - **EPA** (Ejecución presupestaria - Estado actual)
+        - **EPG** (Ejecución presupestaria - Gastos)
+        - **EPI** (Ejecución presupestaria - Ingresos)
+        - **FJF** (Facturas y justificantes - Facturas y gastos)
+        - **FJV** (Facturas y justificantes - Viajes y dietas)
+        - **FJP** (Facturas y justificantes - Personal contratado)
+        - **DOG** (Detalle de operaciones - Gastos)
+        - **DOI** (Detalle de operaciones - Ingresos)
+        - **DOM** (Detalle de operaciones - Modificaciones)
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Ejecución presupuestaria ➜ Estado actual**, **Ejecución económica ➜ Ejecución presupuestaria ➜ Gastos**, **Ejecución económica ➜ Ejecución presupuestaria ➜ Ingresos**, **Ejecución económica ➜ Detalle operaciones ➜ Gastos**, **Ejecución económica ➜ Detalle operaciones ➜ Ingresos**, **Ejecución económica ➜ Detalle operaciones ➜ Modificaciones**, **Ejecución económica ➜ Facturas y justificantes ➜ Facturas y gastos**, **Ejecución económica ➜ Facturas y justificantes ➜ Viajes y dietas**, **Ejecución económica ➜ Facturas y justificantes ➜ Personal contratado**  
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. En caso que el SGE no posibilite la implementación de este servicio se podría establecer una configuración en el SGI para deshabilitar el apartado de Ejecución Económica. Esto supondría que no se podría realizar el seguimiento de los datos económicos de proyectos y grupos desde el SGI. También se podrían deshabilitar apartados individuales de Ejecución Económica según la disponibilidad de los tipos de operación asociados.
+      operationId: findAllColumnasEjecucionEconomica
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Es obligatorio incluir el campo:
+            - `tipoOperacion` 
+          schema:
+            type: string
+            example: tipoOperacion=="FJF"
+      responses:
+        200:
+          description: Devuelve la lista de columnas asociadas al tipo de operación.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColumnaOutput"
+        204:
+          description: No hay columnas para el tipo de operación indicado.
+        400:
+          description: Tipo de operación no válido o no informado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /ejecucion-economica/{id}:
+    get:
+      tags:
+        - ejecucion-economica
+      summary: Devuelve el detalle de una operación económica.
+      description: |-
+        Devuelve el detalle de la operación económica correspondiente al `id`. El parámetro `tipoOperacion` es obligatorio y determina la estructura de los campos dinámicos devueltos. Si la operación económica tiene documentos asociados, se incluirán en el campo `documentos`.
+
+        ### Valores permitidos para `tipoOperacion`
+        - **EPA** (Ejecución presupuestaria - Estado actual)
+        - **EPG** (Ejecución presupuestaria - Gastos)
+        - **EPI** (Ejecución presupuestaria - Ingresos)
+        - **FJF** (Facturas y justificantes - Facturas y gastos)
+        - **FJV** (Facturas y justificantes - Viajes y dietas)
+        - **FJP** (Facturas y justificantes - Personal contratado)
+        - **DOG** (Detalle de operaciones - Gastos)
+        - **DOI** (Detalle de operaciones - Ingresos)
+        - **DOM** (Detalle de operaciones - Modificaciones)
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Ejecución presupuestaria ➜ Gastos ➜ Detalle**, **Ejecución económica ➜ Detalle operaciones ➜ Gastos ➜ Detalle**, **Ejecución económica ➜ Facturas y justificantes ➜ Facturas y gastos ➜ Detalle**, **Ejecución económica ➜ Facturas y justificantes ➜ Viajes y dietas ➜ Detalle**, **Ejecución económica ➜ Facturas y justificantes ➜ Personal contratado ➜ Detalle**, **Ejecución económica ➜ Facturas y justificantes ➜ Personal contratado ➜ Detalle**, **Ejecución económica ➜ Clasificación de gastos ➜ Detalle**, **Ejecución económica ➜ Facturas emitidas ➜ Detalle**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. En caso que el SGE no posibilite la implementación de este servicio se podría establecer una configuración en el SGI para deshabilitar el apartado de Ejecución Económica. Esto supondría que no se podría realizar el seguimiento de los datos económicos de proyectos y grupos desde el SGI. También se podrían deshabilitar apartados individuales de Ejecución Económica según la disponibilidad de los tipos de operación asociados.
+        - Para los casos del `tipoOperacion`: **EPG** y **DOG** será necesario también que esté habilitada la vista de detalle.
+      operationId: findEjecucionEconomicaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del dato económico
+          required: true
+          schema:
+            type: string
+            example: E1
+        - name: tipoOperacion
+          in: query
+          description: Tipo de operación al que pertenece el dato económico
+          required: true
+          schema:
+            type: string
+            example: FJF
+      responses:
+        200:
+          description: Devuelve el detalle del dato económico
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatoEconomicoDetalleOutput"
+        400:
+          description: Tipo de operación no válido o no informado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: No existe un dato económico con el identificador indicado para el tipo de operación informado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /facturas-emitidas:
+    get:
+      tags:
+        - facturas-emitidas
+      summary: Devuelve la lista con las facturas emitidas del SGE
+      description: |-
+        Devuelve la lista de facturas emitidas filtradas y ordenadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+        El filtro por tipo de operación se aplica internamente al valor **FEM** (Facturas Emitidas), por lo que no es necesario informarlo en la búsqueda.
+
+        ### Búsquedas necesarias que deben soportarse
+        - `proyectoId`
+        - `anualidad`
+        - `estado`
+        - `fechaFactura`
+        - `reducida` (no filtra, solo afecta a columnas devueltas)
+
+        El campo **reducida** puede tomar los siguientes valores:
+        - `true`: sólo se envían las columnas a mostrar en la pantalla principal
+        - `false`: se envían todas las columnas (para su exportación)
+        Si no se informa, se considera `false`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Facturas emitidas**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. En caso que el SGE no posibilite la implementación de este servicio se podría establecer una configuración en el SGI para deshabilitar este apartado Facturas emitidas. En este caso no se permitiría mostrar el detalle de las facturas emitidas desde el SGI. También se podría establecer una configuración para deshabilitar todo el apartado de Ejecución Económica. Esto supondría que no se podría realizar el seguimiento de los datos económicos de proyectos y grupos desde el SGI.
+      operationId: findAllFacturasEmitidas
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - `proyectoId`
+            - `anualidad`
+            - `estado`
+            - `fechaFactura`
+            - `reducida` (no filtra, solo afecta a columnas devueltas)
+          schema:
+            type: string
+            example: proyectoId==P1;estado=="VALIDADO";reducida==false
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: id,asc
+      responses:
+        200:
+          description: Devuelve la lista de facturas emitidas
+          headers:
+            X-Page-Count:
+              description: Nº total de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Número de elementos en la página actual
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página actual
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FacturaEmitidaOutput"
+        204:
+          description: No hay facturas emitidas para los criterios de busqueda utilizados.
+        400:
+          description: Parámetros no válidos (ej. sintaxis RSQL inválida o parámetros de paginación fuera de rango).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /facturas-emitidas/columnas:
+    get:
+      tags:
+        - facturas-emitidas
+      summary: Devuelve la lista de columnas dinámicas de las facturas emitidas
+      description: |-
+        Devuelve la lista de columnas dinámicas configuradas para las Facturas emitidas.
+        La selección de columnas se realiza exclusivamente en función del campo `reducida`.
+
+        ### Búsquedas necesarias que deben soportarse
+        - `reducida` (opcional)
+
+        El campo **reducida** puede tomar los siguientes valores:
+        - **true** → Devuelve únicamente las columnas visibles en la pantalla principal.
+        - **false** → Devuelve todas las columnas disponibles (modo exportación).
+        Si no se informa el campo `reducida`, se considerará **false**.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Facturas emitidas**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. En caso que el SGE no posibilite la implementación de este servicio se podría establecer una configuración en el SGI para deshabilitar este apartado Facturas emitidas. En este caso no se permitiría mostrar el detalle de las facturas emitidas desde el SGI. También se podría establecer una configuración para deshabilitar todo el apartado de Ejecución Económica. Esto supondría que no se podría realizar el seguimiento de los datos económicos de proyectos y grupos desde el SGI. 
+        - No se aplican filtros adicionales distintos del campo `reducida`.
+      operationId: findAllColumnasFacturasEmitidas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - reducida
+          schema:
+            type: string
+            example: reducida==false
+      responses:
+        200:
+          description: Devuelve la lista de columnas asociadas al modo de visualización.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColumnaOutput"
+        204:
+          description: No hay columnas configuradas.
+        400:
+          description: Parámetros de búsqueda no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /facturas-emitidas/{id}:
+    get:
+      tags:
+        - facturas-emitidas
+      summary: Devuelve el detalle de una factura emitida
+      description: |-
+        Devuelve el detalle completo de una **Factura emitida** identificada por su `id`.
+
+        El detalle incluye:
+        - Información general de la factura.
+        - Lista de campos dinámicos asociados a la factura.
+        - Documentos asociados a la factura.
+
+        Las columnas dinámicas devueltas corresponden a la definición completa de columnas de **Facturas emitidas** (modo no reducido).
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Facturas emitidas ➜ Detalle**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. En caso que el SGE no posibilite la implementación de este servicio se podría establecer una configuración en el SGI para deshabilitar este apartado Facturas emitidas. En este caso no se permitiría mostrar el detalle de las facturas emitidas desde el SGI. También se podría establecer una configuración para deshabilitar todo el apartado de Ejecución Económica. Esto supondría que no se podría realizar el seguimiento de los datos económicos de proyectos y grupos desde el SGI. 
+        - Será necesaria únicamente cuando esté habilitada la opción de menú de Facturas emitidas.
+      operationId: findFacturaEmitidaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la factura emitida
+          required: true
+          schema:
+            type: string
+            example: F1
+      responses:
+        200:
+          description: Devuelve el detalle de la factura emitida.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacturaEmitidaDetalleOutput"
+        400:
+          description: Identificador no válido.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Factura emitida no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /facturas-previstas:
+    post:
+      tags:
+        - facturas-previstas
+      summary: Informa de una factura prevista de acuerdo al calendario de facturación establecido en el SGI
+      description: |-
+        Informa de una factura prevista de acuerdo al calendario de facturación establecido en el SGI. Podría utilizar para crear o iniciar la creación de una factura emitida en el SGE.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Calendario facturación**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. En caso  que el SGE no posibilite la integración para la creación de facturas emitidas o bien los procedimientos corporativos no lo contemplen esta posibilidad, podrá establecerse una configuración en el SGI. En este caso la creación de la factura emitida en el SGE no tomaría de forma automática ningún dato aportado en el calendario de facturación del SGI.
+        - Será necesaria únicamente cuando estén habilitadas las opciones de integración para el calendario de facturación.
+      operationId: createFacturaPrevista
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Datos de la factura prevista a crear.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FacturaPrevistaInput"
+      responses:
+      200:
+        description: Factura prevista creada correctamente.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FacturaPrevistaOutput"
+      400:
+        description: Datos de la factura prevista no válidos.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BadRequestError"
+
+  /facturas-previstas/{id}:
+    put:
+      tags:
+        - facturas-previstas
+      summary: Informa de la actualización de los datos de una factura prevista en el calendario de facturación del SGI
+      description: |-
+        Informa que se han actualizado los datos en el calendario de facturación del SGI de una factura prevista identificada por el parámetro `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Calendario facturación**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando estén habilitadas las opciones de integración para el calendario de facturación.
+      operationId: updateFacturaPrevista
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único de la factura prevista.
+          required: true
+          schema:
+            type: string
+            example: FP1
+      requestBody:
+        description: Datos de la factura prevista a actualizar.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FacturaPrevistaInput"
+      responses:
+        200:
+          description: Factura prevista actualizada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacturaPrevistaOutput"
+        400:
+          description: Datos de la factura prevista no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Factura prevista no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /facturas-previstas-emitidas:
+    get:
+      tags:
+        - facturas-previstas-emitidas
+      summary: Facturas emitidas en el SGE para un proyecto del SGI
+      description: |-
+        Listado de facturas que han sido emitidas en el SGE para un proyecto del SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Calendario facturación**
+
+        ### Consideraciones para la implementación
+        - Si el SGE no dispone de la posibilidad de implementar este servicio se puede establecer un parámetro de configuración en el SGI que anule esta integración. En este caso la información relativa a la emisión de la factura debe introducirse manualmente en el SGI.
+      operationId: findAllFacturasPrevistasEmitidas
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - proyectoIdSGI
+            - numeroPrevision
+            - numeroFactura
+          schema:
+            type: string
+            example: proyectoIdSGI==1;numeroPrevision==3
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`. 
+          schema:
+            type: string
+            example: id,asc
+      responses:
+        200:
+          description: Devuelve la lista de facturas previstas emitidas
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FacturaPrevistaEmitidaOutput"
+        204:
+          description: No hay facturas emitidas para los criterios de busqueda utilizados.
+        400:
+          description: Parámetros no válidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /facturas-previstas-pendientes:
+    get:
+      tags:
+        - facturas-previstas-pendientes
+      summary: Devuelve el listado de facturas previstas en el calendario de facturación que no figuran como emitidas en el SGE
+      description: |-
+        Listado de facturas previstas pendientes de emitir.  
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Listados ➜ Facturas previstas pendientes de emitir**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**. Dependiendo de la configuración de la variable **integración calendario facturación**, se permite establecer una configuración "**sin integración**". Con esta configuración la información que determina que una factura prevista en el calendario de facturación ha sido emitida, debe de introducirse manualmente en el SGI. Si se establece otra configuración, es necesario que el SGE implemente este servicio.
+      operationId: findAllFacturasPrevistasPendientes
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - fechaDesde
+            - fechaHasta
+          schema:
+            type: string
+            example: fechaDesde=ge=2024-03-07T00:00:00Z
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`. 
+          schema:
+            type: string
+            example: id,asc
+      responses:
+        200:
+          description: Devuelve la lista de facturas previstas emitidas
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FacturaPrevistaPendienteOutput"
+        204:
+          description: No hay facturas pendientes para los criterios de busqueda utilizados.
+        400:
+          description: Parámetros no válidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /gastos:
+    get:
+      tags:
+        - gastos
+      summary: Devuelve el listado de gastos que serán procesados en el apartado de validación de gastos del SGI
+      description: |-
+        Listado de gastos pendientes de pasar por la "Validación de gastos" si en el campo del filtrado estado = 'Pendiente' o listado de gastos que ya han sido validados (han pasado por la "Validación de gastos") si en el campo del filtrado estado = 'Validado'
+        
+        ### Búsquedas necesarias que deben soportarse
+        - `proyectoId`
+        - `estado`
+        - `fecha`
+        - `reducida` (no filtra, solo afecta a columnas devueltas)
+
+        El campo **reducida** puede tomar los siguientes valores:
+        - `true`: sólo se envían las columnas a mostrar en la pantalla principal
+        - `false`: se envían todas las columnas (para su exportación)
+        Si no se informa, se considera `false`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Validación de gastos ➜ Pendientes**, **Ejecución económica ➜ Validación de gastos ➜ Validados**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para la validación de gastos.
+      operationId: findAllGastos
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - proyectoId
+            - fecha
+            - estado
+            - reducida
+
+            El campo estado puede tomar dos valores:
+            - Pendiente
+            - Validado
+          schema:
+            type: string
+            example: proyectoId==P1;estado=="VALIDADO";reducida==false
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`. 
+          schema:
+            type: string
+            example: id,asc
+      responses:
+        200:
+          description: Devuelve la lista de gastos
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DatoEconomicoOutput"
+        204:
+          description: No hay gastos para los criterios de busqueda utilizados.
+        400:
+          description: Parámetros no válidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /gastos/columnas:
+    get:
+      tags:
+        - gastos
+      summary: Devuelve la lista de columnas dinámicas de los gastos a procesar en el apartado de validación de gastos
+      description: |-
+        Devuelve la lista de columnas dinámicas configuradas para los gastos a procesar en el apartado de validación de gastos. La selección de columnas se realiza exclusivamente en función del campo `reducida`.
+
+        ### Búsquedas necesarias que deben soportarse
+        - `reducida` (opcional)
+
+        El campo **reducida** puede tomar los siguientes valores:
+        - **true** → Devuelve únicamente las columnas visibles en la pantalla principal.
+        - **false** → Devuelve todas las columnas disponibles (modo exportación).
+        Si no se informa el campo `reducida`, se considerará **false**.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Validación de gastos**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para la validación de gastos.
+        - No se aplican filtros adicionales distintos del campo `reducida`.
+      operationId: findAllColumnasGastos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - reducida
+          schema:
+            type: string
+            example: reducida==false
+      responses:
+        200:
+          description: Devuelve la lista de columnas asociadas al modo de visualización.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColumnaOutput"
+        204:
+          description: No hay columnas configuradas.
+        400:
+          description: Parámetros de búsqueda no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /gastos/{id}:
+    get:
+      tags:
+        - gastos
+      summary: Detalle del gasto
+      description: |-
+        Devuelve el detalle completo de un **Gasto** identificada por su `id`. Estos gastos se muestran en el apartado de validación de gastos.
+
+        El detalle incluye:
+        - Información general del gasto.
+        - Lista de campos dinámicos asociados al gasto.
+        - Documentos asociados al gasto.
+
+        Las columnas dinámicas devueltas corresponden a la definición completa de columnas de **Gastos** (modo no reducido).
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Validación de gastos ➜ Detalle**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para la validación de gastos.
+      operationId: findGastoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del gasto
+          required: true
+          schema:
+            type: string
+            example: E1
+      responses:
+        200:
+          description: Devuelve el detalle del gasto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatoEconomicoDetalleOutput"
+        400:
+          description: Identificador no válido.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Gasto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /gastos/{id}/validar:
+    patch:
+      tags:
+        - gastos
+      summary: Valida el gasto
+      description: |-
+        Marca un **gasto como VALIDADO** dentro del proceso de **validación de gastos**.
+        Este servicio cambia el estado del gasto a **VALIDADO**.
+        Opcionalmente se puede incluir un **comentario** asociado al cambio de estado.
+
+        ### Flujo funcional
+        1. El usuario accede al listado de gastos pendientes (`/gastos?estado=PENDIENTE`)
+        2. Consulta el detalle (`/gastos/{id}`)
+        3. Valida el gasto mediante este servicio.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Validación de gastos ➜ Detalle ➜ Validar gasto**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para la validación de gastos.
+      operationId: validarGasto
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del gasto
+          required: true
+          schema:
+            type: string
+            example: E1
+      requestBody:
+        description: Comentario
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComentarioInput"
+      responses:
+        204:
+          description: Gasto validado correctamente.
+        400:
+          description: Parámetros no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Gasto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /gastos/{id}/rechazar:
+    patch:
+      tags:
+        - gastos
+      summary: Rechaza el gasto
+      description: |-
+        Marca un **gasto como RECHAZADO** dentro del proceso de **validación de gastos**.
+        Este servicio cambia el estado del gasto a **RECHAZADO**.
+        Opcionalmente se puede incluir un **comentario** indicando el motivo del rechazo.
+
+        ### Flujo funcional
+        1. El usuario accede al listado de gastos pendientes (`/gastos?estado=PENDIENTE`)
+        2. Consulta el detalle (`/gastos/{id}`)
+        3. Rechaza el gasto mediante este servicio.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Validación de gastos ➜ Detalle ➜ Rechazar gasto**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para la validación de gastos.
+      operationId: rechazarGasto
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del gasto
+          required: true
+          schema:
+            type: string
+            example: E1
+      requestBody:
+        description: Comentario
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComentarioInput"
+      responses:
+        204:
+          description: Gasto rechazado correctamente.
+        400:
+          description: Parámetros no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Gasto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+  
+  /partidas-presupuestarias-gastos:
+    get:
+      tags:
+        - partidas-presupuestarias-gastos
+      summary: Lista de partidas presupuestarias de tipo gasto
+      description: |-
+        Devuelve el listado de partidas presupuestarias de tipo gasto activas en la fecha actual ordenadas alfabéticamente por su código.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Partidas presupuestarias**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para obtener las partidas del SGE.
+      operationId: findAllPartidasPresupuestariasGasto
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de partidas presupuestarias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PartidaPresupuestariaGastoOutput"
+        204:
+          description: No hay partidas presupuestarias de gasto activas.
+        400:
+          description: Parámetros de la petición no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /partidas-presupuestarias-gastos/{id}:
+    get:
+      tags:
+        - partidas-presupuestarias-gastos
+      summary: Detalles de la partida presupuestaria de tipo gasto
+      description: |-
+        Devuelve la partida presupuestaria de tipo gasto correspondiente al `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Partidas presupuestarias**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para obtener las partidas del SGE.
+      operationId: findPartidaPresupuestariaGastoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la partida presupuestaria de gasto.
+          required: true
+          schema:
+            type: string
+            example: PG1
+      responses:
+        200:
+          description: Partida presupuestaria de gasto encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartidaPresupuestariaGastoOutput"
+        404:
+          description: No existe una partida presupuestaria de gasto con el identificador indicado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/partidas-presupuestarias-gastos/{id}:
+    get:
+      tags:
+        - partidas-presupuestarias-gastos-public
+      summary: Detalles de la partida presupuestaria
+      description: |-
+        Versión pública del endpoint `GET /partidas-presupuestarias-gastos/{id}`.
+        Devuelve los mismos datos que el servicio de detalle de partidas presupuestarias, pero **no requiere autenticación** desde el SGI.
+
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Proyecto ➜ Configuración económica ➜ Partidas presupuestarias**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findPublicPartidaPresupuestariaGastoById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la partida presupuestaria de tipo gasto
+          required: true
+          schema:
+            type: string
+            example: CG1
+      responses:
+        200:
+          description: Partida presupuestaria de gasto encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartidaPresupuestariaGastoOutput"
+        404:
+          description: No existe una partida presupuestaria de gasto con el identificador indicado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /partidas-presupuestarias-ingresos:
+    get:
+      tags:
+        - partidas-presupuestarias-ingresos
+      summary: Lista de partidas presupuestarias de tipo ingreso
+      description: |-
+        Devuelve el listado de partidas presupuestarias de tipo ingreso activas en la fecha actual ordenadas alfabéticamente por su código.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Partidas presupuestarias**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para obtener las partidas del SGE.
+      operationId: findAllPartidasPresupuestariasIngreso
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de partidas presupuestarias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PartidaPresupuestariaIngresoOutput"
+        204:
+          description: No hay partidas presupuestarias de ingreso activas.
+        400:
+          description: Parámetros de la petición no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /partidas-presupuestarias-ingresos/{id}:
+    get:
+      tags:
+        - partidas-presupuestarias-ingresos
+      summary: Detalles de la partida presupuestaria de tipo ingreso
+      description: |-
+        Devuelve la partida presupuestaria de tipo ingreso correspondiente al `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Partidas presupuestarias**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para obtener las partidas del SGE.
+      operationId: findPartidaPresupuestariaIngresoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la partida presupuestaria
+          required: true
+          schema:
+            type: string
+            example: PG1
+      responses:
+        200:
+          description: Partida presupuestaria de ingreso encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartidaPresupuestariaIngresoOutput"
+        404:
+          description: No existe una partida presupuestaria de ingreso con el identificador indicado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/partidas-presupuestarias-ingresos/{id}:
+    get:
+      tags:
+        - partidas-presupuestarias-ingresos-public
+      summary: Detalles de la partida presupuestaria
+      description: |-
+        Versión pública del endpoint `GET /partidas-presupuestarias-ingresos/{id}`.
+        Devuelve los mismos datos que el servicio de detalle de partidas presupuestarias, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Proyecto ➜ Configuración económica ➜ Partidas presupuestarias**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findPublicPartidaPresupuestariaIngresoById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la partida presupuestaria de tipo ingreso
+          required: true
+          schema:
+            type: string
+            example: PI1
+      responses:
+        200:
+          description: Partida presupuestaria de ingreso encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartidaPresupuestariaIngresoOutput"
+        404:
+          description: No existe una partida presupuestaria de ingreso con el identificador indicado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /periodos-amortizacion:
+    post:
+      tags:
+        - periodos-amortizacion
+      summary: Expone los datos para la creación de un nuevo periodo de amortización en el sistema de gestión económica
+      description: |-
+        Crea un nuevo **periodo de amortización** en el sistema económico.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Amortización de fondos**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - La implementación del servicio será necesaria si se establece la configuración "amortización de fondos"
+      operationId: createPeriodoAmortizacion
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Datos del periodo de amortizacion
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PeriodoAmortizacionInput"
+      responses:
+        200:
+          description: Periodo de amortización creado correctamente.
+        400:
+          description: Datos del periodo de amortización no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /periodos-amortizacion/{id}:
+    delete:
+      tags:
+        - periodos-amortizacion
+      summary: Informa de la eliminación del periodo de amortización
+      description: |-
+        Notifica al sistema de gestión económica que se debe de eliminar un **periodo de amortización** a partir de su `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Amortización de fondos**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - La implementación del servicio será necesaria si se establece la configuración "amortización de fondos"
+      operationId: deletePeriodoAmortizacion
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del periodo de amortización
+          required: true
+          schema:
+            type: string
+            example: PA1
+      responses:
+        200:
+          description: Periodo de amortización eliminado correctamente.
+        400:
+          description: Datos del periodo de amortización no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Periodo de amortización no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+    put:
+      tags:
+        - periodos-amortizacion
+      summary: Informa de la actualización de los datos de un periodo de amortización
+      description: |-
+        Notifica al sistema de gestión económica que se deben de actualizar los datos de un **periodo de amortización** a partir de su `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Amortización de fondos**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - La implementación del servicio será necesaria si se establece la configuración "amortización de fondos"
+      operationId: updatePeriodoAmortizacion
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del periodo de amortización
+          required: true
+          schema:
+            type: string
+            example: PA1
+      requestBody:
+        description: Datos del periodo de amortizacion
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PeriodoAmortizacionInput"
+      responses:
+        200:
+          description: Periodo de amortización actualizado
+        400:
+          description: Datos del periodo de amortización no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Periodo de amortización no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /proyectos:
+    get:
+      tags:
+        - proyectos
+      summary: Devuelve una lista paginada y filtrada de proyectos económicos/orgánicas/centros de coste existentes en el sistema de gestión económica
+      description: |-
+        Devuelve una lista paginada de proyectos económicos/orgánicas/centros de coste aplicando criterios de búsqueda y ordenación. Este servicio del SGI se utilizará exclusivamente a través del componente de búsqueda de identificadores SGE.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración del buscador de proyectos SGE.
+        - Aunque el soporte completo de búsquedas RSQL es opcional, **se recomienda implementarlo** para mantener la compatibilidad futura con el SGI.
+
+        ### Búsquedas necesarias que deben soportarse
+        - `id`
+        - `titulo`
+        - `fechaInicio`
+        - `fechaFin`
+      operationId: findAllProyectoss
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - id
+            - titulo
+            - fechaInicio
+            - fechaFin
+          schema:
+            type: string
+            example: titulo=ik=proy,fechaInicio=ge=2020-03-07T00:00:00Z
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: titulo,asc
+      responses:
+        200:
+          description: Devuelve la lista paginada de proyectos
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página actual
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos que cumplen los criterios
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página devuelta
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProyectoOutput"
+        204:
+          description: No hay proyectos para los criterios de busqueda utilizados.
+        400:
+          description: Datos del periodo de amortización no válidos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /proyectos/{id}:
+    get:
+      tags:
+        - proyectos
+      summary: Detalle del proyecto
+      description: |-
+        Devuelve el detalle del proyecto correspondiente al `id`.
+        
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **obligatoria**.
+      operationId: findProyectoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del proyecto
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve el proyecto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProyectoOutput"
+        404:
+          description: Proyecto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /proyectos/formly:
+    post:
+      tags:
+        - proyectos
+      summary: Expone los datos para la creación de un nuevo proyecto económico/orgánica/centro de coste en el sistema de gestión económica
+      description: |-
+        Expone los datos para la creación de un nuevo proyecto económico/orgánica/centro de coste. Los datos se recogen a través del formly  definido de acuerdo a las necesidades particulares del sistema de gestión económica. El SGI admite que la creación del proyecto económico sea resuelta por el sistema de gestión económica de forma síncrona o asíncrona.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde la acción **Solicitar alta** del buscador de proyectos si este está habilitado en la configuración o directamente desde **Añadir identificador SGE** en la pantalla anteriormente mencionada.
+        - Su implementación es **obligatoria** para poder vincular un proyecto SGI a un identificador SGE lo que resulta indispensable para: definir el presupuesto de proyectos y para habilitar el apartado de Ejecución Económica
+      operationId: createProyectoFormly
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Datos del proyecto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProyectoFormlyCreateInput"
+      responses:
+        200:
+          description: Devuelve el identificador del proyecto creado (creación síncrona).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: P2
+        202:
+          description: Solicitud de creación procesada correctamente (creación asíncrona).
+        400:
+          description: Datos del proyecto incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  
+  /proyectos/formly/create:
+    get:
+      tags:
+        - proyectos
+      summary: Formulario dinámico para la solicitud de los datos de creación de un proyecto económico/orgánica/centro de coste
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) a través del que se recogerán todos los datos que el sistema de gestión económica requiere para la creación de un nuevo  proyecto económico/orgánica/centro de coste.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde la acción **Solicitar alta** del buscador de proyectos si este está habilitado en la configuración o directamente desde **Añadir identificador SGE** en la pantalla anteriormente mencionada.
+        - Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+        - Si se requiere añadir **validadores personalizados**, es necesario **incluirlos previamente en el SGI** para que puedan ser reconocidos y utilizados en los formularios dinámicos.
+
+        ### Validadores personalizados disponibles
+        - `date-is-after`: Valida que la fecha del campo sea posterior a otra fecha o campo.  
+        - `date-is-between`: Valida que la fecha esté entre dos valores o campos.  
+        - `email`: Valida el formato de correo electrónico.  
+        - `email-principal-unique`: Valida que exista un único correo electrónico principal.  
+        - `field-array-max`: Valida que el número de elementos de una lista no supere el límite definido.  
+        - `multicheckbox-restricted`: Valida que ciertos valores de selección múltiple no sean simultáneamente seleccionados.  
+        - `oneRowRequired`: Comprueba que exista al menos una fila en una tabla.
+      operationId: getProyectoFormlyCreate
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para crear un proyecto.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                  - key: proyectoSgiId
+                    type: input
+                    templateOptions:
+                      label: Identificador proyecto SGI
+                      required: true
+                      disabled: true
+                  - key: titulo
+                    type: i18n-input
+                    templateOptions:
+                      label: Título proyecto
+                      required: true
+                      disabled: true
+                  - fieldGroupClassName: row-formly
+                    fieldGroup:
+                      - key: fechaInicio
+                        type: dateTimePicker
+                        className: flex-1
+                        templateOptions:
+                          label: Fecha inicio
+                          luxonFormat: shortDate
+                          placeholder: Introduce fecha inicio
+                          required: true
+                          disabled: true
+                      - key: fechaFin
+                        type: dateTimePicker
+                        className: flex-1
+                        templateOptions:
+                          label: Fecha fin
+                          luxonFormat: shortDate
+                          placeholder: Introduce fecha fin
+                          required: true
+                          disabled: true
+                  - key: responsable
+                    type: input
+                    templateOptions:
+                      label: Responsable
+                      disabled: true
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /proyectos/formly/update:
+    get:
+      tags:
+        - proyectos
+      summary: Formulario dinámico para la solicitud de modificación de los datos de un proyecto económico/orgánica/centro de coste
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para la edición de los datos de un proyecto económico/orgánica/centro de coste. A través de este formulario se recogerán las modificaciones de un proyecto económico/orgánica/centro de coste para ser notificadas al sistema de gestión económica.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI anteriormentente mencionadas así como desde la acción **Editar** del buscador de proyectos.  
+        - El SGI rellena el formulario con los datos obtenidos de `GET /proyectos/formly/{id}`. Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+        - Si se requiere añadir **validadores personalizados**, es necesario **incluirlos previamente en el SGI** para que puedan ser reconocidos y utilizados en los formularios dinámicos.
+
+        ### Validadores personalizados disponibles
+        - `date-is-after`: Valida que la fecha del campo sea posterior a otra fecha o campo.  
+        - `date-is-between`: Valida que la fecha esté entre dos valores o campos.  
+        - `email`: Valida el formato de correo electrónico.  
+        - `email-principal-unique`: Valida que exista un único correo electrónico principal.  
+        - `field-array-max`: Valida que el número de elementos de una lista no supere el límite definido.  
+        - `multicheckbox-restricted`: Valida que ciertos valores de selección múltiple no sean simultáneamente seleccionados.  
+        - `oneRowRequired`: Comprueba que exista al menos una fila en una tabla.
+      operationId: getProyectoFormlyUpdate
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para modificar un proyecto.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                  - key: proyectoSgiId
+                    type: input
+                    templateOptions:
+                      label: Identificador proyecto SGI
+                      required: true
+                      disabled: true
+                  - key: titulo
+                    type: i18n-input
+                    templateOptions:
+                      label: Título proyecto
+                      required: true
+                      disabled: true
+                  - fieldGroupClassName: row-formly
+                    fieldGroup:
+                      - key: fechaInicio
+                        type: dateTimePicker
+                        className: flex-1
+                        templateOptions:
+                          label: Fecha inicio
+                          luxonFormat: shortDate
+                          placeholder: Introduce fecha inicio
+                          required: true
+                          disabled: true
+                      - key: fechaFin
+                        type: dateTimePicker
+                        className: flex-1
+                        templateOptions:
+                          label: Fecha fin
+                          luxonFormat: shortDate
+                          placeholder: Introduce fecha fin
+                          required: true
+                          disabled: true
+                  - key: responsable
+                    type: input
+                    templateOptions:
+                      label: Responsable
+                      disabled: true
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /proyectos/formly/view:
+    get:
+      tags:
+        - proyectos
+      summary: Formulario dinámico para la visualización del detalle de un proyecto económico/orgánica/centro de coste
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para visualizar el detalle de un proyecto económico/orgánica/centro de coste del sistema de gestión económica.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI anteriormentente mencionadas así como desde la acción **Ver** del buscador de proyectos.  
+        - El SGI rellena el formulario con los datos obtenidos de `GET /proyectos/formly/{id}`. Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+      operationId: getProyectoFormlyView
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para visualizar un proyecto.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                  - key: proyectoSgiId
+                    type: input
+                    templateOptions:
+                      label: Identificador proyecto SGI
+                      required: true
+                      disabled: true
+                  - key: titulo
+                    type: i18n-input
+                    templateOptions:
+                      label: Título proyecto
+                      required: true
+                      disabled: true
+                  - fieldGroupClassName: row-formly
+                    fieldGroup:
+                      - key: fechaInicio
+                        type: dateTimePicker
+                        className: flex-1
+                        templateOptions:
+                          label: Fecha inicio
+                          luxonFormat: shortDate
+                          placeholder: Introduce fecha inicio
+                          required: true
+                          disabled: true
+                      - key: fechaFin
+                        type: dateTimePicker
+                        className: flex-1
+                        templateOptions:
+                          label: Fecha fin
+                          luxonFormat: shortDate
+                          placeholder: Introduce fecha fin
+                          required: true
+                          disabled: true
+                  - key: responsable
+                    type: input
+                    templateOptions:
+                      label: Responsable
+                      disabled: true
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+
+  /proyectos/formly/{id}:
+    get:
+      tags:
+        - proyectos
+      summary: Devuelve los datos de un proyecto económico/orgánica/centro de coste para ser mostrados en el formulario dinámico
+      description: |-
+        Devuelve el detalle, en el formato del formulario dinámico (**Formly**), del proyecto económico/orgánica/centro de coste correspondiente al `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI anteriormentente mencionadas así como desde las acciones **Ver** y **Editar** del buscador de proyectos.  
+        - Su implementación es **obligatoria** para mostrar el detalle de los proyectos económicos/orgánicas/centros de coste y en el caso que se habilite la  solicitud de modificación de los mismos desde el SGI.
+        - La definición del objeto de respuesta de este endpoint debe estar **alineada con la estructura de los formularios dinámicos (Formly)**, para permitir visualizar y editar los campos que se deseen mantener.  
+        - El esquema de la respuesta puede adaptarse en cada implantación en función de las necesidades y del diseño de los formularios Formly en los que se utilice.
+      operationId: findProyectoFormlyById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del proyecto
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve el detalle del proyecto para el Formly.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProyectoFormlyOutput"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Proyecto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+    put:
+      tags:
+        - proyectos
+      summary: Expone los datos de un proyecto económico/orgánica/centro de coste para su actualización en el sistema de gestión económica
+      description: |-
+        Expone los datos del  proyecto económico/orgánica/centro de coste correspondiente al `id` para que el sistema de gestión económica procede a su actualización. El SGI admite por configuración que el SGE realice la actualización de forma **síncrona** o **asíncrona**.
+        
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI anteriormentente mencionadas así como desde la acción **Editar** del buscador de proyectos.  
+        - Su implementación es **opcional** si no se habilita la modificación de proyecto SGE en **Configuración ➜ Configuración CSP** del módulo Administración.  
+        - La definición del **cuerpo de la solicitud** debe estar **alineada con la estructura del formulario dinámico (Formly)** de modificación, para permitir editar los campos definidos en cada implantación.  
+        - El **esquema del cuerpo de la solicitud** puede adaptarse en función de las necesidades de cada implantación o de los sistemas corporativos de origen.
+      operationId: updateProyectoFormly
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del proyecto
+          required: true
+          schema:
+            type: string
+            example: E1
+      requestBody:
+        description: Datos actualizados del proyecto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProyectoFormlyInput"
+      responses:
+        204:
+          description: Proyecto económico actualizado
+        400:
+          description: Datos del proyecto incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Proyecto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+          
+  /proyectos/{id}/notificaciones/relaciones-eliminadas:
+    post:
+      tags:
+        - proyectos
+      summary: Notifica al SGE la eliminación de relaciones en el SGI entre el proyecto del SGE y uno o varios proyectos y/o grupos del SGI
+      description: |- 
+        Notifica al SGE la eliminación de relaciones en el SGI entre el proyecto del SGE y uno o varios proyectos y/o grupos del SGI
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - Su implementación es **opcional** si no se habilita la configuración  de proyecto SGE en **Configuración ➜ Configuración CSP**
+        - No obstante, si el **SGE no necesita reaccionar ante esta notificación**, el servicio puede implementarse sin lógica interna (endpoint vacío que responda correctamente).
+      operationId: processNotificacionRelacionEliminada
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del proyecto
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/RelacionEliminadaInput"
+      responses:
+        202:
+          description: Notificación procesada correctamente
+        400:
+          description: Error al procesar la notificación porque los datos de la notificación no son validos o porque el SGE no permite realizar la acción
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Proyecto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /proyectos/anualidades:
+    post:
+      tags:
+        - proyectos
+      summary: Notifica al sistema de gestión económica el presupuesto de un proyecto
+      description: |-
+        Notifica al sistema de gestión económica el presupuesto de un proyecto. La definición del presupuesto en el SGI se establece por anualidad y partida presupuestaria.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Configuración económica ➜ Presupuesto**, **Notificación presupuestos al SGE**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para la notificación de presupuestos al SGE.
+      operationId: createProyectoAnualidadPartidas
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de partidas presupuestarias por anualidad y proyecto
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/ProyectoAnualidadPartidaInput"
+      responses:
+        204:
+          description: Devuelve el identificador del proyecto
+        400:
+          description: Datos del proyecto incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /seguimiento-justificacion:
+    get:
+      tags:
+        - seguimiento-justificacion
+      summary: Devuelve el listado de gastos justificados para un proyecto y uno o más periodos de justificación
+      description: |-
+        Devuelve el listado de gastos justificados para un proyecto SGI y uno o más periodos de justificación para su inclusión en un requerimiento de justificación.
+
+        ### Búsquedas necesarias que deben soportarse
+        - `proyectoId`
+        - `justificacionId`
+        - `numRegistroProveedor`
+        - `importeJustificado`
+        - `fechaDevengo`
+        - `fechaPago`
+        - `id`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Seguimiento justificación ➜ Requerimientos de justificación**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para añadir gastos justificados a los requerimientos de justificación.
+      operationId: findAllSeguimientoJustificacion
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - proyectoId
+            - justificacionId
+            - numRegistroProveedor
+            - importeJustificado
+            - fechaDevengo
+            - fechaPago
+            - id
+          schema:
+            type: string
+            example: proyectoId==P1;justificacionId==J1
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: id,asc
+      responses:
+        200:
+          description: Devuelve la lista de facturas emitidas
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GastoJustificadoOutput"
+        204:
+          description: No hay gastos para los criterios de busqueda utilizados.
+        400:
+          description: Parámetros no válidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /seguimiento-justificacion/columnas:
+    get:
+      tags:
+        - seguimiento-justificacion
+      summary: Devuelve la lista de columnas dinámicas para mostrar la información de  los gastos justificados
+      description: |-
+        DDevuelve la lista de **columnas dinámicas** asociadas a los gastos justificados utilizados para realizar el seguimiento de los requerimientos de justificación. Estas columnas permiten representar datos variables de acuerdo al sistema externo que se utilice para agrupar los gastos de bajo los periodos de justificación.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Seguimiento justificación ➜ Requerimientos de justificación**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para añadir gastos justificados a los requerimientos de justificación.
+        - Algunas columnas pueden ser **acumulables**, permitiendo calcular totales.
+      operationId: findAllColumnasSeguimientoJustificacion
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de columnas dinámicas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColumnaOutput"
+        204:
+          description: No hay columnas configuradas.
+        400:
+          description: Parámetros no válidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /seguimiento-justificacion/{id}:
+    get:
+      tags:
+        - seguimiento-justificacion
+      summary: Detalle de un gasto justificado
+      description: |-
+        Devuelve el detalle completo del gasto justificado correspondiente al `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Ejecución económica ➜ Seguimiento justificación ➜ Requerimientos de justificación ➜ Detalle**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Será necesaria únicamente cuando esté habilitada la configuración para añadir gastos justificados a los requerimientos de justificación.
+      operationId: findSeguimientoJustifcacionById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del gasto
+          required: true
+          schema:
+            type: string
+            example: SJG1
+      responses:
+        200:
+          description: Devuelve el detalle del gasto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GastoJustificadoDetalleOutput"
+        404:
+          description: Gasto no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /solicitudes-proyecto/{proyectoSgiId}/pendientes:
+    get:
+      tags:
+        - solicitudes-proyecto
+      summary: |-
+        Lista de solicitudes asociadas al proyecto con el proyectoSgiId con un estado pendiente de procesar
+      description: |-
+        Listado de solicitudes de creación de proyecto económico/orgánica/centro que aún están pendientes de procesar por el sistema de gestión económica.
+
+        El resultado se utiliza para:
+        - Informar en el SGI de la existencia de solicitudes de creación de proyecto económico/orgánica/centro que están pendientes de resolver por el sistema de gestión económica.
+        - Informar en el SGI de la existencia de solicitudes de modificación de los datos de proyecto económico/orgánica/centro o de vinculaciones de proyecto económico/orgánica/centro con proyectos SGI que están pendientes de resolver por el sistema de gestión económica.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP ➜ **Proyectos ➜ Configuración económica ➜ Identificación**
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional**.
+        - Solo es necesaria cuando las operaciones de **alta o modificación de proyectos en el SGE** se ejecutan en **modo asíncrono**.
+        - El servicio devuelve las solicitudes asociadas al proyecto que aún no han sido completamente resueltas en el sistema económico.
+      operationId: findAllSolicitudesProyectoPendientesByProyectoSgiId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: proyectoSgiId
+          in: path
+          description: Identificador del proyecto en el SGI
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        200:
+          description: Devuelve la lista de solicitudes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SolicitudProyectoOutput"
+        204:
+          description: No hay solicitudes asociadas al proyectoSgiId
+        400:
+          description: Parámetros no válidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+components:
+  schemas:
+    ClasificacionSGEOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: Clasificacion 1
+    CodigoEconomicoGastoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: CG1
+        nombre:
+          type: string
+          example: TRANSPORTES
+        fechaInicio:
+          type: string
+          format: date
+          example: "2024-01-01"
+        fechaFin:
+          type: string
+          format: date
+          example: "2024-03-15"
+    CodigoEconomicoIngresoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: CI1
+        nombre:
+          type: string
+          example: SUBVENCIONES PARA GASTOS
+        fechaInicio:
+          type: string
+          format: date
+          example: "2024-01-01"
+        fechaFin:
+          type: string
+          format: date
+          example: "2024-03-15"
+    ColumnaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+          description: Identificador único de la columna
+        nombre:
+          type: string
+          example: "Nº registro"
+          description: Nombre visible de la columna
+        acumulable:
+          type: boolean
+          example: false
+          description: Indica si la columna es acumulable (sumable) o no
+    ComentarioInput:
+      type: object
+      properties:
+        comentario:
+          type: string
+          example: Comentario...
+    DatoEconomicoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        proyectoId:
+          type: string
+          example: P1
+        partidaPresupuestaria:
+          type: string
+          example: "AP-01"
+        fechaDevengo:
+          type: string
+          format: date
+          example: "2023-03-19"
+          nullable: true
+        clasificacionSGE:
+          type: string
+          nullable: true
+          example: "SGE-01"
+        codigoEconomico:
+          $ref: "#/components/schemas/CodigoEconomicoOutput"
+        anualidad:
+          type: string
+          example: 2023
+        tipo:
+          type: string
+          enum:
+            - Gasto
+            - Ingreso
+          example: Gasto
+        columnas:
+          type: object
+          description: |-
+            Mapa dinámico de columnas configuradas.
+            La clave representa el identificador de la columna y el valor puede ser numérico o null dependiendo del tipo de dato.
+          additionalProperties:
+            nullable: true
+            oneOf:
+              - type: number
+              - type: string
+    DatoEconomicoDetalleOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: E1
+          description: Identificador del dato económico en el SGE
+        proyectoId:
+          type: string
+          example: P1
+          description: Identificador del proyecto al que pertenece el dato económico en el SGI
+        partidaPresupuestaria:
+          type: string
+          example: "08.002B.541A.64406"
+        fechaDevengo:
+          type: string
+          format: date
+          example: "2023-03-19"
+        clasificacionSGE:
+          $ref: "#/components/schemas/ClasificacionSGEOutput"
+        codigoEconomico:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/CodigoEconomicoGastoOutput"
+            - $ref: "#/components/schemas/CodigoEconomicoIngresoOutput"
+        anualidad:
+          type: string
+          example: 2023
+        tipo:
+          type: string
+          enum:
+            - Gasto
+            - Ingreso
+          example: Gasto
+          description: Indica si el dato es un gasto o un ingreso
+        campos:
+          type: array
+          description: Lista de campos dinámicos del dato económico
+          items:
+            type: object
+            properties:
+              nombre:
+                type: string
+                description: Nombre del campo.
+                example: Número previsión
+              valor:
+                description: |-
+                  Valor del campo.
+                  El valor será normalmente un **String**, salvo en aquellos campos que representen importes o valores acumulables, donde se enviará un **valor numérico** sin separador de miles y con el punto como separador decimal.
+                oneOf:
+                  - type: string
+                  - type: number
+                example: DE-1
+        documentos:
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentoOutput"
+          description: Lista de documentos asociados al dato económico, si los hubiera
+    DocumentoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: D1
+        nombre:
+          type: string
+          example: Documento 1
+        nombreFichero:
+          type: string
+          example: docucumento1.pdf
+    FacturaEmitidaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: F1
+        proyectoId:
+          type: string
+          example: P1
+        anualidad:
+          type: string
+          example: 2023
+        numeroFactura:
+          type: string
+          example: "S-29|2021"
+        columnas:
+          type: object
+          description: |-
+            Mapa dinámico de columnas configuradas.
+            La clave representa el identificador de la columna y el valor puede ser numérico o null dependiendo del tipo de dato.
+          additionalProperties:
+            nullable: true
+            oneOf:
+              - type: number
+              - type: string
+    FacturaEmitidaDetalleOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: F1
+        proyectoId:
+          type: string
+          example: P1
+        anualidad:
+          type: string
+          example: 2023
+        numeroFactura:
+          type: string
+          example: "S-29|2021"
+        campos:
+          type: array
+          description: Lista de campos dinámicos de la factura emitida.
+          items:
+            type: object
+            properties:
+              nombre:
+                type: string
+                description: Nombre del campo.
+                example: Número previsión
+              valor:
+                description: |-
+                  Valor del campo.
+                  El valor será normalmente un **String**, salvo en aquellos campos que representen importes o valores acumulables, donde se enviará un **valor numérico** sin separador de miles y con el punto como separador decimal.
+                oneOf:
+                  - type: string
+                  - type: number
+                example: PREV-1
+        documentos:
+          type: array
+          description: Lista de documentos asociados a la factura emitida.
+          items:
+            $ref: "#/components/schemas/DocumentoOutput"
+    FacturaPrevistaInput:
+      type: object
+      required:
+        - proyectoIdSGI
+        - numeroPrevision
+        - fechaEmision
+        - importeBase
+        - porcentajeIVA
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador de la factura prevista. Solo necesario en operaciones de actualización.
+        proyectoSgeId:
+          type: string
+          example: P1
+          description: Identificador del proyecto en el sistema económico.
+        proyectoIdSGI:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador del proyecto en el SGI.
+        numeroPrevision:
+          type: string
+          example: PREV-1
+          description: Número de previsión asociado a la factura prevista.
+        fechaEmision:
+          type: string
+          format: date-time
+          example: "2024-03-15T00:00:00Z"
+          description: Fecha de emisión de la factura prevista.
+        importeBase:
+          type: number
+          format: double
+          example: 1000.50
+          description: Importe base de la factura prevista.
+        porcentajeIVA:
+          type: integer
+          example: 21
+          description: Porcentaje de IVA aplicado.
+        comentario:
+          type: array
+          description: Comentario asociado a la factura prevista con soporte multidioma.
+          items:
+            $ref: "#/components/schemas/I18nFieldValueInput"
+        tipoFacturacion:
+          type: array
+          description: Tipo de facturación con soporte multidioma.
+          items:
+            $ref: "#/components/schemas/I18nFieldValueInput"
+        numeroFactura:
+          type: string
+          example: "S-29|2021"
+          description: Número de factura asociado si existe.
+    FacturaPrevistaOutput:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador de la factura prevista
+        proyectoSgeId:
+          type: string
+          example: P1
+          description: Identificador del proyecto en el sistema económico
+        proyectoIdSGI:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador del proyecto en el SGI
+        numeroPrevision:
+          type: string
+          example: "PREV-1"
+          description: Número de previsión asociado a la factura prevista
+        fechaEmision:
+          type: string
+          format: date-time
+          example: "2024-03-15T00:00:00Z"
+          description: Fecha de emisión de la factura prevista
+        importeBase:
+          type: number
+          format: double
+          example: 1000.50
+          description: Importe base de la factura prevista
+        porcentajeIVA:
+          type: integer
+          example: 21
+          description: Porcentaje de IVA aplicado
+        comentario:
+          type: array
+          description: Comentario multidioma asociado a la factura prevista
+          items:
+            $ref: "#/components/schemas/I18nFieldValueDto"
+        tipoFacturacion:
+          type: array
+          description: Tipo de facturación multidioma
+          items:
+            $ref: "#/components/schemas/I18nFieldValueDto"
+        numeroFactura:
+          type: string
+          example: "S-29|2021"
+          description: Número de factura asociado si existe
+    FacturaPrevistaEmitidaOutput:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador de la factura prevista emitida
+        proyectoSgeId:
+          type: string
+          example: P1
+          description: Identificador del proyecto en el sistema económico
+        proyectoIdSGI:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador del proyecto en el SGI
+        numeroPrevision:
+          type: string
+          example: "PREV-1"
+          description: Número de previsión asociado a la factura prevista emitida
+        fechaEmision:
+          type: string
+          format: date-time
+          example: "2024-03-15T00:00:00Z"
+          description: Fecha de emisión de la factura prevista emitida
+        importeBase:
+          type: number
+          format: double
+          example: 1000.50
+          description: Importe base de la factura prevista emitida
+        porcentajeIVA:
+          type: integer
+          example: 21
+          description: Porcentaje de IVA aplicado
+        comentario:
+          type: array
+          description: Comentario multidioma asociado a la factura prevista emitida
+          items:
+            $ref: "#/components/schemas/I18nFieldValueDto"
+        tipoFacturacion:
+          type: array
+          description: Tipo de facturación multidioma
+          items:
+            $ref: "#/components/schemas/I18nFieldValueDto"
+        numeroFactura:
+          type: string
+          example: "S-29|2021"
+          description: Número de factura asociado si existe
+    FacturaPrevistaPendienteOutput:
+      type: object
+      properties:
+        proyectoSgeId:
+          type: string
+          example: P1
+          description: Identificador del proyecto en el sistema económico
+        proyectoIdSGI:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador del proyecto en el SGI
+        numeroPrevision:
+          type: string
+          example: "PREV-1"
+          description: Número de previsión asociado a la factura prevista emitida
+    FuenteFinancionInput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: F1
+        nombre:
+          type: string
+          example: Fuente 1
+    GastoJustificadoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: G1
+        proyectoId:
+          type: string
+          example: P1
+        justificacionId:
+          type: string
+          example: J1
+        columnas:
+          type: object
+          description: |-
+            Mapa dinámico de columnas configuradas.
+            La clave representa el identificador de la columna y el valor puede ser numérico o null dependiendo del tipo de dato.
+          additionalProperties:
+            nullable: true
+            oneOf:
+              - type: number
+              - type: string
+    GastoJustificadoDetalleOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: E1
+        proyectoId:
+          type: string
+          example: P1
+        justificacionId:
+          type: string
+          example: J1
+        campos:
+          type: array
+          items:
+            type: object
+            properties:
+              clave:
+                type: string
+                example: C1
+              valor:
+                type: string
+                example: Campo 1
+                description: |-
+                  El valor será un String salvo en aquellas columnas que sean acumulables (se tenga que hacer sumas sobre ellas) donde será de tipo Numérico (sin separador de miles y como separador decimal el punto)
+        documentos:
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentoOutput"
+    PartidaPresupuestariaGastoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: PG1
+        codigo:
+          type: string
+          example: 00.1111.2222.33333
+        descripcion:
+          type: string
+          example: Partida gasto 01
+        fechaInicio:
+          type: string
+          format: date
+          example: "2024-01-01"
+        fechaFin:
+          type: string
+          format: date
+          example: "2024-03-15"
+    PartidaPresupuestariaIngresoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: PI1
+        codigo:
+          type: string
+          example: 33.2222.1111.00000
+        descripcion:
+          type: string
+          example: Partida ingreso 01
+        fechaInicio:
+          type: string
+          format: date
+          example: "2024-01-01"
+        fechaFin:
+          type: string
+          format: date
+          example: "2024-03-15"
+    PeriodoAmortizacionInput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: PA1
+          description: Identificador interno del SGI del periodo de amortización
+        proyectoId:
+          type: string
+          example: P1
+        anualidad:
+          type: string
+          example: 2023
+        empresaRef:
+          type: string
+          example: E1
+        tipoFinanciacion:
+          $ref: "#/components/schemas/TipoFinancionInput"
+        fuenteFinanciacion:
+          $ref: "#/components/schemas/FuenteFinancionInput"
+        fecha:
+          type: string
+          format: date
+          example: "2023-04-23"
+        importe:
+          type: number
+          example: 85000
+    ProyectoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        proyectoSGIId:
+          type: string
+          example: 101
+        titulo:
+          type: string
+          example: Proyecto 1
+        fechaInicio:
+          type: string
+          format: date-time
+          example: "2022-06-07T00:00:00Z"
+        fechaFin:
+          type: string
+          format: date-time
+          example: "2024-06-07T00:00:00Z"
+        sectorIva:
+          type: boolean
+          example: true
+    ProyectoAnualidadPartidaInput:
+      type: object
+      properties:
+        proyectoId:
+          type: string
+          example: P1
+        anualidad:
+          type: string
+          example: 2023
+        partidaPresupuestaria:
+          type: string
+          example: "08.002B.541A.64406"
+        tipoDatoEconomico:
+          type: string
+          enum:
+            - Gasto
+            - Ingreso
+          example: Gasto
+        importe:
+          type: number
+          example: 10000
+    ProyectoFormlyInput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P2
+        titulo:
+          type: string
+          example: Proyecto 2
+    ProyectoFormlyOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        proyectoSGIId:
+          type: string
+          example: 101
+        titulo:
+          type: string
+          example: Proyecto 1
+        fechaInicio:
+          type: string
+          format: date-time
+          example: "2022-06-07T00:00:00Z"
+        fechaFin:
+          type: string
+          format: date-time
+          example: "2024-06-07T00:00:00Z"
+        sectorIva:
+          type: boolean
+          example: true
+    RelacionEliminadaInput:
+      type: object
+      required:
+        - entidadSGIId
+        - tipoEntidadSGI
+      properties:
+        entidadSGIId:
+          type: string
+          description: ID de la entidad relacionada en SGI
+        tipoEntidadSGI:
+          type: string
+          enum:
+            - GRUPO
+            - PROYECTO
+          example: PROYECTO
+          description: Tipo de entidad del SGI para la que se ha eliminado la relación
+    SolicitudProyectoOutput:
+      type: object
+      required:
+        - id
+        - proyectoSgeRef
+        - estado
+      properties:
+        id:
+          type: string
+          example: SP1
+        proyectoSgeRef:
+          type: string
+          example: P1
+        estado:
+          type: string
+          enum:
+            - ALTA_SOLICITUD_SGI
+            - ALTA_ACEPTADA_SGE
+            - ALTA_CONFIRMADA_SGI
+            - ALTA_ERROR_SGI
+            - ALTA_RECHAZADA_SGE
+            - ALTA_RECHAZO_CONFIRMADO_SGI
+            - MODIFICACION_SOLICITUD_SGI
+            - MODIFICACION_ACEPTADA_SGE
+            - MODIFICACION_RECHAZADA_SGE
+            - MODIFICACION_CONFIRMADA_SGI
+            - MODIFICACION_RECHAZO_CONFIRMADO_SGI
+            - REASIGNACION_ACEPTADA_SGE
+            - REASIGNACION_CONFIRMADA_SGI
+            - REASIGNACION_ERROR_SGI
+          example: MODIFICACION_SOLICITUD_SGI
+    CodigoEconomicoOutput:
+      type: object
+      description: Representa un código económico disponible en el SGE.
+      properties:
+        id:
+          type: string
+          description: Identificador único del código económico en el SGE.
+          example: "CE-001"
+        nombre:
+          type: string
+          description: Nombre o descripción del código económico.
+          example: "Gastos de personal"
+      required:
+        - id
+        - nombre
+    TipoFinancionInput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: T1
+        nombre:
+          type: string
+          example: Tipo 1
+    I18nFieldValueDto:
+      type: object
+      properties:
+        lang:
+          type: string
+          example: "es"
+          description: Código del idioma
+        value:
+          type: string
+          example: "Un comentario"
+          description: Valor en el idioma indicado
+      required:
+        - lang
+        - value
+    I18nFieldValueInput:
+      type: object
+      properties:
+        lang:
+          type: string
+          example: "es"
+          description: Código del idioma
+        value:
+          type: string
+          example: "Un comentario"
+          description: Valor en el idioma indicado
+      required:
+        - lang
+        - value
+
+    AccessDeniedError:
+      type: object
+      description: Este error se produce cuando el usuario no tiene permiso para acceder al recurso solicitado.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:access-denied
+        title:
+          type: string
+          description: Descripción del error.
+          example: Forbidden
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 403
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Access is denied
+    NotFoundError:
+      type: object
+      description: Este error se produce cuando el recurso solicitado no existe.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:not-found
+        title:
+          type: string
+          description: Descripción del error.
+          example: Not Found
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 404
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No se ha encontrado '{NOMBRE_RECURSO}' con el identificador '{IDENTIFICADOR_RECURSO}'
+    UnauthorizedError:
+      type: object
+      description: Este error se produce cuando el usuario no está autenticado (Token JWT inválido, expirado o ausente).
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:authentication
+        title:
+          type: string
+          description: Descripción del error.
+          example: Unauthorized
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 401
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No token found
+    BadRequestError:
+      type: object
+      description: Este error se produce cuando el sistema recibe una petición incorrecta y no existe un error más especifico.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:bad-request
+        title:
+          type: string
+          description: Descripción del error.
+          example: Bad Request
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 400
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Page index must not be less than zero
+  responses:
+    UnauthorizedErrorResponse:
+      description: Token JWT inválido, expirado o ausente
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnauthorizedError"
+    AccessDeniedErrorResponse:
+      description: El usuario no tiene permiso para acceder al recurso solicitado.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccessDeniedError"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, for documentation purposes only
