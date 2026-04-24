@@ -1,0 +1,435 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Gestión Documental (SGDOC)
+  description: |-
+    API del **Sistema de Gestión Documental (SGDOC)** utilizada por el SGI.
+    Este servicio permite gestionar los documentos asociados a distintas entidades del SGI, incluyendo:
+    - Registro de documentos
+    - Consulta de metadatos
+    - Descarga de archivos
+    - Eliminación de documentos
+  version: 0.1.0
+  contact: {}
+
+tags:
+  - name: documentos
+    description: Gestión de documentos
+
+paths:
+  /documentos:
+    get:
+      tags:
+        - documentos
+      summary: Obtiene la lista de documentos
+      description: |-
+        Devuelve una lista paginada y filtrada de documentos.
+
+        ### Criterios de búsqueda
+        Se utiliza **RSQL** mediante el parámetro `q`.
+        
+        ### Consideraciones para la implementación
+        - Este servicio es **opcional**. No se utiliza en ningún módulo del SGI.
+      operationId: findAllDocumentos
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Número de página
+          schema:
+            type: integer
+            minimum: 0
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Número de elementos por página
+          schema:
+            type: integer
+            minimum: 0
+          example: 10
+        - name: q
+          in: query
+          description: |-
+            Criterios de búsqueda en formato **RSQL**.
+          schema:
+            type: string
+          example: nombre==contrato.pdf
+        - name: s
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Lista paginada de documentos
+          headers:
+            X-Page-Count:
+              description: Número de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Número de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Número total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Número de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Número de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Documento"
+        204:
+          description: No hay documentos
+
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+    post:
+      tags:
+        - documentos
+      summary: Crear un documento
+      description: |-
+        Crea un nuevo documento en el sistema.
+        El endpoint acepta un **multipart/form-data** que contiene el archivo del documento.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Documentos**, **Solicitud ➜ Documentos**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**, **Proyecto ➜ Documentos**, **Proyecto ➜ Periodo de seguimiento científico ➜ Documentos**, **Proyecto ➜ Prórrogas ➜ Documentos**, **Proyecto ➜ Socios ➜ Periodos justificación ➜ Documentos**
+        - EER: **Empresa de explotación de resultados ➜ Documentos**
+        - ETI: **Convocatoria de reunión ➜ Documentación**, **Memoria ➜ Documentación**
+        - PII: **Invención ➜ Documentos**, **Invención ➜ Informes de patentabilidad**, **Invención ➜ Solicitud de protección ➜ Procedimientos**
+
+        ### Consideraciones para la implementación
+        - Este servicio es **obligatorio** para las pantallas en las que se realiza una gestión de documentos.
+      operationId: createDocumento
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - archivo
+              properties:
+                archivo:
+                  type: string
+                  format: binary
+                  description: Archivo del documento
+      responses:
+        201:
+          description: Documento creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Documento"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+
+  /documentos/{id}:
+    get:
+      tags:
+        - documentos
+      summary: Obtener documento
+      description: |-
+        Devuelve los metadatos de un documento.
+        
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Documentos**, **Solicitud ➜ Documentos**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**, **Proyecto ➜ Documentos**, **Proyecto ➜ Periodo de seguimiento científico ➜ Documentos**, **Proyecto ➜ Prórrogas ➜ Documentos**, **Proyecto ➜ Socios ➜ Periodos justificación ➜ Documentos**, **Autorización participación proyecto externo ➜ Listado ➜ Descargar certificado**, **Autorización participación proyecto externo ➜ Certificado Autorización**
+        - EER: **Empresa de explotación de resultados ➜ Documentos**
+        - ETI: **Convocatoria de reunión ➜ Documentación**, **Memoria ➜ Documentación**, **Memoria ➜ Evaluaciones**, **Memoria ➜ Versiones**,  **Evaluación ➜ Documentación**, **Seguimientos ➜ Documentación**, **Acta ➜ Listado**, **Acta ➜ Memorias**
+        - PII: **Invención ➜ Documentos**, **Invención ➜ Informes de patentabilidad**, **Invención ➜ Gasto ➜ Detalle**, **Invención ➜ Solicitud de protección ➜ Procedimientos**
+
+        ### Consideraciones para la implementación
+        - Este servicio es **obligatorio** para las pantallas en las que se realiza una gestión de documentos.
+      operationId: findDocumentoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador del documento `documentoRef`
+          schema:
+            type: string
+      responses:
+        200:
+          description: Documento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Documento"
+        404:
+          description: Documento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+    delete:
+      tags:
+        - documentos
+      summary: Eliminar documento
+      description: |- 
+        Elimina un documento del sistema.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Documentos**, **Solicitud ➜ Documentos**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**, **Proyecto ➜ Documentos**, **Proyecto ➜ Periodo de seguimiento científico ➜ Documentos**, **Proyecto ➜ Prórrogas ➜ Documentos**, **Proyecto ➜ Socios ➜ Periodos justificación ➜ Documentos**
+        - EER: **Empresa de explotación de resultados ➜ Documentos**
+        - ETI: **Convocatoria de reunión ➜ Documentación**, **Memoria ➜ Documentación**
+        - PII: **Invención ➜ Documentos**, **Invención ➜ Informes de patentabilidad**, **Invención ➜ Solicitud de protección ➜ Procedimientos**
+
+        ### Consideraciones para la implementación
+        - Este servicio es **obligatorio** para las pantallas en las que se realiza una gestión de documentos.
+      operationId: deleteDocumento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador del documento `documentoRef`
+          schema:
+            type: string
+      responses:
+        204:
+          description: Documento eliminado correctamente
+
+        404:
+          description: Documento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+
+  /documentos/{id}/archivo:
+    get:
+      tags:
+        - documentos
+      summary: Descargar archivo
+      description: |-
+        Descarga el archivo asociado a un documento.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Documentos**, **Solicitud ➜ Documentos**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**, **Proyecto ➜ Documentos**, **Proyecto ➜ Periodo de seguimiento científico ➜ Documentos**, **Proyecto ➜ Prórrogas ➜ Documentos**, **Proyecto ➜ Socios ➜ Periodos justificación ➜ Documentos**, **Autorización participación proyecto externo ➜ Listado ➜ Descargar certificado**, **Autorización participación proyecto externo ➜ Certificado Autorización**
+        - EER: **Empresa de explotación de resultados ➜ Documentos**
+        - ETI: **Convocatoria de reunión ➜ Documentación**, **Memoria ➜ Documentación**, **Memoria ➜ Evaluaciones**, **Memoria ➜ Versiones**, **Evaluación ➜ Documentación**, **Seguimientos ➜ Documentación**, **Acta ➜ Listado**, **Acta ➜ Memorias**
+        - PII: **Invención ➜ Documentos**, **Invención ➜ Informes de patentabilidad**, **Invención ➜ Gasto ➜ Detalle**, **Invención ➜ Solicitud de protección ➜ Procedimientos**
+
+        ### Consideraciones para la implementación
+        - Este servicio es **obligatorio** para las pantallas en las que se realiza una gestión de documentos.
+      operationId: downloadDocumentoArchivo
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador del documento `documentoRef`
+          schema:
+            type: string
+      responses:
+        200:
+          description: Archivo del documento
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        404:
+          description: Archivo no encontrado
+
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+
+  /documentos/bydocumentorefs/{ids}:
+    get:
+      tags:
+        - documentos
+      summary: Obtener documentos por referencias
+      description: |-
+        Devuelve una lista paginada de documentos asociados a un conjunto
+        de referencias de documento.
+
+        Las referencias deben enviarse separadas por `|`.
+
+        ### Ejemplo
+        ```
+        /documentos/bydocumentorefs/ref1|ref2|ref3
+        ```
+      operationId: findDocumentosByRefs
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: ids
+          in: path
+          required: true
+          description: |-
+            Lista de referencias de documentos separadas por `|`
+
+            ### Consideraciones para la implementación
+            - Este servicio es **opcional**. No se utiliza en ningún módulo del SGI.
+          schema:
+            type: string
+          example: ref1|ref2|ref3
+        - name: X-Page
+          in: header
+          description: Número de página
+          schema:
+            type: integer
+            minimum: 0
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Número de elementos por página
+          schema:
+            type: integer
+            minimum: 0
+          example: 10
+        - name: q
+          in: query
+          description: Criterios de búsqueda en formato RSQL
+          schema:
+            type: string
+        - name: s
+          in: query
+          description: Criterios de ordenación
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Lista paginada de documentos
+          headers:
+            X-Page-Count:
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              schema:
+                type: integer
+            X-Total-Count:
+              schema:
+                type: integer
+            X-Page-Size:
+              schema:
+                type: integer
+            X-Page:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Documento"
+        204:
+          description: No hay documentos
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedErrorResponse:
+      description: No autenticado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnauthorizedError"
+    AccessDeniedErrorResponse:
+      description: Acceso denegado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccessDeniedError"
+  schemas:
+    Documento:
+      type: object
+      required:
+        - documentoRef
+        - nombre
+      properties:
+        documentoRef:
+          type: string
+          description: Identificador único del documento
+          example: 8f8f0f4d-bf9a-4a1e-9a4c-2cfa21e3d8c2
+        nombre:
+          type: string
+          description: Nombre del archivo
+          example: contrato.pdf
+        version:
+          type: integer
+          description: Versión del documento
+          example: 1
+        fechaCreacion:
+          type: string
+          format: date-time
+          description: Fecha de creación del documento
+          example: 2024-01-01T10:15:30
+        tipo:
+          type: string
+          description: Tipo MIME del documento
+          example: application/pdf
+        autorRef:
+          type: string
+          description: Identificador del autor
+          example: anonymous
+        hash:
+          type: string
+          description: Hash SHA-256 del archivo
+          example: 7d793037a0760186574b0282f2f435e7
+
+    UnauthorizedError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unauthorized
+    AccessDeniedError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Access denied
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Resource not found

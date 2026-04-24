@@ -1,0 +1,2836 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Gestión de Personas (SGP)
+  description: |-
+    API de integración del **Sistema de Gestión de Personas (SGP)** con el **SGI**.
+
+    La integración con el **SGP** es **imprescindible**, con independencia de los módulos del SGI que se implanten. 
+    El SGI no almacena datos propios de las personas ni de su vinculación con la Universidad.
+
+    Todos los datos relativos a las personas —incluyendo su identificación, datos administrativos y su relación 
+    o vinculación con la Universidad— deben recuperarse de los sistemas corporativos correspondientes.
+
+    Dependiendo de la organización interna de la Universidad, la información que el SGI necesita sobre una persona 
+    puede proceder de uno o varios sistemas fuente.
+
+    Bajo la denominación **Sistema de Gestión de Personas (SGP)** se agrupa, por tanto, cualquier sistema corporativo 
+    del que la Universidad deba extraer los datos relativos a personas necesarios para el funcionamiento del SGI.
+  version: 0.1.0
+  contact: {}
+
+tags:
+  - name: actividad-docente
+    description: Actividad docente (servicios pasarela. No son necesarios para el funcionamiento del SGI)
+  - name: categorias-profesionales
+    description: Categorías profesionales
+  - name: categorias-profesionales-public
+    description: Categorías profesionales (endpoints accesibles sin autenticación)
+  - name: colectivos
+    description: Colectivos
+  - name: datos-academicos
+    description: Datos académicos de la persona
+  - name: datos-academicos-public
+    description: Datos académicos de la persona (endpoints accesibles sin autenticación)
+  - name: datos-contacto
+    description: Datos de contacto de la persona
+  - name: datos-contacto-public
+    description: Datos de contacto de la persona (endpoints accesibles sin autenticación)
+  - name: datos-personales
+    description: Datos personales de la persona
+  - name: formacion
+    description: Formación (servicios pasarela. No son necesarios para el funcionamiento del SGI)
+  - name: niveles-academicos
+    description: Niveles académicos
+  - name: niveles-academicos-public
+    description: Niveles académicos (endpoints accesibles sin autenticación)
+  - name: personas
+    description: Operaciones con personas
+  - name: personas-public
+    description: Operaciones con personas (endpoints accesibles sin autenticación)
+  - name: sexos
+    description: Sexos
+  - name: sexos-public
+    description: Sexos (endpoints accesibles sin autenticación)
+  - name: tipos-documento
+    description: Tipos de documento de identificación personal
+  - name: tipos-documento-public
+    description: Tipos de documento de identificación personal (endpoints accesibles sin autenticación)
+  - name: vinculaciones
+    description: Datos de vinculación de la persona
+  - name: vinculaciones-public
+    description: Datos de vinculación de la persona (endpoints accesibles sin autenticación)
+  - name: direccion-tesis y sexenios
+    description: (solo necesarios para PRC)
+
+paths:
+  /actividad-docente/{id}:
+    get:
+      tags:
+        - actividad-docente
+      summary: Detalle sobre los datos de la actividad docente de la persona (Servicio pasarela)
+      description: |-
+        Devuelve un listado con los datos de la actividad docente correspondiente al `id` de la persona y el `tipo de actividad`.
+
+        ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+        
+        ### Consideraciones para la implementación
+        -  La implementación de este servicio es **opcional** y sólo se requiere si el SGI se utiliza como pasarela entre el sistema de gestión de personas corporativo  y cualquier otro sistema externo que requiera la actividad docente de la persona (como puede ser un sistema de gestión de CVN).
+      operationId: findAllActividadDocenteByPersonaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único de la persona en el SGP.
+          required: true
+          schema:
+            type: string
+            example: P1
+        - name: q
+          in: query
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - `tipoActividad`
+
+            El tipo de actividad tiene que tener el siguiente formato de ejemplo:
+            - XXX.XXX.XXX.XXX
+          schema:
+            type: string
+            example: tipoActividad="030.040.000.000"
+          required: true
+      responses:
+        200:
+          description: Devuelve la lista de actividades docentes de la persona y el tipo actividad
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActividadDocenteOutput"
+        204:
+          description: No hay actividades docentes
+  /actividad-docente/modificados-ids:
+    get:
+      tags:
+        - actividad-docente
+      summary: Listado de identificadores de las personas que han tenido modificaciones en la actividad docente. (Servicio pasarela)
+      description: |-
+        Devuelve un listado con los identificadores de las personas que han tenido modificaciones en la actividad docente
+
+        ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional** y sólo se requiere si el SGI se utiliza como pasarela entre el sistema de gestión de personas corporativo  y cualquier otro sistema externo que requiera conocer la modificación de la actividad docente (gestionada en el sistema de gestión de personas corporativo de origen).
+      operationId: findAllActividadDocenteModificados
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - `tipoActividad`:
+            - `fechaModificacion`:
+          schema:
+            type: string
+            example: fechaModificacion=ge="2022-01-01T00:00:00Z";tipoActividad="030.040.000.000"
+        - name: s
+          x-sgi-pageable: false
+          in: query
+          description: |-
+            Criterios de ordenación de la busqueda. 
+
+            Nombre del campo por el que se ordena seguido de **asc** o **desc** para ordenar ascendente o descendentemente.
+          schema:
+            type: string
+            example: fechaModificacion,asc
+      responses:
+        200:
+          description: Devuelve la lista de identificadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        204:
+          description: No hay identificadores
+
+  /categorias-profesionales:
+    get:
+      tags:
+        - categorias-profesionales
+      summary: Listado de categorías profesionales
+      description: |-
+        Devuelve el listado de las categorías profesionales que se manejen en el sistema de gestión de personas corporativo ordenadas por `nombre` alfabéticamente de forma ascendente.
+        (ejemplo: profesor contratado, profesor asociado, personal docente investigador, personal administración y servicios, etc.)
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el alta/modificación de personas no están habilitadas y no se requiere este dato para realizar el alta/modificación. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesario para la implantación del módulo CSP para hacer uso de la funcionalidad de validación de requisitos IP/equipo de la convocatoria.
+      operationId: findAllCategoriasProfesionales
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de categorías profesionales ordenadas alfabéticamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoriaProfesionalOutput"
+        204:
+          description: No hay categorías profesionales
+  /categorias-profesionales/{id}:
+    get:
+      tags:
+        - categorias-profesionales
+      summary: Detalle de la categoría profesional
+      description: |-
+        Devuelve la categoría profesional correspondiente al `id`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza para dar información sobre la categoría profesional a la que pertenece la persona vinculada a la universidad
+      operationId: findCategoriaProfesionalById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la categoría profesional
+          required: true
+          schema:
+            type: string
+            example: C1
+      responses:
+        200:
+          description: Devuelve la categoría profesional
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoriaProfesionalOutput"
+        404:
+          description: Categoría profesional no encontrada
+
+  /public/categorias-profesionales/{id}:
+    get:
+      tags:
+        - categorias-profesionales-public
+      summary: Detalle de la categoría profesional
+      description: |-
+        Versión pública del endpoint `GET /categorias-profesionales/{id}`.
+
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findCategoriaProfesionalPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la categoría profesional
+          required: true
+          schema:
+            type: string
+            example: C1
+      responses:
+        200:
+          description: Devuelve la categoría profesional
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoriaProfesionalOutput"
+        404:
+          description: Categoría profesional no encontrada
+
+  /colectivos:
+    get:
+      tags:
+        - colectivos
+      summary: Lista de colectivos
+      description: |-
+        Devuelve los colectivos ordenados por `nombre` alfabéticamente de forma ascendente.
+        Nomenclatura de la organización de la Universidad (Posibles valores: PAS, PSI, Alumnos, Becarios, Externo).
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Equipo ➜ Miembro equipo**, **Proyecto ➜ Equipo ➜ Miembro equipo**, **Grupo investigación ➜ Equipo ➜ Miembro equipo**, **Roles de equipo ➜ Colectivos**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el  alta/modificación de personas no están habilitadas y no se requiere este dato para realizar el alta/modificación de los datos de una persona. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - El subconjunto de personas (colectivos) cuyos datos deben estar disponibles para el SGI serán aquellas que sean susceptibles de participar en las actividades de investigación
+          o flujos de trabajo cubiertos por cualquiera de los módulos del SGI (miembros de los equipos de proyectos y/o contratos, grupos de investigación, miembros de comités de ética, autoría de PII y/o EBTs, etc.).
+      operationId: findAllColectivos
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de colectivos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColectivoOutput"
+        204:
+          description: No hay colectivos
+
+  /colectivos/{id}:
+    get:
+      tags:
+        - colectivos
+      summary: Detalles del colectivo
+      description: |-
+        Devuelve el colectivo correspondiente al `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Equipo**, **Proyecto ➜ Equipo**, **Grupo investigación ➜ Equipo**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza para dar información sobre el colectivo al que pertenece la persona.
+      operationId: findColectivoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del colectivo
+          required: true
+          schema:
+            type: string
+            example: C1
+      responses:
+        200:
+          description: Devuelve el colectivo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ColectivoOutput"
+        404:
+          description: Colectivo no encontrado
+
+  /niveles-academicos:
+    get:
+      tags:
+        - niveles-academicos
+      summary: Lista de niveles académicos
+      description: |-
+        Devuelve los niveles académicos ordenados alfabéticamente de forma ascendente. Los campos del listado devuelto serán:
+        - `id`: Identificador del nivel académico.
+        - `nombre`: El nombre del nivel académico. (Posibles valores: Doctor, Ldo/Graduado, Diplomado, FP, etc).
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el  alta/modificación de personas no están habilitadas y no se requiere este dato para realizar el alta/modificación. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesario para la implantación del módulo CSP para de hacer uso de la funcionalidad de comprobación de requisitos IP/equipo de la convocatoria.
+      operationId: findAllNivelesAcademicos
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de niveles académicos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NivelAcademicoOutput"
+        204:
+          description: No hay niveles académicos
+  /niveles-academicos/{id}:
+    get:
+      tags:
+        - niveles-academicos
+      summary: Detalles del nivel académico
+      description: |-
+        Devuelve el nivel académico correspondiente al `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza para dar información sobre el nivel académico al que pertenece la persona.
+      operationId: findNivelAcademicoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del nivel académico
+          required: true
+          schema:
+            type: string
+            example: N1
+      responses:
+        200:
+          description: Devuelve el nivel académico
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NivelAcademicoOutput"
+        404:
+          description: Nivel académico no encontrado
+
+  /public/niveles-academicos/{id}:
+    get:
+      tags:
+        - niveles-academicos-public
+      summary: Detalles del nivel académico
+      description: |-
+        Versión pública del endpoint `GET /niveles-academicos/{id}`.
+
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findNivelAcademicoPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del nivel académico
+          required: true
+          schema:
+            type: string
+            example: N1
+      responses:
+        200:
+          description: Devuelve el nivel académico
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NivelAcademicoOutput"
+        404:
+          description: Nivel académico no encontrado
+
+  /datos-academicos/persona/{id}:
+    get:
+      tags:
+        - datos-academicos
+      summary: Datos académicos de la persona
+      description: |-
+        Devuelve los datos académicos de la persona correspondiente al `id`. Los campos del listado devuelto serán:
+        - `nivelAcademico`
+        - `fechaObtencion`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado - investigador**, **Solicitud ➜ Datos proyecto ➜ Equipo**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**, **Proyecto ➜ Equipo**
+        - ETI: **Solicitud evaluación proyecto ➜ Equipo investigador**, **Memoria ➜ Formulario**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el  alta/modificación de personas no están habilitadas y no se requiere esta información para ver el detalle de una persona o realizar el alta/modificación de sus datos. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesarios para la implantación del módulo CSP para hacer uso de la funcionalidad  de validación de requisitos IP/equipo de la convocatoria.
+        - Este servicio será necesario para la implantación del módulo de ETI para mostrar información en el listado de equipo de trabajo. Es un dato meramente informativo.
+      operationId: findDatosAcademicosByPersonaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - `fechaObtencion`: La fecha en la que se obtiene el nivel académico
+          schema:
+            type: string
+            example: fechaObtencion=ge="2022-01-01T00:00:00Z"
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve los datos académicos de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatosAcademicosOutput"
+        204:
+          description: La persona no tiene datos académicos
+        404:
+          description: Persona no encontrada
+
+  /public/datos-academicos/persona/{id}:
+    get:
+      tags:
+        - datos-academicos-public
+      summary: Datos académicos de la persona
+      description: |-
+        Versión pública del endpoint `GET /datos-academicos/persona/{id}`.
+
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findDatosAcademicosPublicByPersonaId
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve los datos académicos de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatosAcademicosOutput"
+        204:
+          description: La persona no tiene datos académicos
+        404:
+          description: Persona no encontrada
+
+  /datos-contacto/persona/{id}:
+    get:
+      tags:
+        - datos-contacto
+      summary: Datos de contacto de la persona
+      description: |-
+        Devuelve los datos de contacto de la persona correspondiente al identificador.
+        - **Identificador/Referencia**: debe de permitir identificar de forma única a una persona. A través de este campo se establecerán todas las relaciones de los datos del SGI dependientes de una persona.
+        - **País**: Será una referencia. Deberá existir un maestro con todos los  países con su nombre e identificador para unificar cualquier campo "país" que se tenga que mostrar en el SGI. 
+        - **Comunidad autónoma**: Será una referencia. Deberá existir un maestro con todas las comunidades autónomas  con su nombre e identificador para unificar cualquier campo comunidad autónoma que se tenga que mostrar en el SGI.
+        - **Provincia**: Será una referencia. Deberá existir un maestro con todas las provincias con su nombre e identificador para unificar cualquier campo comunidad autónoma que se tenga que mostrar en el SGI.
+        - **Ciudad**: Nombre de la ciudad. En este caso no existirá maestro.
+        - **Dirección**: Será un literal sin patrón establecido para desglosar calle, portal, puerta, etc.
+        - **Código postal**
+        - **Emails**: Si solamente se dispone de un mail será un único campo, en caso contrario, se deberá disponer de una vista relacionada que contenga todas las direcciones de mail de la persona. Cada dirección deberá de llevar un atributo que permita distinguir cual es la dirección de mail  principal. (**obligatorio**)
+        - **Teléfonos móviles/fijos**: Si solamente se dispone de un teléfono será un única campo, en caso contrario, se deberá disponer de una vista relacionada que contenga todos los teléfonos de la persona. (**obligatorio**)
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el  alta/modificación de personas no están habilitadas y no se requiere este dato para ver el detalle de una persona o realizar el alta/modificación de sus datos. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesario para la implantación del módulo CSP para de hacer uso del tipo de solicitudes de tipo RRHH.
+      operationId: findDatosContactoByPersonaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve los datos de contacto de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatosContactoOutput"
+        204:
+          description: La persona no tiene datos de contacto
+        404:
+          description: Persona no encontrada
+
+  /public/datos-contacto/persona/{id}:
+    get:
+      tags:
+        - datos-contacto-public
+      summary: Datos de contacto de la persona
+      description: |-
+        Versión pública del endpoint `GET /datos-contacto/persona/{id}`.
+
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos solicitud RRHH ➜ Tutor**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findDatosContactoPublicByPersonaId
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve los datos de contacto de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatosContactoOutput"
+        204:
+          description: La persona no tiene datos de contacto
+        404:
+          description: Persona no encontrada
+
+  /datos-personales/persona/{id}:
+    get:
+      tags:
+        - datos-personales
+      summary: Datos personales de la persona
+      description: |-
+        Devuelve los datos personales de la persona correspondiente al identificador.
+        - **Identificador/Referencia**: debe de permitir identificar de forma única a una persona. A través de este campo se establecerán todas las relaciones de los datos del SGI dependientes de una persona.
+        - **Fecha de nacimiento**: Indicará la fecha de nacimiento de la persona.
+        - **País de nacimiento**: Será una referencia. Deberá existir un maestro con todos los  países con su descripción e identificador para unificar cualquier campo "país" que se tenga que mostrar en el SGI.
+        - **Comunidad autónoma de nacimiento**: Será una referencia. Deberá existir un maestro con todas las comunidades autónomas con su descripción e identificador para unificar cualquier campo comunidad autónoma que se tenga que mostrar en el SGI.
+        - **Ciudad de nacimiento**: Nombre de la ciudad. En este caso no existirá maestro.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado - investigador**, **Solicitud ➜ Datos proyecto ➜ Equipo**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el  alta/modificación de personas no están habilitadas y no se requiere este dato para ver el detalle de una persona o realizar el alta/modificación de sus datos. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesario para la implantación del módulo CSP para de hacer uso del tipo de solicitudes de tipo RRHH.
+      operationId: findDatosPersonalesByPersonaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve los datos personales de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatosPersonalesOutput"
+        204:
+          description: La persona no tiene datos personales
+        404:
+          description: Persona no encontrada
+
+  /direccion-tesis:
+    get:
+      tags:
+        - direccion-tesis y sexenios
+      summary: Lista de Direcciones de tesis
+      description: |-
+        Devuelve la lista de Direcciones de tesis (incluida la personaRef indicando la persona que es el director de la tesis) cuya fecha de defensa sea en el año que se le pasa por parámetro
+        - El SGI dispone de la posibilidad de activar, dentro del módulo PRC, baremos relacionados con la dirección de trabajos. Los trabajos dirigidos por una persona deben de ser recuperados del sistema corporativo correspondiente. Los baremos disponibles en el SGI están basados en la norma FECYT. De acuerdo a ésta, el baremo de "dirección de tesis" está definido en base a los tipos de trabajo que identifica la norma FECYT (proyecto de fin de carrera, tesis doctoral, trabajo conducente a la obtención de DEA, tesina, otros). Los datos relativos a la dirección de trabajos que precisa el SGI son:
+          - **Identificador del trabajo**: Es un identificador único del trabajo (independientemente de su naturaleza: tesis, trabajo fin de máster, proyecto fin de carrera, etc).
+          - **Identificador de la persona que dirige el trabajo**: Será una referencia que permitirá identificar a la persona en el conjunto de vistas relacionadas que se está creando.
+          - **Título del trabajo**.
+          - **Fecha de obtención del título**: Es la fecha de defensa del trabajo y que, por tanto, da lugar a la obtención del título correspondiente de acuerdo al tipo de trabajo que se dirige
+          - **Nombre de la persona que realiza el trabajo**: Será el nombre del/de la alumno/a que realiza el trabajo.
+          - **Tipo del trabajo dirigido**: Es un identificador del tipo de trabajo que permitirá aplicar el baremo de PRC asociado a la dirección de trabajos. Este baremo está definido de acuerdo a la tipología de trabajos recogida por la norma FECYT (proyecto de fin de carrera (id "055"), tesis doctoral (id "067"), trabajo conducente a la obtención de DEA (id "071"), tesina (id "066"), otros (id "OTHERS")). Como se está realizando una integración basada en vistas puede crearse una vista maestra de correspondencia entre los valores de la FECYT y los valores que puedan estar recogidos en el sistema de gestión de personas.
+          - **Nombre del tipo de trabajo**: Es el nombre del tipo de trabajo asociado al identificador anterior. En caso que se disponga de una vista de correspondencia entre los valores de la FECYT y los valores que  recogidos en el sistema de gestión de personas, este campo podría ser redundante.
+          - **Calificación obtenida**: Calificación obtenida en la defensa del trabajo.
+          - Identificador de la persona que actúa como **co-director/a** (en caso de existir): Será una referencia que permitirá identificar a la persona en el conjunto de vistas relacionadas que se está creando.
+          - **Doctorado mención europea**: Será un campo booleano que indicará si el doctorado ha recibido una mención europea.
+          - **Fecha de la mención del doctorado europeo**: Fecha en la que se recibe la mención europea.
+          - **Mención de calidad**: Será un campo booleano que indicará si el doctorado ha recibido una mención de calidad.
+          - **Fecha de la mención de calidad**: Fecha en la que se recibe la mención calidad.
+          - **Mención internacional**: Será un campo booleano que indicará si el doctorado ha recibido una mención internacional
+          - **Mención industrial**: Será un campo booleano que indicará si el doctorado ha recibido una mención industrial.
+
+        ## Módulos del SGI donde se utiliza
+        - PRC: **Validación producción científica ➜ Dirección de tesis/TFM/TFG**
+
+        ### Consideraciones para la implementación
+        - Este servicio será necesario únicamente para la implantación del módulo de PRC (baremación de producción científica).
+      operationId: findAllDireccionTesis
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: anioDefensa
+          in: query
+          description: |-
+            Año de consulta
+          required: true
+          schema:
+            type: integer
+            minimum: 1900
+            maximum: 2200
+            title: anioDefensa
+            example: 2023
+      responses:
+        200:
+          description: Devuelve la lista de direcciones de tesis
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DireccionTesisOutput"
+
+  /personas:
+    get:
+      tags:
+        - personas
+      summary: Devuelve una lista paginada y filtrada de personas
+      description: |-
+        Devuelve una lista paginada y filtrada de personas que cumplen los criterios proporcionados.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de personas.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Listado**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+
+        ### Consideraciones para la implementación
+        - Los datos de las personas en el SGI tienen carácter **exclusivamente informativo**.  
+        - Es **obligatorio** garantizar que el campo `id` sea único y estable, y que las referencias a `tipoColectivo` y `colectivoId` (si se utilizan) correspondan a valores existentes.  
+        - Dado su uso informativo, si algún dato no puede obtenerse de los sistemas corporativos, puede definirse una estrategia adecuada para completarlo (por ejemplo, valores por defecto o inferidos), siempre que se mantenga la coherencia con el resto de la información.
+        - Aunque el soporte completo de búsquedas RSQL es opcional, **se recomienda implementarlo** para mantener la compatibilidad futura con el SGI.
+
+        ### Búsquedas necesarias que deben soportarse
+        - **Búsqueda general** (buscador de personas):  
+          Filtra por nombre, apellidos, email:
+          Ejemplo:  
+          ```
+          nombre=ik=ejemplo,apellidos=ik=ejemplo,email=ik=ejemplo,nombreApellidos=ik=ejemplo
+          ```
+        - **Por identificadores** (listados internos del SGI):  
+          ```
+          id=in=(P1,P2,P3)
+          ```
+        - **Por colectivo**:
+          `tipoColetivo` y `colectivoId` son mutuamente excluyentes. En el caso se recibir un tipoColectivo se traducirá a los colectivos que lo formen.
+          ```
+          colectivoId=in=(refAlumnos,refExterno);
+          ```
+            El SGI dispone de una serie de tipos de colectivos definidos internamente y que son utilizados como filtro en las operaciones de búsqueda de personas. 
+            Los tipos de colectivos internos del SGI que deben ser mapeados con los nombres de colectivos que se recopilen del sistema de gestión de personas son:
+            - **Solicitante ética**: personal de investigación que crea las solicitudes de evaluación de proyectos en ética.
+            - **Evaluador ética**: personal de investigación que puede realizar las evaluaciones de las memorias de investigación o bien personal técnico que puede realizar las tareas de evaluación de memorias.
+            - **Equipo trabajo ética**: personal de investigación que puede formar parte del equipo de trabajo de una solicitud de evaluación de ética.
+            - **Solicitante csp**: personal de investigación que puede figurar como solicitante de una ayuda/convocatoria (a pesar de que, por norma general,  los colectivos asociados a este tipo pudieran coincidir con los asociados a los roles de tipo "equipo investigación" de la tabla "rol proyecto", se crea este tipo de colectivo para simplificar la búsqueda en pantallas en las que no es necesario distinguir el rol a la vez que para independizar la configuración de colectivos por si fuera necesario llegado el caso).
+            - **Responsable económico csp**: personal de la Universidad que puede ser el responsable económico de un proyecto y/o de un grupo.
+            - **Autor de invención**: persona física que tiene un porcentaje de autoría de la invención. Puede ser un investigador de la Universidad o externo.
+            - **Responsable proyecto externo**: persona que puede participar como responsable (IP) de un proyecto externo (autorización de participación en proyecto externo). 
+            - **Autor prc**: personal de investigación que alimenta su CVN y que por lo tanto figura como autor de items de producción científica.
+            - **Destinatario comunicado**: personal de la Universidad o de investigación (de la Universidad o externo) que puede ser destinatario de un comunicado enviado por el SGI.
+            - **Persona autorizada grupo**: personal de la Universidad que puede der la persona autorizada de un grupo para realizar la tarea de validar/rechazar items de producción científica y persona autorizadas para la creación de solicitudes de modificación del grupo.
+            - **Tutor/a csp**: personal de investigación que puede ser tutor/a de un trabajo postdoctoral, predoctoral, etc, trabajos de solicitudes de RRHH.
+            - **Miembro equipo empresa de explotación de resultados**: personal de la Universidad que puede participar en una empresa de explotación de resultados como solicitante, parte del equipo emprendedor, de la composición de la sociedad o de la administración de la misma.
+      operationId: findAllPersonas
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de búsqueda en formato RSQL. Campos por los que es necesario poder filtrar:
+            - `id`: Identificador único de la persona en el SGP.
+            - `tipoColectivo`: Contiene los tipos de colectivos definidos en el SGI para ser usados como filtro a la hora de realizar la búsqueda de personas.
+            - `colectivoId`: Identificador de la entidad colectivo. Agrupación de personas sobre las que se van a realizar las búsquedas de personas.
+            - `nombre`: Nombre de la persona.
+            - `apellidos`: Apellidos de la persona.
+            - `email`: Correo electrónico de la persona.
+            - `nombreApellidos`: Nombre y apellidos de la persona.
+          schema:
+            type: string
+            example: (nombreApellidos=ik="maria",email=ik="maria");tipoColectivo=="SOLICITANTE_CSP"
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de personas (respuesta paginada).
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonaOutput"
+        204:
+          description: No hay personas para los criterios de busqueda utilizados.
+        400:
+          description: Parámetros no válidos (ej. sintaxis RSQL inválida o parámetros de paginación fuera de rango).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /personas/{id}:
+    get:
+      tags:
+        - personas
+      summary: Detalle de la persona
+      description: |-
+        Devuelve el detalle de la persona correspondiente al `id`.
+          
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo**, **Solicitud ➜ Responsable económico**, **Proyecto ➜ Listado**, **Proyecto ➜ Equipo**,  **Proyecto ➜ Responsable económico**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación**, **Grupo investigación ➜ Responsable económico**, **Grupo investigación ➜ Persona autorizada**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor**
+
+        ### Consideraciones para la implementación
+        - Los datos de las personas en el SGI tienen carácter **exclusivamente informativo**.  
+        - Es **obligatorio** garantizar que el campo `id` sea único y estable, y que las referencias a `tipoColectivo` y `colectivoId` (si se utilizan) correspondan a valores existentes.  
+        - Dado su uso informativo, si algún dato no puede obtenerse de los sistemas corporativos, puede definirse una estrategia adecuada para completarlo (por ejemplo, valores por defecto o inferidos), siempre que se mantenga la coherencia con el resto de la información.
+      operationId: findPersonaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonaOutput"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /personas/{id}/fotografia:
+    get:
+      tags:
+        - personas
+      summary: Fotografía de la persona. (Servicio pasarela. No es necesario para el funcionamiento del SGI)
+      description: |-
+        Devuelve la fotografía de la persona correspondiente al `id`
+
+         ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional** y solo se requiere si el SGI se utiliza como pasarela del sistema de gestión de personas corporativo hacia otros sistemas externos que requieran o utilicen la fotografía (ejemplo sistema de gestión de CVN).
+      operationId: findPersonaFotografiaByPersonaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve la fotografía de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonaFotografiaOutput"
+        204:
+          description: No hay identificadores que cumplan los criterios.
+        404:
+          description: Persona no encontrada
+
+  /personas/formly:
+    post:
+      tags:
+        - personas
+      summary: Crea una nueva persona
+      description: |-
+        Crea una nueva entidad persona utilizando el formato definido en el **Formly** de alta.
+        La creación puede realizarse de forma **síncrona**, si los cambios pueden aplicarse automáticamente, o de forma **asíncrona**, si requieren algún tipo de validación o aprobación para su traslado a los sistemas corporativos.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de personas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**, **Proyecto ➜ Listado**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde la acción **Solicitar alta** del buscador de personas.  
+        - Su implementación es **opcional** si no se asigna a los usuarios el permiso para crear (**ESB-PER-C**) personas, o si se desactiva la opción **Alta de personas** en **Configuración ➜ Configuración global** del módulo Administración.  
+        - La definición del **cuerpo de la solicitud** debe estar **alineada con la estructura del formulario dinámico (Formly)** de alta, permitiendo capturar los campos definidos para la creación de personas.  
+        - El **esquema del cuerpo de la solicitud** puede adaptarse en función de las necesidades de cada implantación o de los sistemas corporativos de origen.
+      operationId: createPersonaFormly
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Datos de la persona
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonaFormlyCreateInput"
+      responses:
+        200:
+          description: Devuelve el identificador de la persona creada (creación síncrona).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: P2
+        202:
+          description: Solicitud de creación procesada correctamente (creación asíncrona).
+        400:
+          description: Datos de la persona incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  
+  /personas/formly/create:
+    get:
+      tags:
+        - personas
+      summary: Formly para la creación de una persona
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para la creación de personas en el SGI.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de personas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Listado**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde la acción **Solicitar alta** del buscador de personas.
+        - Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+        - Si se requiere añadir **validadores personalizados**, es necesario **incluirlos previamente en el SGI** para que puedan ser reconocidos y utilizados en los formularios dinámicos.
+
+        ### Validadores personalizados disponibles
+        - `date-is-after`: Valida que la fecha del campo sea posterior a otra fecha o campo.  
+        - `date-is-between`: Valida que la fecha esté entre dos valores o campos.  
+        - `email`: Valida el formato de correo electrónico.  
+        - `email-principal-unique`: Valida que exista un único correo electrónico principal.  
+        - `field-array-max`: Valida que el número de elementos de una lista no supere el límite definido.  
+        - `multicheckbox-restricted`: Valida que ciertos valores de selección múltiple no sean simultáneamente seleccionados.  
+        - `oneRowRequired`: Comprueba que exista al menos una fila en una tabla.
+      operationId: getPersonaFormlyCreate
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para crear una persona.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                    - key: nombre
+                      type: input
+                      templateOptions:
+                        label: Nombre de la persona
+                        required: true
+                    - key: apellidos
+                      type: input
+                      templateOptions:
+                        label: Apellidos de la persona
+                        required: true
+                    - key: tipoDocumento
+                      type: select
+                      templateOptions:
+                        label: Tipo de documento
+                        options:
+                          - { label: DNI, value: "DNI" }
+                          - { label: NIE, value: "NIE" }
+                          - { label: OTRO, value: "OTRO" }
+                        required: true
+                    - key: numeroDocumento
+                      type: input
+                      templateOptions:
+                        label: Número de identificación del documento
+                        required: true
+                    - key: sexo
+                      type: select
+                      templateOptions:
+                        label: Sexo
+                        options:
+                          - { label: Mujer, value: "M" }
+                          - { label: Varón, value: "V" }
+                        required: true
+                    - key: colectivo
+                      type: select
+                      templateOptions:
+                        label: Colectivo
+                        options:
+                          - { label: Alumnos, value: "ALUM" }
+                          - { label: Externo, value: "EXT" }
+                    - key: personalPropio
+                      type: select
+                      templateOptions:
+                        label: Personal propio
+                        options:
+                          - { label: Sí, value: "si" }
+                          - { label: No, value: "no" }
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /personas/formly/update:
+    get:
+      tags:
+        - personas
+      summary: Formly para la edición de una persona
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para la edición de personas en el SGI.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de personas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Listado**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI anteriormentente mencionadas así como desde la acción **Editar** del buscador de personas.  
+        - El SGI rellena el formulario con los datos obtenidos de `GET /personas/formly/{id}`. Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+        - Si se requiere añadir **validadores personalizados**, es necesario **incluirlos previamente en el SGI** para que puedan ser reconocidos y utilizados en los formularios dinámicos.
+
+        ### Validadores personalizados disponibles
+        - `date-is-after`: Valida que la fecha del campo sea posterior a otra fecha o campo.  
+        - `date-is-between`: Valida que la fecha esté entre dos valores o campos.  
+        - `email`: Valida el formato de correo electrónico.  
+        - `email-principal-unique`: Valida que exista un único correo electrónico principal.  
+        - `field-array-max`: Valida que el número de elementos de una lista no supere el límite definido.  
+        - `multicheckbox-restricted`: Valida que ciertos valores de selección múltiple no sean simultáneamente seleccionados.  
+        - `oneRowRequired`: Comprueba que exista al menos una fila en una tabla.
+      operationId: getPersonaFormlyUpdate
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para modificar una persona.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                    - key: nombre
+                      type: input
+                      templateOptions:
+                        label: Nombre de la persona
+                        required: true
+                    - key: apellidos
+                      type: input
+                      templateOptions:
+                        label: Apellidos de la persona
+                        required: true
+                    - key: tipoDocumento
+                      type: select
+                      templateOptions:
+                        label: Tipo de documento
+                        options:
+                          - { label: DNI, value: "DNI" }
+                          - { label: NIE, value: "NIE" }
+                          - { label: OTRO, value: "OTRO" }
+                        required: true
+                    - key: numeroDocumento
+                      type: input
+                      templateOptions:
+                        label: Número de identificación del documento
+                        required: true
+                    - key: sexo
+                      type: select
+                      templateOptions:
+                        label: Sexo
+                        options:
+                          - { label: Mujer, value: "M" }
+                          - { label: Varón, value: "V" }
+                        required: true
+                    - key: colectivo
+                      type: select
+                      templateOptions:
+                        label: Colectivo
+                        options:
+                          - { label: Alumnos, value: "ALUM" }
+                          - { label: Externo, value: "EXT" }
+                    - key: personalPropio
+                      type: select
+                      templateOptions:
+                        label: Personal propio
+                        options:
+                          - { label: Sí, value: "si" }
+                          - { label: No, value: "no" }
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+  /personas/formly/view:
+    get:
+      tags:
+        - personas
+      summary: Formly para la visualización del detalle de una persona
+      description: |-
+        Devuelve la definición del formulario dinámico (**Formly**) utilizado para visualizar el detalle de una persona en el SGI.
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de personas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Listado**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI anteriormentente mencionadas así como desde la acción **Ver** del buscador de personas.  
+        - El SGI rellena el formulario con los datos obtenidos de `GET /personas/formly/{id}`. Al construir el formulario, pueden incorporarse datos adicionales no expuestos directamente al SGI.
+      operationId: getPersonaFormlyView
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la definición del formulario Formly para visualizar una persona.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Estructura del formulario dinámico en formato Formly de ejemplo simplificada.
+                additionalProperties: true
+                example:
+                  fieldGroup:
+                    - key: nombre
+                      type: input
+                      templateOptions:
+                        label: Nombre de la persona
+                        required: true
+                    - key: apellidos
+                      type: input
+                      templateOptions:
+                        label: Apellidos de la persona
+                        required: true
+                    - key: tipoDocumento
+                      type: select
+                      templateOptions:
+                        label: Tipo de documento
+                        options:
+                          - { label: DNI, value: "DNI" }
+                          - { label: NIE, value: "NIE" }
+                          - { label: OTRO, value: "OTRO" }
+                        required: true
+                    - key: numeroDocumento
+                      type: input
+                      templateOptions:
+                        label: Número de identificación del documento
+                        required: true
+                    - key: sexo
+                      type: select
+                      templateOptions:
+                        label: Sexo
+                        options:
+                          - { label: Mujer, value: "M" }
+                          - { label: Varón, value: "V" }
+                        required: true
+                    - key: colectivo
+                      type: select
+                      templateOptions:
+                        label: Colectivo
+                        options:
+                          - { label: Alumnos, value: "ALUM" }
+                          - { label: Externo, value: "EXT" }
+                    - key: personalPropio
+                      type: select
+                      templateOptions:
+                        label: Personal propio
+                        options:
+                          - { label: Sí, value: "si" }
+                          - { label: No, value: "no" }
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+
+  /personas/formly/{id}:
+    get:
+      tags:
+        - personas
+      summary: Detalle de la persona para el formly
+      description: |-
+        Devuelve el detalle de la persona correspondiente al `id` en el formato utilizado por los formularios dinámicos (**Formly**).
+        Este servicio del SGI se utilizará exclusivamente a través de un componente de búsqueda de personas y si está configurado para su uso.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**, **Proyecto ➜ Listado**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Consideraciones para la implementación
+        - Los datos de las personas en el SGI tienen carácter **exclusivamente informativo**.  
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI anteriormentente mencionadas así como desde las acciones **Ver** y **Editar** del buscador de personas.  
+        - Su implementación es **opcional** si no se asignan a los usuarios permisos para modificar (**ESB-PER-E**) o ver (**ESB-PER-V**) el detalle de las personas, o si los formularios se diseñan para no mostrar información de la PERSONA (por ejemplo, mostrando un mensaje informativo con el sistema corporativo desde el que se puede realizar la operación).  
+        - La definición del objeto de respuesta de este endpoint debe estar **alineada con la estructura de los formularios dinámicos (Formly)**, para permitir visualizar y editar los campos que se deseen mantener.  
+        - El esquema de la respuesta puede adaptarse en cada implantación en función de las necesidades y del diseño de los formularios Formly en los que se utilice.
+      operationId: findPersonaFormlyById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve el detalle de la persona para el Formly.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonaFormlyOutput"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+    put:
+      tags:
+        - personas
+      summary: Actualiza los datos de la persona
+      description: |-
+        Actualiza los datos de la persona correspondiente al `id`.  
+        La actualización puede realizarse de forma **síncrona**, si los cambios pueden aplicarse automáticamente, o de forma **asíncrona**, si requieren algún tipo de validación o aprobación para su traslado a los sistemas corporativos.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**, **Proyecto ➜ Listado**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde la acción **Editar** del buscador de personas.  
+        - Su implementación es **opcional** si no se asigna a los usuarios el permiso para modificar (**ESB-PER-E**) personas, o si se desactiva la opción **Modificación de personas** en **Configuración ➜ Configuración global** del módulo Administración.  
+        - La definición del **cuerpo de la solicitud** debe estar **alineada con la estructura del formulario dinámico (Formly)** de modificación, para permitir editar los campos definidos en cada implantación.  
+        - El **esquema del cuerpo de la solicitud** puede adaptarse en función de las necesidades de cada implantación o de los sistemas corporativos de origen.
+      operationId: updatePersonaFormly
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      requestBody:
+        description: Datos actualizados de la persona
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonaFormlyUpdateInput"
+      responses:
+        202:
+          description: Solicitud de actualización procesada correctamente (actualización asíncrona).
+        204:
+          description: Persona actualizada correctamente (actualización síncrona).
+        400:
+          description: Datos de la persona incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/AccessDeniedErrorResponse"
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /personasFast:
+    get:
+      tags:
+        - personas
+      summary: Busqueda rápida de personas
+      description: |-
+        Versión optimizada del endpoint `GET /personas`, diseñada para su uso en componentes de **autocompletado** (buscadores rápidos).
+        
+        Devuelve un máximo de **11 registros** (paginación fija, página 0 y ordenados alfabéticamente).  
+        Si se devuelven más de 10 resultados, el SGI mostrará el mensaje:
+        *“Demasiados resultados, por favor refine la búsqueda”*, indicando al usuario que existen más coincidencias.
+
+        Los parametros tipoColetivo y colectivoId son mutuamente excluyentes. En el caso de recibir un tipoColectivo se traducirá a los colectivos que lo formen.
+        Si no se indica el parámetro colectivoId o tipoColetivo, se buscará en todos los colectivos.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Listado**, **Solicitud ➜ Datos generales**, **Solicitud ➜ Equipo ➜ Miembro equipo**, **Solicitud ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Listado**, **Proyecto ➜ Equipo ➜ Miembro equipo**,  **Proyecto ➜ Responsable económico ➜ Responsable**, **Proyecto ➜ Socio ➜ Datos generales**, **Proyecto ➜ Socio ➜ Equipo ➜ Miembro equipo**, **Participación proyectos externos ➜ Autorizaciones ➜ Listado**, **Participación proyectos externos ➜ Autorizaciones ➜ Datos generales**, **Notificaciones CVN ➜ Listado**, **Notificaciones CVN ➜ Datos generales**, **Grupo investigación ➜ Listado**, **Grupo investigación ➜ Equipo investigación ➜ Miembro equipo**, **Grupo investigación ➜ Responsable económico ➜ Responsable**, **Grupo investigación ➜ Persona autorizada ➜ Persona**, **Ejecución económica ➜ Listado**, **Listados ➜ Miembros de grupos de investigación ➜ Listado**
+        - ETI: **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Listado**, **Solicitudes evaluación proyectos ➜ Equipo investigador ➜ Persona**, **Memorias ➜ Listado**, **Evaluaciones ➜ Listado**, **Seguimientos ➜ Listado**, **Evaluadores ➜ Listado**, **Evaluadores ➜ Datos generales**,  **Evaluadores ➜ Conflictos de interés**
+        - EER: **Empresas de explotación de resultados ➜ Datos generales**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor ➜ Equipo**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Composición sociedad ➜ Miembro**, **Empresas de explotación de resultados ➜ Equipo empresarial ➜ Administración sociedad ➜ Miembro**
+        - PII: **Invenciones ➜ Listado**, **Invenciones ➜ Equipo inventor ➜ Miembro**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde las pantallas que incorporan el **buscador de personas**, cuando el usuario escribe directamente en el campo de búsqueda.
+        - La búsqueda replica la lógica del buscador general de personas, pero **sin utilizar sintaxis RSQL**. Internamente realiza una búsqueda por coincidencia parcial (OR) sobre los campos:
+          - `nombre`: Nombre de la persona.
+          - `apellidos`: Apellidos de la persona.
+          - `email`: Email de la persona
+          - `colectivoIds`: Lista de indentificadores de colectivos separados por ','.
+          - `tipoColectivo`: El tipo de colectivo al que pertenece la persona.
+            El SGI dispone de una serie de tipos de colectivos definidos internamente y que son utilizados como filtro en las operaciones de búsqueda de personas. 
+            Los tipos de colectivos internos del SGI que deben ser mapeados con los nombres de colectivos que se recopilen del sistema de gestión de personas son:
+              **Solicitante ética**: personal de investigación que crea las solicitudes de evaluación de proyectos en ética.
+              **Evaluador ética**: personal de investigación que puede realizar las evaluaciones de las memorias de investigación o bien personal técnico que puede realizar las tareas de evaluación de memorias.
+              **Equipo trabajo ética**: personal de investigación que puede formar parte del equipo de trabajo de una solicitud de evaluación de ética.
+              **Solicitante csp**: personal de investigación que puede figurar como solicitante de una ayuda/convocatoria (a pesar de que, por norma general,  los colectivos asociados a este tipo pudieran coincidir con los asociados a los roles de tipo "equipo investigación" de la tabla "rol proyecto", se crea este tipo de colectivo para simplificar la búsqueda en pantallas en las que no es necesario distinguir el rol a la vez que para independizar la configuración de colectivos por si fuera necesario llegado el caso).
+              **Responsable económico csp**: personal de la Universidad que puede ser el responsable económico de un proyecto y/o de un grupo.
+              **Autor de invención**: persona física que tiene un porcentaje de autoría de la invención. Puede ser un investigador de la Universidad o externo.
+              **Responsable proyecto externo**: persona que puede participar como responsable (IP) de un proyecto externo (autorización de participación en proyecto externo). 
+              **Autor prc**: personal de investigación que alimenta su CVN y que por lo tanto figura como autor de items de producción científica.
+              **Destinatario comunicado**: personal de la Universidad o de investigación (de la Universidad o externo) que puede ser destinatario de un comunicado enviado por el SGI.
+              **Persona autorizada grupo**: personal de la Universidad que puede der la persona autorizada de un grupo para realizar la tarea de validar/rechazar items de producción científica y persona autorizadas para la creación de solicitudes de modificación del grupo.
+              **Tutor/a csp**: personal de investigación que puede ser tutor/a de un trabajo postdoctoral, predoctoral, etc, trabajos de solicitudes de RRHH.
+              **Miembro equipo empresa de explotación de resultados**: personal de la Universidad que puede participar en una empresa de explotación de resultados como solicitante, parte del equipo emprendedor, de la composición de la sociedad o de la administración de la misma.
+
+        - En función de los tiempos de respuesta del endpoint `GET /personas`, puede ser recomendable implementar una **versión optimizada** de esta consulta.
+        - Alternativamente, puede reutilizarse la implementación del buscador general (`GET /personas`) transformando el parámetro `busqueda` para aplicar los filtros sobre los campos indicados, o permitiendo buscar directamente por dicho parámetro.
+      operationId: findAllPersonasFast
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: busqueda
+          in: query
+          required: true
+          description: |-
+            Texto para hacer la búsqueda en la concatenación del nombre, apellidos y emails de la persona
+          schema:
+            type: string
+            example: maria garcia
+        - name: colectivoId
+          in: query
+          description: |-
+            Colectivo o lista de colectivos (separados por ",") al que pertenece la persona.
+          schema:
+            type: string
+            example: PDI
+        - name: tipoColectivo
+          in: query
+          description: |-
+            Tipo de colectivo al que pertenece la persona (si se pasa el colectivoId no se tiene en cuenta).
+          schema:
+            type: string
+            example: AUTOR_PRC
+      responses:
+        200:
+          description: Devuelve la lista de personas coincidentes con la búsqueda.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonaOutput"
+        204:
+          description: No hay personas para los criterios de busqueda utilizados.
+        400:
+          description: Datos de la persona incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /personas/modificadas-ids:
+    get:
+      tags:
+        - personas
+      summary: 	Listado con los identificadores de las personas que han tenido modificaciones. (Servicio pasarela. No es necesario para el funcionamiento del SGI)
+      description: |-
+        Devuelve un listado de los identificadores de personas que han sufrido cambios en los datos identificativos (nombre, apellidos, sexo, número de documento y tipo de documento) y/o en los datos personales (fecha de nacimiento, país de nacimiento, comunidad autónoma de nacimiento y ciudad de nacimiento) y/o en datos de contacto (país de contacto, comunidad autónoma de contacto, provincia de contacto, ciudad de contacto, dirección de contacto, código postal, listado de teléfonos y listado de emails) y/o en la fotografía a partir de la fecha de modificación pasada por parámetro y/o en los sexenios.
+
+        ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional** y sólo se requiere si el SGI se utiliza como pasarela  entre el sistema corporativo de gestión de personas y cualquier otro sistema externo para identificar las personas cuyos datos hayan experimentado modificaciones en el sistema de gestión de personas corporativo.
+      operationId: findAllPersonasModificadas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL:
+            - fechaModificacion
+          schema:
+            type: string
+            example: (fechaModificacion=ge="2022-01-01T00:00:00Z")
+        - name: s
+          x-sgi-pageable: false
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`. 
+          schema:
+            type: string
+            example: fechaModificacion,asc  
+      responses:
+        200:
+          description: Devuelve la lista de identificadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        204:
+          description: No hay identificadores
+
+  /public/personas:
+    get:
+      tags:
+        - personas-public
+      summary: Devuelve una lista paginada y filtrada de personas
+      description: |-
+        Versión pública del endpoint `GET /personas`.
+
+        Devuelve los mismos datos básicos de las personas, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findAllPersonasPublic
+      x-sgi-return-page: true # Remplaza el List de la respuesta un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 1
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+            example: 5
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL:
+            - id
+            - tipoColectivo
+            - colectivoId
+            - nombre
+            - apellidos
+            - email
+            - nombreApellidos
+          schema:
+            type: string
+          example: (nombreApellidos=ik="maria",email=ik="maria");tipoColectivo=="SOLICITANTE_CSP"
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`. 
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de personas (respuesta paginada).
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 1
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 6
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonaOutput"
+        204:
+          description: No hay personas para los criterios de busqueda utilizados.
+        400:
+          description: Datos de la persona incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /public/personas/{id}:
+    get:
+      tags:
+        - personas-public
+      summary: Detalle de la persona
+      description: |-
+        Versión pública del endpoint `GET /personas/{id}`.
+
+        Devuelve los mismos datos básicos de la persona, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findPersonaPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el detalle de la entidad.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonaOutput"
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/personas/formly/{id}:
+    get:
+      tags:
+        - personas-public
+      summary: Detalle de la persona para el formly
+      description: |-
+        Versión pública del endpoint `GET /personas/formly/{id}`.
+
+        Devuelve los mismos datos básicos del formly de la persona, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findPersonaFormlyPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonaFormlyOutput"
+        400:
+          description: Datos de la persona incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/personasFast:
+    get:
+      tags:
+        - personas-public
+      summary: Busqueda rapida de personas
+      description: |-
+        Versión pública del endpoint `GET /personasFast`.
+
+        Devuelve los mismos datos básicos de la persona, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos solicitud RRHH ➜ Tutor/a**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findAllPersonasFastPublic
+      parameters:
+        - name: busqueda
+          in: query
+          required: true
+          description: |-
+            Texto para hacer la búsqueda en la concatenación del nombre, apellidos y emails de la persona
+          schema:
+            type: string
+            example: maria garcia
+        - name: colectivoId
+          in: query
+          description: |-
+            Colectivo o lista de colectivos (separados por ",") al que pertenece la persona.
+          schema:
+            type: string
+            example: PDI
+        - name: tipoColectivo
+          in: query
+          description: |-
+            Tipo de colectivo al que pertenece la persona (si se pasa el colectivoId no se tiene en cuenta).
+          schema:
+            type: string
+            example: AUTOR_PRC
+      responses:
+        200:
+          description: Devuelve la lista de personas coincidentes con la búsqueda.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonaOutput"
+        204:
+          description: No hay personas para los criterios de busqueda utilizados.
+        400:
+          description: Datos de la persona incorrectos o error en la validación.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /sexos:
+    get:
+      tags:
+        - sexos
+      summary: Lista de sexos
+      description: |-
+        Devuelve los sexos ordenados alfabéticamente de forma ascendente.
+        
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** tanto si el  alta/modificación de personas no están habilitadas y no se requiere este dato para realizar el alta/modificación. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesario para la implantación del módulo CSP para hacer uso de la funcionalidad de comprobación de requisitos IP/equipo de la convocatoria y de la funcionalidad de solicitudes de RRHH.
+      operationId: findAllSexos
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de sexos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SexoOutput"
+        204:
+          description: No hay sexos
+  /public/sexos:
+    get:
+      tags:
+        - sexos-public
+      summary: Lista de sexos
+      description: |-
+        Versión pública del endpoint `GET /sexos`.
+
+        Devuelve los mismos datos básicos de los sexos, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Convocatoria ➜ Requisitos equipo**, **Convocatoria ➜ Requisitos IP**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findAllSexosPublic
+      responses:
+        200:
+          description: Devuelve la lista de sexos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SexoOutput"
+        204:
+          description: No hay sexos
+
+  /sexenios:
+    get:
+      tags:
+        - direccion-tesis y sexenios
+      summary: Lista de identificadores de persona con el número de sexenios
+      description: |-
+        Devuelve los sexenios ordenados alfabéticamente de forma ascendente.
+        El SGI, dentro de su módulo de Producción científica, dispone de la posibilidad de activar un baremo relativo al número de sexenios. El número de sexenios reconocidos que tiene cada persona debe ser recuperado del sistema corporativo correspondiente. Los datos relativos a los sexenios que precisa el SGI son:
+        - **Número de sexenios reconocidos**: Se debe disponer del número de sexenios reconocidos con los que cuenta cada persona (solamente de aquellos colectivos sobre los que aplique).
+        - **País de reconocimiento de los sexenios**: Será una referencia. Deberá existir un maestro con todos los países con su nombre e identificador para unificar cualquier campo "país" que se tenga que mostrar en el SGI. 
+
+        ### Consideraciones para la implementación
+        - Este servicio será necesario para la implantación del módulo PRC.
+      operationId: findAllSexenios
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: fecha
+          in: query
+          description: |-
+            Fecha de consulta
+          schema:
+            type: string
+            format: date-time
+            example: fecha=ge=2022-01-01T00:00:00Z
+      responses:
+        200:
+          description: Devuelve la lista de identificadores de persona con el número de sexenios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SexenioOutput"
+        204:
+          description: No hay sexenios
+  /sexenios/persona/{id}:
+    get:
+      tags:
+        - direccion-tesis y sexenios
+      summary: Devuelve el número de sexenios de la persona. (Servicio pasarela. No es necesario para el funcionamiento del SGI)
+      description: |-
+        Devuelve el número de sexenios de la persona. Si se le pasa el parámetro de la fecha devuelve el número de sexenios en esa fecha, sino se devuelve el número de sexenios a la fecha actual.
+      
+        ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+        
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional** y sólo se requiere si el SGI se utiliza como pasarela entre el sistema de gestión de personas corporativo y cualquier otro sistema externo que requiera los sexenios de una persona (ejemplo: sistema de gestión de CVN).
+      operationId: findSexeniosById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve el número de sexenios de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SexenioOutput"
+        204:
+          description: La persona no tiene sexenios
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /tipos-documento:
+    get:
+      tags:
+        - tipos-documento
+      summary: Lista de tipos de documento de identificación personal
+      description: |-
+        Devuelve los tipos de documento que pueden asociarse a la persona alfabéticamente de forma ascendente.
+
+        ### Módulos del SGI donde se utiliza
+        CSP: **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza desde el **formulario dinámico (Formly)** de personas.
+        - Desde el formly su implementación puede ser **opcional** si no se incluye este campo en los formularios o si no está habilitada la funcionalidad de alta o modificación de personas.
+        - Este servicio será necesario para la implantación del módulo CSP para hacer uso de la funcionalidad que permite cumplimentar los campos relativos a los datos de la persona solicitante.
+      operationId: findAllTiposDocumento
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de tipos de documento
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TipoDocumentoOutput"
+        204:
+          description: No hay tipos de documento
+
+  /public/tipos-documento:
+    get:
+      tags:
+        - tipos-documento-public
+      summary: Lista de tipos de documento de identificación personal
+      description: |-
+        Versión pública del endpoint `GET /tipos-documento`.
+
+        Devuelve los mismos datos básicos de los tipos de documento, pero **no requiere autenticación** desde el SGI.
+        
+        ### Módulos del SGI donde se utiliza
+        PUB: **Solicitud ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findAllTiposDocumentoPublic
+      responses:
+        200:
+          description: Devuelve la lista de tipos de documento
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TipoDocumentoOutput"
+        204:
+          description: No hay tipos de documento
+
+  /vinculaciones/persona/{id}:
+    get:
+      tags:
+        - vinculaciones
+      summary: Datos de vinculación vigentes de la persona
+      description: |-
+        Devuelve los datos de vinculación vigentes de la persona correspondiente al `id`
+        Este bloque de datos, relativos a la vinculación de una persona con la Universidad son:
+        - **Categoría**: Será la categoría profesional vigente de la persona. Será una referencia a través de la que se podrá obtener el nombre de la categoría en el listado de categorías profesionales.
+        - **Fecha de obtención de la categoría**: Es la fecha a partir de la que la persona dispone de la categoría profesional vigente, indicada en el campo anterior.
+        - **Departamento**: Departamento al que pertenece la persona en la actualidad. Será una referencia que permitirá identificar el nombre del departamento en la vista de datos maestros que contendrá el listado de departamentos de la Universidad.
+        - **Centro** Centro al que pertenece la persona en la actualidad. Será una referencia que permitirá identificar el nombre del centro en la vista de datos maestros que contendrá el listado de centros de la Universidad.
+        - Indicador (sí/no) de **personal propio**: Será un valor booleano que indicará si la persona es personal laboral de la Universidad en el momento actual o no.
+        - Identificador de la **empresa a la que está vinculada la persona**:  Si la persona no pertenece a la Universidad, pero está registrada en el sistema de gestión de personas corporativo por tener establecido con ella algún vínculo colaborativo, se deberá disponer del identificador de la organización/empresa a la que pertenece la persona. Este identificador hará referencia al sistema de gestión de empresas (o a las vistas que se creen conteniendo la información a obtener de este sistema corporativo).
+        - Identificador de la **entidad propia/universidad**: Si la persona es personal de la Universidad, se dispondrá en este campo del identificador con el que la propia Universidad está registrada en el sistema de gestión de empresas corporativo (o de las vistas que se creen conteniendo la información a obtener de este sistema corporativo). Es decir, la propia Universidad deberá estar registrada en el sistema de gestión de empresas.
+      
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado - investigador**, **Solicitud ➜ Datos proyecto ➜ Equipo**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**, **Proyecto ➜ Equipo**, **Grupo investigación ➜ Datos generales**
+        - ETI: **Solicitud evaluación proyecto ➜ Equipo investigador**, **Memoria ➜ Formulario**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el  alta/modificación de personas no están habilitadas y no se requiere este dato para ver el detalle de una persona o realizar el alta/modificación de sus datos. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesario para la implantación del módulo CSP para hacer uso de la funcionalidad de comprobación de requisitos IP/equipo de la convocatoria y de la funcionalidad de solicitudes de RRHH.
+        - Este servicio será necesario para la implantación del módulo de ETI para mostrar información en el listado de equipo de trabajo. Es un dato meramente informativo.
+      operationId: findVinculacionActualByPersonaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve los datos de vinculación vigentes de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VinculacionOutput"
+        204:
+          description: La persona no tiene vinculaciones
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/vinculaciones/persona/{id}:
+    get:
+      tags:
+        - vinculaciones-public
+      summary: Datos de vinculación vigentes de la persona
+      description: |-
+        Versión pública del endpoint `GET /vinculaciones/persona/{id}`.
+        Devuelve los mismos datos básicos de las vinculaciones de la persona, pero **no requiere autenticación** desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        PUB: **Solicitud ➜ Datos solicitud RRHH ➜ Tutor**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findVinculacionActualPublicByPersonaId
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+      responses:
+        200:
+          description: Devuelve los datos de vinculación vigentes de la persona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VinculacionOutput"
+        204:
+          description: La persona no tiene vinculaciones
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /vinculaciones/persona/{id}/vinculaciones-categorias-profesionales:
+    get:
+      tags:
+        - vinculaciones
+      summary: Datos de vinculación de las categorías profesionales en el rango de fechas indicado
+      description: |-
+        Devuelve el histórico de las categorías profesionales que ha ocupado la persona en la universidad en el rango de fechas indicado de la persona correspondiente al `id`
+        Históricos de categorías. Se deberá disponer de una vista que contenga . El detalle de campos necesarios es:
+        - **Categoría profesional**: Será una referencia a través de la que se podrá obtener el nombre de la categoría en el listado de categorías profesionales.
+        - **Fecha de obtención**: Es la fecha a partir de la que se dispone de la categoría profesional indicada en el campo anterior.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Grupo investigación ➜ Equipo**
+        - EER: **Empresa de explotación de resultados ➜ Equipo empresarial ➜ Equipo emprendedor**
+
+        ### Consideraciones para la implementación
+        - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** en caso de que el alta/modificación de personas no están habilitadas y no se requiere este dato para ver el detalle de una persona o realizar el alta/modificación de sus datos. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.
+        - Este servicio será necesario para la implantación del módulo CSP y EER.
+      operationId: findVinculacionCategoriaProfesionalByPersonaId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL:
+            - fechaObtencion
+          schema:
+            type: string
+            example: fechaObtencion=gt=1990-01-01;fechaObtencion=lt=1993-01-01
+      responses:
+        200:
+          description: Devuelve la lista de categorías profesionales
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VinculacionCategoriaProfesionalOutput"
+        204:
+          description: La persona no tiene vinculaciones
+        404:
+          description: Persona no encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /formacion/{id}:
+    get:
+      tags:
+        - formacion
+      summary: Detalle sobre los datos de la formación recibida de la persona (Servicio pasarela)
+      description: |-
+        Devuelve un listado con los datos de la formación recibida, dependiendo del `id` de la persona y el `tipo de formación`
+
+        ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+        
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional** y sólo se requiere si el SGI se utiliza como pasarela entre el sistema de gestión de personas corporativo y cualquier otor sistema externo que requiera  los datos de la formación de la persona (como puede ser el sistema de gestión de CVN).
+      operationId: findFormacionByPersonaIdAndTipoFormacionId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la persona
+          required: true
+          schema:
+            type: string
+            example: P1
+        - name: tipoFormacion
+          in: query
+          description: |-
+            El tipo de formación tiene que tener el siguiente formato de ejemplo:
+            - XXX.XXX.XXX.XXX
+          required: true
+          schema:
+            type: string
+            example: "030.040.000.000"
+      responses:
+        200:
+          description: Devuelve la lista de formaciones recibidas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FormacionOutput"
+        204:
+          description: No hay formaciones
+  /formacion/modificados-ids:
+    get:
+      tags:
+        - formacion
+      summary: 	Personas que han tenido modificaciones en la formación (Servicio pasarela)
+      description: |-
+        Devuelve un listado de identificadores de las personas que han tenido modificaciones en la formación realizada
+
+        ### Servicio de pasarela
+        - Este endpoint está diseñado para su uso en integraciones o sincronizaciones con otros sistemas.
+        - **No es necesario** para el funcionamiento del SGI.
+
+        ### Detalles del filtrado
+        - El parámetro `q` utiliza sintaxis **RSQL** para aplicar filtros sobre los campos soportados.
+
+        ### Consideraciones para la implementación
+        - La implementación de este servicio es **opcional** y sólo se requiere si el SGI se utiliza como pasarela entre el sistema de gestión de personas corporativo y cualquier otro sistema externo que requiera conocer las modificaciones en los datos de formación de las personas.
+      operationId: findAllFormacionModificados
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |-
+            Criterios de busqueda en formato RSQL:
+            - tipoFormacion
+            - fechaModificacion
+          schema:
+            type: string
+            example: (fechaModificacion=ge="2022-01-01T00:00:00Z";tipoFormacion="030.040.000.000")
+        - name: s
+          x-sgi-pageable: false
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: fechaModificacion,asc
+      responses:
+        200:
+          description: Devuelve la lista de identificadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        204:
+          description: No hay identificadores
+
+components:
+  schemas:
+    ActividadDocenteOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: AD1
+        tituloTrabajo:
+          type: string
+          example: Mecanismos que regulan la autofagia en levaduras con fisión
+        alumno:
+          type: string
+          example: personaRef
+        entidadRealizacion:
+          $ref: "#/components/schemas/EntidadOutput"
+        ciudadEntidadRealizacion:
+          type: string
+          example: OVIEDO
+        paisEntidadRealizacion:
+          $ref: "#/components/schemas/PaisOutput"
+        ccaaRegionEntidadRealizacion:
+          $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        tipoProyecto:
+          $ref: "#/components/schemas/TipoProyectoOutput"
+        calificacionObtenida: 
+          type: string
+          example: SOBRESALIENTE
+        coDirectorTesis: 
+          type: string
+          example: "23019512"
+        doctoradoEuropeo:
+          type: boolean
+          example: false
+        fechaMencionDoctoradoEuropeo: 
+          type: string
+          format: date
+          example: "2019-06-14"
+        mencionCalidad: 
+          type: boolean
+          example: false
+        fechaMencionCalidad:
+          type: string
+          format: date
+          example: "2019-06-14"
+        mencionInternacional: 
+          type: boolean
+          example: false
+        mencionIndustrial: 
+          type: boolean
+          example: false
+        compendio: 
+          type: boolean
+          example: false
+    AreaConocimientoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: A1
+        nombre:
+          type: string
+          example: Área 1
+        padreId:
+          type: string
+          example: null
+    CategoriaProfesionalOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: CATEDRÁTICOS DE UNIVERSIDAD
+    CentroOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: Centro 1
+    ColectivoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: Investigador/a principal
+    ComunidadAutonomaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: PRINCIPADO DE ASTURIAS
+        paisId:
+          type: string
+          example: P1
+    DatosAcademicosOutput:
+      type: object
+      properties:
+        nivelAcademico:
+          $ref: "#/components/schemas/NivelAcademicoOutput"
+        fechaObtencion:
+          type: string
+          format: date
+          example: "1994-06-07"
+    DatosContactoOutput:
+      type: object
+      properties:
+        paisContacto:
+          $ref: "#/components/schemas/PaisOutput"
+        comAutonomaContacto:
+          $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        provinciaContacto:
+          $ref: "#/components/schemas/ProvinciaOutput"
+        ciudadContacto:
+          type: string
+          example: MADRID
+        codigoPostalContacto:
+          type: string
+          example: "28004"
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmailOutput"
+        telefonos:
+          type: array
+          items:
+            type: string
+        moviles:
+          type: array
+          items:
+            type: string
+        direccionContacto:
+          type: string
+          example: "S/N"
+    DatosPersonalesOutput:
+      type: object
+      properties:
+        fechaNacimiento:
+          type: string
+          format: date
+          example: "1994-06-07"
+        paisNacimiento:
+          $ref: "#/components/schemas/PaisOutput"
+        comAutonomaNacimiento:
+          $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        ciudadNacimiento:
+          type: string
+          example: OVIEDO
+    DepartamentoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: D1
+        nombre:
+          type: string
+          example: DERECHO PRIVADO
+    DireccionTesisOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: D1
+        personaRef:
+          type: string
+          example: P1
+        tituloTrabajo:
+          type: string
+          example: Título 1
+        fechaDefensa:
+          type: string
+          format: date
+          example: "2023-09-25"
+        alumno:
+          type: string
+          example: Alumno 1
+        tipoProyecto:
+          $ref: "#/components/schemas/TipoTrabajoDirigidoOutput"
+        calificacionObtenida:
+          type: string
+          example: Calificación 1
+        coDirectorTesisRef:
+          type: string
+          example: P1
+        doctoradoEuropeo:
+          type: boolean
+          example: true
+        fechaMencionDoctoradoEuropeo:
+          type: string
+          format: date
+          example: "2023-10-25"
+        mencionCalidad:
+          type: boolean
+        fechaMencionCalidad:
+          type: string
+          format: date
+          example: "2023-11-25"
+        mencionInternacional:
+          type: boolean
+          example: true
+        mencionIndustrial:
+          type: boolean
+          example: true
+        url:
+          type: string
+          example: url1.es
+        areaCientifica:
+          type: string
+          example: Área 1
+        resumen:
+          type: string
+          example: Resumen 1
+    EmailOutput:
+      type: object
+      properties:
+        email:
+          type: string
+          example: abcde@email.es
+        principal:
+          type: boolean
+          example: true
+    EntidadOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: E1
+        entidadRef:
+          type: string
+          example: Q3018001
+    FormacionOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        nobreTitulo:
+          type: string
+          example: Título formación
+        fechaTitulacion: 
+          type: string
+          format: date
+          example: "2019-06-14"
+        titulacionUniversitaria:
+          $ref: "#/components/schemas/TitulacionOutput"
+        entidadTitulacion:
+          $ref: "#/components/schemas/EntidadOutput"
+        ciudadEntidadTitulacion:
+          type: string
+          example: Oviedo
+        paisEntidadTitulacion:
+          $ref: "#/components/schemas/PaisOutput"
+        ccaaRegionEntidadTitulacion:
+          $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        tipoProyecto:
+          $ref: "#/components/schemas/TipoProyectoOutput"
+        tituloExtranjero: 
+          type: string
+          example: null
+        tituloHomologado: 
+          type: boolean
+          example: false
+        fechaHomologacion: 
+          type: string
+          format: date
+          example: null
+        notaMediaExpediente: 
+          type: integer
+          example: 2
+        premio: 
+          type: string
+          example: null
+    NivelAcademicoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: N1
+        nombre:
+          type: string
+          example: DOCTOR
+    PaisOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        nombre:
+          type: string
+          example: ESPAÑA
+    ProvinciaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: PR1
+        nombre:
+          type: string
+          example: ASTURIAS
+        comunidadAutonomaId:
+          type: string
+          example: CA1
+    PersonaFormlyCreateInput:
+      type: object
+      description: |-
+        Ejemplo de estructura de datos utilizada para el **alta de personas** mediante el formulario dinámico (**Formly**).
+        Los campos y sus requisitos pueden variar según la implantación, en función del diseño de los formularios dinámicos y de las necesidades del sistema corporativo de origen.
+      properties:
+        nombre:
+          type: string
+          example: Nombre 1
+        apellidos:
+          type: string
+          example: Apellido 1 Apellido 2
+        sexo:
+          $ref: "#/components/schemas/SexoOutput"
+        numeroDocumento:
+          type: string
+          example: 11111111A
+        tipoDocumento:
+          $ref: "#/components/schemas/TipoDocumentoOutput"
+        empresaRef:
+          type: string
+          example: null
+        personalPropio:
+          type: boolean
+          example: true
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmailOutput"
+    PersonaFormlyUpdateInput:
+      type: object
+      description: |-
+        Ejemplo de estructura de datos utilizada para la **actualización de personas** mediante el formulario dinámico (**Formly**).
+        Los campos y sus requisitos pueden variar según la implantación, en función del diseño de los formularios dinámicos y de las necesidades del sistema corporativo de origen.
+      properties:
+        nombre:
+          type: string
+          example: Nombre 1
+        apellidos:
+          type: string
+          example: Apellido 1 Apellido 2
+        sexo:
+          $ref: "#/components/schemas/SexoOutput"
+        numeroDocumento:
+          type: string
+          example: 11111111A
+        tipoDocumento:
+          $ref: "#/components/schemas/TipoDocumentoOutput"
+        empresaRef:
+          type: string
+          example: null
+        personalPropio:
+          type: boolean
+          example: true
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmailOutput"
+    PersonaFormlyOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        nombre:
+          type: string
+          example: Nombre 1
+        apellidos:
+          type: string
+          example: Apellido 1 Apellido 2
+        sexo:
+          $ref: "#/components/schemas/SexoOutput"
+        numeroDocumento:
+          type: string
+          example: 11111111A
+        tipoDocumento:
+          $ref: "#/components/schemas/TipoDocumentoOutput"
+        empresaRef:
+          type: string
+          example: null
+        personalPropio:
+          type: boolean
+          example: true
+        entidadPropiaRef:
+          type: string
+          example: E1
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmailOutput"
+    PersonaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        nombre:
+          type: string
+          example: Nombre 1
+        apellidos:
+          type: string
+          example: Apellido 1 Apellido 2
+        sexo:
+          $ref: "#/components/schemas/SexoOutput"
+        numeroDocumento:
+          type: string
+          example: 11111111A
+        tipoDocumento:
+          $ref: "#/components/schemas/TipoDocumentoOutput"
+        empresaRef:
+          type: string
+          example: null
+        personalPropio:
+          type: boolean
+          example: true
+        entidadPropiaRef:
+          type: string
+          example: E1
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmailOutput"
+        activo:
+          type: boolean
+          example: true
+    PersonaFotografiaOutput:
+      type: object
+      properties:
+        contenido:
+          type: string
+          description: imagen en base64
+        mimeType:
+          type: string
+          example: image/jpeg
+    SexenioOutput:
+      type: object
+      properties:
+        numero:
+          type: string
+        paisRef:
+          type: string
+          example: P1
+        personaRef:
+          type: string
+          example: P1
+    SexoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: S1
+        nombre:
+          type: string
+          example: Varón
+    TipoDocumentoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: T1
+        nombre:
+          type: string
+          example: DNI
+    TipoProyectoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: T1
+        nombre:
+          type: string
+          example: Proyecto Final de Carrera
+    TipoTrabajoDirigidoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: T1
+        nombre:
+          type: string
+          example: Tipo 1
+    TitulacionOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: T1
+        nombre:
+          type: string
+          example: GRADO 1
+    VinculacionOutput:
+      type: object
+      properties:
+        areaConocimiento:
+          $ref: "#/components/schemas/AreaConocimientoOutput"
+        personalPropio:
+          type: boolean
+          example: true
+        entidadPropiaRef:
+          type: string
+          example: E1
+        empresaRef:
+          type: string
+          example: E2
+        centro:
+          $ref: "#/components/schemas/CentroOutput"
+        categoriaProfesional:
+          $ref: "#/components/schemas/CategoriaProfesionalOutput"
+        fechaObtencionCategoria:
+          type: string
+          format: date
+          example: "2020-06-16"
+        departamento:
+          $ref: "#/components/schemas/DepartamentoOutput"
+    VinculacionCategoriaProfesionalOutput:
+      type: object
+      properties:
+        categoriaProfesional:
+          $ref: "#/components/schemas/CategoriaProfesionalOutput"
+        fechaObtencion:
+          type: string
+          format: date
+          example: "2020-06-16"
+
+    AccessDeniedError:
+      type: object
+      description: Este error se produce cuando el usuario no tiene permiso para acceder al recurso solicitado.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:access-denied
+        title:
+          type: string
+          description: Descripción del error.
+          example: Forbidden
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 403
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Access is denied
+    NotFoundError:
+      type: object
+      description: Este error se produce cuando el recurso solicitado no existe.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:not-found
+        title:
+          type: string
+          description: Descripción del error.
+          example: Not Found
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 404
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No se ha encontrado '{NOMBRE_RECURSO}' con el identificador '{IDENTIFICADOR_RECURSO}'
+    UnauthorizedError:
+      type: object
+      description: Este error se produce cuando el usuario no está autenticado (Token JWT inválido, expirado o ausente).
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:authentication
+        title:
+          type: string
+          description: Descripción del error.
+          example: Unauthorized
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 401
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No token found
+    BadRequestError:
+      type: object
+      description: Este error se produce cuando el sistema recibe una petición incorrecta y no existe un error más especifico.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:bad-request
+        title:
+          type: string
+          description: Descripción del error.
+          example: Bad Request
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 400
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Page index must not be less than zero
+  responses:
+    UnauthorizedErrorResponse:
+      description: Token JWT inválido, expirado o ausente
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnauthorizedError"
+    AccessDeniedErrorResponse:
+      description: El usuario no tiene permiso para acceder al recurso solicitado.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccessDeniedError"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, for documentation purposes only

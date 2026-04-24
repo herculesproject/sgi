@@ -1,0 +1,1619 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Gestión de la estructura Orgánica (SGO)
+  description: |-
+    El SGI precisa de una serie de datos relativos a la estructura organizativa de la Universidad (centros, áreas de conocimiento, departamentos, etc.). 
+    A fin de evitar la duplicidad de los procesos de gestión y los consiguientes riesgos de inconsistencia de información derivados, el SGI no almacena ningún dato relativo a la estructura de la Universidad. 
+    Del mismo modo, el SGI tampoco dispone de listados de datos geográficos propio (países, comunidades autónomas, etc.). Ambos grupos de información deben de ser recuperados de los sistemas de gestión corporativos adecuados. 
+    Se unifica bajo el nombre de Sistema de gestión de la estructura orgánica de la universidad (SGO), el sistema o sistemas de los que se debe recuperar estos listados generales.
+
+  version: 0.1.0
+tags:
+  - name: areas-conocimiento
+    description: Áreas de conocimiento
+  - name: areas-conocimiento-public
+    description: Áreas de conocimiento (endpoints accesibles sin autentificación)
+  - name: centros
+    description: Centros
+  - name: centros-public
+    description: Centros (endpoints accesibles sin autentificación)
+  - name: clasificaciones
+    description: Clasificaciones
+  - name: clasificaciones-public
+    description: Clasificaciones (endpoints accesibles sin autentificación)
+  - name: comunidades-autonomas
+    description: Comunidades autónomas
+  - name: comunidades-autonomas-public
+    description: Comunidades autónomas (endpoints accesibles sin autentificación)
+  - name: departamentos
+    description: Departamentos
+  - name: departamentos-public
+    description: Departamentos (endpoints accesibles sin autentificación)
+  - name: paises
+    description: Países
+  - name: paises-public
+    description: Países (endpoints accesibles sin autentificación)
+  - name: palabras-clave
+    description: Palabras clave
+  - name: provincias
+    description: Provincias
+  - name: provincias-public
+    description: Provincias (endpoints accesibles sin autentificación)
+
+paths:
+  /areas-conocimiento:
+    get:
+      tags:
+        - areas-conocimiento
+      summary: Devuelve una lista de áreas de conocimiento
+      description: |-
+        Devuelve la lista de áreas de conocimiento filtradas, ordenadas y paginadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `nombre`
+        - `padreId`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Datos proyecto ➜ Área conocimiento**, **Proyecto ➜ Área conocimiento**
+        - PII: **Invenciones ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Si no se envían parámetros de paginación, el servicio devolverá todas las áreas de conocimiento **ordenados alfabéticamente por nombre en orden ascendente**
+        - Está diseñado para poder componer una estructura en forma de árbol.
+        - Es candidato a ser incluido en el formulario de alta/modificación de persona, su utilización o no en este formulario, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario).
+      operationId: findAllAreasConocimiento
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - nombre 
+            - padreId            
+          schema:
+            type: string
+          example: nombre==Área 1;
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`. 
+          schema:
+            type: string
+            example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de áreas de conocimiento
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AreaConocimientoOutput"
+        204:
+          description: No hay áreas de conocimiento para los criterios de búsqueda utilizados.
+        400:
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /areas-conocimiento/{id}:
+    get:
+      tags:
+        - areas-conocimiento
+      summary: Detalles del área de conocimiento
+      description: |-
+        Devuelve el área de conocimiento correspondiente al `id`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Datos proyecto ➜ Área conocimiento**, **Proyecto ➜ Área conocimiento**
+        - PII: **Invenciones ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Es candidato a ser incluido en el formly de persona, su utilización o no, tanto para la vista de detalle de persona como para el alta o modificación, depende de la definición de requisitos para la gestión de personas propia de cada implantación  (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario de detalle o de alta/modificación).
+        - Este servicio será necesario para la implantación de los módulos CSP y PII.
+      operationId: findAreaConocimientoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del área de conocimiento
+          required: true
+          example: A1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el área de conocimiento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AreaConocimientoOutput"
+        404:
+          description: Área de conocimiento no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/areas-conocimiento/{id}:
+    get:
+      tags:
+        - areas-conocimiento-public
+      summary: Detalles del área de conocimiento
+      description: |-
+        Versión pública del endpoint `GET /areas-conocimiento/{id}`.
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findAreaConocimientoPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del área de conocimiento
+          required: true
+          example: A1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el área de conocimiento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AreaConocimientoOutput"
+        404:
+          description: Área de conocimiento no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /centros:
+    get:
+      tags:
+        - centros
+      summary: Devuelve la lista de centros
+      description: |-
+        Devuelve la lista de centros filtrados, ordenados y paginados.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `nombre`
+
+        ### Consideraciones para la implementación
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+        - Es candidato a ser incluido en el formly de persona, su utilización o no, tanto para la vista de detalle de persona como para el alta o modificación, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario de detalle o de alta/modificación).
+      operationId: findAllCentros
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de búsqueda en formato **RSQL**.  Se puede buscar por los siguientes campos:
+            - `nombre`
+          schema:
+            type: string
+          example: nombre==Centro*
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+          schema:
+            type: string
+            example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de centros
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+                example: 2
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+                example: 5
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+                example: 10
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+                example: 5
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+                example: 0
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CentroOutput"
+        204:
+          description: No hay centros para los criterios de búsqueda utilizados.
+        400:
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /centros/{id}:
+    get:
+      tags:
+        - centros
+      summary: Detalles del centro
+      description: |-
+        Devuelve el centro correspondiente al identificador indicado.
+
+        ### Consideraciones para la implementación
+        - Desde el **formly** su implementación puede ser **opcional** si no se incluye este campo en los formularios o si no está habilitada la funcionalidad de alta o modificación de personas.
+      operationId: findCentroById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del centro
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el centro
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CentroOutput"
+        404:
+          description: Centro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/centros/{id}:
+    get:
+      tags:
+        - centros-public
+      summary: Detalles del centro
+      description: |-
+        Versión pública del endpoint `GET /centros/{id}`.
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findCentroPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador único del centro
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el centro
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CentroOutput"
+        404:
+          description: Centro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /clasificaciones:
+    get:
+      tags:
+        - clasificaciones
+      summary: Devuelve una lista de clasificaciones
+      description: |-
+        Devuelve la lista de clasificaciones filtradas, ordenadas y paginadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `tipoClasificacion`
+        - `padreId`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, **Solicitud ➜ Datos proyecto ➜ Clasificaciones**, **Proyecto ➜ Clasificaciones**, **Grupos investigación ➜ Líneas investigación ➜ Clasificaciones**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en las distintas pantallas de los módulos del SGI por lo que se considera **obligatorio**.
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+        - Si no se envían parámetros de paginación, el servicio devolverá **todas las clasificaciones ordenadas alfabéticamente por nombre**.
+        - Este servicio permite construir estructuras jerárquicas mediante el campo `padreId`.
+      operationId: findAllClasificaciones
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `tipoClasificacion`
+            - `padreId`            
+          schema:
+            type: string
+          example: padreId=na="";tipoClasificacion==SECTORES_INDUSTRIALES
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de clasificaciones
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClasificacionOutput"
+      204:
+        description: No hay clasificaciones para los criterios de búsqueda utilizados.
+      400:
+        description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BadRequestError"
+
+  /clasificaciones/{id}:
+    get:
+      tags:
+        - clasificaciones
+      summary: Detalles de la clasificación
+      description: |-
+        Devuelve la clasificación correspondiente al `id`.
+      operationId: findClasificacionById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la clasificación
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve la clasificación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClasificacionOutput"
+      404:
+        description: Clasificación no encontrada
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotFoundError"
+
+  /public/clasificaciones:
+    get:
+      tags:
+        - clasificaciones-public
+      summary: Devuelve una lista paginada y filtrada de clasificaciones
+      description: |-
+        Versión pública del endpoint `GET /clasificaciones`.
+        Devuelve la lista de clasificaciones filtradas, ordenadas y paginadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `tipoClasificacion`
+        - `padreId`
+
+        ### Consideraciones para la implementación
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
+      operationId: findAllClasificacionesPublic
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `tipoClasificacion`
+            - `padreId`            
+          schema:
+            type: string
+          example: padreId=na="";tipoClasificacion==SECTORES_INDUSTRIALES
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de clasificaciones
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClasificacionOutput"
+      204:
+        description: No hay clasificaciones para los criterios de búsqueda utilizados.
+      400:
+        description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BadRequestError"
+
+  /public/clasificaciones/{id}:
+    get:
+      tags:
+        - clasificaciones-public
+      summary: Detalles de la clasificación
+      description: |-
+        Versión pública del endpoint `GET /clasificaciones/{id}`.
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        PUB: **Solicitud ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+    operationId: findClasificacionPublicById
+    parameters:
+      - name: id
+        in: path
+        description: Identificador de la clasificación
+        required: true
+        example: C1
+        schema:
+          type: string
+    responses:
+      200:
+        description: Devuelve la clasificación
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClasificacionOutput"
+      404:
+        description: Clasificación no encontrada
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotFoundError"
+
+  /comunidades-autonomas:
+    get:
+      tags:
+        - comunidades-autonomas
+      summary: Devuelve una lista de comunidades autónomas
+      description: |-
+        Devuelve la lista de comunidades autónomas filtradas, ordenadas y paginadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `paisId`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**, en el caso de introducir los datos de la persona manualmente y no a través del buscador de personas.
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en distintas pantallas del SGI por lo que se considera **obligatorio**.
+        - Es candidato a ser incluido en el formly de alta/modificación de persona, su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario).
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+        - Si no se envían parámetros de paginación, el servicio devolverá **todas las comunidades autónomas ordenadas alfabéticamente por nombre**.
+        - Este servicio permite filtrar comunidades autónomas por país mediante el campo `paisId`.
+      operationId: findAllComunidadesAutonomas
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `paisId`
+          schema:
+            type: string
+          example: paisId==P1
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de comunidades autónomas
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        204:
+          description: No hay comunidades autónomas para los criterios de búsqueda utilizados.
+        400:
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /comunidades-autonomas/{id}:
+    get:
+      tags:
+        - comunidades-autonomas
+      summary: Detalles de la comunidad autónoma
+      description: |-
+        Devuelve la comunidad autónoma correspondiente al `id`.
+
+        ### Consideraciones para la implementación
+        -  Es candidato a ser incluido en el formly de persona, su utilización o no, tanto para la vista de detalle de persona como para el alta o modificación, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario de detalle o de alta/modificación).
+      operationId: findComunidadAutonomaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la comunidad autónoma
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve la comunidad autónoma
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        404:
+          description: Comunidad autónoma no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/comunidades-autonomas:
+    get:
+      tags:
+        - comunidades-autonomas-public
+      summary: Devuelve una lista de comunidades autónomas
+      description: |-
+        Versión pública del endpoint `GET /comunidades-autonomas`.
+        Devuelve la lista de comunidades autónomas filtradas, ordenadas y paginadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `paisId`
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
+      operationId: findAllComunidadesAutonomasPublic
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `paisId`
+          schema:
+            type: string
+          example: paisId==P1
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de comunidades autónomas
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComunidadAutonomaOutput"
+        204:
+          description: No hay comunidades autónomas para los criterios de búsqueda utilizados.
+        400:
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /departamentos:
+    get:
+      tags:
+        - departamentos
+      summary: Devuelve la lista de departamentos
+      description: |-
+        Devuelve la lista completa de departamentos ordenados alfabéticamente por nombre en orden ascendente.
+
+        ### Consideraciones para la implementación
+        - Es candidato a ser incluido en el formly de alta/modificación de persona, su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario).
+        - No se admiten parámetros de filtrado ni paginación.
+      operationId: findAllDepartamentos
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Devuelve la lista de departamentos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DepartamentoOutput"
+        204:
+          description: No hay departamentos disponibles.
+
+  /departamentos/{id}:
+    get:
+      tags:
+        - departamentos
+      summary: Detalles del departamento
+      description: |-
+        Devuelve el departamento correspondiente al `id`.
+
+        ### Consideraciones para la implementación
+        - Es candidato a ser incluido en el formly de persona, su utilización o no, tanto para la vista de detalle de persona como para el alta o modificación, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario de detalle o de alta/modificación).
+      operationId: findDepartamentoById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del departamento
+          required: true
+          example: D1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el departamento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepartamentoOutput"
+        404:
+          description: Departamento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+
+  /public/departamentos:
+    get:
+      tags:
+        - departamentos-public
+      summary: Devuelve la lista de departamentos
+      description: |-
+        Versión pública del endpoint `GET /departamentos`.
+        Devuelve la lista completa de departamentos ordenados alfabéticamente por nombre en orden ascendente.
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
+      operationId: findAllDepartamentosPublic
+      responses:
+        200:
+          description: Devuelve la lista de departamentos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DepartamentoOutput"
+        204:
+          description: No hay departamentos disponibles.
+
+  /paises:
+    get:
+      tags:
+        - paises
+      summary: Devuelve una lista paginada y filtrada de países
+      description: |-
+        Devuelve la lista de países filtrada, ordenada y paginada.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - No hay campos obligatorios definidos, pero se puede filtrar según los campos de la entidad `Pais`.
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Proyecto ➜ Listado ➜ Filtro país socio**, **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en distintas pantallas del SGI por lo que se considera **obligatorio**.
+        - Es candidato a ser incluido en el formly de alta/modificación de persona, su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario).
+        - Si no se envían parámetros de paginación, el servicio devolverá **todos los países ordenados alfabéticamente por nombre**.
+      operationId: findAllPaises
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de búsqueda en formato RSQL.
+          schema:
+            type: string
+          example: nombre==España
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de países
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaisOutput"
+        204:
+          description: No hay países que cumplan con los filtros
+
+  /paises/{id}:
+    get:
+      tags:
+        - paises
+      summary: Detalles del país
+      description: |-
+        Devuelve el país correspondiente al `id`.
+
+        ### Consideraciones para la implementación
+        - Es candidato a ser incluido en el formly de persona, su utilización o no, tanto para la vista de detalle de persona como para el alta o modificación, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario de detalle o de alta/modificación).
+      operationId: findPaisById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador del país
+          required: true
+          example: P1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve el país
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaisOutput"
+        404:
+          description: País no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/paises:
+    get:
+      tags:
+        - paises-public
+      summary: Devuelve una lista paginada de países
+      description: |-
+        Versión pública del endpoint `GET /paises`.
+        Devuelve la lista de países filtrada, ordenada y paginada.
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
+      operationId: findAllPaisesPublic
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de países
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaisOutput"
+        204:
+          description: No hay países que cumplan con los filtros
+
+  /palabras-clave:
+    get:
+      tags:
+        - palabras-clave
+      summary: Devuelve una lista paginada y filtrada de palabras clave
+      description: |-
+        Devuelve una lista paginada y filtrada de palabras clave que cumplen los filtros.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Campos que se pueden filtrar:
+        - `palabra`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Listado ➜ Filtro palabras clave**, **Convocatoria ➜ Datos generales**, **Solicitud ➜ Listado ➜ Filtro palabras clave**, **Solicitud ➜ Datos proyecto ➜ Ficha general**, **Proyecto ➜ Listado ➜ Filtro palabras clave**, **Proyecto ➜ Datos generales ➜ Ficha general**, **Grupo investigación ➜ Listado ➜ Filtro palabras clave**, **Grupo investigación ➜ Datos generales**  
+        - PII: **Invención ➜ Listado ➜ Filtro palabras clave**, **Invención ➜ Datos generales**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en distintas pantallas del SGI por lo que se considera **obligatorio**.
+        - Si no se especifica ordenación, los resultados se devuelven en **orden ascendente por nombre**.
+      operationId: findAllPalabrasClave
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de búsqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `palabra`
+          schema:
+            type: string
+          example: palabra=ik=palabra1;
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **palabra ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de palabras clave
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["palabra1", "palabra12"]
+        204:
+          description: No hay palabras clave que cumplan con los filtros de busqueda
+    post:
+      tags:
+        - palabras-clave
+      summary: Añade una lista de nuevas palabras clave
+      description: |-
+        Añade una lista de nuevas palabras clave
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Convocatoria ➜ Datos generales**, **Solicitud ➜ Datos proyecto ➜ Ficha general**, **Proyecto ➜ Datos generales ➜ Ficha general**, **Grupo investigación ➜ Datos generales**  
+        - PII: **Invención ➜ Datos generales**
+      operationId: createPalabrasClave
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de palabras clave
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              example: ["palabra2", "palabra3"]
+      responses:
+        200:
+          description: palabras clave creadas correctamente
+
+  /provincias:
+    get:
+      tags:
+        - provincias
+      summary: Devuelve una lista paginada y filtrada de provincias
+      description: |-
+        Devuelve una lista paginada y filtrada de provincias que cumplen los filtros.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `comunidadAutonomaId`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Solicitud ➜ Datos solicitud RRHH ➜ Solicitante**
+
+        ### Consideraciones para la implementación
+        - Este servicio se utiliza en distintas pantallas del SGI por lo que se considera **obligatorio**.
+        - Es candidato a ser incluido en el formly de alta/modificación de persona, su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario).
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+      operationId: findAllProvincias
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de búsqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `comunidadAutonomaId`
+          schema:
+            type: string
+          example: comunidadAutonomaId==C1;
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de provincias
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProvinciaOutput"
+        204:
+          description: No hay provincias que cumplan con los filtros de búsqueda
+
+  /provincias/{id}:
+    get:
+      tags:
+        - provincias
+      summary: Detalles de la provincia
+      description: |-
+        Devuelve la provincia correspondiente al `id`.
+
+        ### Consideraciones para la implementación
+        - Es candidato a ser incluido en el formly de persona, su utilización o no, tanto para la vista de detalle de persona como para el alta o modificación, depende de la definición de requisitos para la gestión de personas propia de cada implantación (podría no estar habilitada el alta/modificación de personas o bien no requerirse este dato en el formulario de detalle o de alta/modificación).
+      operationId: findProvinciaById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la provincia
+          required: true
+          example: PR1
+          schema:
+            type: string
+      responses:
+        200:
+          description: Devuelve la provincia
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvinciaOutput"
+        404:
+          description: Provincia no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/provincias:
+    get:
+      tags:
+        - provincias-public
+      summary: Devuelve una lista paginada y filtrada de provincias
+      description: |-
+        Versión pública del endpoint `GET /provincias`.
+        Devuelve la lista de provincias filtradas, ordenadas y paginadas.
+        No requiere autenticación desde el SGI.
+
+        ### Módulos del SGI donde se utiliza
+        - PUB: **Solicitud ➜ Datos generales ➜ Filtro provincia contacto**
+
+        ### Consideraciones para la implementación
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
+      operationId: findAllProvinciasPublic
+      x-sgi-return-page: true
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de búsqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `comunidadAutonomaId`
+          schema:
+            type: string
+          example: comunidadAutonomaId==C1;
+        - name: s
+          x-sgi-pageable: true
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        200:
+          description: Devuelve la lista de provincias
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProvinciaOutput"
+        204:
+          description: No hay provincias que cumplan con los filtros de búsqueda
+
+components:
+  schemas:
+    AreaConocimientoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: A1
+        nombre:
+          type: string
+          example: Dibujo
+        padreId:
+          type: string
+          example: null
+    CentroOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: FACULTAD DE CIENCIAS
+    ClasificacionOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: ANEP
+        codigo:
+          type: string
+          example: CLS1
+        padreId:
+          type: string
+          example: null
+    ComunidadAutonomaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: C1
+        nombre:
+          type: string
+          example: PRINCIPADO DE ASTURIAS
+        paisId:
+          type: string
+          example: P1
+    DepartamentoOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: D1
+        nombre:
+          type: string
+          example: ADMINISTRACIÓN DE ACTIVIDADES DEPORTIVAS
+    PaisOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P1
+        nombre:
+          type: string
+          example: ESPAÑA
+    ProvinciaOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: PR1
+        nombre:
+          type: string
+          example: ASTURIAS
+        comunidadAutonomaId:
+          type: string
+          example: C1
+
+    NotFoundError:
+      type: object
+      description: Este error se produce cuando el recurso solicitado no existe.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:not-found
+        title:
+          type: string
+          description: Descripción del error.
+          example: Not Found
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 404
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: No se ha encontrado '{NOMBRE_RECURSO}' con el identificador '{IDENTIFICADOR_RECURSO}'
+    BadRequestError:
+      type: object
+      description: Este error se produce cuando el sistema recibe una petición incorrecta y no existe un error más especifico.
+      required:
+        - type
+        - title
+        - status
+        - instance
+      properties:
+        type:
+          type: string
+          description: Tipo de error.
+          example: urn:problem-type:bad-request
+        title:
+          type: string
+          description: Descripción del error.
+          example: Bad Request
+        status:
+          type: integer
+          description: Código HTTP del error.
+          example: 400
+        instance:
+          type: string
+          description: Identificador único del error.
+          example: urn:uuid:6ec423fd-87fb-4470-9c5e-60c4628bd7eb
+        detail:
+          type: string
+          description: Información adicional del error.
+          example: Page index must not be less than zero
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, for documentation purposes only
