@@ -87,7 +87,7 @@ En relació amb els treballs que ha realitzat en el marc d'aquest contracte, és
 
 Cal que valideu la factura des de l'aplicació, accedint mitjançant l'enllaç següent: ${data.enlaceAplicacion}
 
-Tot esperant la vostra resposta, rebeu una cordial salutació,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado  
 Email unidad responsable
 </#macro>

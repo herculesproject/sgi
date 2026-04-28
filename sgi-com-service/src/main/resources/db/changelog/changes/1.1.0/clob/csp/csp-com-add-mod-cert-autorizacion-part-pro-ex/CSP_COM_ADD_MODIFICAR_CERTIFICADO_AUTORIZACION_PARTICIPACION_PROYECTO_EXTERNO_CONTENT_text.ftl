@@ -43,7 +43,7 @@ Us informem que teniu disponible per a baixar l'autorització de participació e
 
 - Projecte extern: ${sgi.getFieldValue(data.tituloProyectoExt)}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

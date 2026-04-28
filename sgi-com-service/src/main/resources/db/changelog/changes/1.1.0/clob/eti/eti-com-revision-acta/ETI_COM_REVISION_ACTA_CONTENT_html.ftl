@@ -39,7 +39,7 @@ Email unidad responsable
 <p>Us informem que teniu a la vostra disposició l'acta de la reunió celebrada el ${sgi.formatDate(data.fechaEvaluacion, "FULL")}</p>
 <p>Podeu revisar-la a través de l'aplicació <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>, aportant, si cal, comentaris pendents sobre les memòries avaluades.</p>
 <p>
-Rebeu una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

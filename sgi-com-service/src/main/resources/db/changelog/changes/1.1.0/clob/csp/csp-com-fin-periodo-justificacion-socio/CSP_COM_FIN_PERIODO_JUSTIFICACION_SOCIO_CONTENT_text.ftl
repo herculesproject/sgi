@@ -18,6 +18,10 @@ Próximamente finalizará el periodo de presentación de justificación para el 
 - Entidad colaboradora: ${data.nombreEntidad}
 - Proyecto: ${sgi.getFieldValue(data.titulo)}
 - Periodo: ${data.numPeriodo}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -27,6 +31,10 @@ The period for submitting justification for the project partner referred to belo
 - Collaborating entity: ${data.nombreEntidad}
 - Project: ${sgi.getFieldValue(data.titulo)}
 - Period: ${data.numPeriodo}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -36,6 +44,10 @@ Laster amaituko da beherago aipatutako proiektuko bazkidearentzako justifikazioa
 - Erakunde kolaboratzailea: ${data.nombreEntidad}
 - Proiektua: ${sgi.getFieldValue(data.titulo)}
 - Aldia: ${data.numPeriodo}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -49,7 +61,7 @@ Properament finalitzarà el període de presentació de justificació per al soc
 - Projecte: ${sgi.getFieldValue(data.titulo)}
 - Període: ${data.numPeriodo}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

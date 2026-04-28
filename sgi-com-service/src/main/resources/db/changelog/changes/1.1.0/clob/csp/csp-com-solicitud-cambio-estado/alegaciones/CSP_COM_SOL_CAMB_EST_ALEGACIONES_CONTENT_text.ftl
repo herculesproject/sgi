@@ -6,6 +6,10 @@ Le informamos de que se ha registrado una alegación a la resolución referida a
 - Solicitud de referencia: ${data.codigoInternoSolicitud}
 - Fecha provisional: <#if data.fechaProvisionalConvocatoria??>${sgi.formatDate(data.fechaProvisionalConvocatoria, "SHORT")}<#else>-</#if>
 - Persona que ha registrado la alegación: ${data.nombreApellidosSolicitante}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -14,6 +18,10 @@ Please be advised that an allegation regarding the following decision has been r
 - Reference request: ${data.codigoInternoSolicitud}
 - Provisional date: <#if data.fechaProvisionalConvocatoria??>${sgi.formatDate(data.fechaProvisionalConvocatoria, "SHORT")}<#else>-</#if>
 - Person who registered the allegation: ${data.nombreApellidosSolicitante}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -22,6 +30,10 @@ Honen bidez jakinarazten dizugu jarraian adierazitako ebazpenaren aurkako alegaz
 - Erreferentziazko eskaera: ${data.codigoInternoSolicitud}
 - Behin-behineko data: <#if data.fechaProvisionalConvocatoria??>${sgi.formatDate(data.fechaProvisionalConvocatoria, "SHORT")}<#else>-</#if>
 - Alegazioa nork erregistratu duen: ${data.nombreApellidosSolicitante}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -34,7 +46,7 @@ Us informem que s'ha registrat una al·legació a la resolució referida a conti
 - Data provisional: <#if data.fechaProvisionalConvocatoria??>${sgi.formatDate(data.fechaProvisionalConvocatoria, "SHORT")}<#else>-</#if>
 - Persona que ha registrat l'al·legació: ${data.nombreApellidosSolicitante}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

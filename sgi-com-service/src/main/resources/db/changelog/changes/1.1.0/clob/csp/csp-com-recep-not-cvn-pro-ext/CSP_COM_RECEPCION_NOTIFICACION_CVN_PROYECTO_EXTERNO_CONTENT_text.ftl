@@ -6,6 +6,10 @@ Le informamos de que ha sido registrada la notificación de creación del proyec
 - Fecha del registo: ${sgi.formatDate(data.fechaCreacion, "SHORT")}
 - Proyecto: ${sgi.getFieldValue(data.tituloProyecto)}
 - CVN de: ${data.nombreApellidosCreador}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -14,6 +18,10 @@ Please be advised that the notification of the creation of the project has been 
 - Registration date: ${sgi.formatDate(data.fechaCreacion, "SHORT")}
 - Project:  ${sgi.getFieldValue(data.tituloProyecto)}
 - CVN of: ${data.nombreApellidosCreador}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -22,6 +30,10 @@ Honen bidez jakinarazten dizugu proiektuaren sorreraren jakinarazpena erregistra
 - Erregistro data: ${sgi.formatDate(data.fechaCreacion, "SHORT")}
 - Proiektua: ${sgi.getFieldValue(data.tituloProyecto)}
 - Noren CVNa den: ${data.nombreApellidosCreador}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -34,7 +46,7 @@ Us informem que ha estat registrada la notificació de creació del projecte al 
 - Projecte: ${sgi.getFieldValue(data.tituloProyecto)}
 - CVN de: ${data.nombreApellidosCreador}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

@@ -8,6 +8,11 @@
 - Solicitud presentada por: ${data.nombreApellidosSolicitante}<br>
 - Fecha de presentación: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -17,6 +22,11 @@
 - Request submitted by: ${data.nombreApellidosSolicitante}<br>
 - Submission date: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
 </p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -25,6 +35,11 @@
 - Deialdia: ${sgi.getFieldValue(data.tituloConvocatoria)} <#if data.fechaPublicacionConvocatoria??>(${sgi.formatDate(data.fechaPublicacionConvocatoria, "SHORT")})</#if><br>
 - Eskaera nork aurkeztu duen: ${data.nombreApellidosSolicitante}<br>
 - Aurkezpen data: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 
@@ -38,7 +53,7 @@
 - Data de presentació: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
 </p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

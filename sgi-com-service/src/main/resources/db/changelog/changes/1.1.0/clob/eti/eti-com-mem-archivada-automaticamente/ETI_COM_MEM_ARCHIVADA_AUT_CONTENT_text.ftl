@@ -56,7 +56,7 @@ Davant l'absència de resposta a les correccions sol·licitades pel comitè indi
 - Títol: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
 - Referència CEID: ${data.referenciaMemoria}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

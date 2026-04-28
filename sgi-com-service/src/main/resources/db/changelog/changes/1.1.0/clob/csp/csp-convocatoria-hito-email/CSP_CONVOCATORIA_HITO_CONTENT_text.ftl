@@ -10,6 +10,10 @@ Le informamos de que se ha alcanzado el siguiente hito de la convocatoria refere
 En el hito se han indicado las siguientes observaciones:
 ${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}
 </#if>
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -23,6 +27,10 @@ Please be advised that the following milestone of the call in question has been 
 The following remarks have been indicated at the milestone:
 ${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}
 </#if>
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -36,6 +44,10 @@ Honen bidez jakinarazten dizugu behean aipatutako deialdia hurrengo mugarrira ir
 Mugarrian ohar hauek adierazi dira:
 ${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}
 </#if>
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -53,7 +65,7 @@ A la fita s'han indicat les següents observacions:
 ${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}
 </#if>
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

@@ -80,7 +80,7 @@ Seguint el calendari de facturació del contracte referenciat més avall, està 
 
 Cal que confirmis si es pot emetre la factura corresponent, seguint aquest enllaç: ${data.enlaceAplicacion}
 
-Tot esperant la vostra resposta, rebeu una cordial salutació,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado  
 Email unidad responsable
 </#macro>

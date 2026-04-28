@@ -29,6 +29,10 @@ Le informamos de que proximamente se inician los períodos de presentación de l
 
 </#list>
 Puede revisar la información a través de la aplicación: ${data.enlaceAplicacion}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -41,6 +45,10 @@ Please be advised that the submission periods for the justification for the scie
 
 </#list>
 You can review the information through the application: ${data.enlaceAplicacion}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -53,6 +61,10 @@ Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuen 
 
 </#list>
 Informazioa berrikus dezakezu aplikazioaren bidez: ${data.enlaceAplicacion}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -70,7 +82,7 @@ Els períodes de presentació de la documentació de justificació són els seg�
 
 Podeu revisar la informació a través de l'aplicació: ${data.enlaceAplicacion}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

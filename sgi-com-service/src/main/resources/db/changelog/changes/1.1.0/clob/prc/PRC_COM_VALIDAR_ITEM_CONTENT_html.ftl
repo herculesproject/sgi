@@ -55,7 +55,7 @@ Email unidad responsable
 - Data: ${sgi.formatDate(data.fechaItem, "SHORT")}
 </p>
 <p>
-Rebi una cordial salutació,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

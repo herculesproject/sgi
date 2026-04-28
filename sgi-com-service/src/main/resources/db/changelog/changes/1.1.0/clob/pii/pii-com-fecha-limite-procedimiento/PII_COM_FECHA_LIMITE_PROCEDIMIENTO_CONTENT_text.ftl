@@ -6,6 +6,10 @@ Le informamos de que proximamente termina el plazo para la realización por su p
 - Trámite a solicitar: ${sgi.getFieldValue(data.tipoProcedimiento)}
 - Acciones a tomar: ${sgi.getFieldValue(data.accionATomar)}
 - Fecha de finalización del plazo:  ${sgi.formatDate(data.fechaLimite, "SHORT")}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -14,6 +18,10 @@ Please be advised that the period in which you can carry out the following actio
 - Procedure to be requested: ${sgi.getFieldValue(data.tipoProcedimiento)}
 - Actions to be taken: ${sgi.getFieldValue(data.accionATomar)}
 - Date of expiry of the period: ${sgi.formatDate(data.fechaLimite, "SHORT")}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -22,6 +30,10 @@ Honen bidez jakinarazten dizugu laster amaituko dela ekintza hauek egiteko duzun
 - Eskatu beharreko izapidea: ${sgi.getFieldValue(data.tipoProcedimiento)}
 - Egin beharreko ekintzak: ${sgi.getFieldValue(data.accionATomar)}
 - Epearen amaiera data: ${sgi.formatDate(data.fechaLimite, "SHORT")}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -30,7 +42,12 @@ Us informem que properament acaba el termini per a la realització per la seva p
 
 - Tràmit a sol·licitar: ${sgi.getFieldValue(data.tipoProcedimiento)}
 - Accions a prendre: ${sgi.getFieldValue(data.accionATomar)}
-- Data de finalització del termini: ${sgi.formatDate(data.fechaLimite, "SHORT")}</#macro>
+- Data de finalització del termini: ${sgi.formatDate(data.fechaLimite, "SHORT")}
+
+Rebeu una cordial salutació,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
+</#macro>
 
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

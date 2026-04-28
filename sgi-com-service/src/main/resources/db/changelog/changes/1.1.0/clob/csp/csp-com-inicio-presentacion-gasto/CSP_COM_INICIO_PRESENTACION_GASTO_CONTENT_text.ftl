@@ -75,7 +75,7 @@ Els períodes de presentació de la documentació de justificació són els seg�
 
 Podeu revisar la informació a través de l'aplicació: ${data.enlaceAplicacion}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

@@ -18,6 +18,10 @@ Tras el proceso de validación, no se ha dado el visto bueno para la emisión de
 - Asociado al/los proyectos con código/s: ${data.codigosSge?join(", ")}
 - Nº de previsión: ${data.numPrevision}
 - Motivo: ${sgi.getFieldValue(data.motivoRechazo)}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -28,6 +32,10 @@ After the validation process, approval was not given to issue the following invo
 - Associated to project(s) with code(s):  ${data.codigosSge?join(", ")}
 - Forecast no.: ${data.numPrevision}
 - Reason: ${sgi.getFieldValue(data.motivoRechazo)}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -38,6 +46,10 @@ Baliozkotze-prozesuaren ondoren, ez da ontzat eman behean adierazitako faktura e
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}
 - Aurreikuspen zk.: ${data.numPrevision}
 - Zergatia: ${sgi.getFieldValue(data.motivoRechazo)}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>

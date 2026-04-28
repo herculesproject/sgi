@@ -12,7 +12,7 @@ Una vez firmado el contrato asociado al/los proyecto/s abajo referenciado/s más
 
 Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}
 
-En espera de su respuesta, reciba un cordial saludo,
+Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -29,7 +29,7 @@ Having signed the contract associated with the below project(s), you need to con
 
 You need to confirm whether the relevant invoice can be issued, by following this link: ${data.enlaceAplicacion}
 
-We look forward to hearing from you. Kind regards,
+Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -46,7 +46,7 @@ Behean aipatutako proiektuekin lotutako kontratua sinatu ostean, adierazita dago
 
 Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: ${data.enlaceAplicacion}
 
-Zure erantzunaren zain, jaso agur bero bat.
+Jaso agur bero bat,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -61,7 +61,7 @@ Un cop signat el contracte assocat al/els projecte/s baix referenciat/s més ava
 - Codi/s de projecte/s associat/s: ${data.codigosSge?join(", ")}
 - Núm.: ${data.numPrevision}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

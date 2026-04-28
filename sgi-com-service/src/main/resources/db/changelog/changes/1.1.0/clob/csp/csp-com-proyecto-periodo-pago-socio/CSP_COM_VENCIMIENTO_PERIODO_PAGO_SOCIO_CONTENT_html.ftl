@@ -16,6 +16,11 @@
 - Socio colaborador: ${data.nombreEntidadColaboradora}<br>
 - Proyecto: ${sgi.getFieldValue(data.titulo)}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -25,6 +30,11 @@
 - Collaborating partner: ${data.nombreEntidadColaboradora}<br>
 - Project: ${sgi.getFieldValue(data.titulo)}
 </p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -33,6 +43,11 @@
 - Ordaintzeko aurreikusitako data: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}<br>
 - Bazkide kolaboratzailea: ${data.nombreEntidadColaboradora}<br>
 - Proiektua: ${sgi.getFieldValue(data.titulo)}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 
@@ -46,7 +61,7 @@
 - Projecte: ${sgi.getFieldValue(data.titulo)}
 </p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

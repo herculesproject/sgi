@@ -6,6 +6,10 @@ Le informamos de la próxima finalización del plazo de prioridad para la extens
 - Meses restantes: ${data.monthsBeforeFechaFinPrioridad} 
 - Fecha de finalización el plazo de prioridad: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}
 - Título: ${sgi.getFieldValue(data.solicitudTitle)}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -14,6 +18,10 @@ Please be advised that the priority period for the extension of the following in
 - Remaining months: ${data.monthsBeforeFechaFinPrioridad} 
 - Date of expiry of the priority period: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}
 - Title: ${sgi.getFieldValue(data.solicitudTitle)}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -22,6 +30,10 @@ Honen bidez jakinarazten dizugu laster amaituko dela behean aipatutako asmakizun
 - Epea amaitzeko geratzen diren hilabeteak: ${data.monthsBeforeFechaFinPrioridad} 
 - Lehentasun epearen amaiera data: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}
 - Izenburua: ${sgi.getFieldValue(data.solicitudTitle)}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -30,7 +42,12 @@ Us informem de la propera finalització del termini de prioritat per a l'extensi
 
 - Mesos restants: ${data.monthsBeforeFechaFinPrioridad} 
 - Data de finalització del termini de prioritat: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}
-- Títol: ${sgi.getFieldValue(data.solicitudTitle)}</#macro>
+- Títol: ${sgi.getFieldValue(data.solicitudTitle)}
+
+Rebeu una cordial salutació,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
+</#macro>
 
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

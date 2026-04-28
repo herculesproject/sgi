@@ -39,7 +39,7 @@ Us informem que cal sotmetre la vostra investigació a avaluació davant el CEID
 - Sol·licitud de convocatòria: ${CSP_SOLICITUD_CODIGO}
 - Codi de referència: ${ETI_PETICION_EVALUACION_CODIGO}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

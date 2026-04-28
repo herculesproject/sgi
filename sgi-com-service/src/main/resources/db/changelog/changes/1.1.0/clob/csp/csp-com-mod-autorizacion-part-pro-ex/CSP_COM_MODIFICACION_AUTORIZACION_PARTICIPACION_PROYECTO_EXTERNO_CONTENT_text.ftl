@@ -8,6 +8,10 @@ Le informamos de que ha sido registrada la solicitud de autorización de partici
 - Persona solicitante: ${data.nombreSolicitante}
 
 Es necesario que valide la solicitud desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}.
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -18,6 +22,10 @@ Please be advised that your request for authorisation to participate in the belo
 - Applicant: ${data.nombreSolicitante}
 
 You need to validate the application from the application, by following this link: ${data.enlaceAplicacion}.
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -28,6 +36,10 @@ Honen bidez jakinarazten dizugu behean adierazitako kanpo proiektuan parte hartz
 - Eskatzailea: ${data.nombreSolicitante}
 
 Eskaera balioztatu behar duzu aplikaziotik, esteka honen bidez: ${data.enlaceAplicacion}.
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -42,7 +54,7 @@ Us informem que ha estat registrada la sol·licitud d'autorització de participa
 
 Cal que validi la sol·licitud des de l'aplicació, accedint mitjançant el següent enllaç: ${data.enlaceAplicacion}.
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

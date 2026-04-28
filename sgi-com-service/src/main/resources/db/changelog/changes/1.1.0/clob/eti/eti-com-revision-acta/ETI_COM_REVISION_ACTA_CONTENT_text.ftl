@@ -44,7 +44,7 @@ Us informem que teniu a la vostra disposició l'acta de la reunió celebrada el 
 
 Podeu revisar-la a través de l'aplicació ${data.enlaceAplicacion}, aportant, si cal, comentaris pendents sobre les memòries avaluades.
 
-Rebeu una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

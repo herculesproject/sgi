@@ -13,6 +13,10 @@ Le informamos de que proximamente se alcanzará la fecha prevista del pago al so
 - Fecha prevista de pago: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}
 - Socio colaborador: ${data.nombreEntidadColaboradora}
 - Proyecto: ${sgi.getFieldValue(data.titulo)}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -20,6 +24,10 @@ Please be advised that the due date for payment to the below collaborating partn
 - Expected payment date: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}
 - Collaborating partner: ${data.nombreEntidadColaboradora}
 - Project: ${sgi.getFieldValue(data.titulo)}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -27,6 +35,10 @@ Honen bidez jakinarazten dizugu laster iritsiko dela behean aipatutako bazkide k
 - Ordaintzeko aurreikusitako data: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}
 - Bazkide kolaboratzailea: ${data.nombreEntidadColaboradora}
 - Proiektua: ${sgi.getFieldValue(data.titulo)}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -39,7 +51,7 @@ Us informem que ha estat registrada la notificació de creació del projecte al 
 - Soci col·laborador: ${data.nombreEntidadColaboradora}
 - Projecte: ${sgi.getFieldValue(data.titulo)}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

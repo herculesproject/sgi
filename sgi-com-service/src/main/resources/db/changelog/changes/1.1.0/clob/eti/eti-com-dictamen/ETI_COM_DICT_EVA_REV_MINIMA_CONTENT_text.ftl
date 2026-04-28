@@ -52,7 +52,7 @@ Un cop avaluada la vostra sol·licitud, us informem que ja podeu descarregar l'i
 - Referència CEID: ${data.referenciaMemoria}
 - Comitè: ${data.comiteCodigo}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

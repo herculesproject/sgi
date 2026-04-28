@@ -76,7 +76,7 @@ Un cop signat el contracte assocat al/els projecte/s baix referenciat/s més ava
 - Núm.: ${data.numPrevision}
 </p>
 <p>És necessari que valideu la factura des de l'aplicació, accedint mitjançant l'enllaç següent: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
-<p>Rebi una salutació cordial,<br>
+<p>Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p></#macro>

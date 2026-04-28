@@ -66,7 +66,7 @@ Email unidad responsable
 <p>L'ordre del dia de la reunió serà el següent:</p>
 <p>${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA)}</p>
 <p>
-Rebi una cordial salutació,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

@@ -52,7 +52,7 @@ Us recordem que un cop ha passat un any des de la data de finalització de l'act
 - Títol: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
 - Referència CEID: ${data.referenciaMemoria}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

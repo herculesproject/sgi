@@ -76,7 +76,7 @@ Podeu consultar l'estat de la mateixa des de l'aplicació, mitjançant les segü
 
 Us recordem que heu de canviar l'estat de la sol·licitud de "esborrany" a "sol·licitada", per tal que pugui ser validada pel vostre tutor/a.
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

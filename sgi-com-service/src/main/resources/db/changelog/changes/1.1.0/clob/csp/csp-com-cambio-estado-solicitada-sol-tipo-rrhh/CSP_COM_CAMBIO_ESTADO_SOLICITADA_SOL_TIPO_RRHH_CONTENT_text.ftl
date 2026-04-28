@@ -68,7 +68,7 @@ Us informem que s'ha registrat una sol·licitud, indicant que vostè participar�
 
 És necessari que validi la sol·licitud des de l'aplicació, accedint mitjançant el següent enllaç: ${data.enlaceAplicacionMenuValidacionTutor}.
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

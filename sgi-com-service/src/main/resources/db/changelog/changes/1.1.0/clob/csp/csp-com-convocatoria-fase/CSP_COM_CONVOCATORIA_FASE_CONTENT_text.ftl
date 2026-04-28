@@ -11,6 +11,10 @@ Le informamos de que próximamente se abrirá la siguiente fase de la convocator
 En dicha fase se han indicado las siguientes observaciones:
 ${sgi.getFieldValue(CSP_CONV_FASE_OBSERVACIONES)}
 </#if>
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -25,6 +29,10 @@ Please be advised that the next stage of the below call will be launched shortly
 The following remarks were made in this phase:
 ${sgi.getFieldValue(CSP_CONV_FASE_OBSERVACIONES)}
 </#if>
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -40,6 +48,10 @@ Fase horretan ohar hauek adierazi dira:
 ${sgi.getFieldValue(CSP_CONV_FASE_OBSERVACIONES)}
 
 </#if>
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -58,7 +70,7 @@ En aquesta fase s'han indicat les següents observacions:
 ${sgi.getFieldValue(CSP_CONV_FASE_OBSERVACIONES)}
 </#if>
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

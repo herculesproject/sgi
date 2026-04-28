@@ -52,7 +52,7 @@ Us informem que la vostra sol·licitud sota referenciada ha estat validada pel/l
 - Sol·licitud: ${data.codigoInternoSolicitud}
 - Convocatòria: <#if data.tituloConvocatoria?has_content>${sgi.getFieldValue(data.tituloConvocatoria)}<#else>-</#if>
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
