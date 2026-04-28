@@ -14,6 +14,11 @@
 - Año: ${data.anio}<br>
 - Error producido: ${data.error}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -22,6 +27,11 @@
 - Year: ${data.anio}<br>
 - Error occurred: ${data.error}
 </p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -29,6 +39,11 @@
 <p>
 - Urtea: ${data.anio}<br>
 - Akatsa: ${data.error}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 
@@ -39,6 +54,11 @@
 <p>
 - Any: ${data.anio}<br>
 - Error produït: ${data.error}
+</p>
+<p>
+Rebeu una cordial salutació,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 

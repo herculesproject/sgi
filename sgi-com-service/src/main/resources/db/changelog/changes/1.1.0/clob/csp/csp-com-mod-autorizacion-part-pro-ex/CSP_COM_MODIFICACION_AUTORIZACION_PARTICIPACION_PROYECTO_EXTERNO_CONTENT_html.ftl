@@ -9,6 +9,11 @@
 - Persona solicitante: ${data.nombreSolicitante}
 </p>
 <p>Es necesario que valide la solicitud desde la aplicación, accediendo mediante el siguiente enlace: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -19,6 +24,11 @@
 - Applicant: ${data.nombreSolicitante}
 </p>
 <p>You need to validate the application from the application, by following this link: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -29,6 +39,11 @@
 - Eskatzailea: ${data.nombreSolicitante}
 </p>
 <p>Eskaera balioztatu behar duzu aplikaziotik, esteka honen bidez: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 
 <#macro renderCa>
@@ -42,7 +57,7 @@
 </p>
 <p>Cal que validi la sol·licitud des de l'aplicació, accedint mitjançant el següent enllaç: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

@@ -60,7 +60,7 @@ Us recordem que, tal com es reflecteix a l'autorització de l'òrgan autonòmic 
 - Títol: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
 - Referència CEID: ${data.referenciaMemoria}
 
-Rebeu una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

@@ -8,6 +8,11 @@
 - Fecha de finalización el plazo de prioridad: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Título: ${sgi.getFieldValue(data.solicitudTitle)}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -16,6 +21,11 @@
 - Remaining months: ${data.monthsBeforeFechaFinPrioridad}<br>
 - Date of expiry of the priority period: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Title: ${sgi.getFieldValue(data.solicitudTitle)}
+</p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -26,6 +36,11 @@
 - Lehentasun epearen amaiera data: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Izenburua: ${sgi.getFieldValue(data.solicitudTitle)}
 </p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 
 <#macro renderCa>
@@ -35,6 +50,11 @@
 - Mesos restants: ${data.monthsBeforeFechaFinPrioridad}<br>
 - Data de finalització del termini de prioritat: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Títol: ${sgi.getFieldValue(data.solicitudTitle)}
+</p>
+<p>
+Rebeu una cordial salutació,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 

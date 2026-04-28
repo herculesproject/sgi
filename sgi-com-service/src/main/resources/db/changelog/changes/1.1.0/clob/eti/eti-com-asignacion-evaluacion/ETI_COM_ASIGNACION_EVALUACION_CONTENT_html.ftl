@@ -87,7 +87,7 @@ ${data.nombreApellidosEvaluador2}
 <p>Aquesta memòria va obtenir un dictamen "pendent de correccions" en l'avaluació realitzada el ${sgi.formatDate(data.fechaEvaluacionAnterior, "SHORT")}. Podeu descarregar l'informe corresponent a l'aplicació: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 </#if>
 <p>
-Rebeu una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

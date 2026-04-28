@@ -17,6 +17,10 @@ Le informamos de que tiene el visto bueno para la emisión de la factura abajo r
 - Responsable del contrato titulado: ${sgi.getFieldValue(data.tituloProyecto)}
 - Asociado al/los proyectos con código/s: ${data.codigosSge?join(", ")}
 - Visto bueno para la emisión de la factura número: ${data.numPrevision}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -26,6 +30,10 @@ Please be advised that you have the approval to issue the invoice below.
 - Responsible for the contract titled: ${sgi.getFieldValue(data.tituloProyecto)}
 - Associated to project(s) with code(s): ${data.codigosSge?join(", ")}
 - Approval for the issuance of invoice number: ${data.numPrevision}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -35,6 +43,10 @@ Honen bidez jakinarazten dizugu behean aipatutako faktura jaulkitzeko oniritzia 
 - Kontratuaren izenburua: ${sgi.getFieldValue(data.tituloProyecto)}
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}
 - Jaulkitze oniritzia jaso duen fakturaren zenbakia: ${data.numPrevision}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>

@@ -104,7 +104,7 @@ Podeu consultar la informació disponible en els enllaços següents:
 </#list>
 </#if>
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

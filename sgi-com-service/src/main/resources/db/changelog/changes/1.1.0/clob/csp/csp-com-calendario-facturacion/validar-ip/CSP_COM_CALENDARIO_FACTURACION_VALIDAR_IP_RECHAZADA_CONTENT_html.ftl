@@ -19,6 +19,11 @@
 - Nº de previsión: ${data.numPrevision}<br>
 - Motivo: ${sgi.getFieldValue(data.motivoRechazo)}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -30,6 +35,11 @@
 - Forecast no.: ${data.numPrevision}<br>
 - Reason: ${sgi.getFieldValue(data.motivoRechazo)}
 </p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -40,6 +50,11 @@
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}<br>
 - Aurreikuspen zk.: ${data.numPrevision}<br>
 - Zergatia: ${sgi.getFieldValue(data.motivoRechazo)}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 

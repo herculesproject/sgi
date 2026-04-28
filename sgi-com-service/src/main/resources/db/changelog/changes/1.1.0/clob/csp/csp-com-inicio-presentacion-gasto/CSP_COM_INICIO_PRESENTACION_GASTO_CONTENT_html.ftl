@@ -84,7 +84,7 @@ Email unidad responsable
 </#list>
 <p>Podeu revisar la informació a través de l'aplicació: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

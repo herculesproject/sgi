@@ -68,7 +68,7 @@ Us informem que heu de realitzar les següents modificacions/aclariments a trav�
 
 ${sgi.getFieldValue(data.comentarioEstado)}
 
-Rebeu una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

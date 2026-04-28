@@ -61,7 +61,7 @@ Us informem que properament finalitzarà el termini de presentació de la docume
 
 Podeu revisar la informació a través de l'aplicació: ${data.enlaceAplicacion}
 
-Rebeu una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

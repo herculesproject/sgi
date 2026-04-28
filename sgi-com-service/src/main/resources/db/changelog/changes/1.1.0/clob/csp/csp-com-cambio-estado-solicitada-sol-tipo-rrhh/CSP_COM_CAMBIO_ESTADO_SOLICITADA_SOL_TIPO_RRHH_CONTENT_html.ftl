@@ -67,7 +67,7 @@ Email unidad responsable
 </p>
 <p>És necessari que validi la sol·licitud des de l'aplicació, accedint mitjançant el següent enllaç: ${data.enlaceAplicacionMenuValidacionTutor}.</p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

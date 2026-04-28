@@ -52,7 +52,7 @@ Us informem que s'ha modificat la vostra sol·licitud d'autorització de partici
 - Projecte: ${sgi.getFieldValue(data.tituloPext)}
 - Estat: ${sgi.getFieldValue(data.estadoSolicitudPext)}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

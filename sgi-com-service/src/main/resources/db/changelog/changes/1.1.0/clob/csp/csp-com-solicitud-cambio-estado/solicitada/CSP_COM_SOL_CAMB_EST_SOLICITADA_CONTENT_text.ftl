@@ -5,6 +5,10 @@ Le informamos de que ha sido registrada correctamente la solicitud referida a co
 - Convocatoria: ${sgi.getFieldValue(data.tituloConvocatoria)} <#if data.fechaPublicacionConvocatoria??>(${sgi.formatDate(data.fechaPublicacionConvocatoria, "SHORT")})</#if>
 - Solicitud presentada por: ${data.nombreApellidosSolicitante}
 - Fecha de presentación: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -12,6 +16,10 @@ Please be advised that the following application has been successfully registere
 - Call: ${sgi.getFieldValue(data.tituloConvocatoria)} <#if data.fechaPublicacionConvocatoria??>(${sgi.formatDate(data.fechaPublicacionConvocatoria, "SHORT")})</#if>
 - Request submitted by: ${data.nombreApellidosSolicitante}
 - Submission date: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -19,6 +27,10 @@ Honen bidez jakinarazten dizugu honako eskaera hau zuzen erregistratu dela:
 - Deialdia: ${sgi.getFieldValue(data.tituloConvocatoria)} <#if data.fechaPublicacionConvocatoria??>(${sgi.formatDate(data.fechaPublicacionConvocatoria, "SHORT")})</#if>
 - Eskaera nork aurkeztu duen: ${data.nombreApellidosSolicitante}
 - Aurkezpen data: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -29,7 +41,7 @@ Us informem que ha estat registrada correctament la sol·licitud referida a cont
 - Sol·licitud presentada per: ${data.nombreApellidosSolicitante}
 - Data de presentació: ${sgi.formatDate(data.fechaCambioEstadoSolicitud, "SHORT")}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

@@ -8,6 +8,11 @@
 - Proyecto: ${sgi.getFieldValue(data.tituloProyecto)}<br>
 - CVN de: ${data.nombreApellidosCreador}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -17,6 +22,11 @@
 - Project:  ${sgi.getFieldValue(data.tituloProyecto)}<br>
 - CVN of: ${data.nombreApellidosCreador}
 </p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -25,6 +35,11 @@
 - Erregistro data: ${sgi.formatDate(data.fechaCreacion, "SHORT")}<br>
 - Proiektua: ${sgi.getFieldValue(data.tituloProyecto)}<br>
 - Noren CVNa den: ${data.nombreApellidosCreador}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 
@@ -38,7 +53,7 @@
 - CVN de: ${data.nombreApellidosCreador}
 </p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

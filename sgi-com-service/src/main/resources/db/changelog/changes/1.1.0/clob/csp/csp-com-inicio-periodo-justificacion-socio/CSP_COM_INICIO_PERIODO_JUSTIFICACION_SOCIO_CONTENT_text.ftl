@@ -67,7 +67,7 @@ Properament donarà inici el període de presentació de justificació per al so
 - Projecte en el qual col·labora: ${sgi.getFieldValue(data.titulo)}
 - Període que cal justificar: ${data.numPeriodo}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

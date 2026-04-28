@@ -67,7 +67,7 @@ Email unidad responsable
 </p>
 <p>Us recordem que heu de canviar l'estat de la sol·licitud de "esborrany" a "sol·licitada", per tal que pugui ser validada pel vostre tutor/a.</p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

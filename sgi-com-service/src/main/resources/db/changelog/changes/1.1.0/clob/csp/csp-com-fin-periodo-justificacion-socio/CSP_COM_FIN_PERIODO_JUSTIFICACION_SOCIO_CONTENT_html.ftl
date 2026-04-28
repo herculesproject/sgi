@@ -19,6 +19,11 @@
 - Proyecto: ${sgi.getFieldValue(data.titulo)}<br>
 - Periodo: ${data.numPeriodo}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -29,6 +34,11 @@
 - Project: ${sgi.getFieldValue(data.titulo)}<br>
 - Period: ${data.numPeriodo}
 </p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -38,6 +48,11 @@
 - Erakunde kolaboratzailea: ${data.nombreEntidad}<br>
 - Proiektua: ${sgi.getFieldValue(data.titulo)}<br>
 - Aldia: ${data.numPeriodo}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 
@@ -52,7 +67,7 @@
 - Període: ${data.numPeriodo}
 </p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

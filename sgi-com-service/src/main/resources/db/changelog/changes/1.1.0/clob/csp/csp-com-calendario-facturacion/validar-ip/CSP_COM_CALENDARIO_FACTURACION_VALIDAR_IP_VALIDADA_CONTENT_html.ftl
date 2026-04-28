@@ -19,6 +19,11 @@
 - Asociado al/los proyectos con código/s: ${data.codigosSge?join(", ")}<br>
 - Visto bueno para la emisión de la factura número: ${data.numPrevision}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -29,6 +34,11 @@
 - Associated to project(s) with code(s): ${data.codigosSge?join(", ")}<br>
 - Approval for the issuance of invoice number: ${data.numPrevision}
 </p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -38,6 +48,11 @@
 - Kontratuaren izenburua: ${sgi.getFieldValue(data.tituloProyecto)}<br>
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}<br>
 - Jaulkitze oniritzia jaso duen fakturaren zenbakia: ${data.numPrevision}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 

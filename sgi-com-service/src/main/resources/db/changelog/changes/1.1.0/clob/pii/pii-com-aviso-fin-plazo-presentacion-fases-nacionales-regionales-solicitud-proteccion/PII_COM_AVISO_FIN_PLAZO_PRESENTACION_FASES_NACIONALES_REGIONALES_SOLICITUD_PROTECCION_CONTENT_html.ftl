@@ -16,6 +16,11 @@
 - Fecha fin del plazo: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Título de la Invención: ${sgi.getFieldValue(data.solicitudTitle)}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -24,6 +29,11 @@
 - Remaining months: ${data.monthsBeforeFechaFinPrioridad}<br>
 - Expiry date: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Invention title: ${sgi.getFieldValue(data.solicitudTitle)}
+</p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -34,6 +44,11 @@
 - Epearen amaiera data: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Asmakizunaren izenburua: ${sgi.getFieldValue(data.solicitudTitle)}
 </p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 
 <#macro renderCa>
@@ -43,6 +58,11 @@
 - Mesos restants: ${data.monthsBeforeFechaFinPrioridad}<br>
 - Data final del termini: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Títol de la Invenció: ${sgi.getFieldValue(data.solicitudTitle)}
+</p>
+<p>
+Rebeu una cordial salutació,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 

@@ -64,7 +64,7 @@ Email unidad responsable
 <p>Us informem que heu de realitzar les següents modificacions/ aclariments a través de l'aplicació <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>${sgi.getFieldValue(data.comentarioEstado)}</p>
 <p>
-Rebeu una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

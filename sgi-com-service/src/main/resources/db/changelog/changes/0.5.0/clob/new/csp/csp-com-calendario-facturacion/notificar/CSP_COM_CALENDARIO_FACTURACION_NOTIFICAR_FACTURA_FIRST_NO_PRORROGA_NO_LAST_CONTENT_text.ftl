@@ -10,7 +10,7 @@ Una vez firmado el contrato asociado al/los proyecto/s abajo referenciado/s más
 - Código/s de proyecto/s asociado/s: ${data.codigosSge?join(", ")}
 - N.º de previsión: ${data.numPrevision}
 
-En espera de su respuesta, reciba un cordial saludo,
+Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -25,7 +25,7 @@ Having signed the contract associated with the below project(s), you need to con
 - Associated project code(s): ${data.codigosSge?join(", ")}
 - Forecast no.: ${data.numPrevision}
 
-We look forward to hearing from you. Kind regards,
+Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -40,7 +40,7 @@ Behean aipatutako proiektuekin lotutako kontratua sinatu ostean, adierazita dago
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}
 - Aurreikuspen zk.: ${data.numPrevision}
 
-Zure erantzunaren zain, jaso agur bero bat.
+Jaso agur bero bat,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

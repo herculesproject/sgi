@@ -56,7 +56,7 @@ Un cop avaluades les revisions mínimes sol·licitades a continuació, us inform
 - Referència CEID: ${data.referenciaMemoria}
 - Comitè: ${data.comiteCodigo}
 
-Rebi una salutació cordial,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

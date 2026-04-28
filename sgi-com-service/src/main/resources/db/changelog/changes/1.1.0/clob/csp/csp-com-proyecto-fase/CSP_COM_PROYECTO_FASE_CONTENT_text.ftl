@@ -12,6 +12,10 @@ Le informamos de que próximamente dará comienzo la siguiente fase del proyecto
 En esta fase, se han indicado las siguientes observaciones:
 ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </#if>
+
+Reciba un cordial saludo,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -27,6 +31,10 @@ You are informed that the next phase of the project referred to below will soon 
 The following remarks were made in this phase:
 ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </#if>
+
+Yours sincerely,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -42,6 +50,10 @@ Jakinarazten dizugu laster hasiko dela behean aipatutako proiektuaren hurrengo f
 Fase horretan ohar hauek adierazi dira:
 ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </#if>
+
+Jaso agur bero bat,
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 
 <#macro renderCa>
@@ -61,7 +73,7 @@ En aquesta fase, s'han indicat les següents observacions:
 ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </#if>
 
-Rebi una cordial salutació,
+Rebeu una cordial salutació,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

@@ -8,6 +8,11 @@
 - Acciones a tomar: ${sgi.getFieldValue(data.accionATomar)}<br>
 - Fecha de finalización del plazo:  ${sgi.formatDate(data.fechaLimite, "SHORT")}
 </p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -16,6 +21,11 @@
 - Procedure to be requested: ${sgi.getFieldValue(data.tipoProcedimiento)}<br>
 - Actions to be taken: ${sgi.getFieldValue(data.accionATomar)}<br>
 - Date of expiry of the period: ${sgi.formatDate(data.fechaLimite, "SHORT")}
+</p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -26,6 +36,11 @@
 - Egin beharreko ekintzak: ${sgi.getFieldValue(data.accionATomar)}<br>
 - Epearen amaiera data: ${sgi.formatDate(data.fechaLimite, "SHORT")}
 </p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
 </#macro>
 
 <#macro renderCa>
@@ -35,6 +50,11 @@
 - Tràmit a sol·licitar: ${sgi.getFieldValue(data.tipoProcedimiento)}<br>
 - Accions a prendre: ${sgi.getFieldValue(data.accionATomar)}<br>
 - Data de finalització del termini: ${sgi.formatDate(data.fechaLimite, "SHORT")}
+</p>
+<p>
+Rebeu una cordial salutació,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 

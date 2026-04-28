@@ -60,7 +60,7 @@ Email unidad responsable
 - Comitè: ${data.comiteCodigo}
 </p>
 <p>
-Rebi una salutació cordial,<br>
+Rebeu una cordial salutació,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
