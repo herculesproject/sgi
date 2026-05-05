@@ -35,7 +35,7 @@ Si el secreto está definido directamente en la propiedad `value`:
   ```yaml
   sgi-com-service:
     extraEnvVariables:
-      - name: SPRING_SECURITY_OAUTH2_CLIENT_COM-SERVICE_CLIENT-SECRET
+      - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_COM-SERVICE_CLIENT-SECRET
         value: "nuevo-secret-xxxx-xxxx"
   ```
 
