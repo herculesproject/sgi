@@ -23,6 +23,7 @@ export const CSP_ROUTE_NAMES = {
   TIPO_FASE: 'tipo-fases',
   TIPO_FINALIDAD: 'tipo-finalidades',
   TIPO_FINANCIACION: 'tipo-financiaciones',
+  TIPO_GRUPO: 'tipos-grupo',
   TIPO_HITO: 'tipo-hitos',
   TIPO_ORIGEN_FUENTE_FINANCIACION: 'tipo-origen-fuente-financiacion',
   TIPOS_AMBITO_GEOGRAFICO: 'tipos-ambito-geografico',

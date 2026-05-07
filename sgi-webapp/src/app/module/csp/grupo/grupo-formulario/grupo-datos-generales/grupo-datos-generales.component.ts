@@ -8,7 +8,7 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-investigacion';
-import { IGrupoTipo, TIPO_MAP } from '@core/models/csp/grupo-tipo';
+import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { RolProyectoColectivoService } from '@core/services/csp/rol-proyecto-colectivo/rol-proyecto-colectivo.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -78,10 +78,6 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
   @ViewChild(MatSort, { static: true }) proyectosSgeSort: MatSort;
 
   private _altaBuscadorSgeEnabled: boolean = true;
-
-  get TIPO_MAP() {
-    return TIPO_MAP;
-  }
 
   get grupo(): IGrupo {
     return this.formPart.getValue();

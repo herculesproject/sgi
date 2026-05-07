@@ -16,7 +16,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaWithRelatedProyectoF
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
-import org.crue.hercules.sgi.csp.model.GrupoTipo.Tipo;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga.Tipo;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;

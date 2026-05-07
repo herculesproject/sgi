@@ -17,7 +17,6 @@ import org.crue.hercules.sgi.csp.dto.GrupoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveOutput;
-import org.crue.hercules.sgi.csp.model.GrupoTipo.Tipo;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -50,7 +49,7 @@ class GrupoIT extends BaseIT {
 
   private static final String DEFAULT_CODIGO = "COD";
   private static final String DEFAULT_NOMBRE = "nombre";
-  private static final Tipo DEFAULT_TIPO = Tipo.ALTO_RENDIMIENTO;
+  private static final Long DEFAULT_TIPO_GRUPO_ID = 4L;
   private static final boolean DEFAULT_ESPECIAL_INVESTIGACION = true;
   private static final Instant DEFAULT_FECHA_INICIO = Instant.now();
   private static final Instant DEFAULT_FECHA_FIN = Instant
@@ -88,8 +87,9 @@ class GrupoIT extends BaseIT {
         .isEqualTo(toCreate.getCodigo());
     Assertions.assertThat(I18nHelper.getValueForLanguage(created.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getNombre(), Language.ES));
-    Assertions.assertThat(created.getTipo()).as("getTipo()")
-        .isEqualTo(toCreate.getTipo());
+    Assertions.assertThat(created.getTipoGrupo()).as("getTipoGrupo()").isNotNull();
+    Assertions.assertThat(created.getTipoGrupo().getId()).as("getTipoGrupo().getId()")
+        .isEqualTo(toCreate.getTipoGrupoId());
     Assertions.assertThat(created.getEspecialInvestigacion()).as("getEspecialInvestigacion()")
         .isEqualTo(toCreate.getEspecialInvestigacion());
     Assertions.assertThat(created.getFechaInicio()).as("getFechaInicio()")
@@ -114,7 +114,7 @@ class GrupoIT extends BaseIT {
     List<I18nFieldValueDto> nombreGrupo = new ArrayList<>();
     nombreGrupo.add(new I18nFieldValueDto(Language.ES, "actualizado"));
     toUpdate.setNombre(nombreGrupo);
-    toUpdate.setTipo(Tipo.PRECOMPETITIVO);
+    toUpdate.setTipoGrupoId(3L);
 
     final ResponseEntity<GrupoOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_ID,
         HttpMethod.PUT, buildRequest(null, toUpdate, roles), GrupoOutput.class, grupoId);
@@ -128,8 +128,9 @@ class GrupoIT extends BaseIT {
         .isEqualTo(toUpdate.getCodigo());
     Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getNombre(), Language.ES));
-    Assertions.assertThat(updated.getTipo()).as("getTipo()")
-        .isEqualTo(toUpdate.getTipo());
+    Assertions.assertThat(updated.getTipoGrupo()).as("getTipoGrupo()").isNotNull();
+    Assertions.assertThat(updated.getTipoGrupo().getId()).as("getTipoGrupo().getId()")
+        .isEqualTo(toUpdate.getTipoGrupoId());
     Assertions.assertThat(updated.getEspecialInvestigacion()).as("getEspecialInvestigacion()")
         .isEqualTo(toUpdate.getEspecialInvestigacion());
     Assertions.assertThat(updated.getFechaInicio()).as("getFechaInicio()")
@@ -519,7 +520,7 @@ class GrupoIT extends BaseIT {
         .fechaInicio(DEFAULT_FECHA_INICIO)
         .fechaFin(DEFAULT_FECHA_FIN)
         .nombre(nombreGrupo)
-        .tipo(DEFAULT_TIPO)
+        .tipoGrupoId(DEFAULT_TIPO_GRUPO_ID)
         .build();
   }
 

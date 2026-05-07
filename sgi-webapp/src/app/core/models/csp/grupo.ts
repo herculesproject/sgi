@@ -1,8 +1,8 @@
 import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DateTime } from 'luxon';
 import { IProyectoSge } from '../sge/proyecto-sge';
-import { Tipo } from './grupo-tipo';
 import { ISolicitud } from './solicitud';
+import { ITipoGrupo } from './tipo-grupo';
 
 export interface IGrupo {
   id: number;
@@ -12,7 +12,7 @@ export interface IGrupo {
   proyectoSge: IProyectoSge;
   solicitud: ISolicitud;
   codigo: string;
-  tipo: Tipo;
+  tipoGrupo: ITipoGrupo;
   especialInvestigacion: boolean;
   departamentoOrigenRef: string;
   resumen: I18nFieldValue[];

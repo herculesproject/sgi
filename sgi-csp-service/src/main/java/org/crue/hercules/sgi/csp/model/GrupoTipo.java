@@ -4,8 +4,6 @@ import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,17 +35,6 @@ public class GrupoTipo extends BaseEntity {
   protected static final String TABLE_NAME = "grupo_tipo";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
-  public enum Tipo {
-    /** Emergente */
-    EMERGENTE,
-    /** Consolidado */
-    CONSOLIDADO,
-    /** Precompetitivo */
-    PRECOMPETITIVO,
-    /** Grupo de alto rendimiento */
-    ALTO_RENDIMIENTO
-  }
-
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
@@ -55,11 +42,11 @@ public class GrupoTipo extends BaseEntity {
   @SequenceGenerator(name = GrupoTipo.SEQUENCE_NAME, sequenceName = GrupoTipo.SEQUENCE_NAME, allocationSize = 1)
   private Long id;
 
-  /** Tipo */
-  @Column(name = "tipo", nullable = false)
-  @Enumerated(EnumType.STRING)
+  /** Tipo de grupo */
+  @ManyToOne
+  @JoinColumn(name = "tipo_grupo_id", nullable = false, foreignKey = @ForeignKey(name = "FK_GRUPOTIPO_TIPOGRUPO"))
   @NotNull
-  private Tipo tipo;
+  private TipoGrupo tipoGrupo;
 
   /** Fecha inicio */
   @Column(name = "fecha_inicio", nullable = false)

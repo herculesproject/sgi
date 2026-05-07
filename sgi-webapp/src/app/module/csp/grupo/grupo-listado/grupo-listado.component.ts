@@ -7,7 +7,6 @@ import { IBaseExportModalData } from '@core/component/base-export/base-export-mo
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
-import { TIPO_MAP } from '@core/models/csp/grupo-tipo';
 import { ILineaInvestigacion } from '@core/models/csp/linea-investigacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -71,10 +70,6 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
 
   private limiteRegistrosExportacionExcel: string;
   private _isEjecucionEconomicaGruposEnabled: boolean;
-
-  get TIPO_MAP() {
-    return TIPO_MAP;
-  }
 
   get isEjecucionEconomicaGruposEnabled(): boolean {
     return this._isEjecucionEconomicaGruposEnabled ?? false;

@@ -1,0 +1,83 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <property name="schemaPrefix" value="" />
+  <property name="defaultLang" value="es" />
+
+  <changeSet author="master" id="1.1.0-migrar-grupo_tipo-tipo-a-tipo-grupo">
+    <insert tableName="tipo_grupo">
+      <column name="id" valueSequenceNext="tipo_grupo_seq"/>
+      <column name="activo" valueBoolean="true"/>
+      <column name="codigo" value="ALTO_RENDIMIENTO"/>
+      <column name="created_by" value="master"/>
+      <column name="creation_date" valueDate="current_timestamp()"/>
+      <column name="last_modified_by" value="master"/>
+      <column name="last_modified_date" valueDate="current_timestamp()"/>
+    </insert>
+    <insert tableName="tipo_grupo">
+      <column name="id" valueSequenceNext="tipo_grupo_seq"/>
+      <column name="activo" valueBoolean="true"/>
+      <column name="codigo" value="CONSOLIDADO"/>
+      <column name="created_by" value="master"/>
+      <column name="creation_date" valueDate="current_timestamp()"/>
+      <column name="last_modified_by" value="master"/>
+      <column name="last_modified_date" valueDate="current_timestamp()"/>
+    </insert>
+    <insert tableName="tipo_grupo">
+      <column name="id" valueSequenceNext="tipo_grupo_seq"/>
+      <column name="activo" valueBoolean="true"/>
+      <column name="codigo" value="EMERGENTE"/>
+      <column name="created_by" value="master"/>
+      <column name="creation_date" valueDate="current_timestamp()"/>
+      <column name="last_modified_by" value="master"/>
+      <column name="last_modified_date" valueDate="current_timestamp()"/>
+    </insert>
+    <insert tableName="tipo_grupo">
+      <column name="id" valueSequenceNext="tipo_grupo_seq"/>
+      <column name="activo" valueBoolean="true"/>
+      <column name="codigo" value="PRECOMPETITIVO"/>
+      <column name="created_by" value="master"/>
+      <column name="creation_date" valueDate="current_timestamp()"/>
+      <column name="last_modified_by" value="master"/>
+      <column name="last_modified_date" valueDate="current_timestamp()"/>
+    </insert>
+    
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'es', 'Grupo de alto rendimiento'   FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'ALTO_RENDIMIENTO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'ca', 'Grup d''alt rendiment'       FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'ALTO_RENDIMIENTO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'en', 'High-performance group'      FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'ALTO_RENDIMIENTO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'eu', 'Errendimendu handiko taldea' FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'ALTO_RENDIMIENTO'</sql>
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'es', 'Consolidado'  FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'CONSOLIDADO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'ca', 'Consolidat'   FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'CONSOLIDADO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'en', 'Consolidated' FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'CONSOLIDADO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'eu', 'Finkatua'     FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'CONSOLIDADO'</sql>
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'es', 'Emergente'  FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'EMERGENTE'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'ca', 'Emergent'   FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'EMERGENTE'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'en', 'Emerging'   FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'EMERGENTE'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'eu', 'Emergentea' FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'EMERGENTE'</sql>
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'es', 'Precompetitivo'  FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'PRECOMPETITIVO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'ca', 'Precompetitiu'   FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'PRECOMPETITIVO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'en', 'Pre-competitive' FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'PRECOMPETITIVO'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_grupo_nombre (tipo_grupo_id, lang, value_) SELECT id, 'eu', 'Lehiaz aurrekoa' FROM ${schemaPrefix}tipo_grupo WHERE codigo = 'PRECOMPETITIVO'</sql>
+
+    <update tableName="grupo_tipo">
+      <column name="tipo_grupo_id" valueComputed="(SELECT id FROM ${schemaPrefix}tipo_grupo WHERE codigo = tipo)"/>
+      <where>tipo IS NOT NULL</where>
+    </update>
+
+    <!-- Añadir NotNull y eliminar columnas migradas -->
+    <addNotNullConstraint tableName="grupo_tipo" columnName="tipo_grupo_id" columnDataType="BIGINT" />
+
+    <dropColumn tableName="grupo_tipo" columnName="tipo" />
+    <dropColumn tableName="tipo_grupo" columnName="codigo" />
+  </changeSet>
+
+</databaseChangeLog>

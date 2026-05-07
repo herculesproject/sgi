@@ -1,0 +1,93 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <property name="schemaPrefix" value="" />
+  <property name="defaultLang" value="es" />
+
+  <changeSet author="master" id="1.1.0-1">
+    <createSequence incrementBy="1" sequenceName="tipo_grupo_seq" startValue="1" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-2">
+    <createTable tableName="tipo_grupo">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_grupoPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+      <!-- Columna temporal para mapear los valores del enum en la migración -->
+      <column name="codigo" type="VARCHAR(50)" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-3">
+    <createTable tableName="tipo_grupo_nombre">
+      <column name="tipo_grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_grupo_nombre" columnNames="tipo_grupo_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_grupo_id"
+      baseTableName="tipo_grupo_nombre"
+      constraintName="FK_TIPOGRUPONOMRE_TIPOGRUPO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_grupo" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-4">
+    <createTable tableName="tipo_grupo_descripcion">
+      <column name="tipo_grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_grupo_descripcion" columnNames="tipo_grupo_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_grupo_id"
+      baseTableName="tipo_grupo_descripcion"
+      constraintName="FK_TIPOGRUPODESCRIPCION_TIPOGRUPO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_grupo" validate="true" />
+  </changeSet>
+
+  <!-- Añadir FK tipo_grupo_id a grupo_tipo (nullable para poder migrar primero) -->
+  <changeSet author="master" id="1.1.0-5">
+    <addColumn tableName="grupo_tipo">
+      <column name="tipo_grupo_id" type="BIGINT">
+        <constraints nullable="true" />
+      </column>
+    </addColumn>
+
+    <addForeignKeyConstraint baseColumnNames="tipo_grupo_id"
+      baseTableName="grupo_tipo"
+      constraintName="FK_GRUPOTIPO_TIPOGRUPO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_grupo" validate="true" />
+  </changeSet>
+
+</databaseChangeLog>

@@ -6,8 +6,10 @@ import org.crue.hercules.sgi.csp.dto.GrupoDto;
 import org.crue.hercules.sgi.csp.dto.GrupoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoResumenOutput;
+import org.crue.hercules.sgi.csp.dto.TipoGrupoOutput;
 import org.crue.hercules.sgi.csp.model.Grupo;
-import org.crue.hercules.sgi.csp.model.GrupoTipo.Tipo;
+import org.crue.hercules.sgi.csp.model.GrupoTipo;
+import org.crue.hercules.sgi.csp.model.TipoGrupo;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -22,15 +24,39 @@ public class GrupoConverter {
 
   @PostConstruct
   public void mapperConfig() {
-    modelMapper.typeMap(GrupoInput.class, Grupo.class)
+    modelMapper.emptyTypeMap(GrupoInput.class, Grupo.class)
         .addMappings(mapper -> mapper.<Boolean>map(GrupoInput::getEspecialInvestigacion,
             (dest, value) -> dest.getEspecialInvestigacion().setEspecialInvestigacion(value)))
-        .addMappings(mapper -> mapper.<Tipo>map(GrupoInput::getTipo, (dest, value) -> dest.getTipo().setTipo(value)));
+        .addMappings(mapper -> mapper.skip(Grupo::setTipo))
+        .implicitMappings()
+        .setPostConverter(ctx -> {
+          GrupoInput src = ctx.getSource();
+          Grupo dest = ctx.getDestination();
 
-    modelMapper.typeMap(Grupo.class, GrupoOutput.class)
+          if (src.getTipoGrupoId() != null) {
+            dest.setTipo(GrupoTipo.builder()
+                .tipoGrupo(TipoGrupo.builder().id(src.getTipoGrupoId()).build())
+                .build());
+          }
+
+          return dest;
+        });
+
+    modelMapper.emptyTypeMap(Grupo.class, GrupoOutput.class)
         .addMappings(mapper -> mapper.<Boolean>map(src -> src.getEspecialInvestigacion().getEspecialInvestigacion(),
             GrupoOutput::setEspecialInvestigacion))
-        .addMappings(mapper -> mapper.<Tipo>map(src -> src.getTipo().getTipo(), GrupoOutput::setTipo));
+        .addMappings(mapper -> mapper.skip(GrupoOutput::setTipoGrupo))
+        .implicitMappings()
+        .setPostConverter(ctx -> {
+          Grupo src = ctx.getSource();
+          GrupoOutput dest = ctx.getDestination();
+
+          if (src.getTipo() != null && src.getTipo().getTipoGrupo() != null) {
+            dest.setTipoGrupo(modelMapper.map(src.getTipo().getTipoGrupo(), TipoGrupoOutput.class));
+          }
+
+          return dest;
+        });
   }
 
   public Grupo convert(GrupoInput input) {

@@ -1,5 +1,5 @@
-import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
-import { Tipo } from "@core/models/csp/grupo-tipo";
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
+import { ITipoGrupoResponse } from '../tipo-grupo/tipo-grupo-response';
 
 export interface IGrupoResponse {
   id: number;
@@ -9,7 +9,7 @@ export interface IGrupoResponse {
   proyectoSgeRef: string;
   solicitudId: number;
   codigo: string;
-  tipo: Tipo;
+  tipoGrupo: ITipoGrupoResponse;
   especialInvestigacion: boolean;
   resumen: I18nFieldValueResponse[];
   activo: boolean;

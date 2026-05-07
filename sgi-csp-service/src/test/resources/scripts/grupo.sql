@@ -17,13 +17,26 @@ VALUES
 (1, true, 1, '2021-01-01 22:59:59.000', '2022-10-07 23:00:00.000'),
 (2, false,2, '2021-11-01 22:59:59.000', '2022-02-14 23:00:00.000');
 
-INSERT INTO test.grupo_tipo (id, fecha_fin, fecha_inicio, grupo_id, tipo) 
+INSERT INTO test.tipo_grupo (id, activo, created_by, creation_date, last_modified_by, last_modified_date)
 VALUES
-(1, '2022-01-01 22:59:59.000', '2021-10-07 23:00:00.000', 1, 'EMERGENTE'),
-(2, '2022-11-01 22:59:59.000', '2021-02-14 23:00:00.000', 2, 'ALTO_RENDIMIENTO');
+(1, true, 'test', '2021-01-01 22:59:59.000', 'test', '2021-01-01 22:59:59.000'),
+(2, true, 'test', '2021-01-01 22:59:59.000', 'test', '2021-01-01 22:59:59.000'),
+(3, true, 'test', '2021-01-01 22:59:59.000', 'test', '2021-01-01 22:59:59.000'),
+(4, true, 'test', '2021-01-01 22:59:59.000', 'test', '2021-01-01 22:59:59.000');
+
+INSERT INTO test.tipo_grupo_nombre (tipo_grupo_id, lang, value_) VALUES (1, 'es', 'Emergente');
+INSERT INTO test.tipo_grupo_nombre (tipo_grupo_id, lang, value_) VALUES (2, 'es', 'Consolidado');
+INSERT INTO test.tipo_grupo_nombre (tipo_grupo_id, lang, value_) VALUES (3, 'es', 'Precompetitivo');
+INSERT INTO test.tipo_grupo_nombre (tipo_grupo_id, lang, value_) VALUES (4, 'es', 'Grupo de alto rendimiento');
+
+INSERT INTO test.grupo_tipo (id, fecha_fin, fecha_inicio, grupo_id, tipo_grupo_id)
+VALUES
+(1, '2022-01-01 22:59:59.000', '2021-10-07 23:00:00.000', 1, 1),
+(2, '2022-11-01 22:59:59.000', '2021-02-14 23:00:00.000', 2, 4);
 
 update test.grupo set grupo_especial_investigacion_id = 1, grupo_tipo_id = 1  where id=1;
 update test.grupo set grupo_especial_investigacion_id = 2, grupo_tipo_id = 2  where id=2;
 
 ALTER SEQUENCE test.grupo_especial_investigacion_seq RESTART WITH 3;
 ALTER SEQUENCE test.grupo_tipo_seq RESTART WITH 3;
+ALTER SEQUENCE test.tipo_grupo_seq RESTART WITH 5;

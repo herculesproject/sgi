@@ -1,8 +1,8 @@
-import { Tipo } from "@core/models/csp/grupo-tipo";
+import { ITipoGrupoResponse } from '../tipo-grupo/tipo-grupo-response';
 
 export interface IGrupoTipoResponse {
   id: number;
-  tipo: Tipo;
+  tipoGrupo: ITipoGrupoResponse;
   grupoId: number;
   fechaInicio: string;
   fechaFin: string;
