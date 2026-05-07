@@ -26,11 +26,12 @@ import { ACTION_MODAL_MODE } from 'src/app/esb/shared/formly-forms/core/base-for
 import { GrupoActionService } from '../../grupo.action.service';
 import { GrupoDatosGeneralesFragment } from './grupo-datos-generales.fragment';
 
-const GRUPO_NOMBRE_KEY = marker('csp.grupo.nombre');
-const GRUPO_INVESTIGADOR_PRINCIPAL_KEY = marker('csp.grupo.investigador-principal');
+const GRUPO_ACRONIMO_KEY = marker('csp.grupo.acronimo');
 const GRUPO_CODIGO_KEY = marker('csp.grupo.codigo');
-const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
 const GRUPO_ESPECIAL_INVESTIGACION_KEY = marker('csp.grupo.especial-investigacion');
+const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
+const GRUPO_INVESTIGADOR_PRINCIPAL_KEY = marker('csp.grupo.investigador-principal');
+const GRUPO_NOMBRE_KEY = marker('csp.grupo.nombre');
 const GRUPO_RESUMEN_KEY = marker('csp.grupo.resumen');
 const IDENTIFICADOR_SGE_KEY = marker('csp.proyecto-proyecto-sge.identificador-sge');
 const PROYECTO_SGE_KEY = marker('sge.proyecto');
@@ -53,14 +54,15 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
 
   private subscriptions = [] as Subscription[];
 
-  msgParamTituloEntity = {};
-  msgParamNombreEntity = {};
-  msgParamInvestigadorPrincipalEntity = {};
+  msgParamAcronimoEntity = {};
   msgParamCodigoEntity = {};
-  msgParamFechaInicioEntity = {};
   msgParamEspecialInvestigacionEntity = {};
-  msgParamResumenEntity = {};
+  msgParamFechaInicioEntity = {};
   msgParamIdentificadorSgeEntity = {};
+  msgParamInvestigadorPrincipalEntity = {};
+  msgParamNombreEntity = {};
+  msgParamResumenEntity = {};
+  msgParamTituloEntity = {};
 
   private textoCrearSuccess: string;
   private textoUpdateSuccess: string;
@@ -111,6 +113,11 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
   }
 
   protected setupI18N(): void {
+
+    this.translate.get(
+      GRUPO_ACRONIMO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAcronimoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       GRUPO_NOMBRE_KEY,

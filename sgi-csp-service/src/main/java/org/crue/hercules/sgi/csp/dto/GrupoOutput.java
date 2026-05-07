@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 public class GrupoOutput implements Serializable {
 
   private Long id;
+  private String acronimo;
   private Collection<GrupoNombre> nombre;
   private Instant fechaInicio;
   private Instant fechaFin;

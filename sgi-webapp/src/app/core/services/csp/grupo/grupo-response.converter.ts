@@ -15,6 +15,7 @@ class GrupoResponseConverter
     }
     return {
       id: value.id,
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
@@ -35,6 +36,7 @@ class GrupoResponseConverter
     }
     return {
       id: value.id,
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),

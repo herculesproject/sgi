@@ -15,6 +15,7 @@ class GrupoRequestConverter
     }
     return {
       id: undefined,
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
@@ -34,6 +35,7 @@ class GrupoRequestConverter
       return value as unknown as IGrupoRequest;
     }
     return {
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),

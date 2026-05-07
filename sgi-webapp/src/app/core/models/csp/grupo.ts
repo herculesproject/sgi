@@ -6,6 +6,7 @@ import { ITipoGrupo } from './tipo-grupo';
 
 export interface IGrupo {
   id: number;
+  acronimo: string;
   nombre: I18nFieldValue[];
   fechaInicio: DateTime;
   fechaFin: DateTime;

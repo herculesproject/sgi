@@ -53,9 +53,10 @@ public class Grupo extends BaseActivableEntity {
   protected static final String TABLE_NAME = "grupo";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
-  public static final int PROYECTO_SGE_REF_LENGTH = 50;
-  public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
+  public static final int ACRONIMO_LENGTH = 50;
   public static final int CODIGO_LENGTH = 50;
+  public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
+  public static final int PROYECTO_SGE_REF_LENGTH = 50;
 
   /** Id */
   @Id
@@ -63,6 +64,11 @@ public class Grupo extends BaseActivableEntity {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Grupo.SEQUENCE_NAME)
   @SequenceGenerator(name = Grupo.SEQUENCE_NAME, sequenceName = Grupo.SEQUENCE_NAME, allocationSize = 1)
   private Long id;
+
+  /** Acrónimo */
+  @Column(name = "acronimo", length = Grupo.ACRONIMO_LENGTH, nullable = true)
+  @Size(max = Grupo.ACRONIMO_LENGTH)
+  private String acronimo;
 
   /** Nombre */
   @ElementCollection(fetch = FetchType.EAGER)

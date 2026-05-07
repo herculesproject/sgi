@@ -3,6 +3,7 @@ import { ITipoGrupoResponse } from '../tipo-grupo/tipo-grupo-response';
 
 export interface IGrupoResponse {
   id: number;
+  acronimo: string;
   nombre: I18nFieldValueResponse[];
   fechaInicio: string;
   fechaFin: string;

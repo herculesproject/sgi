@@ -131,6 +131,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     this.grupo = grupo;
     let formValues: { [key: string]: any } = {
       nombre: grupo.nombre,
+      acronimo: grupo.acronimo,
       codigo: grupo.codigo,
       fechaInicio: grupo.fechaInicio,
       fechaFin: grupo.fechaFin,
@@ -156,6 +157,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   getValue(): IGrupo {
     const form = this.getFormGroup().controls;
     this.grupo.nombre = form.nombre.value;
+    this.grupo.acronimo = form.acronimo.value;
     this.grupo.codigo = form.codigo.value;
     this.grupo.proyectoSge = this.proyectosSge$?.value[0]?.value;
     this.grupo.fechaInicio = form.fechaInicio.value;
@@ -209,6 +211,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   private buildFormGroupCreate(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
+      acronimo: new FormControl(null, Validators.maxLength(50)),
       investigadorPrincipal: new FormControl(null, Validators.required),
       departamento: new FormControl({ value: null, disabled: true }),
       codigo: new FormControl(null, {
@@ -235,6 +238,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   private buildFormGroupEdit(): FormGroup {
     const form = new FormGroup({
       nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
+      acronimo: new FormControl(null, Validators.maxLength(50)),
       codigo: new FormControl(null, {
         validators: Validators.required,
         asyncValidators: GrupoValidator.duplicatedCodigo(this.grupoService, this.grupo.id),

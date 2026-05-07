@@ -24,6 +24,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GrupoInput implements Serializable {
 
+  @Size(max = Grupo.ACRONIMO_LENGTH)
+  private String acronimo;
+
   @NotEmpty
   private List<I18nFieldValueDto> nombre;
 
