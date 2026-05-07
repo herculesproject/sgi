@@ -31,8 +31,9 @@ class GrupoResumenIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-      // @formatter:off 
-      "classpath:scripts/grupo.sql",
+      // @formatter:off
+      "classpath:scripts/tipo-grupo.sql",
+      "classpath:scripts/grupo.sql"
       // @formatter:on  
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")

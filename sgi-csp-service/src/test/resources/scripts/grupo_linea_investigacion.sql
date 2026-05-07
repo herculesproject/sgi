@@ -2,6 +2,7 @@
 /*scripts = {
     // @formatter:off    
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/linea_investigacion.sql"
     // @formatter:on  

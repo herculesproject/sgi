@@ -47,6 +47,7 @@ class GrupoEquipoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -69,6 +70,7 @@ class GrupoEquipoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -98,6 +100,7 @@ class GrupoEquipoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -128,6 +131,7 @@ class GrupoEquipoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -150,6 +154,7 @@ class GrupoEquipoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -174,6 +179,7 @@ class GrupoEquipoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  

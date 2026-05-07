@@ -44,7 +44,7 @@ public class TipoGrupoService {
   /**
    * Guarda la entidad {@link TipoGrupo}.
    * 
-   * @param grupo la entidad {@link TipoGrupo} a guardar.
+   * @param tipoGrupo la entidad {@link TipoGrupo} a guardar.
    * @return la entidad {@link TipoGrupo} persistida.
    */
   @Transactional
@@ -64,7 +64,7 @@ public class TipoGrupoService {
   /**
    * Actualiza los datos del {@link TipoGrupo}.
    *
-   * @param grupoActualizar {@link TipoGrupo} con los datos actualizados.
+   * @param tipoGrupo {@link TipoGrupo} con los datos actualizados.
    * @return {@link TipoGrupo} actualizado.
    */
   @Transactional
@@ -147,7 +147,8 @@ public class TipoGrupoService {
    * Obtiene todas las entidades {@link TipoGrupo} activas paginadas y
    * filtradas.
    *
-   * @param query información del filtro.
+   * @param query  información del filtro.
+   * @param paging información de paginación.
    * @return el listado de entidades {@link TipoGrupo} paginadas y filtradas.
    */
   public Page<TipoGrupo> findAll(String query, Pageable paging) {

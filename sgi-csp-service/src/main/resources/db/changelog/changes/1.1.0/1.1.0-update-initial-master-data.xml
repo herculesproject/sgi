@@ -10,7 +10,7 @@
   <property name="schemaPrefix" value="" />
   <property name="defaultLang" value="es" />
 
-  <changeSet author="master" id="1.1.0-migrar-grupo_tipo-tipo-a-tipo-grupo">
+  <changeSet context="!test" author="master" id="1.1.0-migrar-grupo_tipo-tipo-a-tipo-grupo">
     <insert tableName="tipo_grupo">
       <column name="id" valueSequenceNext="tipo_grupo_seq"/>
       <column name="activo" valueBoolean="true"/>
@@ -72,10 +72,11 @@
       <column name="tipo_grupo_id" valueComputed="(SELECT id FROM ${schemaPrefix}tipo_grupo WHERE codigo = tipo)"/>
       <where>tipo IS NOT NULL</where>
     </update>
-
-    <!-- Añadir NotNull y eliminar columnas migradas -->
+  </changeSet>
+  
+  <!-- Añadir NotNull y eliminar columnas migradas -->
+  <changeSet author="master" id="1.1.0-migrar-grupo_tipo-cleanup-columns"> 
     <addNotNullConstraint tableName="grupo_tipo" columnName="tipo_grupo_id" columnDataType="BIGINT" />
-
     <dropColumn tableName="grupo_tipo" columnName="tipo" />
     <dropColumn tableName="tipo_grupo" columnName="codigo" />
   </changeSet>

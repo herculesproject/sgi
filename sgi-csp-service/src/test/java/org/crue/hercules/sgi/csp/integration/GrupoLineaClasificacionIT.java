@@ -37,6 +37,7 @@ class GrupoLineaClasificacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/linea_investigacion.sql",
       "classpath:scripts/grupo_linea_investigacion.sql"
@@ -64,6 +65,7 @@ class GrupoLineaClasificacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/linea_investigacion.sql",
       "classpath:scripts/grupo_linea_investigacion.sql",
@@ -90,6 +92,7 @@ class GrupoLineaClasificacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/linea_investigacion.sql",
       "classpath:scripts/grupo_linea_investigacion.sql",

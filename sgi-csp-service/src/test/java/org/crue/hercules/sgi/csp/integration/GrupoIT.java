@@ -66,10 +66,12 @@ class GrupoIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-    // @formatter:off
-      "classpath:scripts/rol_proyecto.sql"
+  // @formatter:off
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql"
     // @formatter:on
   })
+
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void create_ReturnsGrupo() throws Exception {
@@ -101,6 +103,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       // @formatter:on  
   })
@@ -143,6 +146,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       // @formatter:on  
   })
@@ -165,6 +169,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       // @formatter:on  
   })
@@ -197,6 +202,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       // @formatter:on  
   })
@@ -234,6 +240,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       // @formatter:on  
   })
@@ -272,6 +279,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -294,6 +302,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -316,6 +325,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -346,6 +356,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -371,6 +382,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_equipo.sql", 
       // @formatter:on  
@@ -400,6 +412,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_palabra_clave.sql", 
       // @formatter:on  
@@ -458,6 +471,7 @@ class GrupoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
       // @formatter:off 
       "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
       "classpath:scripts/grupo.sql",
       "classpath:scripts/grupo_palabra_clave.sql", 
       // @formatter:on
