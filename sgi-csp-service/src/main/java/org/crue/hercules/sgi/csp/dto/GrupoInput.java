@@ -35,6 +35,9 @@ public class GrupoInput implements Serializable {
 
   private Instant fechaFin;
 
+  @Size(max = Grupo.EMAIL_LENGTH)
+  private String email;
+
   @Size(max = Grupo.PROYECTO_SGE_REF_LENGTH)
   private String proyectoSgeRef;
 

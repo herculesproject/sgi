@@ -7,6 +7,7 @@ export interface IGrupoResponse {
   nombre: I18nFieldValueResponse[];
   fechaInicio: string;
   fechaFin: string;
+  email: string;
   proyectoSgeRef: string;
   solicitudId: number;
   codigo: string;

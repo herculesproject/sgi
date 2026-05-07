@@ -187,6 +187,21 @@
         </mat-form-field>
       </div>
 
+      <div class="separation-button">
+        <h3>{{'csp.grupo.datos-contacto.title' | translate}}</h3>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Email -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.email' | translate}}</mat-label>
+          <input matInput type="email" placeholder="{{'csp.grupo.email' | translate}}" formControlName="email">
+          <mat-error *ngIf="formGroup.controls.email.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamEmailEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
     </form>
 
     <ng-container *ngIf="formPart.showProyectoSge">
@@ -379,6 +394,21 @@
           <mat-label>{{'csp.grupo.palabras-clave' | translate}}</mat-label>
           <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
             placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
+        </mat-form-field>
+      </div>
+
+      <div class="separation-button">
+        <h3>{{'csp.grupo.datos-contacto.title' | translate}}</h3>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Email -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.email' | translate}}</mat-label>
+          <input matInput type="email" placeholder="{{'csp.grupo.email' | translate}}" formControlName="email">
+          <mat-error *ngIf="formGroup.controls.email.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamEmailEntity}}
+          </mat-error>
         </mat-form-field>
       </div>
 

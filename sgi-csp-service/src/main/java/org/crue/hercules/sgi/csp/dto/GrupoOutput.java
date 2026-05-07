@@ -25,6 +25,7 @@ public class GrupoOutput implements Serializable {
   private Collection<GrupoNombre> nombre;
   private Instant fechaInicio;
   private Instant fechaFin;
+  private String email;
   private String proyectoSgeRef;
   private Long solicitudId;
   private String codigo;

@@ -152,6 +152,7 @@ public class GrupoService {
       data.setAcronimo(grupoActualizar.getAcronimo());
       data.setNombre(grupoActualizar.getNombre());
       data.setCodigo(grupoActualizar.getCodigo());
+      data.setEmail(grupoActualizar.getEmail());
       data.setProyectoSgeRef(grupoActualizar.getProyectoSgeRef());
       data.setFechaInicio(grupoActualizar.getFechaInicio());
       data.setFechaFin(grupoActualizar.getFechaFin());

@@ -135,6 +135,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       codigo: grupo.codigo,
       fechaInicio: grupo.fechaInicio,
       fechaFin: grupo.fechaFin,
+      email: grupo.email,
       tipoGrupo: grupo.tipoGrupo ?? null,
       especialInvestigacion: grupo.especialInvestigacion ?? false,
       resumen: grupo.resumen ?? []
@@ -162,6 +163,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     this.grupo.proyectoSge = this.proyectosSge$?.value[0]?.value;
     this.grupo.fechaInicio = form.fechaInicio.value;
     this.grupo.fechaFin = form.fechaFin.value;
+    this.grupo.email = form.email.value;
     this.grupo.tipoGrupo = form.tipoGrupo.value;
     this.grupo.especialInvestigacion = form.especialInvestigacion.value;
     this.grupo.resumen = form.resumen.value;
@@ -220,6 +222,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       }),
       fechaInicio: new FormControl(null, Validators.required),
       fechaFin: new FormControl(null),
+      email: new FormControl(null, Validators.maxLength(200)),
       palabrasClave: new FormControl(null),
       tipoGrupo: new FormControl(null),
       especialInvestigacion: new FormControl(false, Validators.required),
@@ -231,6 +234,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     });
 
     this.loadDepartamentoAndCodigoOnInvestigadorPrincipalChange(formGroup);
+    this.loadEmailOnInvestigadorPrincipalChange(formGroup);
 
     return formGroup;
   }
@@ -246,6 +250,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       proyectoSge: new FormControl(null),
       fechaInicio: new FormControl(null, Validators.required),
       fechaFin: new FormControl(null),
+      email: new FormControl(null, Validators.maxLength(200)),
       palabrasClave: new FormControl(null),
       tipoGrupo: new FormControl(null),
       especialInvestigacion: new FormControl({ value: null, disabled: true }),
@@ -304,6 +309,19 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       ).subscribe(departamento => {
         formGroup.controls.departamento.setValue(departamento?.nombre, { emitEvent: false });
         this.grupo.departamentoOrigenRef = departamento?.id;
+      })
+    );
+  }
+
+  private loadEmailOnInvestigadorPrincipalChange(formGroup: FormGroup): void {
+    this.subscriptions.push(
+      formGroup.controls.investigadorPrincipal.valueChanges.pipe(
+        filter(value => !!value?.id)
+      ).subscribe((value: IPersona) => {
+        if (!formGroup.controls.email.value) {
+          const emailPrincipal = value.emails?.find(email => email.principal)?.email ?? null;
+          formGroup.controls.email.setValue(emailPrincipal, { emitEvent: false });
+        }
       })
     );
   }

@@ -5,6 +5,7 @@ export interface IGrupoRequest {
   nombre: I18nFieldValueRequest[];
   fechaInicio: string;
   fechaFin: string;
+  email: string;
   proyectoSgeRef: string;
   solicitudId: number;
   codigo: string;

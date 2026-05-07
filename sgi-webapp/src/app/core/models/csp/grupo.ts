@@ -10,6 +10,7 @@ export interface IGrupo {
   nombre: I18nFieldValue[];
   fechaInicio: DateTime;
   fechaFin: DateTime;
+  email: string;
   proyectoSge: IProyectoSge;
   solicitud: ISolicitud;
   codigo: string;

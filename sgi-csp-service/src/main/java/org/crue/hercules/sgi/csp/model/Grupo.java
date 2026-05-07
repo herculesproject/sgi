@@ -56,6 +56,7 @@ public class Grupo extends BaseActivableEntity {
   public static final int ACRONIMO_LENGTH = 50;
   public static final int CODIGO_LENGTH = 50;
   public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
+  public static final int EMAIL_LENGTH = 200;
   public static final int PROYECTO_SGE_REF_LENGTH = 50;
 
   /** Id */
@@ -86,6 +87,11 @@ public class Grupo extends BaseActivableEntity {
   /** Fecha fin */
   @Column(name = "fecha_fin", nullable = true)
   private Instant fechaFin;
+
+  /** Email */
+  @Column(name = "email", length = Grupo.EMAIL_LENGTH, nullable = true)
+  @Size(max = Grupo.EMAIL_LENGTH)
+  private String email;
 
   /** Proyecto SGE */
   @Column(name = "proyecto_sge_ref", length = Grupo.PROYECTO_SGE_REF_LENGTH, nullable = true)
