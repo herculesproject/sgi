@@ -28,6 +28,7 @@ import { GrupoDatosGeneralesFragment } from './grupo-datos-generales.fragment';
 
 const GRUPO_ACRONIMO_KEY = marker('csp.grupo.acronimo');
 const GRUPO_CODIGO_KEY = marker('csp.grupo.codigo');
+const GRUPO_DIRECCION_KEY = marker('csp.grupo.direccion');
 const GRUPO_EMAIL_KEY = marker('csp.grupo.email');
 const GRUPO_ESPECIAL_INVESTIGACION_KEY = marker('csp.grupo.especial-investigacion');
 const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
@@ -57,6 +58,7 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
 
   msgParamAcronimoEntity = {};
   msgParamCodigoEntity = {};
+  msgParamDireccionEntity = {};
   msgParamEmailEntity = {};
   msgParamEspecialInvestigacionEntity = {};
   msgParamFechaInicioEntity = {};
@@ -125,6 +127,11 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
       GRUPO_EMAIL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEmailEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      GRUPO_DIRECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDireccionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       GRUPO_NOMBRE_KEY,

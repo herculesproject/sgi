@@ -93,6 +93,7 @@
   <changeSet author="master" id="1.1.0-6">
     <addColumn tableName="grupo">
       <column name="acronimo" type="VARCHAR(50)" />
+      <column name="direccion" type="VARCHAR(200)" />
       <column name="email" type="VARCHAR(200)" />
     </addColumn>
   </changeSet>

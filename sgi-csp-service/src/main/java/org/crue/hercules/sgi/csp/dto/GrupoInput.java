@@ -35,6 +35,9 @@ public class GrupoInput implements Serializable {
 
   private Instant fechaFin;
 
+  @Size(max = Grupo.DIRECCION_LENGTH)
+  private String direccion;
+
   @Size(max = Grupo.EMAIL_LENGTH)
   private String email;
 

@@ -135,6 +135,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       codigo: grupo.codigo,
       fechaInicio: grupo.fechaInicio,
       fechaFin: grupo.fechaFin,
+      direccion: grupo.direccion,
       email: grupo.email,
       tipoGrupo: grupo.tipoGrupo ?? null,
       especialInvestigacion: grupo.especialInvestigacion ?? false,
@@ -164,6 +165,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     this.grupo.fechaInicio = form.fechaInicio.value;
     this.grupo.fechaFin = form.fechaFin.value;
     this.grupo.email = form.email.value;
+    this.grupo.direccion = form.direccion.value;
     this.grupo.tipoGrupo = form.tipoGrupo.value;
     this.grupo.especialInvestigacion = form.especialInvestigacion.value;
     this.grupo.resumen = form.resumen.value;
@@ -222,6 +224,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       }),
       fechaInicio: new FormControl(null, Validators.required),
       fechaFin: new FormControl(null),
+      direccion: new FormControl(null, Validators.maxLength(200)),
       email: new FormControl(null, Validators.maxLength(200)),
       palabrasClave: new FormControl(null),
       tipoGrupo: new FormControl(null),
@@ -250,6 +253,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       proyectoSge: new FormControl(null),
       fechaInicio: new FormControl(null, Validators.required),
       fechaFin: new FormControl(null),
+      direccion: new FormControl(null, Validators.maxLength(200)),
       email: new FormControl(null, Validators.maxLength(200)),
       palabrasClave: new FormControl(null),
       tipoGrupo: new FormControl(null),

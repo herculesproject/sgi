@@ -187,7 +187,7 @@
         </mat-form-field>
       </div>
 
-      <div class="separation-button">
+      <div class="separation-title">
         <h3>{{'csp.grupo.datos-contacto.title' | translate}}</h3>
       </div>
 
@@ -198,6 +198,17 @@
           <input matInput type="email" placeholder="{{'csp.grupo.email' | translate}}" formControlName="email">
           <mat-error *ngIf="formGroup.controls.email.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamEmailEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Dirección -->
+        <mat-form-field>
+          <mat-label>{{'csp.grupo.direccion' | translate}}</mat-label>
+          <input matInput type="text" placeholder="{{'csp.grupo.direccion' | translate}}" formControlName="direccion">
+          <mat-error *ngIf="formGroup.controls.direccion.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamDireccionEntity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -408,6 +419,17 @@
           <input matInput type="email" placeholder="{{'csp.grupo.email' | translate}}" formControlName="email">
           <mat-error *ngIf="formGroup.controls.email.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamEmailEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Dirección -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.direccion' | translate}}</mat-label>
+          <input matInput type="text" placeholder="{{'csp.grupo.direccion' | translate}}" formControlName="direccion">
+          <mat-error *ngIf="formGroup.controls.direccion.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamDireccionEntity}}
           </mat-error>
         </mat-form-field>
       </div>
