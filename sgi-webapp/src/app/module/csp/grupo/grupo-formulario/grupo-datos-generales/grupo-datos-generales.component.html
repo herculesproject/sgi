@@ -43,7 +43,7 @@
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Fecha inicio -->
-        <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
           <mat-label>{{'label.fecha-inicio' | translate}}</mat-label>
           <input matInput formControlName="fechaInicio" [matDatepicker]="pickerInicio" required />
           <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
@@ -71,35 +71,19 @@
         </mat-form-field>
       </div>
 
-      <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
-        <!-- Resumen-->
-        <span class="ckeditor-label">{{'csp.grupo.resumen' | translate}}</span>
-        <sgi-i18n-ckeditor #resumen formControlName="resumen"
-          [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''">
-        </sgi-i18n-ckeditor>
-        <span *ngIf="!formGroup.controls.resumen.errors" class="ckeditor-hint">{{resumen.editingValue?.length}} /
-          4000</span>
-        <span class="ckeditor-error"
-          *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.maxlength">
-          {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
-        </span>
-      </div>
-
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <!-- Palabras Clave -->
-        <mat-form-field>
-          <mat-label>{{'csp.grupo.palabras-clave' | translate}}</mat-label>
-          <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
-            placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
-        </mat-form-field>
-      </div>
-
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Tipo -->
         <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
           <mat-label>{{'csp.grupo.tipo' | translate}}</mat-label>
           <sgi-select-tipo-grupo formControlName="tipoGrupo">
           </sgi-select-tipo-grupo>
+        </mat-form-field>
+
+        <!-- Grupo especial investigacion -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.especial-investigacion' | translate}}</mat-label>
+          <sgi-select-boolean formControlName="especialInvestigacion" required>
+          </sgi-select-boolean>
         </mat-form-field>
       </div>
 
@@ -136,15 +120,6 @@
         </div>
       </div>
 
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <!-- Grupo especial investigacion -->
-        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
-          <mat-label>{{'csp.grupo.especial-investigacion' | translate}}</mat-label>
-          <sgi-select-boolean formControlName="especialInvestigacion" required>
-          </sgi-select-boolean>
-        </mat-form-field>
-      </div>
-
       <div
         *ngIf="especialesInvestigacionGrupo && especialesInvestigacionGrupo.data && especialesInvestigacionGrupo.data.length > 1"
         class="separation-button">
@@ -176,6 +151,29 @@
             <tr mat-row *matRowDef="let row; columns: columnsEspecialInvestigacion;"></tr>
           </table>
         </div>
+      </div>
+
+      <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
+        <!-- Resumen-->
+        <span class="ckeditor-label">{{'csp.grupo.resumen' | translate}}</span>
+        <sgi-i18n-ckeditor #resumen formControlName="resumen"
+          [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''">
+        </sgi-i18n-ckeditor>
+        <span *ngIf="!formGroup.controls.resumen.errors" class="ckeditor-hint">{{resumen.editingValue?.length}} /
+          4000</span>
+        <span class="ckeditor-error"
+          *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
+        </span>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Palabras Clave -->
+        <mat-form-field>
+          <mat-label>{{'csp.grupo.palabras-clave' | translate}}</mat-label>
+          <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
+            placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
+        </mat-form-field>
       </div>
 
     </form>
@@ -320,6 +318,25 @@
         </mat-form-field>
       </div>
 
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Tipo -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.tipo' | translate}}</mat-label>
+          <sgi-select-tipo-grupo formControlName="tipoGrupo">
+          </sgi-select-tipo-grupo>
+        </mat-form-field>
+
+        <!-- Grupo especial investigacion -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.especial-investigacion' | translate}}</mat-label>
+          <sgi-select-boolean formControlName="especialInvestigacion" required>
+          </sgi-select-boolean>
+          <mat-error *ngIf="formGroup.controls.especialInvestigacion.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamEspecialInvestigacionEntity }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
       <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
         <!-- Resumen-->
         <span class="ckeditor-label">{{'csp.grupo.resumen' | translate}}</span>
@@ -341,26 +358,6 @@
           <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
             placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
         </mat-form-field>
-      </div>
-
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <!-- Tipo -->
-        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
-          <mat-label>{{'csp.grupo.tipo' | translate}}</mat-label>
-          <sgi-select-tipo-grupo formControlName="tipoGrupo">
-          </sgi-select-tipo-grupo>
-        </mat-form-field>
-
-        <!-- Grupo especial investigacion -->
-        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
-          <mat-label>{{'csp.grupo.especial-investigacion' | translate}}</mat-label>
-          <sgi-select-boolean formControlName="especialInvestigacion" required>
-          </sgi-select-boolean>
-          <mat-error *ngIf="formGroup.controls.especialInvestigacion.errors?.required">
-            {{ 'error.required.entity' | translate:msgParamEspecialInvestigacionEntity }}
-          </mat-error>
-        </mat-form-field>
-
       </div>
 
     </form>
