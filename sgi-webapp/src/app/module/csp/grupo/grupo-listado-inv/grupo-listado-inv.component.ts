@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IGrupo } from '@core/models/csp/grupo';
-import { TIPO_MAP } from '@core/models/csp/grupo-tipo';
 import { IPersona } from '@core/models/sgp/persona';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
@@ -31,10 +30,6 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
   grupos$: Observable<IGrupoListado[]>;
 
   private _isEjecucionEconomicaGruposEnabled: boolean;
-
-  get TIPO_MAP() {
-    return TIPO_MAP;
-  }
 
   get isEjecucionEconomicaGruposEnabled(): boolean {
     return this._isEjecucionEconomicaGruposEnabled ?? false;

@@ -1,5 +1,4 @@
-import { I18nFieldValueRequest } from "@core/i18n/i18n-field-request";
-import { Tipo } from "@core/models/csp/grupo-tipo";
+import { I18nFieldValueRequest } from '@core/i18n/i18n-field-request';
 
 export interface IGrupoRequest {
   nombre: I18nFieldValueRequest[];
@@ -8,7 +7,7 @@ export interface IGrupoRequest {
   proyectoSgeRef: string;
   solicitudId: number;
   codigo: string;
-  tipo: Tipo;
+  tipoGrupoId: number;
   especialInvestigacion: boolean;
   resumen: I18nFieldValueRequest[];
   departamentoOrigenRef: string;

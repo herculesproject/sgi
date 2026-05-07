@@ -4,6 +4,7 @@ import { ISolicitud } from '@core/models/csp/solicitud';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { TIPO_GRUPO_RESPONSE_CONVERTER } from '../tipo-grupo/tipo-grupo-response.converter';
 import { IGrupoResponse } from './grupo-response';
 
 class GrupoResponseConverter
@@ -20,7 +21,7 @@ class GrupoResponseConverter
       proyectoSge: value.proyectoSgeRef ? { id: value.proyectoSgeRef } as IProyectoSge : null,
       solicitud: value.solicitudId ? { id: value.solicitudId } as ISolicitud : null,
       codigo: value.codigo,
-      tipo: value.tipo,
+      tipoGrupo: value.tipoGrupo ? TIPO_GRUPO_RESPONSE_CONVERTER.toTarget(value.tipoGrupo) : null,
       especialInvestigacion: value.especialInvestigacion,
       departamentoOrigenRef: null,
       resumen: value.resumen ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.resumen) : [],
@@ -40,7 +41,7 @@ class GrupoResponseConverter
       proyectoSgeRef: value.proyectoSge?.id,
       solicitudId: value.solicitud?.id,
       codigo: value.codigo,
-      tipo: value.tipo,
+      tipoGrupo: value.tipoGrupo ? TIPO_GRUPO_RESPONSE_CONVERTER.fromTarget(value.tipoGrupo) : null,
       especialInvestigacion: value.especialInvestigacion,
       resumen: value.resumen ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.resumen) : [],
       activo: value.activo

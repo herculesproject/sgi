@@ -64,7 +64,8 @@
     'CSP-PRG-B', 'CSP-PRG-R', 'CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R', 'CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 
     'CSP-FNT-B', 'CSP-FNT-R', 'CSP-TFNA-V', 'CSP-TFNA-C', 'CSP-TFNA-E', 'CSP-TFNA-B', 'CSP-TFNA-R', 'CSP-TGTO-V', 'CSP-TGTO-C', 'CSP-TGTO-E',
     'CSP-TGTO-B', 'CSP-TGTO-R', 'CSP-TOFF-V', 'CSP-TOFF-C', 'CSP-TOFF-E', 'CSP-TOFF-B', 'CSP-TOFF-R', 'CSP-TRCO-V', 'CSP-TRCO-C', 'CSP-TRCO-E', 
-    'CSP-TRCO-B', 'CSP-TRCO-R']" title="{{'menu.csp.configuraciones' | translate}}" icon="settings">
+    'CSP-TRCO-B', 'CSP-TRCO-R', 'CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-TGIN-R']"
+    title="{{'menu.csp.configuraciones' | translate}}" icon="settings">
 
 
     <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-ROLE-V', 'CSP-ROLE-C', 'CSP-ROLE-E','CSP-ROLE-B','CSP-ROLE-R']"
@@ -146,6 +147,10 @@
     <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['CSP-LIN-C', 'CSP-LIN-E', 'CSP-LIN-B', 'CSP-LIN-R']"
       [route]="[CSP_ROUTE_NAMES.LINEA_INVESTIGACION]"
       title="{{'menu.csp.configuraciones.lineas-investigacion' | translate}}">
+    </sgi-menu-subitem>
+    <sgi-menu-subitem
+      *sgiHasAnyAuthorityForAnyUO="['CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-TGIN-R']"
+      [route]="[CSP_ROUTE_NAMES.TIPO_GRUPO]" title="{{'menu.csp.configuraciones.tipos-grupo' | translate}}">
     </sgi-menu-subitem>
   </sgi-menu-group>
 </sgi-root>

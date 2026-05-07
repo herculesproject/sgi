@@ -7,7 +7,6 @@ import { DialogCommonComponent } from '@core/component/dialog-common.component';
 import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
-import { TIPO_MAP } from '@core/models/csp/grupo-tipo';
 import { IPersona } from '@core/models/sgp/persona';
 import { Module } from '@core/module';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
@@ -58,10 +57,6 @@ export class SearchGrupoModalComponent extends DialogCommonComponent implements 
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
-  }
-
-  get TIPO_MAP() {
-    return TIPO_MAP;
   }
 
   get isModuleINV(): boolean {

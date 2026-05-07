@@ -3,7 +3,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DEDICACION_MAP } from '@core/models/csp/grupo-equipo';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
-import { TIPO_MAP } from '@core/models/csp/grupo-tipo';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
@@ -168,7 +167,7 @@ export class MiembrosGruposInvestigacionListadoExportService extends AbstractTab
         this.languageService.getFieldValue(miembroGrupoInvestigacion.grupo.nombre),
         miembroGrupoInvestigacion.grupo.codigo ?? '',
         miembroGrupoInvestigacion.grupo.proyectoSge?.id ?? '',
-        miembroGrupoInvestigacion.grupo.tipo ? this.translate.instant(TIPO_MAP.get(miembroGrupoInvestigacion.grupo.tipo)) : '',
+        this.languageService.getFieldValue(miembroGrupoInvestigacion.grupo.tipoGrupo?.nombre),
         this.getI18nBooleanYesNo(miembroGrupoInvestigacion.grupo.especialInvestigacion),
         LuxonUtils.toBackend(miembroGrupoInvestigacion.grupo.fechaInicio),
         LuxonUtils.toBackend(miembroGrupoInvestigacion.grupo.fechaFin)

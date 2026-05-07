@@ -158,7 +158,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as TipoProrroga is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo de Grupo Tipo de Proyecto Prórroga no puede ser nulo");
+        .hasMessage("Tipo de Prórroga de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -365,7 +365,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: throw exception as TipoProrroga is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo de Grupo Tipo de Proyecto Prórroga no puede ser nulo");
+        .hasMessage("Tipo de Prórroga de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test

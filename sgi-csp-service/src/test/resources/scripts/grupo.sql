@@ -1,7 +1,8 @@
 -- DEPENDENCIAS
 /*scripts = {
     // @formatter:off    
-      "classpath:scripts/rol_proyecto.sql"
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql"
     // @formatter:on  
   }*/
 INSERT INTO test.grupo (id, activo, codigo, grupo_especial_investigacion_id, fecha_inicio, fecha_fin, proyecto_sge_ref, departamento_origen_ref, solicitud_id, grupo_tipo_id, last_modified_date)
@@ -17,10 +18,10 @@ VALUES
 (1, true, 1, '2021-01-01 22:59:59.000', '2022-10-07 23:00:00.000'),
 (2, false,2, '2021-11-01 22:59:59.000', '2022-02-14 23:00:00.000');
 
-INSERT INTO test.grupo_tipo (id, fecha_fin, fecha_inicio, grupo_id, tipo) 
+INSERT INTO test.grupo_tipo (id, fecha_fin, fecha_inicio, grupo_id, tipo_grupo_id)
 VALUES
-(1, '2022-01-01 22:59:59.000', '2021-10-07 23:00:00.000', 1, 'EMERGENTE'),
-(2, '2022-11-01 22:59:59.000', '2021-02-14 23:00:00.000', 2, 'ALTO_RENDIMIENTO');
+(1, '2022-01-01 22:59:59.000', '2021-10-07 23:00:00.000', 1, 1),
+(2, '2022-11-01 22:59:59.000', '2021-02-14 23:00:00.000', 2, 4);
 
 update test.grupo set grupo_especial_investigacion_id = 1, grupo_tipo_id = 1  where id=1;
 update test.grupo set grupo_especial_investigacion_id = 2, grupo_tipo_id = 2  where id=2;

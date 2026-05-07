@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.Grupo;
-import org.crue.hercules.sgi.csp.model.GrupoTipo.Tipo;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
@@ -41,7 +40,7 @@ public class GrupoInput implements Serializable {
   @Size(max = Grupo.CODIGO_LENGTH)
   private String codigo;
 
-  private Tipo tipo;
+  private Long tipoGrupoId;
 
   private Boolean especialInvestigacion;
 

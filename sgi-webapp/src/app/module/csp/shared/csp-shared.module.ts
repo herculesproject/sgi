@@ -45,6 +45,7 @@ import { SelectTipoEnlaceComponent } from './select-tipo-enlace/select-tipo-enla
 import { SelectTipoFaseComponent } from './select-tipo-fase/select-tipo-fase.component';
 import { SelectTipoFinalidadComponent } from './select-tipo-finalidad/select-tipo-finalidad.component';
 import { SelectTipoFinanciacionComponent } from './select-tipo-financiacion/select-tipo-financiacion.component';
+import { SelectTipoGrupoComponent } from './select-tipo-grupo/select-tipo-grupo.component';
 import { SelectTipoHitoComponent } from './select-tipo-hito/select-tipo-hito.component';
 import { SelectTipoOrigenFuenteFinanciacionComponent } from './select-tipo-origen-fuente-financiacion/select-tipo-origen-fuente-financiacion.component';
 import { SelectTipoRegimenConcurrenciaComponent } from './select-tipo-regimen-concurrencia/select-tipo-regimen-concurrencia.component';
@@ -90,6 +91,7 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectTipoFaseComponent,
     SelectTipoFinalidadComponent,
     SelectTipoFinanciacionComponent,
+    SelectTipoGrupoComponent,
     SelectTipoHitoComponent,
     SelectTipoOrigenFuenteFinanciacionComponent,
     SelectTipoRegimenConcurrenciaComponent,
@@ -142,6 +144,7 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectTipoFaseComponent,
     SelectTipoFinalidadComponent,
     SelectTipoFinanciacionComponent,
+    SelectTipoGrupoComponent,
     SelectTipoHitoComponent,
     SelectTipoOrigenFuenteFinanciacionComponent,
     SelectTipoRegimenConcurrenciaComponent,

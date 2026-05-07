@@ -173,7 +173,7 @@
           {{'csp.grupo.tipo-grupo' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{TIPO_MAP.get(element.tipo) | translate}}
+          <sgi-i18n-table-field [field]="element.tipoGrupo?.nombre"></sgi-i18n-table-field>
         </td>
       </ng-container>
 

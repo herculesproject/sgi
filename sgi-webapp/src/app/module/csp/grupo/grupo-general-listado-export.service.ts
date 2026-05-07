@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { TIPO_MAP } from '@core/models/csp/grupo-tipo';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LanguageService } from '@core/services/language.service';
@@ -126,7 +125,7 @@ export class GrupoGeneralListadoExportService extends AbstractTableExportFillSer
     elementsRow.push(grupo.proyectoSge ? grupo.proyectoSge.id : '');
     elementsRow.push(LuxonUtils.toBackend(grupo.fechaInicio));
     elementsRow.push(LuxonUtils.toBackend(grupo.fechaFin));
-    elementsRow.push(grupo.tipo ? this.translate.instant(TIPO_MAP.get(grupo.tipo)) : '');
+    elementsRow.push(this.languageService.getFieldValue(grupo.tipoGrupo?.nombre));
     elementsRow.push(
       this.notIsNullAndNotUndefined(grupo.especialInvestigacion) ? this.getI18nBooleanYesNo(grupo.especialInvestigacion) : '');
     return elementsRow;

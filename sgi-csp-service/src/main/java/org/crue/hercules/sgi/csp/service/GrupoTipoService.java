@@ -72,7 +72,7 @@ public class GrupoTipoService {
     return repository.findById(grupoTipoActualizar.getId()).map(data -> {
       data.setFechaInicio(grupoTipoActualizar.getFechaInicio());
       data.setFechaFin(grupoTipoActualizar.getFechaFin());
-      data.setTipo(grupoTipoActualizar.getTipo());
+      data.setTipoGrupo(grupoTipoActualizar.getTipoGrupo());
 
       GrupoTipo returnValue = repository.save(data);
 

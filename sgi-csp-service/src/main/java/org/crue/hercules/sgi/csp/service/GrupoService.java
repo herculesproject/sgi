@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoTipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.TipoGrupo;
 import org.crue.hercules.sgi.csp.repository.GrupoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoPersonaAutorizadaRepository;
 import org.crue.hercules.sgi.csp.repository.GrupoRepository;
@@ -67,6 +68,7 @@ public class GrupoService {
 
   private final GrupoRepository repository;
   private final GrupoTipoService grupoTipoService;
+  private final TipoGrupoService tipoGrupoService;
   private final GrupoEspecialInvestigacionService grupoEspecialInvestigacionService;
   private final Validator validator;
   private final SgiConfigProperties sgiConfigProperties;
@@ -91,9 +93,12 @@ public class GrupoService {
     AssertHelper.idIsNull(grupo.getId(), Grupo.class);
 
     GrupoTipo grupoTipo = null;
-    if (grupo.getTipo() != null) {
+    if (grupo.getTipo() != null
+        && grupo.getTipo().getTipoGrupo() != null
+        && grupo.getTipo().getTipoGrupo().getId() != null) {
+      TipoGrupo tipoGrupo = tipoGrupoService.findById(grupo.getTipo().getTipoGrupo().getId());
       grupoTipo = GrupoTipo.builder()
-          .tipo(grupo.getTipo().getTipo())
+          .tipoGrupo(tipoGrupo)
           .fechaInicio(grupo.getFechaInicio())
           .build();
     }
@@ -166,19 +171,26 @@ public class GrupoService {
     ZonedDateTime fechaFin = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
         .with(LocalTime.MAX).withNano(0).minusDays(1);
 
+    Long currentTipoGrupoId = data.getTipo() != null && data.getTipo().getTipoGrupo() != null
+        ? data.getTipo().getTipoGrupo().getId()
+        : null;
+    Long newTipoGrupoId = grupoActualizar.getTipo() != null && grupoActualizar.getTipo().getTipoGrupo() != null
+        ? grupoActualizar.getTipo().getTipoGrupo().getId()
+        : null;
+
     // Ambos informados y distintos (actualiza la fecha de fin del anterior y crea
     // el nuevo)
-    if (data.getTipo() != null && grupoActualizar.getTipo() != null
-        && !data.getTipo().getTipo().equals(grupoActualizar.getTipo().getTipo())) {
+    if (currentTipoGrupoId != null && newTipoGrupoId != null && !currentTipoGrupoId.equals(newTipoGrupoId)) {
+      TipoGrupo tipoGrupo = tipoGrupoService.findById(newTipoGrupoId);
 
       // El tipo anterior se actualiza tambien en el dia actual
       if (this.isSameDay(fechaInicio,
           data.getTipo().getFechaInicio().atZone(this.sgiConfigProperties.getTimeZone().toZoneId()))) {
         GrupoTipo grupoTipo = grupoTipoService.findById(data.getTipo().getId());
-        grupoTipo.setTipo(grupoActualizar.getTipo().getTipo());
+        grupoTipo.setTipoGrupo(tipoGrupo);
         data.setTipo(grupoTipoService.update(grupoTipo));
       } else {
-        GrupoTipo grupoTipo = GrupoTipo.builder().tipo(grupoActualizar.getTipo().getTipo())
+        GrupoTipo grupoTipo = GrupoTipo.builder().tipoGrupo(tipoGrupo)
             .fechaInicio(fechaInicio.toInstant())
             .grupoId(data.getId()).build();
         data.getTipo().setFechaFin(fechaFin.toInstant());
@@ -188,15 +200,16 @@ public class GrupoService {
       }
     }
     // Tipo añadido y sin tipo previo (crea el nuevo tipo)
-    else if (data.getTipo() == null && grupoActualizar.getTipo() != null) {
-      GrupoTipo grupoTipo = GrupoTipo.builder().tipo(grupoActualizar.getTipo().getTipo())
+    else if (currentTipoGrupoId == null && newTipoGrupoId != null) {
+      TipoGrupo tipoGrupo = tipoGrupoService.findById(newTipoGrupoId);
+      GrupoTipo grupoTipo = GrupoTipo.builder().tipoGrupo(tipoGrupo)
           .fechaInicio(fechaInicio.toInstant())
           .grupoId(data.getId()).build();
 
       data.setTipo(grupoTipoService.create(grupoTipo));
     }
     // Con tipo previo y eliminado (actualiza la fecha de fin del anterior)
-    else if (data.getTipo() != null && grupoActualizar.getTipo() == null) {
+    else if (currentTipoGrupoId != null && newTipoGrupoId == null) {
       data.getTipo().setFechaFin(fechaFin.toInstant());
       grupoTipoService.update(data.getTipo());
       data.setTipo(null);

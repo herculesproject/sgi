@@ -2,6 +2,7 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { TIPO_GRUPO_RESPONSE_CONVERTER } from '../tipo-grupo/tipo-grupo-response.converter';
 import { IGrupoTipoResponse } from './grupo-tipo-response';
 
 class GrupoTipoResponseConverter
@@ -15,7 +16,7 @@ class GrupoTipoResponseConverter
       grupo: value.grupoId ? { id: value.grupoId } as IGrupo : undefined,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
-      tipo: value.tipo
+      tipoGrupo: value.tipoGrupo ? TIPO_GRUPO_RESPONSE_CONVERTER.toTarget(value.tipoGrupo) : undefined
     };
   }
 
@@ -28,7 +29,7 @@ class GrupoTipoResponseConverter
       grupoId: value.grupo.id,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
-      tipo: value.tipo
+      tipoGrupo: value.tipoGrupo ? TIPO_GRUPO_RESPONSE_CONVERTER.fromTarget(value.tipoGrupo) : undefined
     };
   }
 }
