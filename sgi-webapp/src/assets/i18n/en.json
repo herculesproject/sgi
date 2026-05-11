@@ -824,6 +824,7 @@
   "csp.grupo-linea-clasificacion.niveles": "Levels",
   "csp.grupo-linea-equipo-instrumental": "Instrumental equipment{count,plural,=0{} one{} other{s}}",
   "csp.grupo-linea-investigacion": "Research Line{count,plural,=0{} one{} other{s}}",
+  "csp.grupo-linea-investigacion.descripcion": "Description",
   "csp.grupo-linea-investigacion.fecha-fin": "End date",
   "csp.grupo-linea-investigacion.fecha-inicio": "Start date",
   "csp.grupo-linea-investigacion.linea": "Line",

@@ -5,11 +5,20 @@
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <mat-form-field fxFlex="50%">
         <mat-label>{{'csp.grupo-linea-investigacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-        <sgi-select-linea-investigacion formControlName="lineaInvestigacion" required>
+        <sgi-select-linea-investigacion formControlName="lineaInvestigacion" required
+          (selectionChange)="onLineaInvestigacionChange($event)">
         </sgi-select-linea-investigacion>
         <mat-error *ngIf="formGroup.controls.lineaInvestigacion.errors?.required">
           {{'error.required.entity' | translate:msgParamLineaInvestigacionEntity}}
         </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Descripción línea investigación -->
+    <div fxFlex fxLayout="row" fxLayoutGap="10px" *ngIf="formGroup.controls.lineaInvestigacion.value">
+      <mat-form-field fxFlex="50%">
+        <mat-label>{{'csp.grupo-linea-investigacion.descripcion' | translate}}</mat-label>
+        <sgi-i18n-textarea formControlName="descripcion"></sgi-i18n-textarea>
       </mat-form-field>
     </div>
 
