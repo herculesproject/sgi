@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
-import org.crue.hercules.sgi.csp.model.LineaInvestigacionNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +19,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LineaInvestigacionInput implements Serializable {
+
   @NotEmpty
-  private List<LineaInvestigacionNombre> nombre;
+  private List<I18nFieldValueDto> nombre;
+
+  private List<I18nFieldValueDto> descripcion;
 
 }

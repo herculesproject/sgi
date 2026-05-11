@@ -56,4 +56,11 @@ public class LineaInvestigacion extends BaseActivableEntity {
   @Builder.Default
   private Set<LineaInvestigacionNombre> nombre = new HashSet<>();
 
+  /** Descripcion. */
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "linea_investigacion_descripcion", joinColumns = @JoinColumn(name = "linea_investigacion_id"))
+  @Valid
+  @Builder.Default
+  private Set<LineaInvestigacionDescripcion> descripcion = new HashSet<>();
+
 }

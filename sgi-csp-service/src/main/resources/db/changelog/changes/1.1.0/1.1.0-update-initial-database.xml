@@ -106,4 +106,27 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-8">
+    <createTable tableName="linea_investigacion_descripcion">
+      <column name="linea_investigacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(3000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="linea_investigacion_descripcion"
+      columnNames="linea_investigacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="linea_investigacion_id"
+      baseTableName="linea_investigacion_descripcion"
+      constraintName="FK_LINEAINVESTIGACIONDESCRIPCION_LINEAINVESTIGACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="linea_investigacion" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

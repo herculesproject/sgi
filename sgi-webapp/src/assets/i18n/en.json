@@ -881,6 +881,7 @@
   "csp.identificador-justificacion.identificador-justificacion.identificador-vinculado-requerimiento": "There is a requirement associated with this justification ID that you are going to modify/delete. Do you wish to continue?",
   "csp.identificador-justificacion.title": "Justification identifier",
   "csp.linea-investigacion": "Research Line{count,plural,=0{} one{} other{s}}",
+  "csp.linea-investigacion.descripcion": "Description",
   "csp.linea-investigacion.nombre": "Name",
   "csp.miembro-equipo-proyecto.fecha-fin": "End Date",
   "csp.miembro-equipo-proyecto.fecha-inicio": "Start Date",

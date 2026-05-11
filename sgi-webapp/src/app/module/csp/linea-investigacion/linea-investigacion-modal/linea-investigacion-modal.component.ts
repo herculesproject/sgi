@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 const LINEA_INVESTIGACION_KEY = marker('csp.linea-investigacion');
+const LINEA_INVESTIGACION_DESCRIPCION_KEY = marker('csp.linea-investigacion.descripcion');
 const LINEA_INVESTIGACION_NOMBRE_KEY = marker('csp.linea-investigacion.nombre');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
@@ -23,6 +24,7 @@ export class LineaInvestigacionModalComponent extends DialogActionComponent<ILin
 
   private readonly lineaInvestigacion: ILineaInvestigacion;
   title: string;
+  msgParamDescripcionEntity = {};
   msgParamNombreEntity = {};
 
   constructor(
@@ -42,6 +44,7 @@ export class LineaInvestigacionModalComponent extends DialogActionComponent<ILin
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.matDialogRef.updateSize('30vw');
     this.setupI18N();
   }
 
@@ -50,6 +53,15 @@ export class LineaInvestigacionModalComponent extends DialogActionComponent<ILin
       LINEA_INVESTIGACION_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      LINEA_INVESTIGACION_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = {
+      entity: value,
+      ...MSG_PARAMS.GENDER.FEMALE,
+      ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
 
     if (this.isEdit()) {
       this.translate.get(
@@ -73,12 +85,14 @@ export class LineaInvestigacionModalComponent extends DialogActionComponent<ILin
 
   protected getValue(): ILineaInvestigacion {
     this.lineaInvestigacion.nombre = this.formGroup.controls.nombre.value;
+    this.lineaInvestigacion.descripcion = this.formGroup.controls.descripcion.value;
     return this.lineaInvestigacion;
   }
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl(this.lineaInvestigacion?.nombre ?? [], [I18nValidators.maxLength(1000), I18nValidators.required]),
+      descripcion: new FormControl(this.lineaInvestigacion?.descripcion ?? [], [I18nValidators.maxLength(3000)]),
     });
     return formGroup;
   }
