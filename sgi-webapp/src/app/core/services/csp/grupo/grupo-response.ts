@@ -5,10 +5,11 @@ export interface IGrupoResponse {
   id: number;
   acronimo: string;
   nombre: I18nFieldValueResponse[];
-  fechaInicio: string;
-  fechaFin: string;
   direccion: string;
   email: string;
+  fechaInicio: string;
+  fechaFin: string;
+  imagenRef: string;
   proyectoSgeRef: string;
   solicitudId: number;
   codigo: string;

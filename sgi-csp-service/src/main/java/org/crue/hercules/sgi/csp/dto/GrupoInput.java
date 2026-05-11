@@ -30,16 +30,19 @@ public class GrupoInput implements Serializable {
   @NotEmpty
   private List<I18nFieldValueDto> nombre;
 
-  @NotNull
-  private Instant fechaInicio;
-
-  private Instant fechaFin;
-
   @Size(max = Grupo.DIRECCION_LENGTH)
   private String direccion;
 
   @Size(max = Grupo.EMAIL_LENGTH)
   private String email;
+
+  @NotNull
+  private Instant fechaInicio;
+
+  private Instant fechaFin;
+
+  @Size(max = Grupo.IMAGEN_REF_LENGTH)
+  private String imagenRef;
 
   @Size(max = Grupo.PROYECTO_SGE_REF_LENGTH)
   private String proyectoSgeRef;

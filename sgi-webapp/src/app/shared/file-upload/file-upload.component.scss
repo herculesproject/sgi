@@ -22,6 +22,7 @@
     &.disabled {
       cursor: default;
       color: $dark-disabled-text;
+      opacity: 0.5;
     }
   }
 }

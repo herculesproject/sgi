@@ -179,10 +179,24 @@
       </div>
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Imagen -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.imagen' | translate}}</mat-label>
+          <sgi-file-upload #imagenUploader formControlName="imagen" accept="image/*" autoUpload="false"
+            showDownload="true" [maxFileSizeMb]="formPart.grupoImagenTamanioMaximo$ | async"
+            [tooltipUpload]="tooltipUploadImagen$ | async" [tooltipDownload]="'csp.grupo.imagen.descargar' | translate">
+          </sgi-file-upload>
+          <mat-error *ngIf="formGroup.controls.imagen.errors?.maxFileSize">
+            {{'error.file.maxsize' | translate:{ maxSize: (formPart.grupoImagenTamanioMaximo$ | async) } }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Palabras Clave -->
         <mat-form-field>
           <mat-label>{{'csp.grupo.palabras-clave' | translate}}</mat-label>
-          <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
+          <sgi-palabra-clave formControlName="palabrasClave"
             placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
         </mat-form-field>
       </div>
@@ -400,10 +414,24 @@
       </div>
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Imagen -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.imagen' | translate}}</mat-label>
+          <sgi-file-upload #imagenUploader formControlName="imagen" accept="image/*" autoUpload="false"
+            showDownload="true" [maxFileSizeMb]="formPart.grupoImagenTamanioMaximo$ | async"
+            [tooltipUpload]="tooltipUploadImagen$ | async" [tooltipDownload]="'csp.grupo.imagen.descargar' | translate">
+          </sgi-file-upload>
+          <mat-error *ngIf="formGroup.controls.imagen.errors?.maxFileSize">
+            {{'error.file.maxsize' | translate:{ maxSize: (formPart.grupoImagenTamanioMaximo$ | async) } }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Palabras Clave -->
         <mat-form-field>
           <mat-label>{{'csp.grupo.palabras-clave' | translate}}</mat-label>
-          <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
+          <sgi-palabra-clave formControlName="palabrasClave"
             placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
         </mat-form-field>
       </div>

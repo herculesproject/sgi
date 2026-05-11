@@ -147,6 +147,11 @@ mat-form-field {
   white-space: pre-line;
 }
 
+.mat-tooltip {
+  // Los tooltips respetan los saltos de linea
+  white-space: pre-line;
+}
+
 /**/
 /** FIN MENSAJES */
 /**/

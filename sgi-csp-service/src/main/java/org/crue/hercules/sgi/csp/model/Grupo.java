@@ -58,6 +58,7 @@ public class Grupo extends BaseActivableEntity {
   public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
   public static final int DIRECCION_LENGTH = 200;
   public static final int EMAIL_LENGTH = 200;
+  public static final int IMAGEN_REF_LENGTH = 250;
   public static final int PROYECTO_SGE_REF_LENGTH = 50;
 
   /** Id */
@@ -80,15 +81,6 @@ public class Grupo extends BaseActivableEntity {
   @Builder.Default
   private Set<GrupoNombre> nombre = new HashSet<>();
 
-  /** Fecha inicio */
-  @Column(name = "fecha_inicio", nullable = false)
-  @NotNull
-  private Instant fechaInicio;
-
-  /** Fecha fin */
-  @Column(name = "fecha_fin", nullable = true)
-  private Instant fechaFin;
-
   /** Dirección */
   @Column(name = "direccion", length = Grupo.DIRECCION_LENGTH, nullable = true)
   @Size(max = Grupo.DIRECCION_LENGTH)
@@ -98,6 +90,20 @@ public class Grupo extends BaseActivableEntity {
   @Column(name = "email", length = Grupo.EMAIL_LENGTH, nullable = true)
   @Size(max = Grupo.EMAIL_LENGTH)
   private String email;
+
+  /** Fecha inicio */
+  @Column(name = "fecha_inicio", nullable = false)
+  @NotNull
+  private Instant fechaInicio;
+
+  /** Fecha fin */
+  @Column(name = "fecha_fin", nullable = true)
+  private Instant fechaFin;
+
+  /** Referencia a imagen en SGDOC */
+  @Column(name = "imagen_ref", length = Grupo.IMAGEN_REF_LENGTH, nullable = true)
+  @Size(max = Grupo.IMAGEN_REF_LENGTH)
+  private String imagenRef;
 
   /** Proyecto SGE */
   @Column(name = "proyecto_sge_ref", length = Grupo.PROYECTO_SGE_REF_LENGTH, nullable = true)

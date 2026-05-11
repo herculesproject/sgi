@@ -141,6 +141,10 @@ export interface IConfiguracion {
   plantillaFormatoIdentificadorJustificacion: string;
   /** Dedicacion minima de un miembro de un grupo de investigacion */
   dedicacionMinimaGrupo: number;
+  /** Relación de aspecto para la imagen del grupo */
+  grupoImagenAspecto: string;
+  /** Tamaño máximo en MB para la imagen del grupo */
+  grupoImagenTamanioMaximo: number;
   /** Expresión regular para validar el formato del código interno de proyecto */
   formatoCodigoInternoProyecto: string;
   /** Plantilla informativa del formato del código interno de proyecto */

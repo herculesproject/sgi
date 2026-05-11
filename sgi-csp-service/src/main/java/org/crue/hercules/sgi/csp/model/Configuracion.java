@@ -129,6 +129,10 @@ public class Configuracion extends BaseEntity {
     FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA("plantillaFormatoIdentificadorJustificacion"),
     /** Dedicacion minima grupo <code>dedicacionMinimaGrupo</code> */
     DEDICACION_MINIMA_GRUPO("dedicacionMinimaGrupo"),
+    /** Relación de aspecto para la imagen del grupo <code>grupoImagenAspecto</code> */
+    GRUPO_IMAGEN_ASPECTO("grupoImagenAspecto"),
+    /** Tamaño máximo en MB para la imagen del grupo <code>grupoImagenTamanioMaximo</code> */
+    GRUPO_IMAGEN_TAMANIO_MAXIMO("grupoImagenTamanioMaximo"),
     /** Formato codigo interno proyecto <code>formatoCodigoInternoProyecto</code> */
     FORMATO_CODIGO_INTERNO_PROYECTO("formatoCodigoInternoProyecto"),
     /**
@@ -310,6 +314,14 @@ public class Configuracion extends BaseEntity {
   @Column(name = "dedicacion_minima_grupo", nullable = true, unique = true)
   private BigDecimal dedicacionMinimaGrupo;
 
+  /** Relación de aspecto para la imagen del grupo. */
+  @Column(name = "grupo_imagen_aspecto", nullable = true, unique = true)
+  private String grupoImagenAspecto;
+
+  /** Tamaño máximo en MB para la imagen del grupo. */
+  @Column(name = "grupo_imagen_tamanio_maximo", nullable = true, unique = true)
+  private BigDecimal grupoImagenTamanioMaximo;
+
   /** Formato codigo interno proyecto. */
   @Column(name = "formato_codigo_interno_proyecto", nullable = true, unique = true)
   private String formatoCodigoInternoProyecto;
@@ -475,6 +487,10 @@ public class Configuracion extends BaseEntity {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
         return this.getDedicacionMinimaGrupo();
+      case GRUPO_IMAGEN_ASPECTO:
+        return this.getGrupoImagenAspecto();
+      case GRUPO_IMAGEN_TAMANIO_MAXIMO:
+        return this.getGrupoImagenTamanioMaximo();
       case FORMATO_CODIGO_INTERNO_PROYECTO:
         return this.getFormatoCodigoInternoProyecto();
       case FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA:
@@ -546,6 +562,12 @@ public class Configuracion extends BaseEntity {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
         this.setDedicacionMinimaGrupo(new BigDecimal(newValue));
+        break;
+      case GRUPO_IMAGEN_ASPECTO:
+        this.setGrupoImagenAspecto(newValue);
+        break;
+      case GRUPO_IMAGEN_TAMANIO_MAXIMO:
+        this.setGrupoImagenTamanioMaximo(new BigDecimal(newValue));
         break;
       case FORMATO_CODIGO_INTERNO_PROYECTO:
         this.setFormatoCodigoInternoProyecto(newValue);
