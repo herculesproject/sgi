@@ -18,8 +18,11 @@
 - Añadidos nuevos componentes para poder ser utilizados en los formularios de memoria ([#33](https://github.com/herculesproject/sgi/issues/33)).
 - Añadida documentación para las apis de integración: SGP, SGEMP, SGO, SGE y SGDOC. ([#47](https://github.com/herculesproject/sgi/issues/47)).
 - [CSP] Añadida tabla maestra de tipos de grupo de investigación (`tipo_grupo`) en sustitución del enum anterior (EMERGENTE, CONSOLIDADO, PRECOMPETITIVO, ALTO_RENDIMIENTO), con soporte i18n y personalizable por instalación (configurable en *CSP > Configuración > Tipos de grupo*) ([#45](https://github.com/herculesproject/sgi/issues/45)).
+- [CSP] Añadidos los campos acrónimo, dirección, email e imagen en los datos generales del grupo de investigación. La relación de aspecto recomendada y el tamaño máximo de la imagen son configurables en *CSP > Configuración* ([#37](https://github.com/herculesproject/sgi/issues/37)).
+- [WEB] Añadido soporte en el componente compartido de subida de ficheros para la descarga del fichero asociado, tooltips configurables y validación de tamaño máximo ([#37](https://github.com/herculesproject/sgi/issues/37)).
 
 ### Changed
+- [CSP] Reordenados los campos de la pantalla de datos generales del grupo de investigación ([#37](https://github.com/herculesproject/sgi/issues/37)).
 - [ETI] Añadir reemplazo de placeholders de nombre de comité en esquemas Formly para el contexto dev ([#36](https://github.com/herculesproject/sgi/issues/36)).
 
 ## 1.0.0 (2026-02-26)
