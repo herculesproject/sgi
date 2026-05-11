@@ -149,8 +149,12 @@ public class GrupoService {
     authorityHelper.checkUserHasAuthorityViewGrupo(grupoActualizar.getId());
 
     return repository.findById(grupoActualizar.getId()).map(data -> {
+      data.setAcronimo(grupoActualizar.getAcronimo());
       data.setNombre(grupoActualizar.getNombre());
       data.setCodigo(grupoActualizar.getCodigo());
+      data.setDireccion(grupoActualizar.getDireccion());
+      data.setEmail(grupoActualizar.getEmail());
+      data.setImagenRef(grupoActualizar.getImagenRef());
       data.setProyectoSgeRef(grupoActualizar.getProyectoSgeRef());
       data.setFechaInicio(grupoActualizar.getFechaInicio());
       data.setFechaFin(grupoActualizar.getFechaFin());

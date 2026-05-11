@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const basePath = 'src/assets/i18n/'
 const defaultLang = 'es';
-const langs = ['en', 'eu'];
+const langs = ['ca', 'en', 'eu'];
 
 const defaultJson = JSON.parse(fs.readFileSync(basePath + defaultLang + '.json'));
 

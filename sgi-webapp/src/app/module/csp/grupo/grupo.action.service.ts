@@ -15,6 +15,7 @@ import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -87,6 +88,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     private dialogService: DialogService,
     private translate: TranslateService,
     private readonly configuracionService: ConfigService,
+    private readonly documentoService: DocumentoService,
     private readonly grupoEnlaceService: GrupoEnlaceService,
     private readonly grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService,
     private readonly grupoEquipoService: GrupoEquipoService,
@@ -114,6 +116,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       logger,
       this.id,
       configuracionService,
+      documentoService,
       grupoService,
       grupoEquipoService,
       palabraClaveService,

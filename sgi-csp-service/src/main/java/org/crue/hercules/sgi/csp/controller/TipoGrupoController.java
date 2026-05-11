@@ -79,7 +79,7 @@ public class TipoGrupoController {
   }
 
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-GIN-E', 'CSP-GIN-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-INV-VR')")
   public ResponseEntity<Page<TipoGrupoOutput>> findAll(
       @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {

@@ -53,9 +53,13 @@ public class Grupo extends BaseActivableEntity {
   protected static final String TABLE_NAME = "grupo";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
-  public static final int PROYECTO_SGE_REF_LENGTH = 50;
-  public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
+  public static final int ACRONIMO_LENGTH = 50;
   public static final int CODIGO_LENGTH = 50;
+  public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
+  public static final int DIRECCION_LENGTH = 200;
+  public static final int EMAIL_LENGTH = 200;
+  public static final int IMAGEN_REF_LENGTH = 250;
+  public static final int PROYECTO_SGE_REF_LENGTH = 50;
 
   /** Id */
   @Id
@@ -63,6 +67,11 @@ public class Grupo extends BaseActivableEntity {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Grupo.SEQUENCE_NAME)
   @SequenceGenerator(name = Grupo.SEQUENCE_NAME, sequenceName = Grupo.SEQUENCE_NAME, allocationSize = 1)
   private Long id;
+
+  /** Acrónimo */
+  @Column(name = "acronimo", length = Grupo.ACRONIMO_LENGTH, nullable = true)
+  @Size(max = Grupo.ACRONIMO_LENGTH)
+  private String acronimo;
 
   /** Nombre */
   @ElementCollection(fetch = FetchType.EAGER)
@@ -72,6 +81,16 @@ public class Grupo extends BaseActivableEntity {
   @Builder.Default
   private Set<GrupoNombre> nombre = new HashSet<>();
 
+  /** Dirección */
+  @Column(name = "direccion", length = Grupo.DIRECCION_LENGTH, nullable = true)
+  @Size(max = Grupo.DIRECCION_LENGTH)
+  private String direccion;
+
+  /** Email */
+  @Column(name = "email", length = Grupo.EMAIL_LENGTH, nullable = true)
+  @Size(max = Grupo.EMAIL_LENGTH)
+  private String email;
+
   /** Fecha inicio */
   @Column(name = "fecha_inicio", nullable = false)
   @NotNull
@@ -80,6 +99,11 @@ public class Grupo extends BaseActivableEntity {
   /** Fecha fin */
   @Column(name = "fecha_fin", nullable = true)
   private Instant fechaFin;
+
+  /** Referencia a imagen en SGDOC */
+  @Column(name = "imagen_ref", length = Grupo.IMAGEN_REF_LENGTH, nullable = true)
+  @Size(max = Grupo.IMAGEN_REF_LENGTH)
+  private String imagenRef;
 
   /** Proyecto SGE */
   @Column(name = "proyecto_sge_ref", length = Grupo.PROYECTO_SGE_REF_LENGTH, nullable = true)

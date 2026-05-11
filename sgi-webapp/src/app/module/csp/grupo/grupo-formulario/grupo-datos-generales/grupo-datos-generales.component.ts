@@ -16,21 +16,27 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiFileUploadComponent } from '@shared/file-upload/file-upload.component';
 import { CKEDITOR_CONFIG, CkEditorConfig } from '@shared/sgi-ckeditor-config';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
-import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { IProyectoEconomicoFormlyData, IProyectoEconomicoFormlyResponse, ProyectoEconomicoFormlyModalComponent } from 'src/app/esb/sge/formly-forms/proyecto-economico-formly-modal/proyecto-economico-formly-modal.component';
 import { SearchProyectoEconomicoModalComponent, SearchProyectoEconomicoModalData } from 'src/app/esb/sge/shared/search-proyecto-economico-modal/search-proyecto-economico-modal.component';
 import { ACTION_MODAL_MODE } from 'src/app/esb/shared/formly-forms/core/base-formly-modal.component';
 import { GrupoActionService } from '../../grupo.action.service';
 import { GrupoDatosGeneralesFragment } from './grupo-datos-generales.fragment';
 
-const GRUPO_NOMBRE_KEY = marker('csp.grupo.nombre');
-const GRUPO_INVESTIGADOR_PRINCIPAL_KEY = marker('csp.grupo.investigador-principal');
+const GRUPO_ACRONIMO_KEY = marker('csp.grupo.acronimo');
 const GRUPO_CODIGO_KEY = marker('csp.grupo.codigo');
-const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
+const GRUPO_DIRECCION_KEY = marker('csp.grupo.direccion');
+const GRUPO_EMAIL_KEY = marker('csp.grupo.email');
 const GRUPO_ESPECIAL_INVESTIGACION_KEY = marker('csp.grupo.especial-investigacion');
+const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
+const GRUPO_IMAGEN_RECOMENDACION_ASPECTO_KEY = marker('csp.grupo.imagen.recomendacion-aspecto');
+const GRUPO_IMAGEN_SELECCIONAR_KEY = marker('csp.grupo.imagen.seleccionar');
+const GRUPO_INVESTIGADOR_PRINCIPAL_KEY = marker('csp.grupo.investigador-principal');
+const GRUPO_NOMBRE_KEY = marker('csp.grupo.nombre');
 const GRUPO_RESUMEN_KEY = marker('csp.grupo.resumen');
 const IDENTIFICADOR_SGE_KEY = marker('csp.proyecto-proyecto-sge.identificador-sge');
 const PROYECTO_SGE_KEY = marker('sge.proyecto');
@@ -53,14 +59,19 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
 
   private subscriptions = [] as Subscription[];
 
-  msgParamTituloEntity = {};
-  msgParamNombreEntity = {};
-  msgParamInvestigadorPrincipalEntity = {};
+  msgParamAcronimoEntity = {};
   msgParamCodigoEntity = {};
-  msgParamFechaInicioEntity = {};
+  msgParamDireccionEntity = {};
+  msgParamEmailEntity = {};
   msgParamEspecialInvestigacionEntity = {};
-  msgParamResumenEntity = {};
+  msgParamFechaInicioEntity = {};
   msgParamIdentificadorSgeEntity = {};
+  msgParamInvestigadorPrincipalEntity = {};
+  msgParamNombreEntity = {};
+  msgParamResumenEntity = {};
+  msgParamTituloEntity = {};
+
+  tooltipUploadImagen$: Observable<string>;
 
   private textoCrearSuccess: string;
   private textoUpdateSuccess: string;
@@ -76,6 +87,11 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
 
   @ViewChild(MatPaginator, { static: true }) proyectosSgePaginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) proyectosSgeSort: MatSort;
+
+  @ViewChild('imagenUploader')
+  set imagenUploader(uploader: SgiFileUploadComponent) {
+    this.formPart.imagenUploader = uploader ?? null;
+  }
 
   private _altaBuscadorSgeEnabled: boolean = true;
 
@@ -108,9 +124,25 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
     this.loadHistoricoTipos();
     this.loadHistoricoEspecialesInvestigacion();
     this.initProyectosSgeTable();
+    this.initTooltipUploadImagen();
   }
 
   protected setupI18N(): void {
+
+    this.translate.get(
+      GRUPO_ACRONIMO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamAcronimoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      GRUPO_EMAIL_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamEmailEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      GRUPO_DIRECCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDireccionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       GRUPO_NOMBRE_KEY,
@@ -290,6 +322,20 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
     this.subscriptions.push(
       this.rolProyectoColectivoService.findColectivosActivos().subscribe(colectivos => {
         this.colectivosBusqueda = colectivos
+      })
+    );
+  }
+
+  private initTooltipUploadImagen(): void {
+    this.tooltipUploadImagen$ = this.formPart.grupoImagenAspecto$.pipe(
+      map(recomendacionAspecto => {
+        const msgSeleccionar = this.translate.instant(GRUPO_IMAGEN_SELECCIONAR_KEY);
+        if (!recomendacionAspecto) {
+          return msgSeleccionar;
+        }
+
+        const msgAspectoRecomendado = this.translate.instant(GRUPO_IMAGEN_RECOMENDACION_ASPECTO_KEY, { aspecto: recomendacionAspecto });
+        return `${msgSeleccionar}.\n${msgAspectoRecomendado}`;
       })
     );
   }

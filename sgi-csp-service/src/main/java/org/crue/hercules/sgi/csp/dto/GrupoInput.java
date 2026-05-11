@@ -24,13 +24,25 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GrupoInput implements Serializable {
 
+  @Size(max = Grupo.ACRONIMO_LENGTH)
+  private String acronimo;
+
   @NotEmpty
   private List<I18nFieldValueDto> nombre;
+
+  @Size(max = Grupo.DIRECCION_LENGTH)
+  private String direccion;
+
+  @Size(max = Grupo.EMAIL_LENGTH)
+  private String email;
 
   @NotNull
   private Instant fechaInicio;
 
   private Instant fechaFin;
+
+  @Size(max = Grupo.IMAGEN_REF_LENGTH)
+  private String imagenRef;
 
   @Size(max = Grupo.PROYECTO_SGE_REF_LENGTH)
   private String proyectoSgeRef;

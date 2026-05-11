@@ -15,9 +15,13 @@ class GrupoResponseConverter
     }
     return {
       id: value.id,
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
+      direccion: value.direccion,
+      email: value.email,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
+      imagenRef: value.imagenRef,
       proyectoSge: value.proyectoSgeRef ? { id: value.proyectoSgeRef } as IProyectoSge : null,
       solicitud: value.solicitudId ? { id: value.solicitudId } as ISolicitud : null,
       codigo: value.codigo,
@@ -35,9 +39,13 @@ class GrupoResponseConverter
     }
     return {
       id: value.id,
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
+      direccion: value.direccion,
+      email: value.email,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
+      imagenRef: value.imagenRef,
       proyectoSgeRef: value.proyectoSge?.id,
       solicitudId: value.solicitud?.id,
       codigo: value.codigo,

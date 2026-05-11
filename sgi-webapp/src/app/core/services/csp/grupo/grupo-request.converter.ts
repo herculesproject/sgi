@@ -15,9 +15,13 @@ class GrupoRequestConverter
     }
     return {
       id: undefined,
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
+      direccion: value.direccion,
+      email: value.email,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
+      imagenRef: value.imagenRef,
       proyectoSge: value.proyectoSgeRef ? { id: value.proyectoSgeRef } as IProyectoSge : undefined,
       solicitud: value.solicitudId ? { id: value.solicitudId } as ISolicitud : undefined,
       codigo: value.codigo,
@@ -34,9 +38,13 @@ class GrupoRequestConverter
       return value as unknown as IGrupoRequest;
     }
     return {
+      acronimo: value.acronimo,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
+      direccion: value.direccion,
+      email: value.email,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
+      imagenRef: value.imagenRef,
       proyectoSgeRef: value.proyectoSge?.id,
       solicitudId: value.solicitud?.id,
       codigo: value.codigo,

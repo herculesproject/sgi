@@ -15,7 +15,6 @@ class ConfiguracionResponseConverter
       calendarioFacturacionSgeIntegration: value.calendarioFacturacionSgeIntegration ? CalendarioFacturacionSgeIntegration[value.calendarioFacturacionSgeIntegration] : null,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge ? CardinalidadRelacionSgiSge[value.cardinalidadRelacionSgiSge] : null,
       dedicacionMinimaGrupo: value.dedicacionMinimaGrupo,
-      integracionesEccSgeEnabled: value.integracionesEccSgeEnabled?.split(',').map(ecc => SgeIntegracionesEccMenus[ecc]),
       ejecucionEconomicaGruposEnabled: value.ejecucionEconomicaGruposEnabled,
       facturasGastosColumnasFijasVisibles: value.facturasGastosColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
       formatoAnualidadAnio: value.formatoAnualidadAnio,
@@ -23,6 +22,9 @@ class ConfiguracionResponseConverter
       formatoIdentificadorJustificacion: value.formatoIdentificadorJustificacion,
       formatoPartidaPresupuestaria: value.formatoPartidaPresupuestaria,
       gastosJustificadosSgeEnabled: value.gastosJustificadosSgeEnabled,
+      grupoImagenAspecto: value.grupoImagenAspecto,
+      grupoImagenTamanioMaximo: value.grupoImagenTamanioMaximo,
+      integracionesEccSgeEnabled: value.integracionesEccSgeEnabled?.split(',').map(ecc => SgeIntegracionesEccMenus[ecc]),
       modificacionProyectoSgeEnabled: value.modificacionProyectoSgeEnabled,
       notificacionPresupuestoSgeEnabled: value.notificacionPresupuestoSgeEnabled,
       partidasPresupuestariasSgeEnabled: value.partidasPresupuestariasSgeEnabled,
@@ -35,13 +37,13 @@ class ConfiguracionResponseConverter
       proyectoSocioPaisFilterEnabled: value.proyectoSocioPaisFilterEnabled,
       sectorIvaSgeEnabled: value.sectorIvaSgeEnabled,
       sgeDetalleOperacionesGastosDetalleEnabled: value.sgeDetalleOperacionesGastosDetalleEnabled,
+      sgeEjecucionEconomicaFiltros: value.sgeEjecucionEconomicaFiltros?.split(',').map(ecc => SgeEjecucionEconomicaFiltros[ecc]),
       sgeEjecucionPresupuestariaGastosDetalleEnabled: value.sgeEjecucionPresupuestariaGastosDetalleEnabled,
+      sgeEliminarRelacionProyectoEnabled: value.sgeEliminarRelacionProyectoEnabled,
       sgeFiltroAnualidades: value.sgeFiltroAnualidades ? SgeFiltroAnualidades[value.sgeFiltroAnualidades] : null,
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos ? ValidacionClasificacionGastos[value.validacionClasificacionGastos] : null,
-      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
-      sgeEjecucionEconomicaFiltros: value.sgeEjecucionEconomicaFiltros?.split(',').map(ecc => SgeEjecucionEconomicaFiltros[ecc]),
-      sgeEliminarRelacionProyectoEnabled: value.sgeEliminarRelacionProyectoEnabled
+      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s])
     };
   }
 
@@ -56,7 +58,6 @@ class ConfiguracionResponseConverter
       calendarioFacturacionSgeIntegration: value.calendarioFacturacionSgeIntegration,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge,
       dedicacionMinimaGrupo: value.dedicacionMinimaGrupo,
-      integracionesEccSgeEnabled: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),
       ejecucionEconomicaGruposEnabled: value.ejecucionEconomicaGruposEnabled,
       facturasGastosColumnasFijasVisibles: value.facturasGastosColumnasFijasVisibles?.join(','),
       formatoAnualidadAnio: value.formatoAnualidadAnio,
@@ -64,6 +65,9 @@ class ConfiguracionResponseConverter
       formatoIdentificadorJustificacion: value.formatoIdentificadorJustificacion,
       formatoPartidaPresupuestaria: value.formatoPartidaPresupuestaria,
       gastosJustificadosSgeEnabled: value.gastosJustificadosSgeEnabled,
+      grupoImagenAspecto: value.grupoImagenAspecto,
+      grupoImagenTamanioMaximo: value.grupoImagenTamanioMaximo,
+      integracionesEccSgeEnabled: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),
       modificacionProyectoSgeEnabled: value.modificacionProyectoSgeEnabled,
       notificacionPresupuestoSgeEnabled: value.notificacionPresupuestoSgeEnabled,
       partidasPresupuestariasSgeEnabled: value.partidasPresupuestariasSgeEnabled,
@@ -76,13 +80,13 @@ class ConfiguracionResponseConverter
       proyectoSocioPaisFilterEnabled: value.proyectoSocioPaisFilterEnabled,
       sectorIvaSgeEnabled: value.sectorIvaSgeEnabled,
       sgeDetalleOperacionesGastosDetalleEnabled: value.sgeDetalleOperacionesGastosDetalleEnabled,
+      sgeEjecucionEconomicaFiltros: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),
       sgeEjecucionPresupuestariaGastosDetalleEnabled: value.sgeEjecucionPresupuestariaGastosDetalleEnabled,
+      sgeEliminarRelacionProyectoEnabled: value.sgeEliminarRelacionProyectoEnabled,
       sgeFiltroAnualidades: value.sgeFiltroAnualidades,
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos,
-      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(','),
-      sgeEjecucionEconomicaFiltros: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),
-      sgeEliminarRelacionProyectoEnabled: value.sgeEliminarRelacionProyectoEnabled
+      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(',')
     };
   }
 }

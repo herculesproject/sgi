@@ -5,7 +5,6 @@ export interface IConfiguracionResponse {
   calendarioFacturacionSgeIntegration: string;
   cardinalidadRelacionSgiSge: string;
   dedicacionMinimaGrupo: number;
-  integracionesEccSgeEnabled: string;
   ejecucionEconomicaGruposEnabled: boolean;
   facturasGastosColumnasFijasVisibles: string;
   formatoAnualidadAnio: boolean;
@@ -13,6 +12,9 @@ export interface IConfiguracionResponse {
   formatoIdentificadorJustificacion: string;
   formatoPartidaPresupuestaria: string;
   gastosJustificadosSgeEnabled: boolean;
+  grupoImagenAspecto: string;
+  grupoImagenTamanioMaximo: number;
+  integracionesEccSgeEnabled: string;
   modificacionProyectoSgeEnabled: boolean;
   notificacionPresupuestoSgeEnabled: boolean;
   partidasPresupuestariasSgeEnabled: boolean;
@@ -25,11 +27,11 @@ export interface IConfiguracionResponse {
   proyectoSocioPaisFilterEnabled: boolean;
   sectorIvaSgeEnabled: boolean;
   sgeDetalleOperacionesGastosDetalleEnabled: boolean;
+  sgeEjecucionEconomicaFiltros: string;
   sgeEjecucionPresupuestariaGastosDetalleEnabled: boolean;
+  sgeEliminarRelacionProyectoEnabled: boolean;
   sgeFiltroAnualidades: string;
   solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
   validacionClasificacionGastos: string;
   viajesDietasColumnasFijasVisibles: string;
-  sgeEjecucionEconomicaFiltros: string;
-  sgeEliminarRelacionProyectoEnabled: boolean;
 }

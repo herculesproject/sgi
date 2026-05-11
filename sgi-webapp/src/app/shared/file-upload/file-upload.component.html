@@ -9,7 +9,13 @@
     </span>
   </div>
 
-  <div class="icon-wrapper" fxFlexAlign="center" [class.disabled]="disabled" (click)="triggerUpload()">
+  <div class="icon-wrapper" fxFlexAlign="center" [class.disabled]="disabled" [matTooltip]="tooltipUpload"
+    (click)="triggerUpload()">
     <mat-icon>{{autoUpload ? 'arrow_upward' : 'search'}}</mat-icon>
+  </div>
+
+  <div class="icon-wrapper" fxFlexAlign="center" *ngIf="showDownload && !!value?.documentoRef && !uploading"
+    [matTooltip]="tooltipDownload" (click)="downloadFile()">
+    <mat-icon>arrow_downward</mat-icon>
   </div>
 </div>

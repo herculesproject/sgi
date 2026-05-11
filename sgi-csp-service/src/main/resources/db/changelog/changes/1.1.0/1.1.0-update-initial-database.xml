@@ -90,4 +90,20 @@
       referencedColumnNames="id" referencedTableName="tipo_grupo" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-6">
+    <addColumn tableName="grupo">
+      <column name="acronimo" type="VARCHAR(50)" />
+      <column name="direccion" type="VARCHAR(200)" />
+      <column name="email" type="VARCHAR(200)" />
+      <column name="imagen_ref" type="VARCHAR(250)" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-7">
+    <addColumn tableName="configuracion">
+      <column name="grupo_imagen_aspecto" type="VARCHAR(50)" />
+      <column name="grupo_imagen_tamanio_maximo" type="DECIMAL(19, 2)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

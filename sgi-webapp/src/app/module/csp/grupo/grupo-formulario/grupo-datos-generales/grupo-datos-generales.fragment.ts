@@ -13,6 +13,7 @@ import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
@@ -20,9 +21,10 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
+import { SgiFileUploadComponent } from '@shared/file-upload/file-upload.component';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, forkJoin, from, Observable, of } from 'rxjs';
-import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { GrupoValidator } from '../../validators/grupo-validator';
 import { IGrupoEquipoListado } from '../grupo-equipo-investigacion/grupo-equipo-investigacion.fragment';
 
@@ -33,7 +35,10 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   readonly especialesInvestigacion$ = new BehaviorSubject<IGrupoEspecialInvestigacion[]>([]);
   equipoInvestigacion$ = new BehaviorSubject<IGrupoEquipoListado[]>([]);
   proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoSge>[]>([]);
+  readonly grupoImagenAspecto$: Observable<string>;
+  readonly grupoImagenTamanioMaximo$: Observable<number>;
 
+  imagenUploader: SgiFileUploadComponent;
   private proyectosSgeEliminados: IProyectoSge[] = [];
   private _disableAddIdentificadorSge$ = new BehaviorSubject<boolean>(false);
   private _isEliminarRelacionProyectoSgeEnabled = false;
@@ -59,6 +64,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     private readonly logger: NGXLogger,
     key: number,
     private readonly configService: ConfigService,
+    private readonly documentoService: DocumentoService,
     private readonly grupoService: GrupoService,
     private readonly grupoEquipoService: GrupoEquipoService,
     private readonly palabraClaveService: PalabraClaveService,
@@ -71,6 +77,16 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     super(key, true);
     this.setComplete(true);
     this.grupo = !key ? {} as IGrupo : { id: key } as IGrupo;
+
+    const config$ = this.configService.getConfiguracion().pipe(shareReplay(1));
+    this.grupoImagenAspecto$ = config$.pipe(
+      map(config => config.grupoImagenAspecto ?? null)
+    );
+
+    this.grupoImagenTamanioMaximo$ = config$.pipe(
+      map(config => config.grupoImagenTamanioMaximo)
+    );
+
     this.initAddIdentificadorSgeDisableSubscription();
   }
 
@@ -96,6 +112,9 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
           isModificacionProyectoSgeEnabled: this.configService.isModificacionProyectoSgeEnabled(),
           palabrasClave: this.grupoService.findPalabrasClave(grupo.id),
           solicitud: !!grupo.solicitud ? this.grupoService.findSolicitud(grupo.id) : of(null),
+          imagen: grupo.imagenRef
+            ? this.documentoService.getInfoFichero(grupo.imagenRef).pipe(catchError(() => of(null)))
+            : of(null),
         }).pipe(
           tap(({
             especialesInvestigacion,
@@ -103,9 +122,11 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
             isEliminarRelacionProyectoSgeEnabled,
             isModificacionProyectoSgeEnabled,
             palabrasClave,
+            imagen,
           }) => {
             this._isEliminarRelacionProyectoSgeEnabled = isEliminarRelacionProyectoSgeEnabled;
             this._isModificacionProyectoSgeEnabled = isModificacionProyectoSgeEnabled;
+            this.getFormGroup().controls.imagen.setValue(imagen);
             this.getFormGroup().controls.palabrasClave.setValue(palabrasClave.items.map(grupoPalabraClave => grupoPalabraClave.palabraClave));
             this.especialesInvestigacion$.next(especialesInvestigacion.items);
             this.tipos$.next(grupoTipos.items);
@@ -131,7 +152,10 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     this.grupo = grupo;
     let formValues: { [key: string]: any } = {
       nombre: grupo.nombre,
+      acronimo: grupo.acronimo,
       codigo: grupo.codigo,
+      direccion: grupo.direccion,
+      email: grupo.email,
       fechaInicio: grupo.fechaInicio,
       fechaFin: grupo.fechaFin,
       tipoGrupo: grupo.tipoGrupo ?? null,
@@ -156,10 +180,14 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   getValue(): IGrupo {
     const form = this.getFormGroup().controls;
     this.grupo.nombre = form.nombre.value;
+    this.grupo.acronimo = form.acronimo.value;
     this.grupo.codigo = form.codigo.value;
     this.grupo.proyectoSge = this.proyectosSge$?.value[0]?.value;
+    this.grupo.direccion = form.direccion.value;
+    this.grupo.email = form.email.value;
     this.grupo.fechaInicio = form.fechaInicio.value;
     this.grupo.fechaFin = form.fechaFin.value;
+    this.grupo.imagenRef = form.imagen.value?.documentoRef ?? null;
     this.grupo.tipoGrupo = form.tipoGrupo.value;
     this.grupo.especialInvestigacion = form.especialInvestigacion.value;
     this.grupo.resumen = form.resumen.value;
@@ -168,9 +196,9 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   }
 
   saveOrUpdate(): Observable<number> {
+    const previousImagenRef = this.grupo.imagenRef ?? null;
     const grupo = this.getValue();
-    const observable$ = this.isEdit() ? this.update(grupo) :
-      this.create(grupo);
+    const observable$ = this.isEdit() ? this.update(grupo, previousImagenRef) : this.create(grupo);
     return observable$.pipe(
       map(value => {
         this.grupo.id = value.id;
@@ -209,14 +237,18 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   private buildFormGroupCreate(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
+      acronimo: new FormControl(null, Validators.maxLength(50)),
       investigadorPrincipal: new FormControl(null, Validators.required),
       departamento: new FormControl({ value: null, disabled: true }),
       codigo: new FormControl(null, {
         validators: Validators.required,
         asyncValidators: GrupoValidator.duplicatedCodigo(this.grupoService, this.grupo.id),
       }),
+      direccion: new FormControl(null, Validators.maxLength(200)),
+      email: new FormControl(null, [Validators.maxLength(200), Validators.email]),
       fechaInicio: new FormControl(null, Validators.required),
       fechaFin: new FormControl(null),
+      imagen: new FormControl(null),
       palabrasClave: new FormControl(null),
       tipoGrupo: new FormControl(null),
       especialInvestigacion: new FormControl(false, Validators.required),
@@ -228,6 +260,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     });
 
     this.loadDepartamentoAndCodigoOnInvestigadorPrincipalChange(formGroup);
+    this.loadEmailOnInvestigadorPrincipalChange(formGroup);
 
     return formGroup;
   }
@@ -235,13 +268,17 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   private buildFormGroupEdit(): FormGroup {
     const form = new FormGroup({
       nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
+      acronimo: new FormControl(null, Validators.maxLength(50)),
       codigo: new FormControl(null, {
         validators: Validators.required,
         asyncValidators: GrupoValidator.duplicatedCodigo(this.grupoService, this.grupo.id),
       }),
       proyectoSge: new FormControl(null),
+      direccion: new FormControl(null, Validators.maxLength(200)),
+      email: new FormControl(null, [Validators.maxLength(200), Validators.email]),
       fechaInicio: new FormControl(null, Validators.required),
       fechaFin: new FormControl(null),
+      imagen: new FormControl(null),
       palabrasClave: new FormControl(null),
       tipoGrupo: new FormControl(null),
       especialInvestigacion: new FormControl({ value: null, disabled: true }),
@@ -304,10 +341,35 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     );
   }
 
+  private loadEmailOnInvestigadorPrincipalChange(formGroup: FormGroup): void {
+    this.subscriptions.push(
+      formGroup.controls.investigadorPrincipal.valueChanges.pipe(
+        filter(value => !!value?.id)
+      ).subscribe((value: IPersona) => {
+        if (!formGroup.controls.email.value) {
+          const emailPrincipal = value.emails?.find(email => email.principal)?.email ?? null;
+          formGroup.controls.email.setValue(emailPrincipal, { emitEvent: false });
+        }
+      })
+    );
+  }
+
   private create(grupo: IGrupo): Observable<IGrupo> {
-    let cascade = this.grupoService.create(grupo).pipe(
-      tap(result => this.grupo.id = result.id),
-      switchMap(grupoCreated => this.saveInvestigadorPrincipal(grupoCreated))
+    let cascade = of(null);
+
+    if (this.getFormGroup().controls.imagen.dirty && this.imagenUploader) {
+      cascade = cascade.pipe(
+        mergeMap(() => this.imagenUploader.uploadSelection()),
+        tap(() => {
+          grupo.imagenRef = this.getFormGroup().controls.imagen.value?.documentoRef ?? null;
+        })
+      );
+    }
+
+    cascade = cascade.pipe(
+      switchMap(() => this.grupoService.create(grupo)),
+      tap(created => this.grupo.id = created.id),
+      switchMap(created => this.saveInvestigadorPrincipal(created))
     );
 
     if (this.getFormGroup().controls.palabrasClave.dirty) {
@@ -339,15 +401,35 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     );
   }
 
-  private update(grupo: IGrupo): Observable<IGrupo> {
+  private update(grupo: IGrupo, previousImagenRef: string): Observable<IGrupo> {
     let cascade = of(null);
+
     if (this.proyectosSgeEliminados?.length) {
-      cascade = this.notificarRelacionesEliminadas(this.proyectosSgeEliminados);
+      cascade = cascade.pipe(
+        mergeMap(() => this.notificarRelacionesEliminadas(this.proyectosSgeEliminados))
+      );
     }
 
-    cascade = cascade = cascade.pipe(
+    if (this.getFormGroup().controls.imagen.dirty && this.imagenUploader) {
+      const previousRef = previousImagenRef;
+      cascade = cascade.pipe(
+        mergeMap(() => this.imagenUploader.uploadSelection()),
+        tap(() => {
+          grupo.imagenRef = this.getFormGroup().controls.imagen.value?.documentoRef ?? null;
+        }),
+        mergeMap(() => {
+          if (!previousRef) {
+            return of(void 0);
+          }
+
+          return this.documentoService.eliminarFichero(previousRef);
+        })
+      );
+    }
+
+    cascade = cascade.pipe(
       switchMap(() => this.grupoService.update(grupo.id, grupo)),
-      tap(grupo => this.grupo = grupo)
+      tap(updatedGrupo => this.grupo = updatedGrupo)
     );
 
     if (this.getFormGroup().controls.palabrasClave.dirty) {

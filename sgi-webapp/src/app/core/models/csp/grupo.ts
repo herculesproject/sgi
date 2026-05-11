@@ -6,9 +6,13 @@ import { ITipoGrupo } from './tipo-grupo';
 
 export interface IGrupo {
   id: number;
+  acronimo: string;
   nombre: I18nFieldValue[];
+  direccion: string;
+  email: string;
   fechaInicio: DateTime;
   fechaFin: DateTime;
+  imagenRef: string;
   proyectoSge: IProyectoSge;
   solicitud: ISolicitud;
   codigo: string;

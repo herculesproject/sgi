@@ -1,8 +1,4 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
-import { Observable, of, Subject, throwError } from 'rxjs';
 import {
   BACKSPACE,
   DELETE,
@@ -10,10 +6,17 @@ import {
   hasModifierKey,
   SPACE,
 } from '@angular/cdk/keycodes';
-import { IDocumento } from '@core/models/sgdoc/documento';
-import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { catchError, filter, map, takeLast, tap } from 'rxjs/operators';
 import { HttpEventType } from '@angular/common/http';
+import {
+  Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  DoCheck, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild
+} from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { MAT_FORM_FIELD, MatFormField, MatFormFieldControl } from '@angular/material/form-field';
+import { IDocumento } from '@core/models/sgdoc/documento';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
+import { Observable, of, Subject, throwError } from 'rxjs';
+import { catchError, filter, map, takeLast } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -160,6 +163,21 @@ export class SgiFileUploadComponent implements
   }
   // tslint:disable-next-line: variable-name
   private _accept: string;
+
+  @Input() maxFileSizeMb: number;
+
+  @Input()
+  get showDownload(): boolean {
+    return this._showDownload;
+  }
+  set showDownload(value: boolean) {
+    this._showDownload = coerceBooleanProperty(value);
+  }
+  // tslint:disable-next-line: variable-name
+  private _showDownload = false;
+
+  @Input() tooltipUpload: string;
+  @Input() tooltipDownload: string;
 
   @Output()
   readonly uploadEventChange: EventEmitter<UploadEvent> = new EventEmitter<UploadEvent>();
@@ -369,11 +387,36 @@ export class SgiFileUploadComponent implements
     }
   }
 
+  downloadFile(): void {
+    if (!this.value?.documentoRef) {
+      return;
+    }
+
+    this.documentoService.downloadFichero(this.value.documentoRef).subscribe(
+      data => triggerDownloadToUser(data, this.value.nombre)
+    );
+  }
+
   onSeletectFile(files: FileList) {
     this.dialogOpen = false;
     this.changeDetectorRef.markForCheck();
     if (files && files.length) {
-      this.selection = files.item(0);
+      const file = files.item(0);
+      if (this.maxFileSizeMb && file.size > this.maxFileSizeMb * 1024 * 1024) {
+        this.selection = null;
+        this.selectionChange.next(null);
+        const existing = this.ngControl?.control?.errors ?? {};
+        this.ngControl?.control?.setErrors({ ...existing, maxFileSize: true });
+        this.changeDetectorRef.markForCheck();
+        return;
+      }
+
+      if (this.ngControl?.control?.errors?.maxFileSize) {
+        const { maxFileSize, ...otherErrors } = this.ngControl.control.errors;
+        this.ngControl.control.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
+      }
+
+      this.selection = file;
       this.selectionChange.next(this.selection);
       if (this.autoUpload) {
         this.uploadSelection().subscribe();
