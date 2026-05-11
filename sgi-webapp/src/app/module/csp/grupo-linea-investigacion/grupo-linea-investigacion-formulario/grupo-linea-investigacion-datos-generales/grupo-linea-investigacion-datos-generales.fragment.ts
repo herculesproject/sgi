@@ -3,6 +3,7 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { FormFragment } from '@core/services/action-service';
 import { GrupoLineaInvestigacionService } from '@core/services/csp/grupo-linea-investigacion/grupo-linea-investigacion.service';
+import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -16,7 +17,9 @@ export class GrupoLineaInvestigacionDatosGeneralesFragment extends FormFragment<
     readonly: boolean,
     key: number,
     private grupo: IGrupo,
-    private service: GrupoLineaInvestigacionService) {
+    private service: GrupoLineaInvestigacionService,
+    private lineaInvestigacionService: LineaInvestigacionService
+  ) {
     super(key);
     this.grupoLineaInvestigacion = {} as IGrupoLineaInvestigacion;
     this.readonly = readonly;
@@ -30,6 +33,7 @@ export class GrupoLineaInvestigacionDatosGeneralesFragment extends FormFragment<
         lineaInvestigacion: new FormControl(null, [
           Validators.required
         ]),
+        descripcion: new FormControl({ value: [], disabled: true }),
         fechaInicio: new FormControl(!this.isEdit() ? this.grupo?.fechaInicio : null),
         fechaFin: new FormControl(null),
       },
@@ -58,6 +62,7 @@ export class GrupoLineaInvestigacionDatosGeneralesFragment extends FormFragment<
 
     return {
       lineaInvestigacion: value.lineaInvestigacion,
+      descripcion: value.lineaInvestigacion?.descripcion ?? [],
       fechaInicio: value.fechaInicio,
       fechaFin: value.fechaFin
     };
@@ -91,7 +96,16 @@ export class GrupoLineaInvestigacionDatosGeneralesFragment extends FormFragment<
     if (this.getKey()) {
       return this.service.findById(key).pipe(
         switchMap((grupoLineaInvestigacion) => {
-          return of(grupoLineaInvestigacion);
+          if (!grupoLineaInvestigacion?.lineaInvestigacion?.id) {
+            return of(grupoLineaInvestigacion);
+          }
+
+          return this.lineaInvestigacionService.findById(grupoLineaInvestigacion.lineaInvestigacion.id).pipe(
+            map((lineaInvestigacion) => {
+              grupoLineaInvestigacion.lineaInvestigacion = lineaInvestigacion;
+              return grupoLineaInvestigacion;
+            })
+          );
         })
       );
     }

@@ -9,6 +9,7 @@ import { GrupoLineaClasificacionService } from '@core/services/csp/grupo-linea-c
 import { GrupoLineaEquipoInstrumentalService } from '@core/services/csp/grupo-linea-equipo-instrumental/grupo-linea-equipo-instrumental.service';
 import { GrupoLineaInvestigacionService } from '@core/services/csp/grupo-linea-investigacion/grupo-linea-investigacion.service';
 import { GrupoLineaInvestigadorService } from '@core/services/csp/grupo-linea-investigador/grupo-linea-investigador.service';
+import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NGXLogger } from 'ngx-logger';
@@ -58,6 +59,7 @@ export class GrupoLineaInvestigacionActionService extends ActionService {
     clasificacionService: ClasificacionService,
     grupoLineaEquipoInstrumentalService: GrupoLineaEquipoInstrumentalService,
     grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService,
+    lineaInvestigacionService: LineaInvestigacionService
   ) {
     super();
     this.grupoLineaInvestigacion = {} as IGrupoLineaInvestigacion;
@@ -72,7 +74,8 @@ export class GrupoLineaInvestigacionActionService extends ActionService {
       this.readonly,
       this.grupoLineaInvestigacion?.id,
       this.grupoLineaInvestigacion.grupo,
-      service
+      service,
+      lineaInvestigacionService
     );
 
     this.lineasInvestigadores = new GrupoLineaInvestigadorFragment(

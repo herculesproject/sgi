@@ -19,7 +19,7 @@
       <mat-form-field>
         <mat-label>{{'csp.linea-investigacion.descripcion' | translate}}</mat-label>
         <sgi-i18n-textarea formControlName="descripcion"
-          placeholder="{{'linea-investigacion.descripcion' | translate}}">
+          placeholder="{{'csp.linea-investigacion.descripcion' | translate}}">
         </sgi-i18n-textarea>
         <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}

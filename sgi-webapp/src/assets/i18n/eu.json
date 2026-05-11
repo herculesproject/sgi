@@ -824,6 +824,7 @@
   "csp.grupo-linea-clasificacion.niveles": "Mailak",
   "csp.grupo-linea-equipo-instrumental": "Ekipo instrumentala{count,plural, =0{} one{} other{k}}",
   "csp.grupo-linea-investigacion": "Ikerketa lerroa{count,plural, =0{} one{} other{k}} ",
+  "csp.grupo-linea-investigacion.descripcion": "Deskribapena",
   "csp.grupo-linea-investigacion.fecha-fin": "Amaiera data",
   "csp.grupo-linea-investigacion.fecha-inicio": "Hasiera data",
   "csp.grupo-linea-investigacion.linea": "Lerroa",
