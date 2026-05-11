@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.TipoGrupoController;
 import org.crue.hercules.sgi.csp.dto.TipoGrupoInput;
 import org.crue.hercules.sgi.csp.dto.TipoGrupoOutput;
-import org.crue.hercules.sgi.csp.model.TipoGrupoNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class TipoGrupoIT extends BaseIT {
 
   private TipoGrupoInput buildMockTipoGrupo() {
     return TipoGrupoInput.builder()
-        .nombre(List.of(new TipoGrupoNombre(Language.ES, "Nuevo tipo")))
+        .nombre(List.of(new I18nFieldValueDto(Language.ES, "Nuevo tipo")))
         .build();
   }
 
@@ -85,7 +85,7 @@ class TipoGrupoIT extends BaseIT {
   void update_ReturnsTipoGrupo() throws Exception {
     Long id = 1L;
     TipoGrupoInput toUpdate = TipoGrupoInput.builder()
-        .nombre(List.of(new TipoGrupoNombre(Language.ES, "Emergente actualizado")))
+        .nombre(List.of(new I18nFieldValueDto(Language.ES, "Emergente actualizado")))
         .build();
     String roles = "CSP-TGIN-E";
 
@@ -148,8 +148,7 @@ class TipoGrupoIT extends BaseIT {
       "classpath:scripts/tipo-grupo.sql"
       // @formatter:on
   })
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
-      statements = "UPDATE test.tipo_grupo SET activo = false WHERE id = 1")
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "UPDATE test.tipo_grupo SET activo = false WHERE id = 1")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void reactivar_ReturnsTipoGrupo() throws Exception {

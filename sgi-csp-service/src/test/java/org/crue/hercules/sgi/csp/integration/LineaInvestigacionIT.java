@@ -9,6 +9,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.LineaInvestigacionOutput;
 import org.crue.hercules.sgi.csp.model.LineaInvestigacion;
+import org.crue.hercules.sgi.csp.model.LineaInvestigacionDescripcion;
 import org.crue.hercules.sgi.csp.model.LineaInvestigacionNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -42,8 +43,7 @@ class LineaInvestigacionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-LIN-V", "CSP-LIN-C",
         "CSP-LIN-E", "CSP-LIN-B", "CSP-LIN-R", "AUTH")));
 
-    HttpEntity<LineaInvestigacion> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -53,8 +53,11 @@ class LineaInvestigacionIT extends BaseIT {
     // given: new LineaInvestigacion
     Set<LineaInvestigacionNombre> nombreLineaInvestigacion = new HashSet<>();
     nombreLineaInvestigacion.add(new LineaInvestigacionNombre(Language.ES, "nombre-1"));
+    Set<LineaInvestigacionDescripcion> descripcionLineaInvestigacion = new HashSet<>();
+    descripcionLineaInvestigacion.add(new LineaInvestigacionDescripcion(Language.ES, "descripcion-1"));
     LineaInvestigacion data = LineaInvestigacion.builder()
         .nombre(nombreLineaInvestigacion)
+        .descripcion(descripcionLineaInvestigacion)
         .activo(Boolean.TRUE)
         .build();
 
@@ -67,6 +70,7 @@ class LineaInvestigacionIT extends BaseIT {
     LineaInvestigacion responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(data.getNombre());
+    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo(data.getDescripcion());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(data.getActivo());
   }
 
@@ -82,9 +86,12 @@ class LineaInvestigacionIT extends BaseIT {
     // given: existing LineaInvestigacion to be updated
     Set<LineaInvestigacionNombre> nombreLineaInvestigacion = new HashSet<>();
     nombreLineaInvestigacion.add(new LineaInvestigacionNombre(Language.ES, "nombre-updated"));
+    Set<LineaInvestigacionDescripcion> descripcionLineaInvestigacion = new HashSet<>();
+    descripcionLineaInvestigacion.add(new LineaInvestigacionDescripcion(Language.ES, "descripcion-updated"));
     LineaInvestigacion data = LineaInvestigacion.builder()
         .id(2L)
         .nombre(nombreLineaInvestigacion)
+        .descripcion(descripcionLineaInvestigacion)
         .activo(Boolean.TRUE)
         .build();
 
@@ -97,6 +104,7 @@ class LineaInvestigacionIT extends BaseIT {
     LineaInvestigacion responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(data.getId());
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(data.getNombre());
+    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo(data.getDescripcion());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(data.getActivo());
   }
 
@@ -163,6 +171,8 @@ class LineaInvestigacionIT extends BaseIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("Psicología Laboral u Organizacional");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("Descripción de la línea de investigación 1");
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 

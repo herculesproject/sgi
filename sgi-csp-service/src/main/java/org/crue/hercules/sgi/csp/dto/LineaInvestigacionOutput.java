@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.LineaInvestigacionDescripcion;
 import org.crue.hercules.sgi.csp.model.LineaInvestigacionNombre;
 
 import lombok.AllArgsConstructor;
@@ -19,5 +20,6 @@ import lombok.NoArgsConstructor;
 public class LineaInvestigacionOutput implements Serializable {
   private Long id;
   private Collection<LineaInvestigacionNombre> nombre;
+  private Collection<LineaInvestigacionDescripcion> descripcion;
   private Boolean activo;
 }

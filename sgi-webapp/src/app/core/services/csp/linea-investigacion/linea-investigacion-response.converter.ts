@@ -11,6 +11,7 @@ class LineaInvestigacionResponseConverter extends SgiBaseConverter<ILineaInvesti
     return {
       id: value.id,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.descripcion) : [],
       activo: value.activo
     };
   }
@@ -21,6 +22,7 @@ class LineaInvestigacionResponseConverter extends SgiBaseConverter<ILineaInvesti
     return {
       id: value.id,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.descripcion) : [],
       activo: value.activo
     };
   }

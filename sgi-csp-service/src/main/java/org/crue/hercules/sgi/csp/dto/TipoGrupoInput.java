@@ -5,8 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
-import org.crue.hercules.sgi.csp.model.TipoGrupoDescripcion;
-import org.crue.hercules.sgi.csp.model.TipoGrupoNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +21,8 @@ import lombok.NoArgsConstructor;
 public class TipoGrupoInput implements Serializable {
 
   @NotEmpty
-  private List<TipoGrupoNombre> nombre;
+  private List<I18nFieldValueDto> nombre;
 
-  private List<TipoGrupoDescripcion> descripcion;
+  private List<I18nFieldValueDto> descripcion;
 
 }

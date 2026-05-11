@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.LineaInvestigacion;
 import org.crue.hercules.sgi.csp.repository.LineaInvestigacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.LineaInvestigacionSpecifications;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -54,11 +55,7 @@ public class LineaInvestigacionService {
   public LineaInvestigacion create(@Valid LineaInvestigacion lineaInvestigacion) {
     log.debug("create(LineaInvestigacion lineaInvestigacion) - start");
 
-    Assert.isNull(lineaInvestigacion.getId(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "isNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(LineaInvestigacion.class)).build());
+    AssertHelper.idIsNull(lineaInvestigacion.getId(), LineaInvestigacion.class);
 
     lineaInvestigacion.setActivo(Boolean.TRUE);
     LineaInvestigacion returnValue = repository.save(lineaInvestigacion);
@@ -80,14 +77,11 @@ public class LineaInvestigacionService {
   public LineaInvestigacion update(@Valid LineaInvestigacion lineaInvestigacion) {
     log.debug("update(LineaInvestigacion lineaInvestigacion) - start");
 
-    Assert.notNull(lineaInvestigacion.getId(),
-        // Defer message resolution untill is needed
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(LineaInvestigacion.class)).build());
+    AssertHelper.idNotNull(lineaInvestigacion.getId(), LineaInvestigacion.class);
 
-    return repository.findById(lineaInvestigacion.getId()).map((data) -> {
+    return repository.findById(lineaInvestigacion.getId()).map(data -> {
       data.setNombre(lineaInvestigacion.getNombre());
+      data.setDescripcion(lineaInvestigacion.getDescripcion());
 
       LineaInvestigacion returnValue = repository.save(data);
       log.debug("update(LineaInvestigacion lineaInvestigacion) - end");
