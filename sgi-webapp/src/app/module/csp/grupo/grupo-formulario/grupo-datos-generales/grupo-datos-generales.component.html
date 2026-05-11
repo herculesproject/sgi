@@ -213,6 +213,9 @@
           <mat-error *ngIf="formGroup.controls.email.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamEmailEntity}}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.email.errors?.email">
+            {{'error.email.incorrect.format' | translate:msgParamEmailEntity}}
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -447,6 +450,9 @@
           <input matInput type="email" placeholder="{{'csp.grupo.email' | translate}}" formControlName="email">
           <mat-error *ngIf="formGroup.controls.email.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamEmailEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.email.errors?.email">
+            {{'error.email.incorrect.format' | translate:msgParamEmailEntity}}
           </mat-error>
         </mat-form-field>
       </div>

@@ -14,13 +14,16 @@ import { map, switchMap } from 'rxjs/operators';
 import { IGrupoReportData, IGrupoReportOptions } from './grupo-listado-export.service';
 
 const ID_SGE_KEY = marker('csp.grupo.codigo-sge');
-const FECHA_INICIO_KEY = marker('csp.grupo.fecha-inicio');
-const FECHA_FIN_KEY = marker('csp.grupo.fecha-fin');
+const ACRONIMO_KEY = marker('csp.grupo.acronimo');
 const CODIGO_KEY = marker('csp.grupo.codigo');
-const TIPO_GRUPO_KEY = marker('csp.grupo.tipo');
-const NOMBRE_KEY = marker('csp.grupo.nombre');
-const INVESTIGADOR_KEY = marker('csp.grupo.investigador-principal');
+const DIRECCION_KEY = marker('csp.grupo.direccion');
+const EMAIL_KEY = marker('csp.grupo.email');
+const FECHA_FIN_KEY = marker('csp.grupo.fecha-fin');
+const FECHA_INICIO_KEY = marker('csp.grupo.fecha-inicio');
 const GRUPO_ESPECIAL_INVESTIGACION_KEY = marker('csp.grupo.especial-investigacion');
+const INVESTIGADOR_KEY = marker('csp.grupo.investigador-principal');
+const NOMBRE_KEY = marker('csp.grupo.nombre');
+const TIPO_GRUPO_KEY = marker('csp.grupo.tipo');
 
 @Injectable()
 export class GrupoGeneralListadoExportService extends AbstractTableExportFillService<IGrupoReportData, IGrupoReportOptions> {
@@ -73,6 +76,12 @@ export class GrupoGeneralListadoExportService extends AbstractTableExportFillSer
         format: '#'
       },
       {
+        title: this.translate.instant(ACRONIMO_KEY),
+        name: 'acronimo',
+        type: ColumnType.STRING,
+        format: '#'
+      },
+      {
         title: this.translate.instant(INVESTIGADOR_KEY),
         name: 'investigador',
         type: ColumnType.STRING,
@@ -109,6 +118,18 @@ export class GrupoGeneralListadoExportService extends AbstractTableExportFillSer
         title: this.translate.instant(GRUPO_ESPECIAL_INVESTIGACION_KEY),
         name: 'grupoEspecialInvestigacion',
         type: ColumnType.STRING
+      },
+      {
+        title: this.translate.instant(DIRECCION_KEY),
+        name: 'direccion',
+        type: ColumnType.STRING,
+        format: '#'
+      },
+      {
+        title: this.translate.instant(EMAIL_KEY),
+        name: 'email',
+        type: ColumnType.STRING,
+        format: '#'
       }
     ];
 
@@ -120,6 +141,7 @@ export class GrupoGeneralListadoExportService extends AbstractTableExportFillSer
 
     const elementsRow: any[] = [];
     elementsRow.push(this.languageService.getFieldValue(grupo.nombre));
+    elementsRow.push(grupo.acronimo ?? '');
     elementsRow.push(grupo.investigadoresPrincipales);
     elementsRow.push(grupo.codigo);
     elementsRow.push(grupo.proyectoSge ? grupo.proyectoSge.id : '');
@@ -128,6 +150,8 @@ export class GrupoGeneralListadoExportService extends AbstractTableExportFillSer
     elementsRow.push(this.languageService.getFieldValue(grupo.tipoGrupo?.nombre));
     elementsRow.push(
       this.notIsNullAndNotUndefined(grupo.especialInvestigacion) ? this.getI18nBooleanYesNo(grupo.especialInvestigacion) : '');
+    elementsRow.push(grupo.direccion ?? '');
+    elementsRow.push(grupo.email ?? '');
     return elementsRow;
   }
 }
