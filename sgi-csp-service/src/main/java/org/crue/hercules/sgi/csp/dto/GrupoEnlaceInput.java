@@ -28,4 +28,6 @@ public class GrupoEnlaceInput implements Serializable {
   @NotNull
   private Long grupoId;
 
+  private Long tipoEnlaceId;
+
 }

@@ -14,6 +14,7 @@ import { GrupoResponsableEconomicoService } from '@core/services/csp/grupo-respo
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
+import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
@@ -102,6 +103,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     private readonly proyectoSgeService: ProyectoSgeService,
     private readonly rolProyectoService: RolProyectoService,
     private readonly sgiAuthService: SgiAuthService,
+    private readonly tipoEnlaceService: TipoEnlaceService,
     private readonly vinculacionService: VinculacionService,
   ) {
     super();
@@ -155,7 +157,14 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       this.data?.readonly
     );
 
-    this.enlaces = new GrupoEnlaceFragment(logger, this.id, grupoService, grupoEnlaceService, this.data?.readonly);
+    this.enlaces = new GrupoEnlaceFragment(
+      logger,
+      this.id,
+      grupoService,
+      grupoEnlaceService,
+      tipoEnlaceService,
+      this.data?.readonly
+    );
 
     this.personasAutorizadas = new GrupoPersonaAutorizadaFragment(
       logger,

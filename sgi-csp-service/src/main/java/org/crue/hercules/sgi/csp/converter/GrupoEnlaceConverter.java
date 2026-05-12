@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.csp.converter;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.crue.hercules.sgi.csp.dto.GrupoEnlaceInput;
 import org.crue.hercules.sgi.csp.dto.GrupoEnlaceOutput;
@@ -17,6 +18,13 @@ import lombok.RequiredArgsConstructor;
 public class GrupoEnlaceConverter {
 
   private final ModelMapper modelMapper;
+
+  @PostConstruct
+  public void mapperConfig() {
+    modelMapper.emptyTypeMap(GrupoEnlace.class, GrupoEnlaceOutput.class)
+        .addMappings(mapper -> mapper.map(GrupoEnlace::getTipoEnlaceId, GrupoEnlaceOutput::setTipoEnlaceId))
+        .implicitMappings();
+  }
 
   public GrupoEnlace convert(GrupoEnlaceInput input) {
     return convert(input.getId(), input);
@@ -37,17 +45,15 @@ public class GrupoEnlaceConverter {
   }
 
   public List<GrupoEnlaceOutput> convert(List<GrupoEnlace> list) {
-    return list.stream().map(this::convert).collect(Collectors.toList());
+    return list.stream().map(this::convert).toList();
   }
 
   public List<GrupoEnlaceOutput> convertGrupoEnlaces(List<GrupoEnlace> entityList) {
-    return entityList.stream()
-        .map(this::convert)
-        .collect(Collectors.toList());
+    return entityList.stream().map(this::convert).toList();
   }
 
   public List<GrupoEnlace> convertGrupoEnlaceInput(
       List<GrupoEnlaceInput> inputList) {
-    return inputList.stream().map(this::convert).collect(Collectors.toList());
+    return inputList.stream().map(this::convert).toList();
   }
 }

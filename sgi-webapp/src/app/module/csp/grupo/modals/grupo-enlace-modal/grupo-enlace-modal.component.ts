@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
+const GRUPO_ENLACE_TIPO_ENLACE_KEY = marker('csp.grupo-enlace.tipo-enlace');
 const GRUPO_EQUIPO_INSTRUMENTAL_ENLACE_KEY = marker('csp.grupo-enlace.enlace');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
@@ -33,6 +34,7 @@ export class GrupoEnlaceModalComponent extends DialogFormComponent<GrupoEnlaceMo
   textSaveOrUpdate: string;
 
   msgParamEnlaceEntity = {};
+  msgParamTipoEnlaceEntity = {};
   title: string;
 
   constructor(
@@ -58,6 +60,11 @@ export class GrupoEnlaceModalComponent extends DialogFormComponent<GrupoEnlaceMo
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEnlaceEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
+    this.translate.get(
+      GRUPO_ENLACE_TIPO_ENLACE_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamTipoEnlaceEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+
     if (this.data?.isEdit) {
       this.translate.get(
         this.data.titleEntity,
@@ -82,6 +89,7 @@ export class GrupoEnlaceModalComponent extends DialogFormComponent<GrupoEnlaceMo
     const formGroup = new FormGroup(
       {
         enlace: new FormControl(this.data?.entidad?.enlace, [Validators.required, Validators.maxLength(100)]),
+        tipoEnlace: new FormControl(this.data?.entidad?.tipoEnlace),
       }
     );
 
@@ -90,6 +98,7 @@ export class GrupoEnlaceModalComponent extends DialogFormComponent<GrupoEnlaceMo
 
   protected getValue(): GrupoEnlaceModalData {
     this.data.entidad.enlace = this.formGroup.get('enlace').value;
+    this.data.entidad.tipoEnlace = this.formGroup.get('tipoEnlace').value;
     return this.data;
   }
 

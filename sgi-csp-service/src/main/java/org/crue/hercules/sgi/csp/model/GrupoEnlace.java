@@ -54,11 +54,19 @@ public class GrupoEnlace extends BaseEntity {
   @NotNull
   private Long grupoId;
 
+  /** Tipo de Enlace */
+  @Column(name = "tipo_enlace_id")
+  private Long tipoEnlaceId;
+
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "grupo_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_GRUPOENLACE_GRUPO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Grupo grupo = null;
+
+  @ManyToOne
+  @JoinColumn(name = "tipo_enlace_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_GRUPOENLACE_TIPOENLACE"))
+  private TipoEnlace tipoEnlace;
 
 }

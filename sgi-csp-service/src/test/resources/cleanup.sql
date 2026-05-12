@@ -12,6 +12,7 @@ DELETE FROM test.tipo_grupo;
 DELETE FROM test.grupo_palabra_clave;
 DELETE FROM test.grupo_linea_clasificacion;
 DELETE FROM test.grupo_linea_investigacion;
+DELETE FROM test.grupo_enlace;
 DELETE FROM test.grupo_nombre;
 DELETE FROM test.grupo_resumen;
 DELETE FROM test.grupo;

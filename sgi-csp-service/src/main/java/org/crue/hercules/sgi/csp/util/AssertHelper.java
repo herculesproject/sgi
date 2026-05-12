@@ -15,11 +15,12 @@ public class AssertHelper {
   public static final String PROBLEM_MESSAGE_PARAMETER_OTHER_FIELD = "otherField";
 
   public static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
-  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
-  private static final String PROBLEM_MESSAGE_EXISTS = "exists";
-  private static final String PROBLEM_MESSAGE_NOT_EXISTS = "notExists";
   private static final String PROBLEM_MESSAGE_BEFORE = "before";
+  private static final String PROBLEM_MESSAGE_EXISTS = "exists";
   private static final String PROBLEM_MESSAGE_FIELD_BEFORE = "field.before";
+  private static final String PROBLEM_MESSAGE_INACTIVO = "inactivo";
+  private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
+  private static final String PROBLEM_MESSAGE_NOT_EXISTS = "notExists";
 
   private AssertHelper() {
   }
@@ -196,4 +197,22 @@ public class AssertHelper {
                 messageOtherKeyField))
             .build());
   }
+
+  /**
+   * Comprueba que la entidad esté activa.
+   *
+   * @param activo      indica si la entidad está activa.
+   * @param entityClazz clase de la entidad cuya activación se comprueba.
+   * @param entityName  identificador/nombre concreto de la entidad para incluir
+   *                    en el mensaje de error.
+   */
+  public static void entityActivo(boolean activo, Class<?> entityClazz, String entityName) {
+    Assert.isTrue(activo,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_INACTIVO)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(entityClazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, entityName)
+            .build());
+  }
+
 }

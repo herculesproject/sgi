@@ -798,6 +798,7 @@
   "csp.grupo": "Grupo{count,plural, =0{} one{} other{s}}  Investigación",
   "csp.grupo-enlace": "Enlace{count,plural, =0{} one{} other{s}}",
   "csp.grupo-enlace.enlace": "Enlace",
+  "csp.grupo-enlace.tipo-enlace": "Tipo de enlace",
   "csp.grupo-equipo": "Equipo{count,plural, =0{} one{} other{s}}",
   "csp.grupo-equipo-instrumental.descripcion": "Descripción",
   "csp.grupo-equipo-instrumental.nombre": "Nombre",

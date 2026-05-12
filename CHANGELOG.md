@@ -21,6 +21,7 @@
 - [CSP] Añadidos los campos acrónimo, dirección, email e imagen en los datos generales del grupo de investigación. La relación de aspecto recomendada y el tamaño máximo de la imagen son configurables en *CSP > Configuración* ([#37](https://github.com/herculesproject/sgi/issues/37)).
 - [CSP] Añadido el campo descripción con soporte i18n en las líneas de investigación ([#51](https://github.com/herculesproject/sgi/issues/51)).
 - [CSP] Añadida la descripción de la línea de investigación seleccionada en modo solo lectura en el formulario de líneas de investigación de los grupos de investigación ([#52](https://github.com/herculesproject/sgi/issues/52)).
+- [CSP] Añadido el campo opcional tipo de enlace en los enlaces de grupo de investigación ([#50](https://github.com/herculesproject/sgi/issues/50)).
 - [WEB] Añadido soporte en el componente compartido de subida de ficheros para la descarga del fichero asociado, tooltips configurables y validación de tamaño máximo ([#37](https://github.com/herculesproject/sgi/issues/37)).
 
 ### Changed

@@ -1,5 +1,6 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
+import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoEnlaceResponse } from './grupo-enlace-response';
 
@@ -12,7 +13,8 @@ class GrupoEnlaceResponseConverter
     return {
       id: value.id,
       grupo: value.grupoId ? { id: value.grupoId } as IGrupo : undefined,
-      enlace: value.enlace
+      enlace: value.enlace,
+      tipoEnlace: value.tipoEnlaceId ? { id: value.tipoEnlaceId } as ITipoEnlace : undefined
     };
   }
 
@@ -23,7 +25,8 @@ class GrupoEnlaceResponseConverter
     return {
       id: value.id,
       grupoId: value.grupo.id,
-      enlace: value.enlace
+      enlace: value.enlace,
+      tipoEnlaceId: value.tipoEnlace?.id
     };
   }
 }

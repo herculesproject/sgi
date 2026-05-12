@@ -2,22 +2,24 @@ import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
-import { FieldOrientation } from '@core/models/rep/field-orientation.enum';
+import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
-import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { IGrupoReportData, IGrupoReportOptions } from './grupo-listado-export.service';
 
 const ENLACE_KEY = marker('csp.grupo-enlace');
+const ENLACE_TIPO_KEY = marker('csp.grupo-enlace.tipo-enlace');
 const ENLACE_URL_KEY = marker('csp.grupo-enlace.enlace');
 
-const ENLACE_FIELD = 'enlace';
+const ENLACE_TIPO_FIELD = 'enlaceTipo';
 const ENLACE_URL_FIELD = 'enlaceUrl';
 
 @Injectable()
@@ -26,16 +28,39 @@ export class GrupoEnlaceListadoExportService extends AbstractTableExportFillServ
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private grupoService: GrupoService
+    private grupoService: GrupoService,
+    private tipoEnlaceService: TipoEnlaceService,
+    private languageService: LanguageService
   ) {
     super(translate);
   }
 
   public getData(grupoData: IGrupoReportData): Observable<IGrupoReportData> {
     return this.grupoService.findEnlaces(grupoData?.id).pipe(
-      map((response) => {
-        grupoData.enlaces = response.items;
+      switchMap((response) => this.populateTiposEnlace(response.items)),
+      map((enlaces) => {
+        grupoData.enlaces = enlaces;
         return grupoData;
+      })
+    );
+  }
+
+  private populateTiposEnlace(enlaces: IGrupoEnlace[]): Observable<IGrupoEnlace[]> {
+    const ids = [...new Set(enlaces.map(e => e.tipoEnlace?.id).filter(id => !!id))];
+    if (!ids?.length) {
+      return of(enlaces);
+    }
+
+    return this.tipoEnlaceService.findAllByIdIn(ids).pipe(
+      map((response) => {
+        const tiposEnlaceById = new Map<number, ITipoEnlace>(response.items.map(t => [t.id, t]));
+        enlaces.forEach(enlace => {
+          if (enlace.tipoEnlace?.id) {
+            enlace.tipoEnlace = tiposEnlaceById.get(enlace.tipoEnlace.id) ?? enlace.tipoEnlace;
+          }
+        });
+
+        return enlaces;
       })
     );
   }
@@ -44,30 +69,9 @@ export class GrupoEnlaceListadoExportService extends AbstractTableExportFillServ
     grupos: IGrupoReportData[],
     reportConfig: IReportConfig<IGrupoReportOptions>
   ): ISgiColumnReport[] {
-    if (!this.isExcelOrCsv(reportConfig.outputType)) {
-      return this.getColumnsEnlaceNotExcel();
-    } else {
+    if (this.isExcelOrCsv(reportConfig.outputType)) {
       return this.getColumnsEnlaceExcel(grupos);
     }
-  }
-
-  private getColumnsEnlaceNotExcel(): ISgiColumnReport[] {
-    const columns: ISgiColumnReport[] = [];
-    columns.push({
-      name: ENLACE_FIELD,
-      title: this.translate.instant(ENLACE_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR),
-      type: ColumnType.STRING
-    });
-    const titleI18n = this.translate.instant(ENLACE_KEY, MSG_PARAMS.CARDINALIRY.PLURAL) +
-      ' (' + this.translate.instant(ENLACE_URL_KEY) + ')';
-    const columnEntidad: ISgiColumnReport = {
-      name: ENLACE_FIELD,
-      title: titleI18n,
-      type: ColumnType.SUBREPORT,
-      fieldOrientation: FieldOrientation.VERTICAL,
-      columns
-    };
-    return [columnEntidad];
   }
 
   private getColumnsEnlaceExcel(grupos: IGrupoReportData[]): ISgiColumnReport[] {
@@ -85,6 +89,13 @@ export class GrupoEnlaceListadoExportService extends AbstractTableExportFillServ
         type: ColumnType.STRING,
       };
       columns.push(columnUrl);
+
+      const columnTipoEnlace: ISgiColumnReport = {
+        name: ENLACE_TIPO_FIELD + idEnlace,
+        title: titleEnlace + idEnlace + ': ' + this.translate.instant(ENLACE_TIPO_KEY),
+        type: ColumnType.STRING,
+      };
+      columns.push(columnTipoEnlace);
     }
 
     return columns;
@@ -94,9 +105,7 @@ export class GrupoEnlaceListadoExportService extends AbstractTableExportFillServ
     const grupo = grupos[index];
 
     const elementsRow: any[] = [];
-    if (!this.isExcelOrCsv(reportConfig.outputType)) {
-      this.fillRowsEnlaceNotExcel(grupo, elementsRow);
-    } else {
+    if (this.isExcelOrCsv(reportConfig.outputType)) {
       const maxNumEnlacees = Math.max(...grupos.map(g => g.enlaces ? g.enlaces?.length : 0));
       for (let i = 0; i < maxNumEnlacees; i++) {
         const enlace = grupo.enlaces ? grupo.enlaces[i] ?? null : null;
@@ -106,30 +115,14 @@ export class GrupoEnlaceListadoExportService extends AbstractTableExportFillServ
     return elementsRow;
   }
 
-  private fillRowsEnlaceNotExcel(grupo: IGrupoReportData, elementsRow: any[]) {
-    const rowsReport: ISgiRowReport[] = [];
-
-    grupo.enlaces?.forEach(grupoEnlace => {
-      const enlaceElementsRow: any[] = [];
-
-      enlaceElementsRow.push(grupoEnlace?.enlace ?? '');
-
-      const rowReport: ISgiRowReport = {
-        elements: enlaceElementsRow
-      };
-      rowsReport.push(rowReport);
-    });
-
-    elementsRow.push({
-      rows: rowsReport
-    });
-  }
-
   private fillRowsEntidadExcel(elementsRow: any[], grupoEnlace: IGrupoEnlace) {
     if (grupoEnlace) {
       elementsRow.push(grupoEnlace.enlace ?? '');
+      elementsRow.push(this.languageService.getFieldValue(grupoEnlace.tipoEnlace?.nombre));
     } else {
+      elementsRow.push('');
       elementsRow.push('');
     }
   }
+
 }
