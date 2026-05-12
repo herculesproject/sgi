@@ -9,7 +9,9 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
+import { CspSharedModule } from '../../../shared/csp-shared.module';
 import { GrupoEnlaceModalComponent, GrupoEnlaceModalData } from './grupo-enlace-modal.component';
 
 describe('GrupoEnlaceModalComponent', () => {
@@ -38,9 +40,11 @@ describe('GrupoEnlaceModalComponent', () => {
         TestUtils.getIdiomas(),
         RouterTestingModule,
         ReactiveFormsModule,
-        SgpSharedModule
+        SgpSharedModule,
+        CspSharedModule
       ],
       providers: [
+        SgiAuthService,
         { provide: MatDialogRef, useValue: TestUtils.buildDialogCommonMatDialogRef() },
         { provide: MAT_DIALOG_DATA, useValue: newData },
       ]
