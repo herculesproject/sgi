@@ -104,6 +104,13 @@ jobs:
           -Dspring.datasource.url=jdbc:postgresql://localhost:5432/db
           -Dspring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:${{ inputs.auth-port }}/auth/realms/sgi
 
+      - name: Upload UT coverage data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-ut-${{ inputs.service-name }}
+          path: ${{ inputs.service-name }}/target/coverage-reports/jacoco-ut.exec
+          retention-days: 1
+
       - name: Stop containers
         if: always()
         run: |
@@ -166,6 +173,13 @@ jobs:
           -Dspring.datasource.url=jdbc:postgresql://localhost:5432/db
           -Dspring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:${{ inputs.auth-port }}/auth/realms/sgi
 
+      - name: Upload IT coverage data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-it-${{ inputs.service-name }}
+          path: ${{ inputs.service-name }}/target/coverage-reports/jacoco-it.exec
+          retention-days: 1
+
       - name: Stop containers
         if: always()
         run: |
@@ -188,6 +202,18 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+
+      - name: Download UT coverage data
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-ut-${{ inputs.service-name }}
+          path: ${{ inputs.service-name }}/target/coverage-reports
+
+      - name: Download IT coverage data
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-it-${{ inputs.service-name }}
+          path: ${{ inputs.service-name }}/target/coverage-reports
 
       - name: SonarQube analysis
         working-directory: ${{ inputs.service-name }}
