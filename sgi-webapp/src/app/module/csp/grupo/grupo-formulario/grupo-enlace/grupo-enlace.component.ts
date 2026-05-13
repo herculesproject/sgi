@@ -9,6 +9,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -32,7 +33,7 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
   formPart: GrupoEnlaceFragment;
 
   elementosPagina = [5, 10, 25, 100];
-  displayedColumns = ['enlace', 'acciones'];
+  displayedColumns = ['enlace', 'tipoEnlace', 'acciones'];
 
   modalTitleEntity: string;
   msgParamEntity = {};
@@ -52,6 +53,7 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
+    private languageService: LanguageService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.ENLACE, actionService, translate);
@@ -65,6 +67,8 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IGrupoEnlace>, property: string) => {
         switch (property) {
+          case 'tipoEnlace':
+            return this.languageService.getFieldValue(wrapper.value.tipoEnlace?.nombre);
           default:
             return wrapper[property];
         }

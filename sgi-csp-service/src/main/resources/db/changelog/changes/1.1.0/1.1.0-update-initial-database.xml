@@ -129,4 +129,18 @@
       referencedColumnNames="id" referencedTableName="linea_investigacion" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-9">
+    <addColumn tableName="grupo_enlace">
+      <column name="tipo_enlace_id" type="BIGINT">
+        <constraints nullable="true" />
+      </column>
+    </addColumn>
+
+    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id"
+      baseTableName="grupo_enlace"
+      constraintName="FK_GRUPOENLACE_TIPOENLACE" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

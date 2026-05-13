@@ -18,5 +18,6 @@ public class GrupoEnlaceOutput implements Serializable {
   private Long id;
   private String enlace;
   private Long grupoId;
+  private Long tipoEnlaceId;
 
 }

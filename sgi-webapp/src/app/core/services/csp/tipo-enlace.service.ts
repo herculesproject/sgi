@@ -2,7 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
+import {
+  CreateCtor,
+  FindAllCtor,
+  mixinCreate,
+  mixinFindAll,
+  mixinUpdate,
+  RSQLSgiRestFilter,
+  SgiRestBaseService,
+  SgiRestFilterOperator,
+  SgiRestFindOptions,
+  SgiRestListResult,
+  UpdateCtor
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ITipoEnlaceResponse } from './tipo-enlace/tipo-enlace-response';
 import { TIPO_ENLACE_RESPONSE_CONVERTER } from './tipo-enlace/tipo-enlace-response.converter';
@@ -60,6 +72,20 @@ export class TipoEnlaceService extends _TipoEnlaceServiceMixinBase {
    */
   reactivar(id: number): Observable<void> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined);
+  }
+
+  /**
+   * Busca los tipos de enlace cuyos ids estén en la lista indicada.
+   *
+   * @param ids lista de identificadores
+   * @returns la lista de tipos de enlace
+   */
+  findAllByIdIn(ids: number[]): Observable<SgiRestListResult<ITipoEnlace>> {
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('id', SgiRestFilterOperator.IN, ids.map(id => id.toString()))
+    };
+
+    return this.findAll(options);
   }
 
 }

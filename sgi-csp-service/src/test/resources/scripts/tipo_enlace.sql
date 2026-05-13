@@ -8,9 +8,11 @@ INSERT INTO test.tipo_enlace
 VALUES
 (1, true),
 (2, true),
-(3, true);
+(3, true),
+(4, false);
 
 -- TIPO_ENLACE_NOMBRE
 INSERT INTO test.tipo_enlace_nombre (tipo_enlace_id, lang, value_) VALUES(1, 'es', 'Publicación convocatoria');
 INSERT INTO test.tipo_enlace_nombre (tipo_enlace_id, lang, value_) VALUES(2, 'es', 'Presentación solicitudes');
 INSERT INTO test.tipo_enlace_nombre (tipo_enlace_id, lang, value_) VALUES(3, 'es', 'Portal de justificación');
+INSERT INTO test.tipo_enlace_nombre (tipo_enlace_id, lang, value_) VALUES(4, 'es', 'Tipo inactivo');

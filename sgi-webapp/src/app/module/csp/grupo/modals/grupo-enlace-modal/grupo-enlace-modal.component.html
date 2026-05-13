@@ -14,12 +14,21 @@
         </mat-error>
       </mat-form-field>
     </div>
+    <!-- Tipo de enlace -->
+    <div fxLayout="row">
+      <mat-form-field>
+        <mat-label>{{'csp.grupo-enlace.tipo-enlace' | translate}}</mat-label>
+        <sgi-select-tipo-enlace formControlName="tipoEnlace">
+        </sgi-select-tipo-enlace>
+      </mat-form-field>
+    </div>
   </form>
 </sgi-dialog-content>
 <mat-dialog-actions>
   <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
     <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
   </button>
-  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
-    translate}}</button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{'btn.cancel' | translate}}
+  </button>
 </mat-dialog-actions>

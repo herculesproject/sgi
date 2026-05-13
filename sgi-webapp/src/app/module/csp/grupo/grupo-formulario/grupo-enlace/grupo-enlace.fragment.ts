@@ -1,12 +1,14 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
+import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { Fragment } from '@core/services/action-service';
 import { GrupoEnlaceService } from '@core/services/csp/grupo-enlace/grupo-enlace.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 
 export class GrupoEnlaceFragment extends Fragment {
@@ -18,6 +20,7 @@ export class GrupoEnlaceFragment extends Fragment {
     key: number,
     private readonly grupoService: GrupoService,
     private readonly grupoEnlaceService: GrupoEnlaceService,
+    private readonly tipoEnlaceService: TipoEnlaceService,
     public readonly readonly: boolean,
   ) {
     super(key);
@@ -30,6 +33,7 @@ export class GrupoEnlaceFragment extends Fragment {
       this.subscriptions.push(
         this.grupoService.findEnlaces(id).pipe(
           map((response) => response.items),
+          switchMap((enlaces) => this.populateTiposEnlace(enlaces)),
         ).subscribe((enlaces) => {
           this.enlaces$.next(enlaces.map(
             enlace => {
@@ -147,6 +151,26 @@ export class GrupoEnlaceFragment extends Fragment {
   private isSaveOrUpdateComplete(): boolean {
     const hasTouched = this.enlaces$.value.some((wrapper) => wrapper.touched);
     return !hasTouched;
+  }
+
+  private populateTiposEnlace(enlaces: IGrupoEnlace[]): Observable<IGrupoEnlace[]> {
+    const ids = [...new Set(enlaces.map(e => e.tipoEnlace?.id).filter(id => !!id))];
+    if (!ids?.length) {
+      return of(enlaces);
+    }
+
+    return this.tipoEnlaceService.findAllByIdIn(ids).pipe(
+      map((response) => {
+        const tiposEnlaceById = new Map<number, ITipoEnlace>(response.items.map(t => [t.id, t]));
+        enlaces.forEach(enlace => {
+          if (enlace.tipoEnlace?.id) {
+            enlace.tipoEnlace = tiposEnlaceById.get(enlace.tipoEnlace.id) ?? enlace.tipoEnlace;
+          }
+        });
+
+        return enlaces;
+      })
+    );
   }
 
 }

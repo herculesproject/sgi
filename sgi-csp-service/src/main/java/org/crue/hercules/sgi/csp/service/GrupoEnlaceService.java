@@ -1,14 +1,18 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.exceptions.GrupoEnlaceNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.TipoEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.repository.GrupoEnlaceRepository;
+import org.crue.hercules.sgi.csp.repository.TipoEnlaceRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoEnlaceSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
@@ -34,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GrupoEnlaceService {
 
   private final GrupoEnlaceRepository repository;
+  private final TipoEnlaceRepository tipoEnlaceRepository;
   private final GrupoAuthorityHelper authorityHelper;
 
   /**
@@ -49,6 +54,7 @@ public class GrupoEnlaceService {
 
     AssertHelper.idIsNull(grupoEnlace.getId(), GrupoEnlace.class);
     authorityHelper.checkUserHasAuthorityViewGrupo(grupoEnlace.getGrupoId());
+    checkTipoEnlaceActivo(grupoEnlace.getTipoEnlaceId());
 
     GrupoEnlace returnValue = repository.save(grupoEnlace);
 
@@ -72,7 +78,12 @@ public class GrupoEnlaceService {
     authorityHelper.checkUserHasAuthorityViewGrupo(grupoEnlaceActualizar.getGrupoId());
 
     return repository.findById(grupoEnlaceActualizar.getId()).map(data -> {
+      if (!Objects.equals(data.getTipoEnlaceId(), grupoEnlaceActualizar.getTipoEnlaceId())) {
+        checkTipoEnlaceActivo(grupoEnlaceActualizar.getTipoEnlaceId());
+      }
+
       data.setEnlace(grupoEnlaceActualizar.getEnlace());
+      data.setTipoEnlaceId(grupoEnlaceActualizar.getTipoEnlaceId());
 
       GrupoEnlace returnValue = repository.save(data);
 
@@ -145,6 +156,25 @@ public class GrupoEnlaceService {
     Page<GrupoEnlace> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(Long grupoId, String query, Pageable paging) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba que el {@link TipoEnlace} existe y está activo.
+   *
+   * @param tipoEnlaceId Identificador del {@link TipoEnlace}.
+   * @throws TipoEnlaceNotFoundException si no existe un {@link TipoEnlace} con el
+   *                                     id indicado.
+   */
+  private void checkTipoEnlaceActivo(Long tipoEnlaceId) {
+    if (tipoEnlaceId == null) {
+      return;
+    }
+
+    TipoEnlace tipoEnlace = tipoEnlaceRepository.findById(tipoEnlaceId)
+        .orElseThrow(() -> new TipoEnlaceNotFoundException(tipoEnlaceId));
+
+    AssertHelper.entityActivo(Boolean.TRUE.equals(tipoEnlace.getActivo()), TipoEnlace.class,
+        String.valueOf(tipoEnlace.getId()));
   }
 
 }

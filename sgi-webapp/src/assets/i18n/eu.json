@@ -794,6 +794,7 @@
   "csp.grupo": "Ikerketa taldea{count,plural, =0{} one{} other{k}} ",
   "csp.grupo-enlace": "Lotura{count,plural, =0{} one{} other{k}}",
   "csp.grupo-enlace.enlace": "Lotura",
+  "csp.grupo-enlace.tipo-enlace": "Lotura mota",
   "csp.grupo-equipo": "Ekipoa{count,plural, =0{} one{} other{k}}",
   "csp.grupo-equipo-instrumental.descripcion": "Deskribapena",
   "csp.grupo-equipo-instrumental.nombre": "Izena",
