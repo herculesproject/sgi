@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: herculesproject/sgi-deploy
-          token: ${{ secrets.PAT_CI_TEST_UPDATE_DEPLOY }}
+          token: ${{ secrets.GH_PAT_SGI_DEPLOY_REPO }}
           path: gitops
           ref: main
 
