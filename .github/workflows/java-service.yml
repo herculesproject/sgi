@@ -109,6 +109,7 @@ jobs:
         with:
           name: coverage-ut-${{ inputs.service-name }}
           path: ${{ inputs.service-name }}/target/coverage-reports/jacoco-ut.exec
+          if-no-files-found: error
           retention-days: 1
 
       - name: Stop containers
@@ -178,6 +179,7 @@ jobs:
         with:
           name: coverage-it-${{ inputs.service-name }}
           path: ${{ inputs.service-name }}/target/coverage-reports/jacoco-it.exec
+          if-no-files-found: error
           retention-days: 1
 
       - name: Stop containers
