@@ -47,13 +47,12 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
     return MSG_PARAMS;
   }
 
-
   constructor(
-    protected proyectoService: GrupoService,
+    protected grupoService: GrupoService,
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private languageService: LanguageService,
+    private readonly languageService: LanguageService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.ENLACE, actionService, translate);
@@ -70,17 +69,16 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
           case 'tipoEnlace':
             return this.languageService.getFieldValue(wrapper.value.tipoEnlace?.nombre);
           default:
-            return wrapper[property];
+            return wrapper.value[property];
         }
       };
     this.dataSource.sort = this.sort;
-    this.subscriptions.push(this.formPart.enlaces$.subscribe(elements => {
+    this.subscriptions.push(this.formPart.enlaces$.subscribe((elements) => {
       this.dataSource.data = elements;
     }));
   }
 
   protected setupI18N(): void {
-
     this.translate.get(
       GRUPO_ENLACE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
@@ -102,7 +100,6 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
         );
       })
     ).subscribe((value) => this.textoDelete = value);
-
   }
 
   /**
@@ -119,7 +116,7 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
     const data: GrupoEnlaceModalData = {
       titleEntity: this.modalTitleEntity,
       entidad: wrapper?.value ?? {} as IGrupoEnlace,
-      selectedEntidades: this.dataSource.data.map(element => element.value),
+      selectedEntidades: this.dataSource.data.map((element) => element.value),
       isEdit: Boolean(wrapper)
     };
 
@@ -149,13 +146,10 @@ export class GrupoEnlaceComponent extends FragmentComponent implements OnInit, O
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  /**
-   * Eliminar grupo equipo
-   */
-  deleteEquipo(wrapper: StatusWrapper<IGrupoEnlace>) {
+  deleteEnlace(wrapper: StatusWrapper<IGrupoEnlace>) {
     this.subscriptions.push(
       this.dialogService.showConfirmation(this.textoDelete).subscribe(
         (aceptado) => {

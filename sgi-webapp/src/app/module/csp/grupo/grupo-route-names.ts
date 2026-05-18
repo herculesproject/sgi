@@ -7,5 +7,6 @@ export const GRUPO_ROUTE_NAMES = {
   EQUIPO_INSTRUMENTAL: 'equipo-instrumental',
   ENLACE: 'enlace',
   PERSONA_AUTORIZADA: 'persona-autorizada',
-  LINEA_INVESTIGACION: 'linea-investigacion'
+  LINEA_INVESTIGACION: 'linea-investigacion',
+  DESCRIPTOR: 'descriptores'
 };

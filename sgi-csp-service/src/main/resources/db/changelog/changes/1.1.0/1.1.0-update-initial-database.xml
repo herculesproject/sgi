@@ -143,4 +143,104 @@
       referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
   </changeSet>
 
+
+  <changeSet author="master" id="1.1.0-10">
+    <createSequence sequenceName="tipo_descriptor_grupo_seq" startValue="1" incrementBy="1" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-11">
+    <createTable tableName="tipo_descriptor_grupo">
+      <column name="id" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-12">
+    <createTable tableName="tipo_descriptor_grupo_nombre">
+      <column name="tipo_descriptor_grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_descriptor_grupo_nombre"
+      columnNames="tipo_descriptor_grupo_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_descriptor_grupo_id"
+      baseTableName="tipo_descriptor_grupo_nombre"
+      constraintName="FK_TIPODESCRIPTORGRUPONOMBRE_TIPODESCRIPTORGRUPO"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_descriptor_grupo" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-13">
+    <createSequence sequenceName="grupo_descriptor_seq" startValue="1" incrementBy="1" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-14">
+    <createTable tableName="grupo_descriptor">
+      <column name="id" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_descriptor_grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+    </createTable>
+
+    <addForeignKeyConstraint baseColumnNames="grupo_id"
+      baseTableName="grupo_descriptor"
+      constraintName="FK_GRUPODESCRIPTOR_GRUPO"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+      
+    <addForeignKeyConstraint baseColumnNames="tipo_descriptor_grupo_id"
+      baseTableName="grupo_descriptor"
+      constraintName="FK_GRUPODESCRIPTOR_TIPODESCRIPTORGRUPO"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_descriptor_grupo" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-15">
+    <createTable tableName="grupo_descriptor_texto">
+      <column name="grupo_descriptor_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(3000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="grupo_descriptor_texto"
+      columnNames="grupo_descriptor_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="grupo_descriptor_id"
+      baseTableName="grupo_descriptor_texto"
+      constraintName="FK_GRUPODESCRIPTORTEXTO_GRUPODESCRIPTOR"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo_descriptor" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

@@ -5,6 +5,7 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { Module } from '@core/module';
 import { ActionService } from '@core/services/action-service';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
+import { GrupoDescriptorService } from '@core/services/csp/grupo-descriptor/grupo-descriptor.service';
 import { GrupoEnlaceService } from '@core/services/csp/grupo-enlace/grupo-enlace.service';
 import { GrupoEquipoInstrumentalService } from '@core/services/csp/grupo-equipo-instrumental/grupo-equipo-instrumental.service';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
@@ -14,6 +15,7 @@ import { GrupoResponsableEconomicoService } from '@core/services/csp/grupo-respo
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
+import { TipoDescriptorGrupoService } from '@core/services/csp/tipo-descriptor-grupo/tipo-descriptor-grupo.service';
 import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
@@ -28,6 +30,7 @@ import { NEVER, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoDatosGeneralesFragment } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.fragment';
+import { GrupoDescriptorFragment } from './grupo-formulario/grupo-descriptor/grupo-descriptor.fragment';
 import { GrupoEnlaceFragment } from './grupo-formulario/grupo-enlace/grupo-enlace.fragment';
 import { GrupoEquipoInstrumentalFragment } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.fragment';
 import { GrupoEquipoInvestigacionFragment } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.fragment';
@@ -57,7 +60,8 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     EQUIPO_INSTRUMENTAL: 'equipo-instrumental',
     ENLACE: 'enlace',
     PERSONA_AUTORIZADA: 'persona-autorizada',
-    LINEA_INVESTIGACION: 'linea-investigacion'
+    LINEA_INVESTIGACION: 'linea-investigacion',
+    DESCRIPTOR: 'descriptor'
   };
 
   private datosGenerales: GrupoDatosGeneralesFragment;
@@ -67,6 +71,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
   private enlaces: GrupoEnlaceFragment;
   private personasAutorizadas: GrupoPersonaAutorizadaFragment;
   private lineasInvestigacion: GrupoLineaInvestigacionFragment;
+  private descriptores: GrupoDescriptorFragment;
 
   private readonly data: IGrupoData;
   public readonly id: number;
@@ -90,6 +95,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     private translate: TranslateService,
     private readonly configuracionService: ConfigService,
     private readonly documentoService: DocumentoService,
+    private readonly grupoDescriptorService: GrupoDescriptorService,
     private readonly grupoEnlaceService: GrupoEnlaceService,
     private readonly grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService,
     private readonly grupoEquipoService: GrupoEquipoService,
@@ -104,6 +110,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     private readonly rolProyectoService: RolProyectoService,
     private readonly sgiAuthService: SgiAuthService,
     private readonly tipoEnlaceService: TipoEnlaceService,
+    private readonly tipoGrupoDescriptorService: TipoDescriptorGrupoService,
     private readonly vinculacionService: VinculacionService,
   ) {
     super();
@@ -158,7 +165,6 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     );
 
     this.enlaces = new GrupoEnlaceFragment(
-      logger,
       this.id,
       grupoService,
       grupoEnlaceService,
@@ -184,6 +190,14 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       this.data?.readonly
     );
 
+    this.descriptores = new GrupoDescriptorFragment(
+      this.id,
+      grupoService,
+      grupoDescriptorService,
+      tipoGrupoDescriptorService,
+      this.data?.readonly
+    );
+
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.EQUIPO_INVESTIGACION, this.equiposInvestigacion);
     this.addFragment(this.FRAGMENT.RESPONSABLE_ECONOMICO, this.responsablesEconomicos);
@@ -191,6 +205,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     this.addFragment(this.FRAGMENT.ENLACE, this.enlaces);
     this.addFragment(this.FRAGMENT.PERSONA_AUTORIZADA, this.personasAutorizadas);
     this.addFragment(this.FRAGMENT.LINEA_INVESTIGACION, this.lineasInvestigacion);
+    this.addFragment(this.FRAGMENT.DESCRIPTOR, this.descriptores);
 
     this.datosGenerales.initialize();
 

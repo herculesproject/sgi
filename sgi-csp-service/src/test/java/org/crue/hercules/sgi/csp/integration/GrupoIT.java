@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.GrupoController;
+import org.crue.hercules.sgi.csp.dto.GrupoDescriptorOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
 import org.crue.hercules.sgi.csp.dto.GrupoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
@@ -46,6 +47,7 @@ class GrupoIT extends BaseIT {
   private static final String PATH_PALABRAS_CLAVE = GrupoController.PATH_PALABRAS_CLAVE;
   private static final String PATH_TODOS = GrupoController.PATH_TODOS;
   private static final String PATH_ID = GrupoController.PATH_ID;
+  private static final String PATH_GRUPO_DESCRIPTOR = GrupoController.PATH_GRUPO_DESCRIPTORES;
 
   private static final String DEFAULT_CODIGO = "COD";
   private static final String DEFAULT_NOMBRE = "nombre";
@@ -522,6 +524,75 @@ class GrupoIT extends BaseIT {
     return GrupoPalabraClaveInput.builder()
         .palabraClaveRef(palabraClaveRef)
         .build();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
+      "classpath:scripts/grupo.sql",
+      "classpath:scripts/tipo-descriptor-grupo.sql",
+      "classpath:scripts/grupo_descriptor.sql"
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllGrupoDescriptor_ReturnsGrupoDescriptorOutputSubList() throws Exception {
+    // given: Grupo 1 con dos descriptores (ids 1 y 2 segun script)
+    String roles = "CSP-GIN-V";
+    Long grupoId = 1L;
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_GRUPO_DESCRIPTOR)
+        .queryParam("s", "id,asc").buildAndExpand(grupoId).toUri();
+
+    // when: findAllGrupoDescriptor
+    final ResponseEntity<List<GrupoDescriptorOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<GrupoDescriptorOutput>>() {
+        });
+
+    // then: 200 OK con solo los descriptores de ese grupo
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<GrupoDescriptorOutput> responseData = response.getBody();
+    Assertions.assertThat(responseData)
+        .hasSize(2)
+        .allMatch(d -> d.getGrupoId().equals(grupoId));
+
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
+      "classpath:scripts/grupo.sql"
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllGrupoDescriptor_ReturnsStatusCode204() throws Exception {
+    // given: Grupo sin descriptores
+    String roles = "CSP-GIN-V";
+    Long grupoId = 1L;
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_GRUPO_DESCRIPTOR)
+        .buildAndExpand(grupoId).toUri();
+
+    // when: findAllGrupoDescriptor
+    final ResponseEntity<List<GrupoDescriptorOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<GrupoDescriptorOutput>>() {
+        });
+
+    // then: 204 No Content
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   private GrupoInput buildMockGrupo() {

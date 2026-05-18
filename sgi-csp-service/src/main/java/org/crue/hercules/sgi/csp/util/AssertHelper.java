@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.util;
 
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.util.Assert;
 
 public class AssertHelper {
@@ -36,7 +37,7 @@ public class AssertHelper {
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(MESSAGE_KEY_ID))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -62,7 +63,7 @@ public class AssertHelper {
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(messageKeyField))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -78,7 +79,7 @@ public class AssertHelper {
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_ISNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(messageKeyField))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -94,7 +95,7 @@ public class AssertHelper {
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(messageKeyField))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -110,7 +111,7 @@ public class AssertHelper {
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(messageKeyField))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -125,8 +126,8 @@ public class AssertHelper {
     Assert.notNull(entityValue,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(entityClazz))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, getEntityName(entityClazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -141,8 +142,8 @@ public class AssertHelper {
     Assert.isTrue(entityValue,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_EXISTS)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(entityClazz))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, getEntityName(entityClazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -159,7 +160,7 @@ public class AssertHelper {
         () -> ProblemMessage.builder().key(Assert.class,
             PROBLEM_MESSAGE_EXISTS)
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(messageKeyField))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -174,8 +175,8 @@ public class AssertHelper {
     Assert.isTrue(entityValue,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOT_EXISTS)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage(entityClazz))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(clazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, getEntityName(entityClazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(clazz))
             .build());
   }
 
@@ -210,9 +211,24 @@ public class AssertHelper {
     Assert.isTrue(activo,
         // Defer message resolution untill is needed
         () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_INACTIVO)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(entityClazz))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, getEntityName(entityClazz))
             .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, entityName)
             .build());
+  }
+
+  /**
+   * Devuelve el nombre localizado de la entidad, o su nombre de clase si no hay
+   * traducción para el locale actual.
+   *
+   * @param clazz la clase de la entidad.
+   * @return el nombre de la entidad.
+   */
+  private static String getEntityName(Class<?> clazz) {
+    try {
+      return ApplicationContextSupport.getMessage(clazz);
+    } catch (NoSuchMessageException e) {
+      return clazz.getSimpleName();
+    }
   }
 
 }

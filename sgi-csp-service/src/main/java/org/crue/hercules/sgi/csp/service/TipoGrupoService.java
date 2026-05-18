@@ -14,15 +14,12 @@ import org.crue.hercules.sgi.csp.model.TipoGrupo;
 import org.crue.hercules.sgi.csp.repository.TipoGrupoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoGrupoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.RequiredArgsConstructor;
@@ -126,10 +123,7 @@ public class TipoGrupoService {
   public TipoGrupo disable(Long id) {
     log.debug("disable({}) - start", id);
 
-    Assert.notNull(id,
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage("id"))
-            .parameter("entity", ApplicationContextSupport.getMessage(TipoGrupo.class)).build());
+    AssertHelper.idNotNull(id, TipoGrupo.class);
 
     return repository.findById(id).map(tipoGrupo -> {
       if (Boolean.FALSE.equals(tipoGrupo.getActivo())) {

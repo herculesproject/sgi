@@ -9,9 +9,10 @@ import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { GrupoCrearComponent } from './grupo-crear/grupo-crear.component';
-import { GRUPO_DATA_KEY, GrupoDataResolver } from './grupo-data.resolver';
+import { GrupoDataResolver, GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';
+import { GrupoDescriptorComponent } from './grupo-formulario/grupo-descriptor/grupo-descriptor.component';
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
 import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.component';
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
@@ -117,6 +118,11 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_ROUTE_NAMES.LINEA_INVESTIGACION,
         component: GrupoLineaInvestigacionComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.DESCRIPTOR,
+        component: GrupoDescriptorComponent,
         canDeactivate: [FragmentGuard],
       },
     ]
