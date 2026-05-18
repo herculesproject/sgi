@@ -23,3 +23,5 @@ VALUES
 (3, 2, 'G0021150', NULL, 80.00, 1, 1),
 (4, 3, 'G0021150', NULL, 100.00, 1, 1);
 
+ALTER SEQUENCE test.convocatoria_entidad_financiadora_seq RESTART WITH 5;
+

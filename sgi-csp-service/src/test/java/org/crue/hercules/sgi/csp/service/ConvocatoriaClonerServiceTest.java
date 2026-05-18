@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.enums.TipoPartida;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
@@ -61,6 +62,7 @@ import org.crue.hercules.sgi.csp.repository.RequisitoIPRepository;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
@@ -122,49 +124,67 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
   @Test
   void cloneConvocatoriaAreasTematicas_ShouldCloneConvocatoriaAreaTematica() {
-    Long convocatoriaId = 1L;
+    // given: una ConvocatoriaAreaTematica asociada a la convocatoria a clonar
+    Long convocatoriaToCloneId = 1L;
+    Long convocatoriaClonedId = 2L;
 
-    ConvocatoriaAreaTematica area = buildMockConvocatoriaAreaTematica(convocatoriaId);
+    ConvocatoriaAreaTematica area = buildMockConvocatoriaAreaTematica(convocatoriaToCloneId);
 
     BDDMockito.given(convocatoriaAreaTematicaRepository.findByConvocatoriaId(anyLong()))
         .willReturn(Arrays.asList(area));
-
-    ConvocatoriaAreaTematica clonedArea = ConvocatoriaAreaTematica.builder().areaTematica(area.getAreaTematica())
-        .convocatoriaId(area.getId()).observaciones(area.getObservaciones()).build();
-
     BDDMockito.given(convocatoriaAreaTematicaRepository.save(ArgumentMatchers.<ConvocatoriaAreaTematica>any()))
-        .willReturn(clonedArea);
+        .willReturn(area);
 
     Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
     convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "testing clone"));
 
-    service.cloneConvocatoriaAreasTematicas(1L,
-        buildMockConvocatoria(convocatoriaId, convocatoriaObservaciones));
+    ArgumentCaptor<ConvocatoriaAreaTematica> captor = ArgumentCaptor.forClass(ConvocatoriaAreaTematica.class);
 
-    verify(convocatoriaAreaTematicaRepository, times(1)).save(ArgumentMatchers.<ConvocatoriaAreaTematica>any());
+    // when: se llama a cloneConvocatoriaAreasTematicas
+    service.cloneConvocatoriaAreasTematicas(convocatoriaToCloneId,
+        buildMockConvocatoria(convocatoriaClonedId, convocatoriaObservaciones));
+
+    // then: se persiste una nueva ConvocatoriaAreaTematica vinculada a la
+    // convocatoria clonada con la misma areaTematica y observaciones
+    verify(convocatoriaAreaTematicaRepository, times(1)).save(captor.capture());
+    ConvocatoriaAreaTematica saved = captor.getValue();
+    Assertions.assertThat(saved.getConvocatoriaId()).isEqualTo(convocatoriaClonedId);
+    Assertions.assertThat(saved.getAreaTematica()).isEqualTo(area.getAreaTematica());
+    Assertions.assertThat(saved.getObservaciones()).isEqualTo(area.getObservaciones());
   }
 
   @Test
   void cloneConvocatoriasEntidadesConvocantes_ShouldCloneConvocatoriaEntidadConvocanteList() {
+    // given: una ConvocatoriaEntidadConvocante asociada a la convocatoria a clonar
     Long convocatoriaToCloneId = 1L;
-    Long convocatoriaCloned = 2L;
+    Long convocatoriaClonedId = 2L;
 
     List<ConvocatoriaEntidadConvocante> entidades = Arrays.asList(buildMockConvocatoriaEntidadConvocante(1L,
-        convocatoriaCloned));
+        convocatoriaClonedId));
 
     BDDMockito.given(convocatoriaEntidadConvocanteRepository.findByConvocatoriaId(anyLong()))
         .willReturn(entidades);
-
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .save(ArgumentMatchers.<ConvocatoriaEntidadConvocante>any())).willReturn(entidades.get(0));
 
-    service.cloneConvocatoriasEntidadesConvocantes(convocatoriaToCloneId, convocatoriaCloned);
-    verify(convocatoriaEntidadConvocanteRepository, times(1))
-        .save(ArgumentMatchers.<ConvocatoriaEntidadConvocante>any());
+    ArgumentCaptor<ConvocatoriaEntidadConvocante> captor = ArgumentCaptor.forClass(ConvocatoriaEntidadConvocante.class);
+
+    // when: se llama a cloneConvocatoriasEntidadesConvocantes
+    service.cloneConvocatoriasEntidadesConvocantes(convocatoriaToCloneId, convocatoriaClonedId);
+
+    // then: se persiste una nueva ConvocatoriaEntidadConvocante vinculada a la
+    // convocatoria clonada con la misma entidadRef y programa
+    verify(convocatoriaEntidadConvocanteRepository, times(1)).save(captor.capture());
+    ConvocatoriaEntidadConvocante saved = captor.getValue();
+    Assertions.assertThat(saved.getConvocatoriaId()).isEqualTo(convocatoriaClonedId);
+    Assertions.assertThat(saved.getEntidadRef()).isEqualTo(entidades.get(0).getEntidadRef());
+    Assertions.assertThat(saved.getPrograma()).isEqualTo(entidades.get(0).getPrograma());
   }
 
   @Test
   void cloneConvocatoriasEntidadesFinanciadoras_ShouldCloneConvocatoriaEntidadFinanciadoraList() {
+    // given: una ConvocatoriaEntidadFinanciadora asociada a la convocatoria a
+    // clonar
     Long convocatoriaToCloneId = 1L;
     Long convocatoriaClonedId = 2L;
 
@@ -173,20 +193,32 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaEntidadFinanciadoraRepository.findByConvocatoriaId(convocatoriaToCloneId))
         .willReturn(entidades);
-
     BDDMockito
         .given(convocatoriaEntidadFinanciadoraRepository.save(ArgumentMatchers.<ConvocatoriaEntidadFinanciadora>any()))
         .willReturn(entidades.get(0));
 
+    ArgumentCaptor<ConvocatoriaEntidadFinanciadora> captor = ArgumentCaptor
+        .forClass(ConvocatoriaEntidadFinanciadora.class);
+
+    // when: se llama a cloneConvocatoriasEntidadesFinanciadoras
     service.cloneConvocatoriasEntidadesFinanciadoras(convocatoriaToCloneId, convocatoriaClonedId);
 
-    verify(convocatoriaEntidadFinanciadoraRepository, times(1))
-        .save(ArgumentMatchers.<ConvocatoriaEntidadFinanciadora>any());
-
+    // then: se persiste una nueva ConvocatoriaEntidadFinanciadora vinculada a la
+    // convocatoria clonada con los mismos datos de financiación
+    verify(convocatoriaEntidadFinanciadoraRepository, times(1)).save(captor.capture());
+    ConvocatoriaEntidadFinanciadora saved = captor.getValue();
+    Assertions.assertThat(saved.getConvocatoriaId()).isEqualTo(convocatoriaClonedId);
+    Assertions.assertThat(saved.getEntidadRef()).isEqualTo(entidades.get(0).getEntidadRef());
+    Assertions.assertThat(saved.getFuenteFinanciacion()).isEqualTo(entidades.get(0).getFuenteFinanciacion());
+    Assertions.assertThat(saved.getTipoFinanciacion()).isEqualTo(entidades.get(0).getTipoFinanciacion());
+    Assertions.assertThat(saved.getPorcentajeFinanciacion()).isEqualTo(entidades.get(0).getPorcentajeFinanciacion());
+    Assertions.assertThat(saved.getImporteFinanciacion()).isEqualTo(entidades.get(0).getImporteFinanciacion());
   }
 
   @Test
   void clonePeriodosJustificacion_ShouldCloneConvocatoriaPeriodoJustificacionList() {
+    // given: un ConvocatoriaPeriodoJustificacion asociado a la convocatoria a
+    // clonar
     Long convocatoriaToCloneId = 1L;
     Long convocatoriaClonedId = 2L;
 
@@ -195,20 +227,36 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaPeriodoJustificacionRepository.findAllByConvocatoriaId(anyLong()))
         .willReturn(justificaciones);
-
     BDDMockito
         .given(
             convocatoriaPeriodoJustificacionRepository.save(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>any()))
         .willReturn(justificaciones.get(0));
 
+    ArgumentCaptor<ConvocatoriaPeriodoJustificacion> captor = ArgumentCaptor
+        .forClass(ConvocatoriaPeriodoJustificacion.class);
+
+    // when: se llama a clonePeriodosJustificacion
     service.clonePeriodosJustificacion(convocatoriaToCloneId, convocatoriaClonedId);
 
-    verify(convocatoriaPeriodoJustificacionRepository, times(1)).save(
-        ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>any());
+    // then: se persiste un nuevo ConvocatoriaPeriodoJustificacion vinculado a la
+    // convocatoria clonada con los mismos datos del período y una copia nueva de
+    // observaciones
+    verify(convocatoriaPeriodoJustificacionRepository, times(1)).save(captor.capture());
+    ConvocatoriaPeriodoJustificacion saved = captor.getValue();
+    Assertions.assertThat(saved.getConvocatoriaId()).isEqualTo(convocatoriaClonedId);
+    Assertions.assertThat(saved.getMesInicial()).isEqualTo(justificaciones.get(0).getMesInicial());
+    Assertions.assertThat(saved.getMesFinal()).isEqualTo(justificaciones.get(0).getMesFinal());
+    Assertions.assertThat(saved.getNumPeriodo()).isEqualTo(justificaciones.get(0).getNumPeriodo());
+    Assertions.assertThat(saved.getTipo()).isEqualTo(justificaciones.get(0).getTipo());
+    Assertions.assertThat(saved.getObservaciones())
+        .isNotSameAs(justificaciones.get(0).getObservaciones())
+        .containsExactlyInAnyOrderElementsOf(justificaciones.get(0).getObservaciones());
   }
 
   @Test
   void cloneConvocatoriaPeriodosSeguimientoCientifico_ShouldCloneConvocatoriaPeriodoSeguimientoCientificoList() {
+    // given: un ConvocatoriaPeriodoSeguimientoCientifico asociado a la convocatoria
+    // a clonar
     Long convocatoriaToCloneId = 1L;
     Long convocatoriaClonedId = 2L;
 
@@ -217,17 +265,35 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaPeriodoSeguimientoCientificoRepository
         .findAllByConvocatoriaIdOrderByMesInicial(convocatoriaToCloneId)).willReturn(periodos);
-    BDDMockito.given(convocatoriaPeriodoSeguimientoCientificoRepository.save(periodos.get(0)))
+    BDDMockito.given(convocatoriaPeriodoSeguimientoCientificoRepository
+        .save(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>any()))
         .willReturn(periodos.get(0));
 
+    ArgumentCaptor<ConvocatoriaPeriodoSeguimientoCientifico> captor = ArgumentCaptor
+        .forClass(ConvocatoriaPeriodoSeguimientoCientifico.class);
+
+    // when: se llama a cloneConvocatoriaPeriodosSeguimientoCientifico
     service.cloneConvocatoriaPeriodosSeguimientoCientifico(convocatoriaToCloneId, convocatoriaClonedId);
 
-    verify(convocatoriaPeriodoSeguimientoCientificoRepository, times(1)).save(periodos.get(0));
-
+    // then: se persiste un nuevo ConvocatoriaPeriodoSeguimientoCientifico vinculado
+    // a la convocatoria clonada con los mismos datos del período y una copia nueva
+    // de observaciones
+    verify(convocatoriaPeriodoSeguimientoCientificoRepository, times(1)).save(captor.capture());
+    ConvocatoriaPeriodoSeguimientoCientifico saved = captor.getValue();
+    Assertions.assertThat(saved.getConvocatoriaId()).isEqualTo(convocatoriaClonedId);
+    Assertions.assertThat(saved.getMesInicial()).isEqualTo(periodos.get(0).getMesInicial());
+    Assertions.assertThat(saved.getMesFinal()).isEqualTo(periodos.get(0).getMesFinal());
+    Assertions.assertThat(saved.getNumPeriodo()).isEqualTo(periodos.get(0).getNumPeriodo());
+    Assertions.assertThat(saved.getTipoSeguimiento()).isEqualTo(periodos.get(0).getTipoSeguimiento());
+    Assertions.assertThat(saved.getObservaciones())
+        .isNotSameAs(periodos.get(0).getObservaciones())
+        .containsExactlyInAnyOrderElementsOf(periodos.get(0).getObservaciones());
   }
 
   @Test
   void cloneRequisitoIP_ShouldCloneRequisitoIP() {
+    // given: un RequisitoIP con un NivelAcademico y una CategoriaProfesional
+    // asociado a la convocatoria a clonar
     Long convocatoriaToCloneId = 1L;
     Long convocatoriaClonedId = 2L;
 
@@ -249,8 +315,11 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         this.requisitoIPCategoriaProfesionalRepository.save(ArgumentMatchers.<RequisitoIPCategoriaProfesional>any()))
         .willReturn(categorias.get(0));
 
+    // when: se llama a cloneRequisitoIP
     service.cloneRequisitoIP(convocatoriaToCloneId, convocatoriaClonedId);
 
+    // then: se persisten un nuevo RequisitoIP, NivelAcademico y
+    // CategoriaProfesional cada uno una vez
     verify(this.requisitoIPRepository, times(1)).save(ArgumentMatchers.<RequisitoIP>any());
     verify(this.requisitoIPNivelAcademicoRepository, times(1)).save(ArgumentMatchers.<RequisitoIPNivelAcademico>any());
     verify(this.requisitoIPCategoriaProfesionalRepository, times(1))
@@ -259,6 +328,7 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
   @Test
   void cloneRequisitosEquipo_ShouldCloneRequisitoEquipo() {
+    // given: un RequisitoEquipo asociado a la convocatoria a clonar
     Long convocatoriaToCloneId = 1L;
     Long convocatoriaClonedId = 2L;
     RequisitoEquipo requisito = buildMockRequisitoEquipo(convocatoriaClonedId);
@@ -268,13 +338,17 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
     BDDMockito.given(this.requisitoEquipoRepository.save(ArgumentMatchers.<RequisitoEquipo>any()))
         .willReturn(requisito);
 
+    // when: se llama a cloneRequisitosEquipo
     service.cloneRequisitosEquipo(convocatoriaToCloneId, convocatoriaClonedId);
 
+    // then: se persiste un nuevo RequisitoEquipo una vez
     verify(this.requisitoEquipoRepository, times(1)).save(ArgumentMatchers.<RequisitoEquipo>any());
   }
 
   @Test
   void cloneConvocatoriaConceptosGastosAndConvocatoriaConceptoCodigosEc_ShouldCloneConvocatoriaConceptosGastosAndConvocatoriaConceptoCodigosEc() {
+    // given: un ConvocatoriaConceptoGasto con un ConvocatoriaConceptoGastoCodigoEc
+    // asociado a la convocatoria a clonar
     Long convocatoriaToCloneId = 1L;
     Long convocatoriaClonedId = 2L;
     List<ConvocatoriaConceptoGasto> gastos = Arrays.asList(buildMockConvocatoriaConceptoGasto(convocatoriaClonedId));
@@ -290,16 +364,38 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
     BDDMockito.given(this.convocatoriaConceptoGastoCodigoEcRepository
         .save(ArgumentMatchers.<ConvocatoriaConceptoGastoCodigoEc>any())).willReturn(gastosCodEc.get(0));
 
+    ArgumentCaptor<ConvocatoriaConceptoGasto> gastoCaptor = ArgumentCaptor.forClass(ConvocatoriaConceptoGasto.class);
+    ArgumentCaptor<ConvocatoriaConceptoGastoCodigoEc> codEcCaptor = ArgumentCaptor
+        .forClass(ConvocatoriaConceptoGastoCodigoEc.class);
+
+    // when: se llama a
+    // cloneConvocatoriaConceptosGastosAndConvocatoriaConceptoCodigosEc
     service.cloneConvocatoriaConceptosGastosAndConvocatoriaConceptoCodigosEc(convocatoriaToCloneId,
         convocatoriaClonedId);
 
-    verify(this.convocatoriaConceptoGastoRepository, times(1)).save(ArgumentMatchers.<ConvocatoriaConceptoGasto>any());
-    verify(this.convocatoriaConceptoGastoCodigoEcRepository, times(1))
-        .save(ArgumentMatchers.<ConvocatoriaConceptoGastoCodigoEc>any());
+    // then: se persisten el nuevo ConvocatoriaConceptoGasto y su CodigoEc con el id
+    // de la convocatoria clonada y copias nuevas de observaciones
+    verify(this.convocatoriaConceptoGastoRepository, times(1)).save(gastoCaptor.capture());
+    ConvocatoriaConceptoGasto savedGasto = gastoCaptor.getValue();
+    Assertions.assertThat(savedGasto.getConvocatoriaId()).isEqualTo(convocatoriaClonedId);
+    Assertions.assertThat(savedGasto.getMesInicial()).isEqualTo(gastos.get(0).getMesInicial());
+    Assertions.assertThat(savedGasto.getMesFinal()).isEqualTo(gastos.get(0).getMesFinal());
+    Assertions.assertThat(savedGasto.getObservaciones())
+        .isNotSameAs(gastos.get(0).getObservaciones())
+        .containsExactlyInAnyOrderElementsOf(gastos.get(0).getObservaciones());
+
+    verify(this.convocatoriaConceptoGastoCodigoEcRepository, times(1)).save(codEcCaptor.capture());
+    ConvocatoriaConceptoGastoCodigoEc savedCodEc = codEcCaptor.getValue();
+    Assertions.assertThat(savedCodEc.getConvocatoriaConceptoGastoId()).isEqualTo(gastos.get(0).getId());
+    Assertions.assertThat(savedCodEc.getCodigoEconomicoRef()).isEqualTo(gastosCodEc.get(0).getCodigoEconomicoRef());
+    Assertions.assertThat(savedCodEc.getObservaciones())
+        .isNotSameAs(gastosCodEc.get(0).getObservaciones())
+        .containsExactlyInAnyOrderElementsOf(gastosCodEc.get(0).getObservaciones());
   }
 
   @Test
   void clonePartidasPresupuestarias_ShouldCloneConvocatoriaPartida() {
+    // given: una ConvocatoriaPartida asociada a la convocatoria a clonar
     Long convocatoriaToCloneId = 1L;
     Long convocatoriaClonedId = 2L;
     List<ConvocatoriaPartida> partidas = Arrays.asList(buildMockConvocatoriaPartida(convocatoriaClonedId));
@@ -308,10 +404,21 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
     BDDMockito.given(this.convocatoriaPartidaRepository.save(ArgumentMatchers.<ConvocatoriaPartida>any()))
         .willReturn(partidas.get(0));
 
+    ArgumentCaptor<ConvocatoriaPartida> captor = ArgumentCaptor.forClass(ConvocatoriaPartida.class);
+
+    // when: se llama a clonePartidasPresupuestarias
     service.clonePartidasPresupuestarias(convocatoriaToCloneId, convocatoriaClonedId);
 
-    verify(this.convocatoriaPartidaRepository, times(1)).save(ArgumentMatchers.<ConvocatoriaPartida>any());
-
+    // then: se persiste una nueva ConvocatoriaPartida vinculada a la convocatoria
+    // clonada con el mismo codigo y tipoPartida y una copia nueva de descripcion
+    verify(this.convocatoriaPartidaRepository, times(1)).save(captor.capture());
+    ConvocatoriaPartida saved = captor.getValue();
+    Assertions.assertThat(saved.getConvocatoriaId()).isEqualTo(convocatoriaClonedId);
+    Assertions.assertThat(saved.getCodigo()).isEqualTo(partidas.get(0).getCodigo());
+    Assertions.assertThat(saved.getTipoPartida()).isEqualTo(partidas.get(0).getTipoPartida());
+    Assertions.assertThat(saved.getDescripcion())
+        .isNotSameAs(partidas.get(0).getDescripcion())
+        .containsExactlyInAnyOrderElementsOf(partidas.get(0).getDescripcion());
   }
 
   private ConvocatoriaAreaTematica buildMockConvocatoriaAreaTematica(Long convocatoriaId) {
@@ -351,7 +458,6 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
   private ConvocatoriaEntidadFinanciadora buildMockConvocatoriaEntidadFinanciadora(Long convocatoriaClonedId,
       String entidadRef) {
-    // @formatter: off
     return ConvocatoriaEntidadFinanciadora.builder()
         .convocatoriaId(convocatoriaClonedId)
         .entidadRef(entidadRef)
@@ -360,11 +466,9 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         .porcentajeFinanciacion(new BigDecimal(100))
         .importeFinanciacion(new BigDecimal(12000))
         .build();
-    // @formatter: on
   }
 
   private ConvocatoriaPeriodoJustificacion buildMockConvocatoriaPeriodoJustificacion(Long convocatoriaClonedId) {
-    //@formatter:off
     Set<ConvocatoriaPeriodoJustificacionObservaciones> obsConvocatoriaPeriodoJustificacion = new HashSet<>();
     obsConvocatoriaPeriodoJustificacion
         .add(new ConvocatoriaPeriodoJustificacionObservaciones(Language.ES, "testing"));
@@ -378,31 +482,29 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         .mesInicial(1)
         .observaciones(obsConvocatoriaPeriodoJustificacion)
         .tipo(TipoJustificacion.PERIODICO).build();
-    //@formatter:off
   }
 
-  private ConvocatoriaPeriodoSeguimientoCientifico buildMockConvocatoriaPeriodoSeguimientoCientifico(Long convocatoriaClonedId) {
-    //@formatter:off
+  private ConvocatoriaPeriodoSeguimientoCientifico buildMockConvocatoriaPeriodoSeguimientoCientifico(
+      Long convocatoriaClonedId) {
     Set<ConvocatoriaPeriodoSeguimientoCientificoObservaciones> observaciones = new HashSet<>();
     observaciones.add(new ConvocatoriaPeriodoSeguimientoCientificoObservaciones(Language.ES, "testing"));
 
     return ConvocatoriaPeriodoSeguimientoCientifico.builder()
-    .convocatoriaId(convocatoriaClonedId)
-    .fechaInicioPresentacion(Instant.now())
-    .fechaFinPresentacion(Instant.now().plusSeconds(3600000))
-    .mesInicial(1)
-    .mesFinal(11)
-    .numPeriodo(1)
-    .tipoSeguimiento(TipoSeguimiento.PERIODICO)
-    .observaciones(observaciones)
-    .build();
-    //@formatter:on
+        .convocatoriaId(convocatoriaClonedId)
+        .fechaInicioPresentacion(Instant.now())
+        .fechaFinPresentacion(Instant.now().plusSeconds(3600000))
+        .mesInicial(1)
+        .mesFinal(11)
+        .numPeriodo(1)
+        .tipoSeguimiento(TipoSeguimiento.PERIODICO)
+        .observaciones(observaciones)
+        .build();
   }
 
   private RequisitoIP buildMockRequisitoIP(Long convocatoriaClonedId) {
     Set<RequisitoIPOtrosRequisitos> otrosRequisitos = new HashSet<>();
     otrosRequisitos.add(new RequisitoIPOtrosRequisitos(Language.ES, "TESTING"));
-    //@formatter:off
+
     return RequisitoIP.builder()
         .id(convocatoriaClonedId)
         .numMaximoIP(10)
@@ -414,7 +516,6 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         .numMaximoCompetitivosActivos(9)
         .numMaximoNoCompetitivosActivos(8)
         .otrosRequisitos(otrosRequisitos).build();
-    //@formatter:on    
   }
 
   private RequisitoIPNivelAcademico buildMockRequisitoIPNivelAcademico() {
