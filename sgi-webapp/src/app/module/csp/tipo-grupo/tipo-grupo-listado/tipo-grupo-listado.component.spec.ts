@@ -12,7 +12,6 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { TipoGrupoListadoComponent } from './tipo-grupo-listado.component';
 
-
 describe('TipoGrupoListadoComponent', () => {
   let component: TipoGrupoListadoComponent;
   let fixture: ComponentFixture<TipoGrupoListadoComponent>;

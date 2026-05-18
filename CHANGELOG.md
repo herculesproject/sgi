@@ -22,6 +22,8 @@
 - [CSP] Añadido el campo descripción con soporte i18n en las líneas de investigación ([#51](https://github.com/herculesproject/sgi/issues/51)).
 - [CSP] Añadida la descripción de la línea de investigación seleccionada en modo solo lectura en el formulario de líneas de investigación de los grupos de investigación ([#52](https://github.com/herculesproject/sgi/issues/52)).
 - [CSP] Añadido el campo opcional tipo de enlace en los enlaces de grupo de investigación ([#50](https://github.com/herculesproject/sgi/issues/50)).
+- [CSP] Añadida tabla maestra de tipos de descriptor de grupos de investigación con soporte i18n (configurable en *CSP > Configuración > Tipos de descriptor de grupos*) ([#54](https://github.com/herculesproject/sgi/issues/54)).
+- [CSP] Añadidos descriptores en los grupos de investigación ([#54](https://github.com/herculesproject/sgi/issues/54)).
 - [WEB] Añadido soporte en el componente compartido de subida de ficheros para la descarga del fichero asociado, tooltips configurables y validación de tamaño máximo ([#37](https://github.com/herculesproject/sgi/issues/37)).
 
 ### Changed

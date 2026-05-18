@@ -17,6 +17,7 @@ export const CSP_ROUTE_NAMES = {
   ROL_EQUIPO: 'rol-equipo',
   ROL_SOCIO_PROYECTO: 'roles-socio-proyecto',
   SOLICITUD: 'solicitudes',
+  TIPO_DESCRIPTOR_GRUPO: 'tipos-descriptores-grupo',
   TIPO_DOCUMENTO: 'tipo-documentos',
   TIPO_ENLACE: 'tipo-enlaces',
   TIPO_FACTURACION: 'tipos-facturacion',

@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupo } from '@core/models/csp/grupo';
+import { IGrupoDescriptor } from '@core/models/csp/grupo-descriptor';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
@@ -21,6 +22,8 @@ import {
 import { DateTime } from 'luxon';
 import { from, Observable } from 'rxjs';
 import { map, mergeMap, reduce } from 'rxjs/operators';
+import { IGrupoDescriptorResponse } from '../grupo-descriptor/grupo-descriptor-response';
+import { GRUPO_DESCRIPTOR_RESPONSE_CONVERTER } from '../grupo-descriptor/grupo-descriptor-response.converter';
 import { IGrupoEnlaceResponse } from '../grupo-enlace/grupo-enlace-response';
 import { GRUPO_ENLACE_RESPONSE_CONVERTER } from '../grupo-enlace/grupo-enlace-response.converter';
 import { IGrupoEquipoInstrumentalResponse } from '../grupo-equipo-instrumental/grupo-equipo-instrumental-response';
@@ -98,7 +101,7 @@ export class GrupoService extends _GrupoMixinBase {
 
   /**
    * Busca todos los grupos que tengan alguno de los ids de la lista,
-   * dividiendo la lista de ids en lotes con el tamaño maximo de batchSize 
+   * dividiendo la lista de ids en lotes con el tamaño maximo de batchSize
    * y haciendo tantas peticiones como lotes se generen para hacer la busqueda
    *
    * @param ids lista de identificadores de grupo
@@ -402,12 +405,12 @@ export class GrupoService extends _GrupoMixinBase {
   }
 
   /**
- * Muestra los grupos a los que pertenece el investigador actual
- *
- * @param personaRef Identificador de la persona
- * @param fechaIinicio fecha de inicio de participacion de la persona
- * @param fechaFin fecha de fin de participacion de la persona
- */
+   * Muestra los grupos a los que pertenece el investigador actual
+   *
+   * @param personaRef Identificador de la persona
+   * @param fechaIinicio fecha de inicio de participacion de la persona
+   * @param fechaFin fecha de fin de participacion de la persona
+   */
   findGruposPersona(personaRef: string, fechaInicio?: DateTime, fechaFin?: DateTime): Observable<IGrupo[]> {
     let params = new HttpParams();
     params = params.append('personaRef', personaRef);
@@ -425,6 +428,20 @@ export class GrupoService extends _GrupoMixinBase {
       { params }
     ).pipe(
       map(response => response ? GRUPO_RESPONSE_CONVERTER.toTargetArray(response) : [])
+    );
+  }
+
+  /**
+   * Recupera la lista de descriptores del grupo
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda
+   * @returns la lista de descriptores
+   */
+  findDescriptores(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoDescriptor>> {
+    return this.find<IGrupoDescriptorResponse, IGrupoDescriptor>(
+      `${this.endpointUrl}/${id}/descriptores`,
+      options,
+      GRUPO_DESCRIPTOR_RESPONSE_CONVERTER
     );
   }
 

@@ -19,6 +19,7 @@ const MSG_FACTURAS_PREVISTAS_PENDIENTES_TITLE = marker('menu.csp.facturas-previs
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.csp.configuraciones.fuentes-financiacion');
 const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.csp.configuraciones.conceptos-gasto');
 const MSG_GESTION_LINEA_INVESTIGACION_TITLE = marker('menu.csp.configuraciones.lineas-investigacion');
+const MSG_GESTION_TIPO_DESCRIPTOR_GRUPO_TITLE = marker('menu.csp.configuraciones.tipos-descriptor-grupo');
 const MSG_GESTION_TIPO_GRUPO_TITLE = marker('menu.csp.configuraciones.tipos-grupo');
 const MSG_GRUPO_TITLE = marker('csp.grupo');
 const MSG_MIEMBROS_GRUPOS_INVESTIGACION_TITLE = marker('menu.csp.miembros-grupos-investigacion');
@@ -216,6 +217,19 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_GESTION_TIPO_GRUPO_TITLE,
           hasAnyAuthority: ['CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-TGIN-R']
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_DESCRIPTOR_GRUPO,
+        loadChildren: () =>
+          import('./tipo-descriptor-grupo/tipo-descriptor-grupo.module').then(
+            (m) => m.TipoDescriptorGrupoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_GESTION_TIPO_DESCRIPTOR_GRUPO_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-TDESG-V', 'CSP-TDESG-C', 'CSP-TDESG-E', 'CSP-TDESG-B', 'CSP-TDESG-R']
         }
       },
       {

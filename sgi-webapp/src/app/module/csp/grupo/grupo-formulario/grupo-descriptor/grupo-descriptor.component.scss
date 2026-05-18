@@ -1,0 +1,15 @@
+:host {
+  .mat-cell.mat-column-texto {
+    max-width: 40vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mat-header-cell.mat-column-acciones,
+  .mat-cell.mat-column-acciones {
+    width: 96px;
+    flex: none;
+  }
+
+}

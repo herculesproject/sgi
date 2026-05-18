@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.converter.GrupoConverter;
+import org.crue.hercules.sgi.csp.converter.GrupoDescriptorConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEnlaceConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEquipoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoEquipoInstrumentalConverter;
@@ -16,6 +17,7 @@ import org.crue.hercules.sgi.csp.converter.GrupoPersonaAutorizadaConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoResponsableEconomicoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoTipoConverter;
 import org.crue.hercules.sgi.csp.converter.SolicitudConverter;
+import org.crue.hercules.sgi.csp.dto.GrupoDescriptorOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
 import org.crue.hercules.sgi.csp.dto.GrupoEnlaceOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoEquipoInstrumentalOutput;
@@ -32,6 +34,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoTipoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudResumenOutput;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Grupo;
+import org.crue.hercules.sgi.csp.model.GrupoDescriptor;
 import org.crue.hercules.sgi.csp.model.GrupoEnlace;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipoInstrumental;
@@ -44,6 +47,7 @@ import org.crue.hercules.sgi.csp.model.GrupoTipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.service.GrupoDescriptorService;
 import org.crue.hercules.sgi.csp.service.GrupoEnlaceService;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoInstrumentalService;
 import org.crue.hercules.sgi.csp.service.GrupoEquipoService;
@@ -55,6 +59,7 @@ import org.crue.hercules.sgi.csp.service.GrupoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.GrupoService;
 import org.crue.hercules.sgi.csp.service.GrupoTipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.json.JSONObject;
@@ -109,6 +114,7 @@ public class GrupoController {
       + "/investigadoresprincipalesmaxparticipacion";
   public static final String PATH_PALABRAS_CLAVE = PATH_ID + "/palabrasclave";
   public static final String PATH_GRUPO_TIPO = PATH_ID + "/tipos";
+  public static final String PATH_GRUPO_DESCRIPTORES = PATH_ID + "/descriptores";
   public static final String PATH_GRUPO_ESPECIAL_INVESTIGACION = PATH_ID + "/especiales-investigacion";
   public static final String PATH_GRUPO_RESPONSABLE_ECONOMICO = PATH_ID + "/responsables-economicos";
   public static final String PATH_GRUPO_EQUIPO_INSTRUMENTAL = PATH_ID + "/equipos-instrumentales";
@@ -120,28 +126,30 @@ public class GrupoController {
   public static final String PATH_DTO = PATH_ID + "/grupo-dto";
 
   // Services
-  private final GrupoService service;
-  private final GrupoEquipoService grupoEquipoService;
-  private final GrupoPalabraClaveService grupoPalabraClaveService;
-  private final GrupoTipoService grupoTipoService;
-  private final GrupoEspecialInvestigacionService grupoEspecialInvestigacionService;
-  private final GrupoResponsableEconomicoService grupoResponsableEconomicoService;
-  private final GrupoEquipoInstrumentalService grupoEquipoInstrumentalService;
+  private final GrupoDescriptorService grupoDescriptorService;
   private final GrupoEnlaceService grupoEnlaceService;
-  private final GrupoPersonaAutorizadaService grupoPersonaAutorizadaService;
+  private final GrupoEquipoInstrumentalService grupoEquipoInstrumentalService;
+  private final GrupoEquipoService grupoEquipoService;
+  private final GrupoEspecialInvestigacionService grupoEspecialInvestigacionService;
   private final GrupoLineaInvestigacionService grupoLineaInvestigacionService;
+  private final GrupoPalabraClaveService grupoPalabraClaveService;
+  private final GrupoPersonaAutorizadaService grupoPersonaAutorizadaService;
+  private final GrupoResponsableEconomicoService grupoResponsableEconomicoService;
+  private final GrupoService service;
+  private final GrupoTipoService grupoTipoService;
   private final SolicitudService solicitudService;
   // Converters
   private final GrupoConverter converter;
-  private final GrupoEquipoConverter grupoEquipoConverter;
-  private final GrupoPalabraClaveConverter grupoPalabraClaveConverter;
-  private final GrupoTipoConverter grupoTipoConverter;
-  private final GrupoEspecialInvestigacionConverter grupoEspecialInvestigacionConverter;
-  private final GrupoResponsableEconomicoConverter grupoResponsableEconomicoConverter;
-  private final GrupoEquipoInstrumentalConverter grupoEquipoInstrumentalConverter;
+  private final GrupoDescriptorConverter grupoDescriptorConverter;
   private final GrupoEnlaceConverter grupoEnlaceConverter;
-  private final GrupoPersonaAutorizadaConverter grupoPersonaAutorizadaConverter;
+  private final GrupoEquipoConverter grupoEquipoConverter;
+  private final GrupoEquipoInstrumentalConverter grupoEquipoInstrumentalConverter;
+  private final GrupoEspecialInvestigacionConverter grupoEspecialInvestigacionConverter;
   private final GrupoLineaInvestigacionConverter grupoLineaInvestigacionConverter;
+  private final GrupoPalabraClaveConverter grupoPalabraClaveConverter;
+  private final GrupoPersonaAutorizadaConverter grupoPersonaAutorizadaConverter;
+  private final GrupoResponsableEconomicoConverter grupoResponsableEconomicoConverter;
+  private final GrupoTipoConverter grupoTipoConverter;
   private final SolicitudConverter solicitudConverter;
 
   /**
@@ -763,6 +771,26 @@ public class GrupoController {
     log.debug("findPersonaRefInvestigadoresPrincipalesAndAutorizadas(String query) - end");
     return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
         : new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de los {@link GrupoDescriptor} del
+   * {@link Grupo}.
+   * 
+   * @param id     Identificador del {@link GrupoDescriptor}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de {@link GrupoDescriptor} paginados y filtrados.
+   */
+  @GetMapping(PATH_GRUPO_DESCRIPTORES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
+  public ResponseEntity<Page<GrupoDescriptorOutput>> findAllGrupoDescriptor(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllGrupoDescriptor - id: {}, query: {}, paging: {}", id, query, SgiLogUtils.pageable(paging));
+    Page<GrupoDescriptorOutput> page = grupoDescriptorConverter
+        .convert(grupoDescriptorService.findAllByGrupo(id, query, paging));
+    log.debug("findAllGrupoDescriptor - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

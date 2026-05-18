@@ -6,7 +6,6 @@ import { GrupoEnlaceService } from '@core/services/csp/grupo-enlace/grupo-enlace
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
@@ -16,7 +15,6 @@ export class GrupoEnlaceFragment extends Fragment {
   private gruposEnlaceEliminados: StatusWrapper<IGrupoEnlace>[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
     key: number,
     private readonly grupoService: GrupoService,
     private readonly grupoEnlaceService: GrupoEnlaceService,
@@ -103,7 +101,7 @@ export class GrupoEnlaceFragment extends Fragment {
         return this.grupoEnlaceService.deleteById(wrapped.value.id).pipe(
           tap(() => {
             this.gruposEnlaceEliminados = this.gruposEnlaceEliminados.filter(deleted =>
-              deleted.value.id === wrapped.value.id);
+              deleted.value.id !== wrapped.value.id);
           })
         );
       })
@@ -119,8 +117,10 @@ export class GrupoEnlaceFragment extends Fragment {
       mergeMap((data) => {
         return this.grupoEnlaceService.update(
           data.value.id, data.value).pipe(
-            map((updatedEntidad) => {
-              data = new StatusWrapper<IGrupoEnlace>(updatedEntidad);
+            map((updated) => {
+              updated.tipoEnlace = data.value.tipoEnlace;
+              const index = this.enlaces$.value.findIndex((current) => current === data);
+              this.enlaces$.value[index] = new StatusWrapper<IGrupoEnlace>(updated);
               this.enlaces$.next(this.enlaces$.value);
             })
           );
@@ -140,7 +140,9 @@ export class GrupoEnlaceFragment extends Fragment {
       mergeMap((data) => {
         return this.grupoEnlaceService.create(data.value).pipe(
           map((createdEntidad) => {
-            data = new StatusWrapper<IGrupoEnlace>(createdEntidad);
+            createdEntidad.tipoEnlace = data.value.tipoEnlace;
+            const index = this.enlaces$.value.findIndex((current) => current === data);
+            this.enlaces$.value[index] = new StatusWrapper<IGrupoEnlace>(createdEntidad);
             this.enlaces$.next(this.enlaces$.value);
           })
         );

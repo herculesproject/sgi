@@ -17,6 +17,7 @@ import { GrupoEnlaceListadoExportService } from './grupo-enlace-listado-export.s
 import { GrupoEquipoInstrumentalListadoExportService } from './grupo-equipo-instrumental-listado-export.service';
 import { GrupoEquipoListadoExportService } from './grupo-equipo-listado-export.service';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';
+import { GrupoDescriptorComponent } from './grupo-formulario/grupo-descriptor/grupo-descriptor.component';
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
 import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.component';
 import { GrupoEquipoInvestigacionExportService } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion-export.service';
@@ -31,6 +32,7 @@ import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GrupoPersonaAutorizadaListadoExportService } from './grupo-persona-autorizada-listado-export.service';
 import { GrupoResponsableEconomicoListadoExportService } from './grupo-responsable-economico-listado-export.service';
 import { GrupoRoutingModule } from './grupo-routing.module';
+import { GrupoDescriptorModalComponent } from './modals/grupo-descriptor-modal/grupo-descriptor-modal.component';
 import { GrupoEnlaceModalComponent } from './modals/grupo-enlace-modal/grupo-enlace-modal.component';
 import { GrupoEquipoInstrumentalModalComponent } from './modals/grupo-equipo-instrumental-modal/grupo-equipo-instrumental-modal.component';
 import { GrupoEquipoModalComponent } from './modals/grupo-equipo-modal/grupo-equipo-modal.component';
@@ -43,6 +45,8 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoCrearComponent,
     GrupoDatosGeneralesComponent,
     GrupoEditarComponent,
+    GrupoDescriptorComponent,
+    GrupoDescriptorModalComponent,
     GrupoEnlaceComponent,
     GrupoEnlaceModalComponent,
     GrupoEquipoInstrumentalComponent,

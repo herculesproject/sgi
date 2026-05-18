@@ -63,8 +63,9 @@
     'CSP-THITO-B', 'CSP-THITO-R', 'CSP-ME-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-ME-B', 'CSP-ME-R', 'CSP-PRG-V', 'CSP-PRG-C', 'CSP-PRG-E',
     'CSP-PRG-B', 'CSP-PRG-R', 'CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R', 'CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 
     'CSP-FNT-B', 'CSP-FNT-R', 'CSP-TFNA-V', 'CSP-TFNA-C', 'CSP-TFNA-E', 'CSP-TFNA-B', 'CSP-TFNA-R', 'CSP-TGTO-V', 'CSP-TGTO-C', 'CSP-TGTO-E',
-    'CSP-TGTO-B', 'CSP-TGTO-R', 'CSP-TOFF-V', 'CSP-TOFF-C', 'CSP-TOFF-E', 'CSP-TOFF-B', 'CSP-TOFF-R', 'CSP-TRCO-V', 'CSP-TRCO-C', 'CSP-TRCO-E', 
-    'CSP-TRCO-B', 'CSP-TRCO-R', 'CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-TGIN-R']"
+    'CSP-TGTO-B', 'CSP-TGTO-R', 'CSP-TOFF-V', 'CSP-TOFF-C', 'CSP-TOFF-E', 'CSP-TOFF-B', 'CSP-TOFF-R', 'CSP-TRCO-V', 'CSP-TRCO-C', 'CSP-TRCO-E',
+    'CSP-TRCO-B', 'CSP-TRCO-R', 'CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-TGIN-R',
+    'CSP-TDESG-V', 'CSP-TDESG-C', 'CSP-TDESG-E', 'CSP-TDESG-B', 'CSP-TDESG-R']"
     title="{{'menu.csp.configuraciones' | translate}}" icon="settings">
 
 
@@ -151,6 +152,10 @@
     <sgi-menu-subitem
       *sgiHasAnyAuthorityForAnyUO="['CSP-TGIN-V', 'CSP-TGIN-C', 'CSP-TGIN-E', 'CSP-TGIN-B', 'CSP-TGIN-R']"
       [route]="[CSP_ROUTE_NAMES.TIPO_GRUPO]" title="{{'menu.csp.configuraciones.tipos-grupo' | translate}}">
+    </sgi-menu-subitem>
+    <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-TDESG-V', 'CSP-TDESG-C', 'CSP-TDESG-E', 'CSP-TDESG-B', 'CSP-TDESG-R']"
+      [route]="[CSP_ROUTE_NAMES.TIPO_DESCRIPTOR_GRUPO]"
+      title="{{'menu.csp.configuraciones.tipos-descriptor-grupo' | translate}}">
     </sgi-menu-subitem>
   </sgi-menu-group>
 </sgi-root>

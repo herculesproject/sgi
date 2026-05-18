@@ -33,6 +33,11 @@
       [title]="'csp.grupo-linea-investigacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.LINEA_INVESTIGACION)">
     </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR']"
+      [route]="[GRUPO_ROUTE_NAMES.DESCRIPTOR]"
+      [title]="'csp.grupo-descriptor' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.DESCRIPTOR)">
+    </sgi-action-fragment-menu-item>
   </ng-container>
   <ng-container footer>
     <sgi-action-footer [texto]="textoEditar" [actionService]="actionService">
