@@ -1750,8 +1750,58 @@ class ConvocatoriaIT extends BaseIT {
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-  // @formatter:off
-        "classpath:scripts/modelo_ejecucion.sql",
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/convocatoria_entidad_gestora.sql",
+    "classpath:scripts/programa.sql",
+    "classpath:scripts/convocatoria_entidad_convocante.sql",
+    "classpath:scripts/tipo_origen_fuente_financiacion.sql",
+    "classpath:scripts/fuente_financiacion.sql",
+    "classpath:scripts/tipo_financiacion.sql",
+    "classpath:scripts/convocatoria_entidad_financiadora.sql",
+    "classpath:scripts/area_tematica.sql",
+    "classpath:scripts/convocatoria_area_tematica.sql",
+    "classpath:scripts/requisito_ip.sql",
+    "classpath:scripts/requisitoip_nivelacademico.sql",
+    "classpath:scripts/requisitoip_categoriaprofesional.sql",
+    "classpath:scripts/requisito_equipo.sql",
+    "classpath:scripts/requisitoequipo_nivelacademico.sql",
+    "classpath:scripts/requisitoequipo_categoriaprofesional.sql",
+    "classpath:scripts/concepto_gasto.sql",
+    "classpath:scripts/convocatoria_concepto_gasto.sql",
+    "classpath:scripts/convocatoria_concepto_gasto_codigo_ec.sql",
+    "classpath:scripts/convocatoria_partida.sql",
+    "classpath:scripts/convocatoria_periodos_justificacion.sql",
+    "classpath:scripts/convocatoria_periodo_seguimiento_cientifico.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void clone_WithRelatedEntities_ReturnsClonedId() throws Exception {
+    // given: una Convocatoria existente con entidades relacionadas
+    Long convocatoriaId = 1L;
+
+    // when: se clona la Convocatoria
+    URI cloneUri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CLONE)
+        .buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<Long> cloneResponse = restTemplate.exchange(cloneUri,
+        HttpMethod.POST,
+        buildGenericRequest(null, null, "CSP-CON-C"), Long.class);
+
+    // then: se devuelve HTTP 201 con el id de la Convocatoria clonada
+    Assertions.assertThat(cloneResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(cloneResponse.getBody()).isNotNull();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
     "classpath:scripts/tipo_finalidad.sql",
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
@@ -1761,18 +1811,20 @@ class ConvocatoriaIT extends BaseIT {
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void clone_ReturnsLong() throws Exception {
+  void clone_WithoutRelatedEntities_ReturnsClonedId() throws Exception {
+    // given: una Convocatoria existente sin entidades relacionadas
     Long convocatoriaId = 1L;
 
+    // when: se clona la Convocatoria
     URI uri = UriComponentsBuilder
-        .fromUriString(
-            CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CLONE)
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CLONE)
         .buildAndExpand(convocatoriaId).toUri();
 
     final ResponseEntity<Long> response = restTemplate.exchange(uri,
         HttpMethod.POST,
         buildGenericRequest(null, null, "CSP-CON-C"), Long.class);
 
+    // then: se devuelve HTTP 201 con el id de la Convocatoria clonada
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     Assertions.assertThat(response.getBody()).isNotNull();
   }

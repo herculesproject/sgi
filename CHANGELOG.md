@@ -26,6 +26,9 @@
 - [CSP] Añadidos descriptores en los grupos de investigación ([#54](https://github.com/herculesproject/sgi/issues/54)).
 - [WEB] Añadido soporte en el componente compartido de subida de ficheros para la descarga del fichero asociado, tooltips configurables y validación de tamaño máximo ([#37](https://github.com/herculesproject/sgi/issues/37)).
 
+### Fixed
+- [CSP] Se corrige error al clonar una convocatoria cuando sus periodos de justificación tienen observaciones ([#62](https://github.com/herculesproject/sgi/issues/62)).
+
 ### Changed
 - [CSP] Reordenados los campos de la pantalla de datos generales del grupo de investigación ([#37](https://github.com/herculesproject/sgi/issues/37)).
 - [ETI] Añadir reemplazo de placeholders de nombre de comité en esquemas Formly para el contexto dev ([#36](https://github.com/herculesproject/sgi/issues/36)).

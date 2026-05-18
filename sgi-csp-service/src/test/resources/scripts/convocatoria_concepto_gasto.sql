@@ -29,3 +29,5 @@ VALUES
 (5, 2, 20000.0, 12, 1, true, 1),
 (6, 2, 30000.0, 24, 13, true, 3),
 (7, 2, NULL, NULL, NULL, false, 11);
+
+ALTER SEQUENCE test.convocatoria_concepto_gasto_seq RESTART WITH 8;

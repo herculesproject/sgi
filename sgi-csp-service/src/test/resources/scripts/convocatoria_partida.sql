@@ -28,3 +28,5 @@ INSERT INTO test.convocatoria_partida_descripcion (convocatoria_partida_id, lang
 INSERT INTO test.convocatoria_partida_descripcion (convocatoria_partida_id, lang, value_) VALUES (6, 'es', 'Testing 6');
 INSERT INTO test.convocatoria_partida_descripcion (convocatoria_partida_id, lang, value_) VALUES (7, 'es', 'Testing 7');
 INSERT INTO test.convocatoria_partida_descripcion (convocatoria_partida_id, lang, value_) VALUES (8, 'es', 'Testing 8');
+
+ALTER SEQUENCE test.convocatoria_partida_seq RESTART WITH 9;
