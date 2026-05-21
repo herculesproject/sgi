@@ -9,6 +9,7 @@ import { IGrupoEspecialInvestigacion } from '@core/models/csp/grupo-especial-inv
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
 import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
+import { IGrupoRelacionInstitucional } from '@core/models/csp/grupo-relacion-institucional';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { ISolicitud } from '@core/models/csp/solicitud';
@@ -39,6 +40,8 @@ import { IGrupoPalabraClaveResponse } from '../grupo-palabra-clave/grupo-palabra
 import { GRUPO_PALABRACLAVE_RESPONSE_CONVERTER } from '../grupo-palabra-clave/grupo-palabra-clave-response.converter';
 import { IGrupoPersonaAutorizadaResponse } from '../grupo-persona-autorizada/grupo-persona-autorizada-response';
 import { GRUPO_PERSONA_AUTORIZADA_RESPONSE_CONVERTER } from '../grupo-persona-autorizada/grupo-persona-autorizada-response.converter';
+import { IGrupoRelacionInstitucionalResponse } from '../grupo-relacion-institucional/grupo-relacion-institucional-response';
+import { GRUPO_RELACION_INSTITUCIONAL_RESPONSE_CONVERTER } from '../grupo-relacion-institucional/grupo-relacion-institucional-response.converter';
 import { IGrupoResponsableEconomicoResponse } from '../grupo-responsable-economico/grupo-responsable-economico-response';
 import { GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from '../grupo-responsable-economico/grupo-responsable-economico-response.converter';
 import { IGrupoTipoResponse } from '../grupo-tipo/grupo-tipo-response';
@@ -442,6 +445,20 @@ export class GrupoService extends _GrupoMixinBase {
       `${this.endpointUrl}/${id}/descriptores`,
       options,
       GRUPO_DESCRIPTOR_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera la lista de relaciones institucionales del grupo
+   * @param id Identificador del grupo
+   * @param options opciones de búsqueda
+   * @returns la lista de relaciones institucionales
+   */
+  findRelacionesInstitucionales(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoRelacionInstitucional>> {
+    return this.find<IGrupoRelacionInstitucionalResponse, IGrupoRelacionInstitucional>(
+      `${this.endpointUrl}/${id}/relaciones-institucionales`,
+      options,
+      GRUPO_RELACION_INSTITUCIONAL_RESPONSE_CONVERTER
     );
   }
 

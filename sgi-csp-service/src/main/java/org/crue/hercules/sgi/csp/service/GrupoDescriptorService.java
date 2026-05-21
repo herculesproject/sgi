@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.repository.GrupoDescriptorRepository;
 import org.crue.hercules.sgi.csp.repository.TipoDescriptorGrupoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.GrupoDescriptorSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,7 @@ public class GrupoDescriptorService {
 
   private final GrupoDescriptorRepository repository;
   private final TipoDescriptorGrupoRepository tipoDescriptorGrupoRepository;
+  private final GrupoAuthorityHelper authorityHelper;
 
   /**
    * Guarda la entidad {@link GrupoDescriptor}.
@@ -51,6 +53,7 @@ public class GrupoDescriptorService {
     log.debug("create - data: {}", grupoDescriptor);
 
     AssertHelper.idIsNull(grupoDescriptor.getId(), GrupoDescriptor.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoDescriptor.getGrupoId());
     checkTipoDescriptorGrupoActivo(grupoDescriptor.getTipoDescriptorGrupoId());
 
     GrupoDescriptor saved = repository.save(grupoDescriptor);
@@ -72,6 +75,7 @@ public class GrupoDescriptorService {
     log.debug("update - id: {}, data: {}", grupoDescriptorActualizar.getId(), grupoDescriptorActualizar);
 
     AssertHelper.idNotNull(grupoDescriptorActualizar.getId(), GrupoDescriptor.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoDescriptorActualizar.getGrupoId());
 
     return repository.findById(grupoDescriptorActualizar.getId()).map(data -> {
       if (!Objects.equals(data.getTipoDescriptorGrupoId(), grupoDescriptorActualizar.getTipoDescriptorGrupoId())) {
@@ -96,9 +100,9 @@ public class GrupoDescriptorService {
 
     AssertHelper.idNotNull(id, GrupoDescriptor.class);
 
-    if (!repository.existsById(id)) {
-      throw new GrupoDescriptorNotFoundException(id);
-    }
+    GrupoDescriptor grupoDescriptor = repository.findById(id)
+        .orElseThrow(() -> new GrupoDescriptorNotFoundException(id));
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoDescriptor.getGrupoId());
 
     repository.deleteById(id);
   }
@@ -113,8 +117,10 @@ public class GrupoDescriptorService {
     log.debug("findById - id: {}", id);
 
     AssertHelper.idNotNull(id, GrupoDescriptor.class);
-    return repository.findById(id)
+    GrupoDescriptor grupoDescriptor = repository.findById(id)
         .orElseThrow(() -> new GrupoDescriptorNotFoundException(id));
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoDescriptor.getGrupoId());
+    return grupoDescriptor;
   }
 
   /**
@@ -128,6 +134,7 @@ public class GrupoDescriptorService {
   public Page<GrupoDescriptor> findAllByGrupo(Long grupoId, String query, Pageable paging) {
     log.debug("findAllByGrupo - grupoId: {}, query: {}, paging: {}", grupoId, query, SgiLogUtils.pageable(paging));
     AssertHelper.idNotNull(grupoId, Grupo.class);
+    authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
 
     Specification<GrupoDescriptor> specs = GrupoDescriptorSpecifications.byGrupoId(grupoId)
         .and(SgiRSQLJPASupport.toSpecification(query));

@@ -19,8 +19,7 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 export interface GrupoDescriptorModalData {
   titleEntity: string;
-  selectedEntidades: IGrupoDescriptor[];
-  entidad: IGrupoDescriptor;
+  descriptor: IGrupoDescriptor;
   isEdit: boolean;
 }
 
@@ -58,8 +57,8 @@ export class GrupoDescriptorModalComponent extends DialogFormComponent<GrupoDesc
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup(
       {
-        tipoDescriptorGrupo: new FormControl(this.data?.entidad?.tipoDescriptorGrupo, [Validators.required]),
-        texto: new FormControl(this.data?.entidad?.texto ?? [], [I18nValidators.required, I18nValidators.maxLength(3000)]),
+        tipoDescriptorGrupo: new FormControl(this.data?.descriptor?.tipoDescriptorGrupo, [Validators.required]),
+        texto: new FormControl(this.data?.descriptor?.texto ?? [], [I18nValidators.required, I18nValidators.maxLength(3000)]),
       }
     );
 
@@ -67,8 +66,8 @@ export class GrupoDescriptorModalComponent extends DialogFormComponent<GrupoDesc
   }
 
   protected getValue(): GrupoDescriptorModalData {
-    this.data.entidad.tipoDescriptorGrupo = this.formGroup.get('tipoDescriptorGrupo').value;
-    this.data.entidad.texto = this.formGroup.get('texto').value;
+    this.data.descriptor.tipoDescriptorGrupo = this.formGroup.get('tipoDescriptorGrupo').value;
+    this.data.descriptor.texto = this.formGroup.get('texto').value;
     return this.data;
   }
 

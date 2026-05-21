@@ -18,6 +18,9 @@ import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equip
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
 import { GrupoLineaInvestigacionComponent } from './grupo-formulario/grupo-linea-investigacion-listado/grupo-linea-investigacion.component';
 import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.component';
+import {
+  GrupoRelacionInstitucionalComponent
+} from './grupo-formulario/grupo-relacion-institucional/grupo-relacion-institucional.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GRUPO_ROUTE_NAMES } from './grupo-route-names';
@@ -118,6 +121,11 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_ROUTE_NAMES.LINEA_INVESTIGACION,
         component: GrupoLineaInvestigacionComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.RELACION_INSTITUCIONAL,
+        component: GrupoRelacionInstitucionalComponent,
         canDeactivate: [FragmentGuard],
       },
       {

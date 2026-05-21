@@ -7,6 +7,7 @@ import { IGrupoLineaEquipoInstrumental } from '@core/models/csp/grupo-linea-equi
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
 import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
+import { IGrupoRelacionInstitucional } from '@core/models/csp/grupo-relacion-institucional';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { OutputReport } from '@core/models/rep/output-report.enum';
 import { ISgiColumnReport } from '@core/models/rep/sgi-column-report';
@@ -26,6 +27,7 @@ import { GrupoEquipoListadoExportService } from './grupo-equipo-listado-export.s
 import { GrupoGeneralListadoExportService } from './grupo-general-listado-export.service';
 import { GrupoLineaInvestigacionListadoExportService } from './grupo-linea-investigacion-listado-export.service';
 import { GrupoPersonaAutorizadaListadoExportService } from './grupo-persona-autorizada-listado-export.service';
+import { GrupoRelacionInstitucionalListadoExportService } from './grupo-relacion-institucional-listado-export.service';
 import { GrupoResponsableEconomicoListadoExportService } from './grupo-responsable-economico-listado-export.service';
 
 export interface IGrupoReportData extends IGrupo {
@@ -39,6 +41,7 @@ export interface IGrupoReportData extends IGrupo {
   lineasInvestigador?: IGrupoLineaInvestigador[];
   clasificaciones?: GrupoLineaClasificacionListado[];
   lineasEquiposInstrumentales?: IGrupoLineaEquipoInstrumental[];
+  relacionesInstitucionales?: IGrupoRelacionInstitucional[];
 }
 
 export interface IGrupoReportOptions extends IReportOptions {
@@ -48,6 +51,7 @@ export interface IGrupoReportOptions extends IReportOptions {
   showPersonasAutorizadas: boolean;
   showLineasInvestigacion: boolean;
   showEquiposInstrumentales: boolean;
+  showRelacionesInstitucionales: boolean;
 }
 
 @Injectable()
@@ -63,6 +67,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     private readonly grupoEnlaceListadoExportService: GrupoEnlaceListadoExportService,
     private readonly grupoPersonaAutorizadaListadoExportService: GrupoPersonaAutorizadaListadoExportService,
     private readonly grupoEquipoInstrumentalListadoExportService: GrupoEquipoInstrumentalListadoExportService,
+    private readonly grupoRelacionInstitucionalListadoExportService: GrupoRelacionInstitucionalListadoExportService,
     protected reportService: ReportService
   ) {
     super(reportService);
@@ -108,6 +113,9 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
         if (reportConfig.reportOptions?.showPersonasAutorizadas) {
           row.elements.push(...this.grupoPersonaAutorizadaListadoExportService.fillRows(grupos, index, reportConfig));
         }
+        if (reportConfig.reportOptions?.showRelacionesInstitucionales) {
+          row.elements.push(...this.grupoRelacionInstitucionalListadoExportService.fillRows(grupos, index, reportConfig));
+        }
 
         return row;
       })
@@ -131,7 +139,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
 
         return from(gruposReportData).pipe(
           mergeMap((grupo) => {
-            return this.getDataReportInner(grupo, reportConfig.reportOptions, reportConfig.outputType)
+            return this.getDataReportInner(grupo, reportConfig.reportOptions, reportConfig.outputType);
           }, this.DEFAULT_CONCURRENT)
         ).pipe(
           map(r => {
@@ -139,13 +147,17 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
             return requestsGrupo;
           }),
           takeLast(1)
-        )
+        );
       }),
       takeLast(1)
     );
   }
 
-  private getDataReportInner(grupoData: IGrupoReportData, reportOptions: IGrupoReportOptions, output: OutputReport): Observable<IGrupoReportData> {
+  private getDataReportInner(
+    grupoData: IGrupoReportData,
+    reportOptions: IGrupoReportOptions,
+    output: OutputReport
+  ): Observable<IGrupoReportData> {
     return concat(
       this.getDataReportListadoGeneral(grupoData),
       this.getDataReportEquipoInvestigacion(grupoData, reportOptions),
@@ -153,7 +165,8 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
       this.getDataReportLineaInvestigacion(grupoData, reportOptions),
       this.getDataReportEquipoInstrumental(grupoData, reportOptions),
       this.getDataReportEnlace(grupoData, reportOptions),
-      this.getDataReportPersonaAutorizada(grupoData, reportOptions)
+      this.getDataReportPersonaAutorizada(grupoData, reportOptions),
+      this.getDataReportRelacionInstitucional(grupoData, reportOptions)
     ).pipe(
       takeLast(1),
       catchError((err) => {
@@ -241,6 +254,18 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     }
   }
 
+  private getDataReportRelacionInstitucional(
+    grupoData: IGrupoReportData,
+    reportOptions: IGrupoReportOptions
+  ): Observable<IGrupoReportData> {
+    if (reportOptions?.showRelacionesInstitucionales) {
+      return this.grupoRelacionInstitucionalListadoExportService.getData(grupoData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(grupoData);
+    }
+  }
+
   protected getColumns(resultados: IGrupoReportData[], reportConfig: IReportConfig<IGrupoReportOptions>):
     Observable<ISgiColumnReport[]> {
     const columns: ISgiColumnReport[] = [];
@@ -264,6 +289,9 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     }
     if (reportConfig.reportOptions?.showPersonasAutorizadas) {
       columns.push(... this.grupoPersonaAutorizadaListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showRelacionesInstitucionales) {
+      columns.push(... this.grupoRelacionInstitucionalListadoExportService.fillColumns(resultados, reportConfig));
     }
 
     return of(columns);

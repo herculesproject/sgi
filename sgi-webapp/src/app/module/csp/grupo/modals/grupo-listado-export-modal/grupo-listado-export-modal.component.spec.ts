@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -21,6 +21,7 @@ import { GrupoGeneralListadoExportService } from '../../grupo-general-listado-ex
 import { GrupoLineaInvestigacionListadoExportService } from '../../grupo-linea-investigacion-listado-export.service';
 import { GrupoListadoExportService } from '../../grupo-listado-export.service';
 import { GrupoPersonaAutorizadaListadoExportService } from '../../grupo-persona-autorizada-listado-export.service';
+import { GrupoRelacionInstitucionalListadoExportService } from '../../grupo-relacion-institucional-listado-export.service';
 import { GrupoResponsableEconomicoListadoExportService } from '../../grupo-responsable-economico-listado-export.service';
 import { GrupoListadoExportModalComponent } from './grupo-listado-export-modal.component';
 
@@ -51,18 +52,19 @@ describe('GrupoListadoExportModalComponent', () => {
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: TestUtils.buildDialogActionMatDialogRef() },
         { provide: MAT_DIALOG_DATA, useValue: {} as IBaseExportModalData },
-        SgiAuthService,
-        GrupoListadoExportService,
-        GrupoGeneralListadoExportService,
-        GrupoEquipoListadoExportService,
-        GrupoResponsableEconomicoListadoExportService,
-        GrupoEnlaceListadoExportService,
-        GrupoPersonaAutorizadaListadoExportService,
-        GrupoEquipoInstrumentalListadoExportService,
-        GrupoLineaInvestigacionListadoExportService,
-        LuxonDatePipe,
         DecimalPipe,
-        PercentPipe
+        GrupoEnlaceListadoExportService,
+        GrupoEquipoInstrumentalListadoExportService,
+        GrupoEquipoListadoExportService,
+        GrupoGeneralListadoExportService,
+        GrupoLineaInvestigacionListadoExportService,
+        GrupoListadoExportService,
+        GrupoPersonaAutorizadaListadoExportService,
+        GrupoRelacionInstitucionalListadoExportService,
+        GrupoResponsableEconomicoListadoExportService,
+        LuxonDatePipe,
+        PercentPipe,
+        SgiAuthService
       ]
     })
       .compileComponents();

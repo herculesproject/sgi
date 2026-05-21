@@ -7,13 +7,12 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoDescriptor } from '@core/models/csp/grupo-descriptor';
-import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { DialogService } from '@core/services/dialog.service';
 import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { GrupoActionService } from '../../grupo.action.service';
 import { GrupoDescriptorModalComponent, GrupoDescriptorModalData } from '../../modals/grupo-descriptor-modal/grupo-descriptor-modal.component';
 import { GrupoDescriptorFragment } from './grupo-descriptor.fragment';
@@ -48,7 +47,6 @@ export class GrupoDescriptorComponent extends FragmentComponent implements OnIni
   }
 
   constructor(
-    protected grupoService: GrupoService,
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
@@ -106,36 +104,26 @@ export class GrupoDescriptorComponent extends FragmentComponent implements OnIni
     ).subscribe((value) => this.textoDelete = value);
   }
 
-  openModal(wrapper?: StatusWrapper<IGrupoDescriptor>, rowIndex?: number): void {
-    this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
-    const row = (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
+  openModal(wrapper?: StatusWrapper<IGrupoDescriptor>): void {
 
-    const data: GrupoDescriptorModalData = {
-      titleEntity: this.modalTitleEntity,
-      entidad: wrapper?.value ?? {} as IGrupoDescriptor,
-      selectedEntidades: this.dataSource.data.map((element) => element.value),
-      isEdit: Boolean(wrapper)
+    const config: MatDialogConfig<GrupoDescriptorModalData> = {
+      data: {
+        titleEntity: this.modalTitleEntity,
+        descriptor: wrapper?.value ?? {} as IGrupoDescriptor,
+        isEdit: Boolean(wrapper)
+      }
     };
 
-    if (wrapper) {
-      const filtered = Object.assign([], data.selectedEntidades);
-      filtered.splice(row, 1);
-      data.selectedEntidades = filtered;
-    }
-
-    const config: MatDialogConfig = {
-      data
-    };
     const dialogRef = this.matDialog.open(GrupoDescriptorModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (modalData: GrupoDescriptorModalData) => {
         if (modalData) {
           if (!wrapper) {
-            modalData.entidad.grupoId = this.actionService.id;
-            this.formPart.addGrupoDescriptor(modalData.entidad as IGrupoDescriptor);
+            modalData.descriptor.grupoId = this.actionService.id;
+            this.formPart.addGrupoDescriptor(modalData.descriptor);
           } else if (!wrapper.created) {
-            const entidad = new StatusWrapper<IGrupoDescriptor>(modalData.entidad as IGrupoDescriptor);
-            this.formPart.updateGrupoDescriptor(entidad);
+            const updated = new StatusWrapper<IGrupoDescriptor>(modalData.descriptor);
+            this.formPart.updateGrupoDescriptor(updated);
           }
         }
       }
@@ -144,13 +132,12 @@ export class GrupoDescriptorComponent extends FragmentComponent implements OnIni
 
   deleteDescriptor(wrapper: StatusWrapper<IGrupoDescriptor>) {
     this.subscriptions.push(
-      this.dialogService.showConfirmation(this.textoDelete).subscribe(
-        (aceptado) => {
-          if (aceptado) {
-            this.formPart.deleteGrupoDescriptor(wrapper);
-          }
-        }
-      )
+      this.dialogService.showConfirmation(this.textoDelete)
+        .pipe(
+          filter(Boolean)
+        ).subscribe(() => {
+          this.formPart.deleteGrupoDescriptor(wrapper);
+        })
     );
   }
 

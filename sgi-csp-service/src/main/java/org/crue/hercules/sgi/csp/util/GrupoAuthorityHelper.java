@@ -78,6 +78,10 @@ public class GrupoAuthorityHelper extends AuthorityHelper {
     return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-GIN-E");
   }
 
+  public boolean hasAuthorityCreateUnidadGestion() {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-GIN-C");
+  }
+
   /**
    * Comprueba si el usuario actual pertenece al {@link Grupo}
    * 

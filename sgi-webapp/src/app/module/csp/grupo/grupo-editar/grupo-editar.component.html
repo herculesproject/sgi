@@ -34,6 +34,11 @@
       [fragment]="actionService.getFragment(actionService.FRAGMENT.LINEA_INVESTIGACION)">
     </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR']"
+      [route]="[GRUPO_ROUTE_NAMES.RELACION_INSTITUCIONAL]"
+      [title]="'csp.grupo-relacion-institucional' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.RELACION_INSTITUCIONAL)">
+    </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR']"
       [route]="[GRUPO_ROUTE_NAMES.DESCRIPTOR]"
       [title]="'csp.grupo-descriptor' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.DESCRIPTOR)">

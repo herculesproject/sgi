@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.TipoDescriptorGrupo;
 import org.crue.hercules.sgi.csp.model.TipoDescriptorGrupoNombre;
 import org.crue.hercules.sgi.csp.repository.GrupoDescriptorRepository;
 import org.crue.hercules.sgi.csp.repository.TipoDescriptorGrupoRepository;
+import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -38,6 +39,9 @@ class GrupoDescriptorServiceTest extends BaseServiceTest {
 
   @MockBean
   private TipoDescriptorGrupoRepository tipoDescriptorGrupoRepository;
+
+  @MockBean
+  private GrupoAuthorityHelper authorityHelper;
 
   @Autowired
   private GrupoDescriptorService service;
@@ -189,7 +193,8 @@ class GrupoDescriptorServiceTest extends BaseServiceTest {
   void deleteById_WithExistingId_DeletesGrupoDescriptor() {
     // given: un id existente
     Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    GrupoDescriptor existing = generarMockGrupoDescriptor(id, 1L, 1L);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(existing));
     BDDMockito.willDoNothing().given(repository).deleteById(ArgumentMatchers.anyLong());
 
     // when: se elimina por id
@@ -203,7 +208,7 @@ class GrupoDescriptorServiceTest extends BaseServiceTest {
   void deleteById_WithNoExistingId_ThrowsNotFoundException() {
     // given: un id inexistente
     Long id = 1L;
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: se elimina un GrupoDescriptor inexistente

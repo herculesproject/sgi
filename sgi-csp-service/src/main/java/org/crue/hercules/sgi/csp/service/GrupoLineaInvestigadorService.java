@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.exceptions.GrupoLineaInvestigacionNotFoundExcep
 import org.crue.hercules.sgi.csp.exceptions.GrupoLineaInvestigadorNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.GrupoLineaInvestigadorOverlapRangeException;
 import org.crue.hercules.sgi.csp.exceptions.GrupoLineaInvestigadorProjectRangeException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessGrupoException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
@@ -110,6 +111,9 @@ public class GrupoLineaInvestigadorService {
    */
   public Page<GrupoLineaInvestigador> findAll(String query, Pageable paging) {
     log.debug("findAll(Long grupoId, String query, Pageable paging) - start");
+    if (!authorityHelper.hasAuthorityViewUnidadGestion()) {
+      throw new UserNotAuthorizedToAccessGrupoException();
+    }
     Specification<GrupoLineaInvestigador> specs = SgiRSQLJPASupport.toSpecification(query);
     Page<GrupoLineaInvestigador> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(Long grupoId, String query, Pageable paging) - end");

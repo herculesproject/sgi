@@ -62,21 +62,22 @@ export class GrupoListadoExportModalComponent extends BaseExportModalComponent<I
       showPersonasAutorizadas: new FormControl(true),
       showLineasInvestigacion: new FormControl(true),
       showEquiposInstrumentales: new FormControl(true),
+      showRelacionesInstitucionales: new FormControl(true),
     });
 
-    Object.keys(formGroup.controls).forEach(key => {
-      if (key.startsWith('show')) {
-        this.subscriptions.push(formGroup.get(key).valueChanges.subscribe(() => {
+    Object.keys(formGroup.controls).forEach(controlName => {
+      if (controlName.startsWith('show')) {
+        this.subscriptions.push(formGroup.get(controlName).valueChanges.subscribe(() => {
           let cont = 0;
-          Object.keys(formGroup.controls).forEach(key => {
-            if (key.startsWith('show') && !formGroup.get(key).value) {
+          Object.keys(formGroup.controls).forEach(innerControlName => {
+            if (innerControlName.startsWith('show') && !formGroup.get(innerControlName).value) {
               formGroup.controls.showTodos.setValue(false, { emitEvent: false });
               cont++;
             } else if (cont === 0) {
               formGroup.controls.showTodos.setValue(true, { emitEvent: false });
             }
           });
-        }))
+        }));
       }
     });
 
@@ -94,6 +95,7 @@ export class GrupoListadoExportModalComponent extends BaseExportModalComponent<I
         showPersonasAutorizadas: this.formGroup.controls.showPersonasAutorizadas.value,
         showLineasInvestigacion: this.formGroup.controls.showLineasInvestigacion.value,
         showEquiposInstrumentales: this.formGroup.controls.showEquiposInstrumentales.value,
+        showRelacionesInstitucionales: this.formGroup.controls.showRelacionesInstitucionales.value,
         columnMinWidth: 120
       }
     };

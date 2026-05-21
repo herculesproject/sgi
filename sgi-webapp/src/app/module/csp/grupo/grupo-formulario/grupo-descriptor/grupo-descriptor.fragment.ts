@@ -7,7 +7,6 @@ import { TipoDescriptorGrupoService } from '@core/services/csp/tipo-descriptor-g
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
-
 export class GrupoDescriptorFragment extends Fragment {
   descriptores$ = new BehaviorSubject<StatusWrapper<IGrupoDescriptor>[]>([]);
   private gruposDescriptorEliminados: StatusWrapper<IGrupoDescriptor>[] = [];
@@ -97,13 +96,13 @@ export class GrupoDescriptorFragment extends Fragment {
     }
 
     return from(this.gruposDescriptorEliminados).pipe(
-      mergeMap((wrapped) => {
+      mergeMap((wrapper) => {
         return this.grupoDescriptorService
-          .deleteById(wrapped.value.id)
+          .deleteById(wrapper.value.id)
           .pipe(
             tap(() => {
               this.gruposDescriptorEliminados = this.gruposDescriptorEliminados
-                .filter((deleted) => deleted.value.id !== wrapped.value.id);
+                .filter((deleted) => deleted.value.id !== wrapper.value.id);
             })
           );
       })
@@ -117,13 +116,13 @@ export class GrupoDescriptorFragment extends Fragment {
     }
 
     return from(descriptores).pipe(
-      mergeMap((data) =>
+      mergeMap((wrapper) =>
         this.grupoDescriptorService
-          .update(data.value.id, data.value)
+          .update(wrapper.value.id, wrapper.value)
           .pipe(
             map((updated) => {
-              updated.tipoDescriptorGrupo = data.value.tipoDescriptorGrupo;
-              const index = this.descriptores$.value.findIndex((current) => current === data);
+              updated.tipoDescriptorGrupo = wrapper.value.tipoDescriptorGrupo;
+              const index = this.descriptores$.value.findIndex((current) => current === wrapper);
               this.descriptores$.value[index] = new StatusWrapper<IGrupoDescriptor>(updated);
               this.descriptores$.next(this.descriptores$.value);
             })
@@ -171,10 +170,10 @@ export class GrupoDescriptorFragment extends Fragment {
 
     return this.tipoGrupoDescriptorService.findAllByIdIn(ids).pipe(
       map((response) => {
-        const tiposEnlaceById = new Map<number, ITipoDescriptorGrupo>(response.items.map((t) => [t.id, t]));
+        const tiposDescriptorById = new Map<number, ITipoDescriptorGrupo>(response.items.map((t) => [t.id, t]));
         descriptores.forEach((descriptor) => {
           if (descriptor.tipoDescriptorGrupo?.id) {
-            descriptor.tipoDescriptorGrupo = tiposEnlaceById.get(descriptor.tipoDescriptorGrupo.id) ?? descriptor.tipoDescriptorGrupo;
+            descriptor.tipoDescriptorGrupo = tiposDescriptorById.get(descriptor.tipoDescriptorGrupo.id) ?? descriptor.tipoDescriptorGrupo;
           }
         });
 

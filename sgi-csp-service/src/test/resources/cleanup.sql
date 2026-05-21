@@ -16,6 +16,7 @@ DELETE FROM test.grupo_descriptor_texto;
 DELETE FROM test.grupo_descriptor;
 DELETE FROM test.tipo_descriptor_grupo_nombre;
 DELETE FROM test.tipo_descriptor_grupo;
+DELETE FROM test.grupo_relacion_institucional;
 DELETE FROM test.grupo_enlace;
 DELETE FROM test.grupo_nombre;
 DELETE FROM test.grupo_resumen;
