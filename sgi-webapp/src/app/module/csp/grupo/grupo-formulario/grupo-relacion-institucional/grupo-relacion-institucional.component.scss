@@ -1,0 +1,13 @@
+@import "colors.scss";
+
+:host {
+  .mat-icon.danger {
+    color: map-get($sgi-custom-colors, danger);
+  }
+
+  .mat-header-cell.mat-column-acciones,
+  .mat-cell.mat-column-acciones {
+    width: 96px;
+    flex: none;
+  }
+}

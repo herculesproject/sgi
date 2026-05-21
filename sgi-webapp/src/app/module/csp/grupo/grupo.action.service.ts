@@ -11,6 +11,7 @@ import { GrupoEquipoInstrumentalService } from '@core/services/csp/grupo-equipo-
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
 import { GrupoLineaInvestigacionService } from '@core/services/csp/grupo-linea-investigacion/grupo-linea-investigacion.service';
 import { GrupoPersonaAutorizadaService } from '@core/services/csp/grupo-persona-autorizada/grupo-persona-autorizada.service';
+import { GrupoRelacionInstitucionalService } from '@core/services/csp/grupo-relacion-institucional/grupo-relacion-institucional.service';
 import { GrupoResponsableEconomicoService } from '@core/services/csp/grupo-responsable-economico/grupo-responsable-economico.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
@@ -20,6 +21,7 @@ import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
@@ -36,6 +38,7 @@ import { GrupoEquipoInstrumentalFragment } from './grupo-formulario/grupo-equipo
 import { GrupoEquipoInvestigacionFragment } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.fragment';
 import { GrupoLineaInvestigacionFragment } from './grupo-formulario/grupo-linea-investigacion-listado/grupo-linea-investigacion.fragment';
 import { GrupoPersonaAutorizadaFragment } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.fragment';
+import { GrupoRelacionInstitucionalFragment } from './grupo-formulario/grupo-relacion-institucional/grupo-relacion-institucional.fragment';
 import { GrupoResponsableEconomicoFragment } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.fragment';
 import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 
@@ -61,6 +64,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     ENLACE: 'enlace',
     PERSONA_AUTORIZADA: 'persona-autorizada',
     LINEA_INVESTIGACION: 'linea-investigacion',
+    RELACION_INSTITUCIONAL: 'relacion-institucional',
     DESCRIPTOR: 'descriptor'
   };
 
@@ -71,6 +75,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
   private enlaces: GrupoEnlaceFragment;
   private personasAutorizadas: GrupoPersonaAutorizadaFragment;
   private lineasInvestigacion: GrupoLineaInvestigacionFragment;
+  private relacionesInstitucionales: GrupoRelacionInstitucionalFragment;
   private descriptores: GrupoDescriptorFragment;
 
   private readonly data: IGrupoData;
@@ -95,12 +100,14 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     private translate: TranslateService,
     private readonly configuracionService: ConfigService,
     private readonly documentoService: DocumentoService,
+    private readonly empresaService: EmpresaService,
     private readonly grupoDescriptorService: GrupoDescriptorService,
     private readonly grupoEnlaceService: GrupoEnlaceService,
     private readonly grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService,
     private readonly grupoEquipoService: GrupoEquipoService,
     private readonly grupoLineaInvestigacionService: GrupoLineaInvestigacionService,
     private readonly grupoPersonaAutorizadaService: GrupoPersonaAutorizadaService,
+    private readonly grupoRelacionInstitucionalService: GrupoRelacionInstitucionalService,
     private readonly grupoResponsableEconomicoService: GrupoResponsableEconomicoService,
     private readonly grupoService: GrupoService,
     private readonly lineaInvestigacionService: LineaInvestigacionService,
@@ -190,6 +197,14 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       this.data?.readonly
     );
 
+    this.relacionesInstitucionales = new GrupoRelacionInstitucionalFragment(
+      this.id,
+      grupoService,
+      grupoRelacionInstitucionalService,
+      empresaService,
+      this.data?.readonly
+    );
+
     this.descriptores = new GrupoDescriptorFragment(
       this.id,
       grupoService,
@@ -205,6 +220,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     this.addFragment(this.FRAGMENT.ENLACE, this.enlaces);
     this.addFragment(this.FRAGMENT.PERSONA_AUTORIZADA, this.personasAutorizadas);
     this.addFragment(this.FRAGMENT.LINEA_INVESTIGACION, this.lineasInvestigacion);
+    this.addFragment(this.FRAGMENT.RELACION_INSTITUCIONAL, this.relacionesInstitucionales);
     this.addFragment(this.FRAGMENT.DESCRIPTOR, this.descriptores);
 
     this.datosGenerales.initialize();
@@ -234,7 +250,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
 
           return NEVER;
         })
-      )
+      );
     }
   }
 

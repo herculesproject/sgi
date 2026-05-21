@@ -1,0 +1,60 @@
+<sgi-dialog-header [title]="title"></sgi-dialog-header>
+<sgi-dialog-content>
+  <form [formGroup]="formGroup">
+    <!-- Tipo de introducción -->
+    <div fxLayout="column" class="tipo-introduccion-radio-group">
+      <mat-radio-group formControlName="tipoIntroduccion" fxLayout="column" fxLayoutGap="8px">
+        <mat-radio-button [value]="TIPO_INTRODUCCION_ENTIDAD.SGE">
+          {{ 'csp.grupo-relacion-institucional.tipo.sge' | translate }}
+        </mat-radio-button>
+        <mat-radio-button [value]="TIPO_INTRODUCCION_ENTIDAD.MANUAL">
+          {{ 'csp.grupo-relacion-institucional.tipo.manual' | translate }}
+          <sgi-field-info visible="true"
+            message="{{ 'csp.grupo-relacion-institucional.tipo.manual.tooltip' | translate }}">
+          </sgi-field-info>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Entidad SGE -->
+    <div fxLayout="row" *ngIf="tipoIntroduccion === TIPO_INTRODUCCION_ENTIDAD.SGE">
+      <mat-form-field fxFlex>
+        <mat-label>{{ 'csp.grupo-relacion-institucional.entidad' | translate }}</mat-label>
+        <sgi-select-empresa formControlName="entidad"
+          placeholder="{{ 'csp.grupo-relacion-institucional.entidad' | translate }}" required>
+        </sgi-select-empresa>
+        <mat-error *ngIf="formGroup.controls.entidad.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamEntidad }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.entidad.errors?.notAllowed">
+          {{ 'error.csp.grupo-relacion-institucional.entidad.duplicated' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Institución manual -->
+    <div fxLayout="row" *ngIf="tipoIntroduccion === TIPO_INTRODUCCION_ENTIDAD.MANUAL">
+      <mat-form-field fxFlex>
+        <mat-label>{{ 'csp.grupo-relacion-institucional.institucion' | translate }}</mat-label>
+        <input matInput formControlName="institucion" type="text" required>
+        <mat-error *ngIf="formGroup.controls.institucion.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamInstitucion }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.institucion.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamInstitucion }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.institucion.errors?.notAllowed">
+          {{ 'error.csp.grupo-relacion-institucional.institucion.duplicated' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>{{ textSaveOrUpdate | translate }}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{ 'btn.cancel' | translate }}
+  </button>
+</mat-dialog-actions>

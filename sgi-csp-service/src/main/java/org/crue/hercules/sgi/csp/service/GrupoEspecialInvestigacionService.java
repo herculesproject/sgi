@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import org.crue.hercules.sgi.csp.exceptions.GrupoEspecialInvestigacionNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessGrupoException;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
@@ -46,6 +47,11 @@ public class GrupoEspecialInvestigacionService {
     log.debug("create(GrupoEspecialInvestigacion grupoEspecialInvestigacion) - start");
 
     AssertHelper.idIsNull(grupoEspecialInvestigacion.getId(), GrupoEspecialInvestigacion.class);
+    // Solo se valida el permiso de creación: el método se invoca desde
+    // GrupoService.create, cuando el usuario aún no es miembro del grupo.
+    if (!authorityHelper.hasAuthorityCreateUnidadGestion()) {
+      throw new UserNotAuthorizedToAccessGrupoException();
+    }
 
     GrupoEspecialInvestigacion returnValue = repository.save(grupoEspecialInvestigacion);
 

@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.converter.GrupoEspecialInvestigacionConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoLineaInvestigacionConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoPalabraClaveConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoPersonaAutorizadaConverter;
+import org.crue.hercules.sgi.csp.converter.GrupoRelacionInstitucionalConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoResponsableEconomicoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoTipoConverter;
 import org.crue.hercules.sgi.csp.converter.SolicitudConverter;
@@ -29,6 +30,7 @@ import org.crue.hercules.sgi.csp.dto.GrupoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoPersonaAutorizadaOutput;
+import org.crue.hercules.sgi.csp.dto.GrupoRelacionInstitucionalOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoTipoOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudResumenOutput;
@@ -42,6 +44,7 @@ import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoPalabraClave;
 import org.crue.hercules.sgi.csp.model.GrupoPersonaAutorizada;
+import org.crue.hercules.sgi.csp.model.GrupoRelacionInstitucional;
 import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.GrupoTipo;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
@@ -55,6 +58,7 @@ import org.crue.hercules.sgi.csp.service.GrupoEspecialInvestigacionService;
 import org.crue.hercules.sgi.csp.service.GrupoLineaInvestigacionService;
 import org.crue.hercules.sgi.csp.service.GrupoPalabraClaveService;
 import org.crue.hercules.sgi.csp.service.GrupoPersonaAutorizadaService;
+import org.crue.hercules.sgi.csp.service.GrupoRelacionInstitucionalService;
 import org.crue.hercules.sgi.csp.service.GrupoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.GrupoService;
 import org.crue.hercules.sgi.csp.service.GrupoTipoService;
@@ -121,6 +125,7 @@ public class GrupoController {
   public static final String PATH_GRUPO_ENLACE = PATH_ID + "/enlaces";
   public static final String PATH_GRUPO_PERSONA_AUTORIZADA = PATH_ID + "/personas-autorizadas";
   public static final String PATH_GRUPO_LINEA_INVESTIGACION = PATH_ID + "/lineas-investigacion";
+  public static final String PATH_GRUPO_RELACION_INSTITUCIONAL = PATH_ID + "/relaciones-institucionales";
   public static final String PATH_SOLICITUD = PATH_ID + "/solicitud";
   public static final String PATH_MODIFICABLE = PATH_ID + "/modificable";
   public static final String PATH_DTO = PATH_ID + "/grupo-dto";
@@ -134,6 +139,7 @@ public class GrupoController {
   private final GrupoLineaInvestigacionService grupoLineaInvestigacionService;
   private final GrupoPalabraClaveService grupoPalabraClaveService;
   private final GrupoPersonaAutorizadaService grupoPersonaAutorizadaService;
+  private final GrupoRelacionInstitucionalService grupoRelacionInstitucionalService;
   private final GrupoResponsableEconomicoService grupoResponsableEconomicoService;
   private final GrupoService service;
   private final GrupoTipoService grupoTipoService;
@@ -148,6 +154,7 @@ public class GrupoController {
   private final GrupoLineaInvestigacionConverter grupoLineaInvestigacionConverter;
   private final GrupoPalabraClaveConverter grupoPalabraClaveConverter;
   private final GrupoPersonaAutorizadaConverter grupoPersonaAutorizadaConverter;
+  private final GrupoRelacionInstitucionalConverter grupoRelacionInstitucionalConverter;
   private final GrupoResponsableEconomicoConverter grupoResponsableEconomicoConverter;
   private final GrupoTipoConverter grupoTipoConverter;
   private final SolicitudConverter solicitudConverter;
@@ -790,6 +797,29 @@ public class GrupoController {
     Page<GrupoDescriptorOutput> page = grupoDescriptorConverter
         .convert(grupoDescriptorService.findAllByGrupo(id, query, paging));
     log.debug("findAllGrupoDescriptor - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link GrupoRelacionInstitucional}
+   * del {@link Grupo}.
+   *
+   * @param id     Identificador del {@link Grupo}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de entidades {@link GrupoRelacionInstitucional} paginadas
+   *         y filtradas del {@link Grupo}.
+   */
+  @GetMapping(PATH_GRUPO_RELACION_INSTITUCIONAL)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR')")
+  public ResponseEntity<Page<GrupoRelacionInstitucionalOutput>> findAllGrupoRelacionInstitucional(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllGrupoRelacionInstitucional - grupoId: {}, query: {}, paging: {}",
+        id, query, SgiLogUtils.pageable(paging));
+    Page<GrupoRelacionInstitucionalOutput> page = grupoRelacionInstitucionalConverter
+        .convert(grupoRelacionInstitucionalService.findAllByGrupo(id, query, paging));
+    log.debug("findAllGrupoRelacionInstitucional - response: {}", SgiLogUtils.page(page));
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 

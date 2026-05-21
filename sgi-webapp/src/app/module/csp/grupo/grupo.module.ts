@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { SharedModule } from '@shared/shared.module';
 import { SgeSharedModule } from 'src/app/esb/sge/shared/sge-shared.module';
+import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { GrupoCrearComponent } from './grupo-crear/grupo-crear.component';
@@ -24,12 +25,16 @@ import { GrupoEquipoInvestigacionExportService } from './grupo-formulario/grupo-
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
 import { GrupoLineaInvestigacionComponent } from './grupo-formulario/grupo-linea-investigacion-listado/grupo-linea-investigacion.component';
 import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.component';
+import {
+  GrupoRelacionInstitucionalComponent
+} from './grupo-formulario/grupo-relacion-institucional/grupo-relacion-institucional.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoGeneralListadoExportService } from './grupo-general-listado-export.service';
 import { GrupoLineaInvestigacionListadoExportService } from './grupo-linea-investigacion-listado-export.service';
 import { GrupoListadoExportService } from './grupo-listado-export.service';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GrupoPersonaAutorizadaListadoExportService } from './grupo-persona-autorizada-listado-export.service';
+import { GrupoRelacionInstitucionalListadoExportService } from './grupo-relacion-institucional-listado-export.service';
 import { GrupoResponsableEconomicoListadoExportService } from './grupo-responsable-economico-listado-export.service';
 import { GrupoRoutingModule } from './grupo-routing.module';
 import { GrupoDescriptorModalComponent } from './modals/grupo-descriptor-modal/grupo-descriptor-modal.component';
@@ -38,6 +43,7 @@ import { GrupoEquipoInstrumentalModalComponent } from './modals/grupo-equipo-ins
 import { GrupoEquipoModalComponent } from './modals/grupo-equipo-modal/grupo-equipo-modal.component';
 import { GrupoListadoExportModalComponent } from './modals/grupo-listado-export-modal/grupo-listado-export-modal.component';
 import { GrupoPersonaAutorizadaModalComponent } from './modals/grupo-persona-autorizada-modal/grupo-persona-autorizada-modal.component';
+import { GrupoRelacionInstitucionalModalComponent } from './modals/grupo-relacion-institucional-modal/grupo-relacion-institucional-modal.component';
 import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsable-economico-modal/grupo-responsable-economico-modal.component';
 
 @NgModule({
@@ -58,6 +64,8 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoListadoExportModalComponent,
     GrupoPersonaAutorizadaComponent,
     GrupoPersonaAutorizadaModalComponent,
+    GrupoRelacionInstitucionalComponent,
+    GrupoRelacionInstitucionalModalComponent,
     GrupoResponsableEconomicoComponent,
     GrupoResponsableEconomicoModalComponent
   ],
@@ -69,6 +77,7 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoRoutingModule,
     MaterialDesignModule,
     ReactiveFormsModule,
+    SgempSharedModule,
     SgeSharedModule,
     SgiAuthModule,
     SgpSharedModule,
@@ -85,6 +94,7 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoLineaInvestigacionListadoExportService,
     GrupoListadoExportService,
     GrupoPersonaAutorizadaListadoExportService,
+    GrupoRelacionInstitucionalListadoExportService,
     GrupoResponsableEconomicoListadoExportService,
     LuxonDatePipe,
     PercentPipe

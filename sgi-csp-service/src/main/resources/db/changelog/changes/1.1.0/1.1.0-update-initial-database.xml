@@ -212,7 +212,7 @@
       constraintName="FK_GRUPODESCRIPTOR_GRUPO"
       deferrable="false" initiallyDeferred="false"
       referencedColumnNames="id" referencedTableName="grupo" validate="true" />
-      
+
     <addForeignKeyConstraint baseColumnNames="tipo_descriptor_grupo_id"
       baseTableName="grupo_descriptor"
       constraintName="FK_GRUPODESCRIPTOR_TIPODESCRIPTORGRUPO"
@@ -241,6 +241,40 @@
       constraintName="FK_GRUPODESCRIPTORTEXTO_GRUPODESCRIPTOR"
       deferrable="false" initiallyDeferred="false"
       referencedColumnNames="id" referencedTableName="grupo_descriptor" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-16">
+    <createSequence incrementBy="1" sequenceName="grupo_relacion_institucional_seq" startValue="1" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-17">
+    <createTable tableName="grupo_relacion_institucional">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_relacion_institucionalPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="entidad_ref" type="VARCHAR(255)" />
+      <column name="institucion" type="VARCHAR(1000)" />
+    </createTable>
+
+    <addForeignKeyConstraint baseColumnNames="grupo_id"
+      baseTableName="grupo_relacion_institucional"
+      constraintName="FK_GRUPORELACIONINSTITUCIONAL_GRUPO"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+
+    <addUniqueConstraint columnNames="grupo_id, entidad_ref"
+      constraintName="UK_GRUPORELACIONINSTITUCIONAL_GRUPO_ENTIDADREF"
+      tableName="grupo_relacion_institucional" />
+    <addUniqueConstraint columnNames="grupo_id, institucion"
+      constraintName="UK_GRUPORELACIONINSTITUCIONAL_GRUPO_INSTITUCION"
+      tableName="grupo_relacion_institucional" />
   </changeSet>
 
 </databaseChangeLog>
