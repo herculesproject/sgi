@@ -44,7 +44,6 @@ export class TipoGrupoModalComponent extends DialogActionComponent<ITipoGrupo> i
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.matDialogRef.updateSize('30vw');
     this.setupI18N();
   }
 

@@ -767,7 +767,6 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
-    proyecto.setConfidencial(Boolean.FALSE);
     proyecto.setActivo(true);
     proyecto.setEstado(estadoProyecto);
 

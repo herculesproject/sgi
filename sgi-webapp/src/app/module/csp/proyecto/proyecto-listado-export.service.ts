@@ -234,6 +234,8 @@ export class ProyectoListadoExportService extends AbstractTableExportService<IPr
       observable$ = this.proyectoService.findAll(findOptions);
     }
 
+    this.proyectoGeneralListadoExportService.clearCache();
+
     return observable$.pipe(
       map((proyectos) => {
         return proyectos.items.map((pr) => pr as IProyectoReportData);
@@ -241,16 +243,20 @@ export class ProyectoListadoExportService extends AbstractTableExportService<IPr
       switchMap((proyectosReportData) => {
         return from(proyectosReportData).pipe(
           mergeMap((proyecto) => {
-            return this.getDataReportInner(proyecto, reportConfig.reportOptions, reportConfig.outputType)
+            return this.getDataReportInner(proyecto, reportConfig.reportOptions, reportConfig.outputType);
           }, this.DEFAULT_CONCURRENT),
           toArray()
-        )
+        );
       }),
       takeLast(1)
     );
   }
 
-  private getDataReportInner(proyectoData: IProyectoReportData, reportOptions: IProyectoReportOptions, output: OutputReport): Observable<IProyectoReportData> {
+  private getDataReportInner(
+    proyectoData: IProyectoReportData,
+    reportOptions: IProyectoReportOptions,
+    output: OutputReport
+  ): Observable<IProyectoReportData> {
     return concat(
       this.getDataReportListadoGeneral(proyectoData),
       this.getDataReportHeader(proyectoData, output),
@@ -523,7 +529,8 @@ export class ProyectoListadoExportService extends AbstractTableExportService<IPr
     }
   }
 
-  private getDataReportHeader(convocatoriaData: IProyectoReportData,
+  private getDataReportHeader(
+    convocatoriaData: IProyectoReportData,
     output: OutputReport
   ): Observable<IProyectoReportData> {
     if (output === OutputReport.PDF || output === OutputReport.RTF) {
@@ -534,7 +541,8 @@ export class ProyectoListadoExportService extends AbstractTableExportService<IPr
     }
   }
 
-  private getDataReportFooter(convocatoriaData: IProyectoReportData,
+  private getDataReportFooter(
+    convocatoriaData: IProyectoReportData,
     output: OutputReport
   ): Observable<IProyectoReportData> {
     if (output === OutputReport.PDF || output === OutputReport.RTF) {

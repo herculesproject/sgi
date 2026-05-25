@@ -113,8 +113,7 @@ class TipoDescriptorGrupoServiceTest extends BaseServiceTest {
         () -> service.create(newData))
         // then: se lanza excepción porque el nombre ya existe
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessage(
-            "create.tipoDescriptorGrupo.Nombre: Ya existe un tipo de descriptor de grupo con el nombre 'nombre-1'");
+        .hasMessageContaining("Ya existe un tipo de descriptor de grupo con el nombre 'nombre-1'");
   }
 
   @Test
@@ -236,7 +235,7 @@ class TipoDescriptorGrupoServiceTest extends BaseServiceTest {
         () -> service.enable(id))
         // then: se lanza ConstraintViolationException
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessage("Nombre: Ya existe un tipo de descriptor de grupo con el nombre 'nombre-1'");
+        .hasMessageContaining("Ya existe un tipo de descriptor de grupo con el nombre 'nombre-1'");
   }
 
   @Test

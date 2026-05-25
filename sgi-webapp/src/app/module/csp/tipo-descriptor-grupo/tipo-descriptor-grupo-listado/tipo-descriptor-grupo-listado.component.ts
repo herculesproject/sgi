@@ -28,7 +28,6 @@ const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
 const TIPO_DESCRIPTOR_GRUPO_KEY = marker('csp.tipo-descriptor-grupo');
 
 @Component({
-  selector: 'sgi-tipo-descriptor-grupo-listado',
   templateUrl: './tipo-descriptor-grupo-listado.component.html',
   styleUrls: ['./tipo-descriptor-grupo-listado.component.scss']
 })

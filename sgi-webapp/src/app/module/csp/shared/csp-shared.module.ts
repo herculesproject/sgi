@@ -40,6 +40,7 @@ import { SelectRequerimientoJustificacionComponent } from './select-requerimient
 import { SelectRolEquipoComponent } from './select-rol-equipo/select-rol-equipo.component';
 import { SelectRolSocioComponent } from './select-rol-socio/select-rol-socio.component';
 import { SelectTipoAmbitoGeograficoComponent } from './select-tipo-ambito-geografico/select-tipo-ambito-geografico.component';
+import { SelectTipoConfidencialidadComponent } from './select-tipo-confidencialidad/select-tipo-confidencialidad.component';
 import { SelectTipoDescriptorGrupoComponent } from './select-tipo-descriptor-grupo/select-tipo-descriptor-grupo.component';
 import { SelectTipoDocumentoComponent } from './select-tipo-documento/select-tipo-documento.component';
 import { SelectTipoEnlaceComponent } from './select-tipo-enlace/select-tipo-enlace.component';
@@ -87,6 +88,7 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectRolEquipoComponent,
     SelectRolSocioComponent,
     SelectTipoAmbitoGeograficoComponent,
+    SelectTipoConfidencialidadComponent,
     SelectTipoDescriptorGrupoComponent,
     SelectTipoDocumentoComponent,
     SelectTipoEnlaceComponent,
@@ -141,6 +143,7 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectRolEquipoComponent,
     SelectRolSocioComponent,
     SelectTipoAmbitoGeograficoComponent,
+    SelectTipoConfidencialidadComponent,
     SelectTipoDescriptorGrupoComponent,
     SelectTipoDocumentoComponent,
     SelectTipoEnlaceComponent,

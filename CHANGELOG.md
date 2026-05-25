@@ -17,7 +17,7 @@
 - Añadido soporte para el idioma catalán ([#23](https://github.com/herculesproject/sgi/issues/23)).
 - Añadidos nuevos componentes para poder ser utilizados en los formularios de memoria ([#33](https://github.com/herculesproject/sgi/issues/33)).
 - Añadida documentación para las apis de integración: SGP, SGEMP, SGO, SGE y SGDOC. ([#47](https://github.com/herculesproject/sgi/issues/47)).
-- [CSP] Añadida tabla maestra de tipos de grupo de investigación (`tipo_grupo`) en sustitución del enum anterior (EMERGENTE, CONSOLIDADO, PRECOMPETITIVO, ALTO_RENDIMIENTO), con soporte i18n y personalizable por instalación (configurable en *CSP > Configuración > Tipos de grupo*) ([#45](https://github.com/herculesproject/sgi/issues/45)).
+- [CSP] Añadida tabla maestra de tipos de grupo de investigación en sustitución del enum anterior, con soporte i18n y personalizable por instalación (configurable en *CSP > Configuración > Tipos de grupo*) ([#45](https://github.com/herculesproject/sgi/issues/45)).
 - [CSP] Añadidos los campos acrónimo, dirección, email e imagen en los datos generales del grupo de investigación. La relación de aspecto recomendada y el tamaño máximo de la imagen son configurables en *CSP > Configuración* ([#37](https://github.com/herculesproject/sgi/issues/37)).
 - [CSP] Añadido el campo descripción con soporte i18n en las líneas de investigación ([#51](https://github.com/herculesproject/sgi/issues/51)).
 - [CSP] Añadida la descripción de la línea de investigación seleccionada en modo solo lectura en el formulario de líneas de investigación de los grupos de investigación ([#52](https://github.com/herculesproject/sgi/issues/52)).
@@ -25,6 +25,7 @@
 - [CSP] Añadido el apartado Relaciones institucionales en grupos de investigación ([#53](https://github.com/herculesproject/sgi/issues/53)).
 - [CSP] Añadida tabla maestra de tipos de descriptor de grupos de investigación con soporte i18n (configurable en *CSP > Configuración > Tipos de descriptor de grupos*) ([#54](https://github.com/herculesproject/sgi/issues/54)).
 - [CSP] Añadidos descriptores en los grupos de investigación ([#54](https://github.com/herculesproject/sgi/issues/54)).
+- [CSP] Añadida tabla maestra de tipos de confidencialidad de proyectos en sustitución del campo booleano anterior, con soporte i18n y personalizable por instalación (configurable en *CSP > Configuración > Tipos de confidencialidad*) ([#57](https://github.com/herculesproject/sgi/issues/57)).
 - [WEB] Añadido soporte en el componente compartido de subida de ficheros para la descarga del fichero asociado, tooltips configurables y validación de tamaño máximo ([#37](https://github.com/herculesproject/sgi/issues/37)).
 
 ### Fixed

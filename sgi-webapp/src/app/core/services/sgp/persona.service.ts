@@ -43,7 +43,7 @@ export class PersonaService extends SgiMutableRestService<string, IPersonaBacken
 
   /**
    * Busca todas las personas que tengan alguno de los ids de la lista,
-   * dividiendo la lista de ids en lotes con el tamaño maximo de batchSize 
+   * dividiendo la lista de ids en lotes con el tamaño maximo de batchSize
    * y haciendo tantas peticiones como lotes se generen para hacer la busqueda
    *
    * @param ids lista de identificadores de persona
@@ -52,6 +52,10 @@ export class PersonaService extends SgiMutableRestService<string, IPersonaBacken
    * @returns la lista de personas
    */
   findAllInBactchesByIdIn(ids: string[], batchSize: number, maxConcurrentRequests: number = 10): Observable<IPersona[]> {
+    if (!ids?.length) {
+      return of([]);
+    }
+
     const batches: string[][] = [];
     for (let i = 0; i < ids.length; i += batchSize) {
       batches.push(ids.slice(i, i + batchSize));

@@ -6,9 +6,21 @@ import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investiga
 import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
 import { environment } from '@env';
 import {
-  CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, UpdateCtor
+  CreateCtor,
+  FindAllCtor,
+  FindByIdCtor,
+  mixinCreate,
+  mixinFindAll,
+  mixinFindById,
+  mixinUpdate,
+  RSQLSgiRestFilter,
+  SgiRestBaseService,
+  SgiRestFilterOperator,
+  SgiRestFindOptions,
+  SgiRestListResult,
+  UpdateCtor
 } from '@herculesproject/framework/http';
-import { from, Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, reduce } from 'rxjs/operators';
 import { IGrupoLineaClasificacionResponse } from '../grupo-linea-clasificacion/grupo-linea-clasificacion-response';
 import { GRUPO_LINEA_CLASIFICACION_RESPONSE_CONVERTER } from '../grupo-linea-clasificacion/grupo-linea-clasificacion-response.converter';
@@ -64,7 +76,7 @@ export class GrupoLineaInvestigacionService extends _GrupoLineaInvestigacionMixi
 
   /**
    * Busca todos lineas de los grupos
-   * 
+   *
    * @param ids lista de identificadores
    * @returns la lista de lineas
    */
@@ -77,7 +89,7 @@ export class GrupoLineaInvestigacionService extends _GrupoLineaInvestigacionMixi
   }
 
   /**
-   * Busca todos las lineas de los grupos dividiendo la lista de ids en lotes con el tamaño maximo de batchSize 
+   * Busca todos las lineas de los grupos dividiendo la lista de ids en lotes con el tamaño maximo de batchSize
    * y haciendo tantas peticiones como lotes se generen para hacer la busqueda
    *
    * @param ids lista de identificadores
@@ -86,6 +98,10 @@ export class GrupoLineaInvestigacionService extends _GrupoLineaInvestigacionMixi
    * @returns la lista de lineas
    */
   findAllInBactchesByIdIn(ids: number[], batchSize: number, maxConcurrentBatches: number = 10): Observable<IGrupoLineaInvestigacion[]> {
+    if (!ids?.length) {
+      return of([]);
+    }
+
     const batches: number[][] = [];
     for (let i = 0; i < ids.length; i += batchSize) {
       batches.push(ids.slice(i, i + batchSize));

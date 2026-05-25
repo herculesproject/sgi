@@ -8,30 +8,23 @@ import javax.validation.ConstraintValidatorContext;
 import org.crue.hercules.sgi.csp.model.TipoDescriptorGrupo;
 import org.crue.hercules.sgi.csp.model.TipoDescriptorGrupoNombre;
 import org.crue.hercules.sgi.csp.repository.TipoDescriptorGrupoRepository;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
-import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 /**
- * UniqueNombreTipoDescriptorGrupoActivoValidator
+ * Validador de la restricción {@link UniqueNombreTipoDescriptorGrupoActivo}.
+ * Comprueba contra la base de datos que no exista otro
+ * {@link TipoDescriptorGrupo} activo con el mismo nombre en alguno de los
+ * idiomas informados.
  */
+@RequiredArgsConstructor
 public class UniqueNombreTipoDescriptorGrupoActivoValidator
     implements ConstraintValidator<UniqueNombreTipoDescriptorGrupoActivo, TipoDescriptorGrupo> {
 
-  private TipoDescriptorGrupoRepository repository;
-  private String field;
-
-  public UniqueNombreTipoDescriptorGrupoActivoValidator(TipoDescriptorGrupoRepository repository) {
-    this.repository = repository;
-  }
-
-  @Override
-  public void initialize(UniqueNombreTipoDescriptorGrupoActivo constraintAnnotation) {
-    ConstraintValidator.super.initialize(constraintAnnotation);
-    field = constraintAnnotation.field();
-  }
+  private final TipoDescriptorGrupoRepository repository;
 
   @Override
   @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
@@ -40,27 +33,19 @@ public class UniqueNombreTipoDescriptorGrupoActivoValidator
       return false;
     }
     for (TipoDescriptorGrupoNombre nombreI18n : value.getNombre()) {
-      Optional<TipoDescriptorGrupo> tipoDescriptorGrupo = repository
+      Optional<TipoDescriptorGrupo> existing = repository
           .findByNombreLangAndNombreValueAndActivoIsTrue(nombreI18n.getLang(), nombreI18n.getValue());
-      boolean returnValue = (!tipoDescriptorGrupo.isPresent()
-          || tipoDescriptorGrupo.get().getId().equals(value.getId()));
-      if (!returnValue) {
-        addEntityMessageParameter(context, nombreI18n);
+      if (existing.isPresent() && !existing.get().getId().equals(value.getId())) {
+        addMessageParameters(context, nombreI18n.getValue());
         return false;
       }
     }
     return true;
   }
 
-  private void addEntityMessageParameter(ConstraintValidatorContext context, TipoDescriptorGrupoNombre nombreI18n) {
+  private void addMessageParameters(ConstraintValidatorContext context, String duplicatedValue) {
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
-    hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(TipoDescriptorGrupo.class));
-    hibernateContext.addMessageParameter("nombre", nombreI18n.getValue());
-
-    hibernateContext.disableDefaultConstraintViolation();
-    hibernateContext.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
-        .enableExpressionLanguage(ExpressionLanguageFeatureLevel.BEAN_PROPERTIES)
-        .addPropertyNode(ApplicationContextSupport.getMessage(field)).addConstraintViolation();
+    hibernateContext.addMessageParameter("value", duplicatedValue);
   }
 
 }

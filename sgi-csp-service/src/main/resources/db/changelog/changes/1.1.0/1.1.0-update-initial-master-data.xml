@@ -9,6 +9,10 @@
 
   <property name="schemaPrefix" value="" />
   <property name="defaultLang" value="es" />
+  <property name="boolean.true" value="TRUE" dbms="postgresql, h2" />
+  <property name="boolean.true" value="1" dbms="oracle, mssql" />
+  <property name="boolean.false" value="FALSE" dbms="postgresql, h2" />
+  <property name="boolean.false" value="0" dbms="oracle, mssql" />
 
   <changeSet context="!test" author="master" id="1.1.0-migrar-grupo_tipo-tipo-a-tipo-grupo">
     <insert tableName="tipo_grupo">
@@ -75,10 +79,56 @@
   </changeSet>
   
   <!-- Añadir NotNull y eliminar columnas migradas -->
-  <changeSet author="master" id="1.1.0-migrar-grupo_tipo-cleanup-columns"> 
+  <changeSet author="master" id="1.1.0-migrar-grupo_tipo-cleanup-columns">
     <addNotNullConstraint tableName="grupo_tipo" columnName="tipo_grupo_id" columnDataType="BIGINT" />
     <dropColumn tableName="grupo_tipo" columnName="tipo" />
     <dropColumn tableName="tipo_grupo" columnName="codigo" />
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="1.1.0-migrar-proyecto-confidencial-a-tipo-confidencialidad">
+    <insert tableName="tipo_confidencialidad">
+      <column name="id" valueSequenceNext="tipo_confidencialidad_seq"/>
+      <column name="activo" valueBoolean="true"/>
+      <column name="codigo" value="CONFIDENCIAL"/>
+      <column name="created_by" value="master"/>
+      <column name="creation_date" valueDate="current_timestamp()"/>
+      <column name="last_modified_by" value="master"/>
+      <column name="last_modified_date" valueDate="current_timestamp()"/>
+    </insert>
+    <insert tableName="tipo_confidencialidad">
+      <column name="id" valueSequenceNext="tipo_confidencialidad_seq"/>
+      <column name="activo" valueBoolean="true"/>
+      <column name="codigo" value="NO_CONFIDENCIAL"/>
+      <column name="created_by" value="master"/>
+      <column name="creation_date" valueDate="current_timestamp()"/>
+      <column name="last_modified_by" value="master"/>
+      <column name="last_modified_date" valueDate="current_timestamp()"/>
+    </insert>
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'es', 'Confidencial'   FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'CONFIDENCIAL'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'ca', 'Confidencial'   FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'CONFIDENCIAL'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'en', 'Confidential'   FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'CONFIDENCIAL'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'eu', 'Konfidentziala'  FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'CONFIDENCIAL'</sql>
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'es', 'No confidencial'    FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'NO_CONFIDENCIAL'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'ca', 'No confidencial'    FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'NO_CONFIDENCIAL'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'en', 'Non-confidential'   FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'NO_CONFIDENCIAL'</sql>
+    <sql>INSERT INTO ${schemaPrefix}tipo_confidencialidad_nombre (tipo_confidencialidad_id, lang, value_) SELECT id, 'eu', 'Ez konfidentziala'  FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'NO_CONFIDENCIAL'</sql>
+
+    <update tableName="proyecto">
+      <column name="tipo_confidencialidad_id" valueComputed="(SELECT id FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'CONFIDENCIAL')"/>
+      <where>confidencial = ${boolean.true}</where>
+    </update>
+    <update tableName="proyecto">
+      <column name="tipo_confidencialidad_id" valueComputed="(SELECT id FROM ${schemaPrefix}tipo_confidencialidad WHERE codigo = 'NO_CONFIDENCIAL')"/>
+      <where>confidencial = ${boolean.false}</where>
+    </update>
+  </changeSet>
+
+  <!-- Eliminar columnas migradas -->
+  <changeSet author="master" id="1.1.0-migrar-proyecto-confidencial-cleanup-columns">
+    <dropColumn tableName="proyecto" columnName="confidencial" />
+    <dropColumn tableName="tipo_confidencialidad" columnName="codigo" />
   </changeSet>
 
 </databaseChangeLog>

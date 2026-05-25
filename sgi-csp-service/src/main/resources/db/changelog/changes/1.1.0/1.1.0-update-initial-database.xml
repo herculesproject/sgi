@@ -277,4 +277,60 @@
       tableName="grupo_relacion_institucional" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-18">
+    <createSequence sequenceName="tipo_confidencialidad_seq" startValue="1" incrementBy="1" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-19">
+    <createTable tableName="tipo_confidencialidad">
+      <column name="id" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <!-- Columna temporal para mapear los valores del booleano en la migración -->
+      <column name="codigo" type="VARCHAR(50)" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-20">
+    <createTable tableName="tipo_confidencialidad_nombre">
+      <column name="tipo_confidencialidad_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_confidencialidad_nombre"
+      columnNames="tipo_confidencialidad_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_confidencialidad_id"
+      baseTableName="tipo_confidencialidad_nombre"
+      constraintName="FK_TIPOCONFIDENCIALIDADNOMBRE_TIPOCONFIDENCIALIDAD"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_confidencialidad" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-21">
+    <addColumn tableName="proyecto">
+      <column name="tipo_confidencialidad_id" type="BIGINT" />
+    </addColumn>
+
+    <addForeignKeyConstraint baseColumnNames="tipo_confidencialidad_id"
+      baseTableName="proyecto"
+      constraintName="FK_PROYECTO_TIPOCONFIDENCIALIDAD"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_confidencialidad" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

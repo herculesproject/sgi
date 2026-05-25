@@ -7,6 +7,7 @@ import { IUnidadGestion } from '../usr/unidad-gestion';
 import { IEstadoProyecto } from './estado-proyecto';
 import { IProyectoIVA } from './proyecto-iva';
 import { IRolSocio } from './rol-socio';
+import { ITipoConfidencialidad } from './tipo-confidencialidad';
 import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad } from './tipos-configuracion';
 
 export interface IProyecto {
@@ -44,8 +45,8 @@ export interface IProyecto {
   solicitudId: number;
   /** ambitoGeografico */
   ambitoGeografico: ITipoAmbitoGeografico;
-  /** confidencial */
-  confidencial: boolean;
+  /** tipoConfidencialidad */
+  tipoConfidencialidad: ITipoConfidencialidad;
   /** clasificacionCVN */
   clasificacionCVN: ClasificacionCVN;
   /** coordinado */

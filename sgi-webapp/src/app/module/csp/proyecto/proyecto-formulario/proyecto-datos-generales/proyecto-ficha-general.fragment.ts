@@ -35,7 +35,7 @@ import { SgiAuthService } from '@herculesproject/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, merge, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
 
@@ -88,6 +88,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   readonly vinculacionesProyectosSge$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   readonly iva$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+
+  // tslint:disable-next-line: variable-name
   private _proyectoRelaciones$: BehaviorSubject<IProyectoRelacionTableData[]> = new BehaviorSubject<IProyectoRelacionTableData[]>([]);
 
   public get proyectoRelaciones$() {
@@ -172,14 +174,25 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       switchMap(proyecto => forkJoin({
         convocatoria: this.getConvocatoria(proyecto),
         hasAnyProyectoSocio: this.service.hasAnyProyectoSocio(proyecto.id),
-        palabrasClave: this.service.findPalabrasClave(proyecto.id).pipe(map(({ items }) => items.map(proyectoPalabraClave => proyectoPalabraClave.palabraClave))),
+        palabrasClave: this.service.findPalabrasClave(proyecto.id)
+          .pipe(map(({ items }) => items.map(proyectoPalabraClave => proyectoPalabraClave.palabraClave))),
         rolUniversidad: this.getRolUniversidad(proyecto),
         solicitudProyecto: this.getSocilictudProyecto(proyecto),
         ultimaProrroga: this.getUltimaProrrogaTiempo(proyecto),
         unidadGestion: this.getUnidadGestion(proyecto.unidadGestion.id),
         proyectosSge: this.service.findAllProyectosSgeProyecto(proyecto.id).pipe(map(({ items }) => items.map(p => p.proyectoSge)))
       }).pipe(
-        map(({ convocatoria, hasAnyProyectoSocio, palabrasClave, rolUniversidad, solicitudProyecto, ultimaProrroga, unidadGestion, proyectosSge }) => {
+        map((
+          {
+            convocatoria,
+            hasAnyProyectoSocio,
+            palabrasClave,
+            rolUniversidad,
+            solicitudProyecto,
+            ultimaProrroga,
+            unidadGestion,
+            proyectosSge
+          }) => {
           proyecto.convocatoria = convocatoria;
           proyecto.rolUniversidad = rolUniversidad;
           proyecto.solicitudProyecto = solicitudProyecto;
@@ -238,7 +251,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       modeloEjecucion: new FormControl(null, Validators.required),
       finalidad: new FormControl(null),
       ambitoGeografico: new FormControl(null),
-      confidencial: new FormControl(null),
+      tipoConfidencialidad: new FormControl(null),
       excelencia: new FormControl(null),
       clasificacionCVN: new FormControl(null),
       coordinado: new FormControl(null),
@@ -415,7 +428,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.subscriptions.push(
         this._proyectoRelaciones$.pipe(
           tap(relaciones => {
-            const codigos = relaciones.filter(relacion => relacion.tipoEntidadRelacionada === TipoEntidad.PROYECTO).map(relacion => (relacion.entidadRelacionada as IProyecto).id).join(', ');
+            const codigos = relaciones
+              .filter(relacion => relacion.tipoEntidadRelacionada === TipoEntidad.PROYECTO)
+              .map(relacion => (relacion.entidadRelacionada as IProyecto).id).join(', ');
             form.controls?.proyectosRelacionados.setValue(codigos);
           })
         )
@@ -487,7 +502,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   /**
-   * Comprueba que la fecha de fin sea anterior o igual a la fecha de la ultima prorroga de tiempo o importe y tiempo si la fecha definitiva no esta informada
+   * Comprueba que la fecha de fin sea anterior o igual a la fecha de la ultima prorroga
+   * de tiempo o importe y tiempo si la fecha definitiva no esta informada
    */
   private isFechaFinBeforeOrEqualFechaUltimaProrroga(): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
@@ -516,7 +532,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   /**
-   * Comprueba que la fecha de fin definitiva sea anterior o igual a la fecha de la ultima prorroga de tiempo o importe y tiempo si la fecha definitiva esta informada
+   * Comprueba que la fecha de fin definitiva sea anterior o igual a la fecha de la ultima
+   * prorroga de tiempo o importe y tiempo si la fecha definitiva esta informada
    */
   private isFechaFinDefinitivaBeforeOrEqualFechaUltimaProrroga(): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
@@ -595,7 +612,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       modeloEjecucion: proyecto.modeloEjecucion,
       finalidad: proyecto.finalidad,
       ambitoGeografico: proyecto.ambitoGeografico,
-      confidencial: proyecto.confidencial,
+      tipoConfidencialidad: proyecto.tipoConfidencialidad,
       excelencia: proyecto.excelencia,
       clasificacionCVN: proyecto.clasificacionCVN,
       coordinado: proyecto.coordinado,
@@ -662,7 +679,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.modeloEjecucion = form.modeloEjecucion.value;
     this.proyecto.finalidad = form.finalidad.value;
     this.proyecto.ambitoGeografico = form.ambitoGeografico.value;
-    this.proyecto.confidencial = form.confidencial.value;
+    this.proyecto.tipoConfidencialidad = form.tipoConfidencialidad.value;
     this.proyecto.excelencia = form.excelencia.value;
     this.proyecto.clasificacionCVN = form.clasificacionCVN.value;
     this.proyecto.colaborativo = form.colaborativo.value;
@@ -780,7 +797,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required, IsEntityValidator.isValid()]);
       formgroup.get('ambitoGeografico').setValidators([
         Validators.required]);
-      formgroup.get('confidencial').setValidators([
+      formgroup.get('tipoConfidencialidad').setValidators([
         Validators.required]);
       formgroup.get('coordinado').setValidators([
         Validators.required]);

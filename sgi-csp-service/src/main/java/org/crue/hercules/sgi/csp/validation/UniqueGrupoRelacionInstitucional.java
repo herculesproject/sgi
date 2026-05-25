@@ -8,16 +8,16 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+import org.crue.hercules.sgi.csp.model.GrupoRelacionInstitucional;
+
 /**
- * Restricción de integridad para
- * {@link org.crue.hercules.sgi.csp.model.GrupoRelacionInstitucional} que exige
+ * Restricción de integridad para {@link GrupoRelacionInstitucional} que exige
  * que no se repita el valor dentro del mismo grupo.
  * <p>
  * Cuando se informa {@code entidadRef} no puede existir otra relación del mismo
  * grupo con la misma {@code entidadRef}; análogamente, cuando se informa
  * {@code institucion} no puede existir otra relación del mismo grupo con la
- * misma {@code institucion}. No se controla la coincidencia cruzada entre
- * {@code entidadRef} e {@code institucion}.
+ * misma {@code institucion}.
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
