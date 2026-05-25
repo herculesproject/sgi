@@ -333,4 +333,16 @@
       referencedColumnNames="id" referencedTableName="tipo_confidencialidad" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-22">
+    <addColumn tableName="proyecto">
+      <column name="tipo_regimen_concurrencia_id" type="BIGINT" />
+    </addColumn>
+
+    <addForeignKeyConstraint baseColumnNames="tipo_regimen_concurrencia_id"
+      baseTableName="proyecto"
+      constraintName="FK_PROYECTO_REGIMENCONCURRENCIA"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

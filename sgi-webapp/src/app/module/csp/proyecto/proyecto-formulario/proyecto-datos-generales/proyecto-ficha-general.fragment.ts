@@ -8,7 +8,7 @@ import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
-import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad, ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
 import { IRelacion, TipoEntidad } from '@core/models/rel/relacion';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
@@ -22,6 +22,7 @@ import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service'
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
+import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { LanguageService } from '@core/services/language.service';
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
@@ -63,6 +64,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   private vinculacionesProyectosSge = false;
   finalidadConvocatoria: ITipoFinalidad;
   ambitoGeograficoConvocatoria: ITipoAmbitoGeografico;
+  tipoRegimenConcurrenciaConvocatoria: ITipoRegimenConcurrencia;
   unidadGestionConvocatoria: IUnidadGestion;
   modeloEjecucionConvocatoria: IModeloEjecucion;
 
@@ -83,6 +85,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   finalidadConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   ambitoGeograficoConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  tipoRegimenConcurrenciaConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   unidadGestionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   modeloEjecucionConvocatoria$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   readonly vinculacionesProyectosSge$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -115,6 +118,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private modeloEjecucionService: ModeloEjecucionService,
     private tipoFinalidadService: TipoFinalidadService,
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    private tipoRegimenConcurrenciaService: TipoRegimenConcurrenciaService,
     private convocatoriaService: ConvocatoriaService,
     private solicitudService: SolicitudService,
     private proyectoIvaService: ProyectoIVAService,
@@ -251,6 +255,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       modeloEjecucion: new FormControl(null, Validators.required),
       finalidad: new FormControl(null),
       ambitoGeografico: new FormControl(null),
+      tipoRegimenConcurrencia: new FormControl(null),
       tipoConfidencialidad: new FormControl(null),
       excelencia: new FormControl(null),
       clasificacionCVN: new FormControl(null),
@@ -342,6 +347,16 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         (value) => {
           if (form.controls.convocatoria?.value !== '' && form.controls.ambitoGeografico.value) {
             this.ambitoGeograficoConvocatoria$.next(form.controls.convocatoria.value?.ambitoGeografico?.id !== value?.id);
+          }
+        }
+      )
+    );
+
+    this.subscriptions.push(
+      form.controls.tipoRegimenConcurrencia.valueChanges.subscribe(
+        (value) => {
+          if (form.controls.convocatoria?.value !== '' && form.controls.tipoRegimenConcurrencia.value) {
+            this.tipoRegimenConcurrenciaConvocatoria$.next(form.controls.convocatoria.value?.regimenConcurrencia?.id !== value?.id);
           }
         }
       )
@@ -613,6 +628,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       finalidad: proyecto.finalidad,
       ambitoGeografico: proyecto.ambitoGeografico,
       tipoConfidencialidad: proyecto.tipoConfidencialidad,
+      tipoRegimenConcurrencia: proyecto.tipoRegimenConcurrencia,
       excelencia: proyecto.excelencia,
       clasificacionCVN: proyecto.clasificacionCVN,
       coordinado: proyecto.coordinado,
@@ -639,10 +655,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     if (proyecto.convocatoria && !this.isInvestigador) {
       this.finalidadConvocatoria = proyecto.convocatoria.finalidad;
       this.ambitoGeograficoConvocatoria = proyecto.convocatoria.ambitoGeografico;
+      this.tipoRegimenConcurrenciaConvocatoria = proyecto.convocatoria.regimenConcurrencia;
       this.modeloEjecucionConvocatoria = proyecto.convocatoria.modeloEjecucion;
 
       this.finalidadConvocatoria$.next(proyecto.finalidad?.id !== proyecto.convocatoria.finalidad?.id);
       this.ambitoGeograficoConvocatoria$.next(proyecto.ambitoGeografico?.id !== proyecto.convocatoria.ambitoGeografico?.id);
+      this.tipoRegimenConcurrenciaConvocatoria$.next(
+        proyecto.tipoRegimenConcurrencia?.id !== proyecto.convocatoria.regimenConcurrencia?.id
+      );
       this.subscriptions.push(this.unidadGestionService.findById(proyecto.convocatoria.unidadGestion.id).subscribe(unidadGestion => {
         this.unidadGestionConvocatoria = unidadGestion;
         this.unidadGestionConvocatoria$.next(proyecto.unidadGestion?.id !== proyecto.convocatoria.unidadGestion?.id);
@@ -680,6 +700,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.finalidad = form.finalidad.value;
     this.proyecto.ambitoGeografico = form.ambitoGeografico.value;
     this.proyecto.tipoConfidencialidad = form.tipoConfidencialidad.value;
+    this.proyecto.tipoRegimenConcurrencia = form.tipoRegimenConcurrencia.value;
     this.proyecto.excelencia = form.excelencia.value;
     this.proyecto.clasificacionCVN = form.clasificacionCVN.value;
     this.proyecto.colaborativo = form.colaborativo.value;
@@ -755,6 +776,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         );
       }
 
+      if (convocatoria.regimenConcurrencia && !this.proyecto.tipoRegimenConcurrencia && !this.isEdit()) {
+        this.subscriptions.push(
+          this.tipoRegimenConcurrenciaService.findById(convocatoria.regimenConcurrencia.id).subscribe(tipoRegimenConcurrencia => {
+            this.getFormGroup().controls.tipoRegimenConcurrencia.setValue(tipoRegimenConcurrencia);
+          })
+        );
+      }
+
       if (convocatoria.clasificacionCVN && !this.proyecto.clasificacionCVN && !this.isEdit()) {
         this.getFormGroup().controls.clasificacionCVN.setValue(convocatoria.clasificacionCVN);
       }
@@ -766,6 +795,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
       this.unidadGestionConvocatoria = convocatoria.unidadGestion;
       this.ambitoGeograficoConvocatoria = convocatoria.ambitoGeografico;
+      this.tipoRegimenConcurrenciaConvocatoria = convocatoria.regimenConcurrencia;
       this.finalidadConvocatoria = convocatoria.finalidad;
       this.modeloEjecucionConvocatoria = convocatoria.modeloEjecucion;
 
@@ -783,6 +813,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       }
       this.unidadGestionConvocatoria = null;
       this.ambitoGeograficoConvocatoria = null;
+      this.tipoRegimenConcurrenciaConvocatoria = null;
       this.finalidadConvocatoria = null;
       this.modeloEjecucionConvocatoria = null;
     }

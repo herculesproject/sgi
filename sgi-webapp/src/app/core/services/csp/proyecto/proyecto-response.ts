@@ -39,6 +39,8 @@ export interface IProyectoResponse {
   solicitudId: number;
   /** ambitoGeografico */
   ambitoGeografico: ITipoAmbitoGeograficoResponse;
+  /** Id de TipoRegimenConcurrencia */
+  tipoRegimenConcurrenciaId: number;
   /** Id de TipoConfidencialidad */
   tipoConfidencialidadId: number;
   /** clasificacionCVN */

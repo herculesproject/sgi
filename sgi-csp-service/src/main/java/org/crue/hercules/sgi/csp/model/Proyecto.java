@@ -152,6 +152,10 @@ public class Proyecto extends BaseEntity {
   @Column(name = "tipo_confidencialidad_id", nullable = true)
   private Long tipoConfidencialidadId;
 
+  /** Tipo Regimen Concurrencia */
+  @Column(name = "tipo_regimen_concurrencia_id", nullable = true)
+  private Long tipoRegimenConcurrenciaId;
+
   /** Clasificacion CVN */
   @Column(name = "clasificacion_cvn", length = 50, nullable = true)
   @Enumerated(EnumType.STRING)
@@ -413,5 +417,12 @@ public class Proyecto extends BaseEntity {
   @Setter(AccessLevel.NONE)
   @SuppressWarnings("java:S1170")
   private final TipoConfidencialidad tipoConfidencialidad = null;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "tipo_regimen_concurrencia_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_REGIMENCONCURRENCIA"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
+  private final TipoRegimenConcurrencia tipoRegimenConcurrencia = null;
 
 }

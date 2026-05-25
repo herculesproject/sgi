@@ -278,18 +278,28 @@
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <!-- Tipo Confidencialidad -->
-      <mat-form-field fxFlex="50%">
+      <mat-form-field fxFlex="33%">
         <mat-label>{{'csp.proyecto.confidencial' | translate}}</mat-label>
-        <sgi-select-tipo-confidencialidad formControlName="tipoConfidencialidad"
-          [required]="formPart.abiertoRequired">
+        <sgi-select-tipo-confidencialidad formControlName="tipoConfidencialidad" [required]="formPart.abiertoRequired">
         </sgi-select-tipo-confidencialidad>
         <mat-error *ngIf="formGroup.controls.tipoConfidencialidad.errors?.required">
           {{'error.required.entity' | translate:msgParamConfidencialEntity}}
         </mat-error>
       </mat-form-field>
 
+      <!-- Tipo régimen de concurrencia -->
+      <mat-form-field fxFlex="33%">
+        <mat-label>{{'csp.proyecto.tipo-regimen-concurrencia' | translate}}</mat-label>
+        <sgi-select-tipo-regimen-concurrencia formControlName="tipoRegimenConcurrencia">
+        </sgi-select-tipo-regimen-concurrencia>
+        <sgi-field-info matSuffix
+          [visible]="!formPart.readonly && !formPart.isInvestigador && !formPart.isVisor && (formPart.tipoRegimenConcurrenciaConvocatoria$ | async)"
+          message="{{textoInfoTipoRegimenConcurrenciaConvocatoria}}" color="warn" icon="error">
+        </sgi-field-info>
+      </mat-form-field>
+
       <!-- Clasificacion produccion cientifica -->
-      <mat-form-field fxFlex="50%">
+      <mat-form-field fxFlex="33%">
         <mat-label>{{'csp.proyecto.clasificacion-produccion' | translate}}</mat-label>
         <sgi-select-enum formControlName="clasificacionCVN" [enumMap]="CLASIFICACION_CVN_MAP">
         </sgi-select-enum>
