@@ -345,4 +345,23 @@
       referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-23">
+    <modifyDataType tableName="proyecto_titulo" columnName="value_" newDataType="VARCHAR(1000)" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-24">
+    <renameColumn tableName="proyecto_observaciones" oldColumnName="value_" newColumnName="value_old" />
+
+    <addColumn tableName="proyecto_observaciones">
+      <column name="value_" type="CLOB" />
+    </addColumn>
+
+    <sql>UPDATE ${schemaPrefix}proyecto_observaciones SET value_ = value_old</sql>
+
+    <dropColumn columnName="value_old" tableName="proyecto_observaciones" />
+
+    <addNotNullConstraint tableName="proyecto_observaciones" columnName="value_"
+      columnDataType="CLOB" />
+  </changeSet>
+
 </databaseChangeLog>

@@ -239,7 +239,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         value: '',
         disabled: true
       }),
-      titulo: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
+      titulo: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(1000)]),
       acronimo: new FormControl('', [Validators.maxLength(50)]),
       codigoInterno: new FormControl(null, [Validators.maxLength(50)]),
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),
@@ -271,7 +271,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.buildValidatorIva()
       ]),
       causaExencion: new FormControl(null),
-      observaciones: new FormControl([], I18nValidators.maxLength(2000)),
+      observaciones: new FormControl([], I18nValidators.maxLength(8000)),
       comentario: new FormControl({
         value: [],
         disabled: true

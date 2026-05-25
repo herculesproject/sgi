@@ -41,9 +41,9 @@ public class ProyectoObservaciones implements Serializable, I18nFieldValue {
   private Language lang;
 
   /** Observaciones */
-  @Column(name = "value_", length = 2000, nullable = false)
+  @Column(name = "value_", length = 8000, nullable = false, columnDefinition = "clob")
   @NotBlank
-  @Size(max = 2000)
+  @Size(max = 8000)
   private String value;
 
 }

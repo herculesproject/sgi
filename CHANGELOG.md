@@ -34,6 +34,7 @@
 
 ### Changed
 - [CSP] Reordenados los campos de la pantalla de datos generales del grupo de investigación ([#37](https://github.com/herculesproject/sgi/issues/37)).
+- [CSP] Ampliado el tamaño máximo de los campos título (1000 caracteres) y observaciones (8000 caracteres) del proyecto ([#63](https://github.com/herculesproject/sgi/issues/63)).
 - [ETI] Añadir reemplazo de placeholders de nombre de comité en esquemas Formly para el contexto dev ([#36](https://github.com/herculesproject/sgi/issues/36)).
 
 ## 1.0.0 (2026-02-26)
