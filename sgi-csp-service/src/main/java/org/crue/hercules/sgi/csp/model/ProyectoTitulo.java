@@ -41,9 +41,9 @@ public class ProyectoTitulo implements Serializable, I18nFieldValue {
   private Language lang;
 
   /** Titulo */
-  @Column(name = "value_", length = 250, nullable = false)
+  @Column(name = "value_", length = 1000, nullable = false)
   @NotBlank
-  @Size(max = 250)
+  @Size(max = 1000)
   private String value;
 
 }
