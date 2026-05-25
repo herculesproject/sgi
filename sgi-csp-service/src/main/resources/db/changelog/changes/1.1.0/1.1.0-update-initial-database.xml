@@ -364,4 +364,8 @@
       columnDataType="CLOB" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-25">
+    <modifyDataType tableName="fuente_financiacion_nombre" columnName="value_" newDataType="VARCHAR(550)" />
+  </changeSet>
+
 </databaseChangeLog>

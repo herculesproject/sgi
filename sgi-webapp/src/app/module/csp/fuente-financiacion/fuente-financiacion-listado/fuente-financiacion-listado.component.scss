@@ -1,11 +1,14 @@
 :host {
   .formulario {
     padding: 10px 20px 10px 20px;
+
     .col {
       padding-right: 15px;
     }
+
     .buttons-final {
       padding: 10px 0px 10px 0px;
+
       .filter-button {
         button {
           margin-right: 15px;
@@ -13,4 +16,13 @@
       }
     }
   }
+
+  .mat-cell.mat-column-nombre {
+    max-width: 30vw;
+    overflow: hidden;
+    padding-right: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
 }
