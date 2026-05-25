@@ -1,6 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IRolSocio } from '@core/models/csp/rol-socio';
+import { ITipoConfidencialidad } from '@core/models/csp/tipo-confidencialidad';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
 import { IProyectoResponse } from '@core/services/csp/proyecto/proyecto-response';
@@ -35,7 +36,7 @@ class ProyectoResponseConverter extends SgiBaseConverter<IProyectoResponse, IPro
       convocatoriaExterna: value.convocatoriaExterna,
       solicitudId: value.solicitudId,
       ambitoGeografico: TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER.toTarget(value.ambitoGeografico),
-      confidencial: value.confidencial,
+      tipoConfidencialidad: value.tipoConfidencialidadId ? { id: value.tipoConfidencialidadId } as ITipoConfidencialidad : undefined,
       clasificacionCVN: value.clasificacionCVN,
       colaborativo: value.colaborativo,
       excelencia: value.excelencia,
@@ -83,7 +84,7 @@ class ProyectoResponseConverter extends SgiBaseConverter<IProyectoResponse, IPro
       convocatoriaExterna: value.convocatoriaExterna,
       solicitudId: value.solicitudId,
       ambitoGeografico: TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER.fromTarget(value.ambitoGeografico),
-      confidencial: value.confidencial,
+      tipoConfidencialidadId: value.tipoConfidencialidad?.id,
       clasificacionCVN: value.clasificacionCVN,
       coordinado: value.coordinado,
       colaborativo: value.colaborativo,

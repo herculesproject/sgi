@@ -2,13 +2,18 @@ import { PercentPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
+import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { CAUSA_EXENCION_MAP } from '@core/models/csp/proyecto';
+import { IRolSocio } from '@core/models/csp/rol-socio';
+import { ITipoConfidencialidad } from '@core/models/csp/tipo-confidencialidad';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
+import { TipoConfidencialidadService } from '@core/services/csp/tipo-confidencialidad/tipo-confidencialidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
@@ -17,8 +22,8 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { toString } from '@core/utils/string-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { IProyectoReportData, IProyectoReportOptions } from './proyecto-listado-export.service';
 
 const ID_KEY = marker('csp.proyecto.id-interno');
@@ -50,6 +55,11 @@ const ANIO_KEY = marker('csp.proyecto.anio');
 @Injectable()
 export class ProyectoGeneralListadoExportService extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions> {
 
+  private unidadGestionCache = new Map<number, Observable<IUnidadGestion>>();
+  private rolSocioCache = new Map<number, Observable<IRolSocio>>();
+  private areaTematicaCache = new Map<number, Observable<IAreaTematica>>();
+  private tipoConfidencialidadCache = new Map<number, Observable<ITipoConfidencialidad>>();
+
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
@@ -59,68 +69,83 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     private readonly unidadGestionService: UnidadGestionService,
     private readonly areaTematicaService: AreaTematicaService,
     private readonly rolSocioService: RolSocioService,
+    private readonly tipoConfidencialidadService: TipoConfidencialidadService,
     private readonly percentPipe: PercentPipe,
   ) {
     super(translate);
   }
 
+  public clearCache(): void {
+    this.unidadGestionCache.clear();
+    this.rolSocioCache.clear();
+    this.areaTematicaCache.clear();
+    this.tipoConfidencialidadCache.clear();
+  }
+
   public getData(proyectoData: IProyectoReportData): Observable<IProyectoReportData> {
-    return this.proyectoService.hasProyectoProrrogas(proyectoData.id).pipe(
-      map(value => {
-        proyectoData.prorrogado = value;
-        return proyectoData;
-      }),
-      switchMap(() => this.proyectoService.findAllProyectosSgeProyecto(proyectoData.id).pipe(
-        map(value => {
-          proyectoData.proyectosSGE = value.items.map(element => element.proyectoSge.id).join(', ');
-          return proyectoData;
-        }))
-      ),
-      switchMap((row) => {
-        return this.contextoProyectoService.findById(proyectoData.id).pipe(
-          map(contextoProyecto => {
-            proyectoData.contextoProyecto = contextoProyecto;
-            return proyectoData;
-          })
-        );
-      }),
-      switchMap(() => {
-        if (proyectoData.unidadGestion?.id) {
-          return this.unidadGestionService.findById(proyectoData.unidadGestion?.id).pipe(
-            map(unidadGestion => {
-              proyectoData.unidadGestion = unidadGestion;
-              return proyectoData;
-            })
-          );
-        } else {
-          return of(proyectoData);
-        }
-      }),
-      switchMap(() => {
-        if (proyectoData.rolUniversidad?.id) {
-          return this.rolSocioService.findById(proyectoData.rolUniversidad.id).pipe(
-            map(rolSocio => {
-              proyectoData.rolUniversidad = rolSocio;
-              return proyectoData;
-            })
-          );
-        } else {
-          return of(proyectoData);
-        }
-      }),
-      switchMap(() => {
-        if (proyectoData.contextoProyecto?.areaTematica?.id) {
-          return this.areaTematicaService.findById(proyectoData.contextoProyecto?.areaTematica?.id).pipe(
+    return forkJoin({
+      prorrogado: this.proyectoService.hasProyectoProrrogas(proyectoData.id),
+      proyectosSge: this.proyectoService.findAllProyectosSgeProyecto(proyectoData.id),
+      contextoProyecto: this.contextoProyectoService.findById(proyectoData.id),
+      unidadGestion: proyectoData.unidadGestion?.id
+        ? this.getUnidadGestionCached(proyectoData.unidadGestion.id) : of(null),
+      rolUniversidad: proyectoData.rolUniversidad?.id
+        ? this.getRolSocioCached(proyectoData.rolUniversidad.id) : of(null),
+      tipoConfidencialidad: proyectoData.tipoConfidencialidad?.id
+        ? this.getTipoConfidencialidadCached(proyectoData.tipoConfidencialidad.id) : of(null),
+    }).pipe(
+      switchMap(result => {
+        proyectoData.prorrogado = result.prorrogado;
+        proyectoData.proyectosSGE = result.proyectosSge.items.map(e => e.proyectoSge.id).join(', ');
+        proyectoData.contextoProyecto = result.contextoProyecto;
+        proyectoData.unidadGestion = result.unidadGestion;
+        proyectoData.rolUniversidad = result.rolUniversidad;
+        proyectoData.tipoConfidencialidad = result.tipoConfidencialidad;
+
+        if (result.contextoProyecto?.areaTematica?.id) {
+          return this.getAreaTematicaCached(result.contextoProyecto.areaTematica.id).pipe(
             map(areaTematica => {
               proyectoData.contextoProyecto.areaTematica = areaTematica;
               return proyectoData;
             })
           );
-        } else {
-          return of(proyectoData);
         }
+
+        return of(proyectoData);
       })
     );
+  }
+
+  private getUnidadGestionCached(id: number): Observable<IUnidadGestion> {
+    if (!this.unidadGestionCache.has(id)) {
+      this.unidadGestionCache.set(id, this.unidadGestionService.findById(id).pipe(shareReplay(1)));
+    }
+
+    return this.unidadGestionCache.get(id);
+  }
+
+  private getRolSocioCached(id: number): Observable<IRolSocio> {
+    if (!this.rolSocioCache.has(id)) {
+      this.rolSocioCache.set(id, this.rolSocioService.findById(id).pipe(shareReplay(1)));
+    }
+
+    return this.rolSocioCache.get(id);
+  }
+
+  private getAreaTematicaCached(id: number): Observable<IAreaTematica> {
+    if (!this.areaTematicaCache.has(id)) {
+      this.areaTematicaCache.set(id, this.areaTematicaService.findById(id).pipe(shareReplay(1)));
+    }
+
+    return this.areaTematicaCache.get(id);
+  }
+
+  private getTipoConfidencialidadCached(id: number): Observable<ITipoConfidencialidad> {
+    if (!this.tipoConfidencialidadCache.has(id)) {
+      this.tipoConfidencialidadCache.set(id, this.tipoConfidencialidadService.findById(id).pipe(shareReplay(1)));
+    }
+
+    return this.tipoConfidencialidadCache.get(id);
   }
 
   public fillColumns(
@@ -212,7 +237,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
       },
       {
         title: this.translate.instant(CONFIDENCIAL_KEY),
-        name: 'confidencial',
+        name: 'tipoConfidencialidad',
         type: ColumnType.STRING
       },
       {
@@ -276,11 +301,11 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(proyecto.unidadGestion?.nombre);
     elementsRow.push(proyecto.modeloEjecucion?.nombre ? this.languageService.getFieldValue(proyecto?.modeloEjecucion?.nombre) : '');
     elementsRow.push(this.languageService.getFieldValue(proyecto.finalidad?.nombre));
-    elementsRow.push(toString(proyecto.anio))
+    elementsRow.push(toString(proyecto.anio));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaInicio));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFin));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFinDefinitiva));
-    elementsRow.push(this.notIsNullAndNotUndefined(proyecto.confidencial) ? this.getI18nBooleanYesNo(proyecto.confidencial) : '');
+    elementsRow.push(this.languageService.getFieldValue(proyecto.tipoConfidencialidad?.nombre));
     elementsRow.push(proyecto.clasificacionCVN ? this.translate.instant(CLASIFICACION_CVN_MAP.get(proyecto.clasificacionCVN)) : '');
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.coordinado) ? this.getI18nBooleanYesNo(proyecto.coordinado) : '');
     elementsRow.push(this.languageService.getFieldValue(proyecto.rolUniversidad?.nombre));

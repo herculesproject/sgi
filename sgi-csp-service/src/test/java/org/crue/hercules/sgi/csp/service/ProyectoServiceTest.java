@@ -18,6 +18,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.TipoConfidencialidadNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
@@ -25,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Proyecto.CausaExencion;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
@@ -32,9 +34,9 @@ import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
+import org.crue.hercules.sgi.csp.model.TipoConfidencialidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
-import org.crue.hercules.sgi.csp.model.Proyecto.CausaExencion;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
@@ -68,6 +70,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustifi
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.TipoConfidencialidadRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
@@ -160,29 +163,29 @@ class ProyectoServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoClasificacionRepository proyectoClasificacionRepository;
   @Mock
-  ProgramaRepository programaRepository;
+  private ProgramaRepository programaRepository;
   @Mock
-  ProyectoProrrogaRepository proyectoProrrogaRepository;
+  private ProyectoProrrogaRepository proyectoProrrogaRepository;
   @Mock
-  ProyectoPartidaService proyectoPartidaService;
+  private ProyectoPartidaService proyectoPartidaService;
   @Mock
-  ConvocatoriaPartidaService convocatoriaPartidaService;
+  private ConvocatoriaPartidaService convocatoriaPartidaService;
   @Mock
-  ProyectoIVARepository proyectoIVARepository;
+  private ProyectoIVARepository proyectoIVARepository;
   @Mock
-  ProyectoProyectoSgeRepository proyectoProyectoSgeRepository;
+  private ProyectoProyectoSgeRepository proyectoProyectoSgeRepository;
   @Mock
-  ProyectoConceptoGastoService proyectoConceptoGastoService;
+  private ProyectoConceptoGastoService proyectoConceptoGastoService;
   @Mock
-  ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService;
+  private ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService;
   @Mock
-  ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
+  private ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
   @Mock
   SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository;
   @Mock
   ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
   @Mock
-  Validator validator;
+  private Validator validator;
   @Mock
   private ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository;
   @Mock
@@ -193,35 +196,73 @@ class ProyectoServiceTest extends BaseServiceTest {
   private ProyectoEquipoRepository proyectoEquipoRepository;
   @Mock
   private SgiApiSgempService sgiApiSgempService;
-
-  private ProyectoHelper proyectoHelper;
-  ProyectoFacturacionService proyectoFacturacionService;
+  @Mock
+  private TipoConfidencialidadRepository tipoConfidencialidadRepository;
+  @Mock
+  private ProyectoFacturacionService proyectoFacturacionService;
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
 
+  private ProyectoHelper proyectoHelper;
   private ProyectoService service;
 
   @BeforeEach
   void setUp() {
     proyectoHelper = new ProyectoHelper(repository, proyectoEquipoRepository, proyectoResponsableEconomicoRepository);
-    service = new ProyectoServiceImpl(sgiConfigProperties, repository, estadoProyectoRepository, modeloUnidadRepository,
-        convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
-        convocatoriaEntidadConvocanteRepository, proyectoEntidadConvocanteService, convocatoriaEntidadGestoraRepository,
-        proyectoEntidadGestoraService, contextoProyectoService, convocatoriaPeriodoSeguimientoCientificoRepository,
-        proyectoPeriodoSeguimientoService, solicitudRepository, solicitudProyectoRepository,
-        solicitudModalidadRepository, solicitudEquipoRepository, proyectoEquipoService, solicitudSocioRepository,
-        proyectoSocioService, solicitudEquipoSocioRepository, proyectoEquipoSocioService,
-        solicitudPeriodoPagoRepository, proyectoSocioPeriodoPagoService, solicitudPeriodoJustificacionRepository,
-        proyectoSocioPeriodoJustificacionService, convocatoriaConceptoGastoRepository,
-        solicitudProyectoEntidadFinanciadoraAjenaRepository, proyectoAreaConocimientoRepository,
-        proyectoClasificacionRepository, solicitudProyectoAreaConocimientoRepository,
-        solicitudProyectoClasificacionRepository, programaRepository, proyectoProrrogaRepository,
-        proyectoPartidaService, convocatoriaPartidaService, proyectoIVARepository, proyectoProyectoSgeRepository,
-        proyectoConceptoGastoService, proyectoConceptoGastoCodigoEcService, convocatoriaConceptoGastoCodigoEcRepository,
-        solicitudProyectoResponsableEconomicoRepository, proyectoResponsableEconomicoService, validator,
-        convocatoriaPeriodoJustificacionRepository, proyectoPeriodoJustificacionRepository,
-        estadoProyectoPeriodoJustificacionRepository, proyectoFacturacionService, proyectoHelper, sgiApiSgempService);
+    service = new ProyectoServiceImpl(
+        sgiConfigProperties,
+        contextoProyectoService,
+        convocatoriaConceptoGastoCodigoEcRepository,
+        convocatoriaConceptoGastoRepository,
+        convocatoriaEntidadConvocanteRepository,
+        convocatoriaEntidadFinanciadoraRepository,
+        convocatoriaEntidadGestoraRepository,
+        convocatoriaPartidaService,
+        convocatoriaPeriodoJustificacionRepository,
+        convocatoriaPeriodoSeguimientoCientificoRepository,
+        convocatoriaRepository,
+        estadoProyectoPeriodoJustificacionRepository,
+        estadoProyectoRepository,
+        modeloUnidadRepository,
+        programaRepository,
+        proyectoAreaConocimientoRepository,
+        proyectoClasificacionRepository,
+        proyectoConceptoGastoCodigoEcService,
+        proyectoConceptoGastoService,
+        proyectoEntidadConvocanteService,
+        proyectoEntidadFinanciadoraService,
+        proyectoEntidadGestoraService,
+        proyectoEquipoService,
+        proyectoFacturacionService,
+        proyectoHelper,
+        proyectoIVARepository,
+        proyectoPartidaService,
+        proyectoPeriodoJustificacionRepository,
+        proyectoPeriodoSeguimientoService,
+        proyectoProrrogaRepository,
+        proyectoProyectoSgeRepository,
+        repository,
+        proyectoResponsableEconomicoService,
+        proyectoEquipoSocioService,
+        proyectoSocioPeriodoJustificacionService,
+        proyectoSocioPeriodoPagoService,
+        proyectoSocioService,
+        sgiApiSgempService,
+        solicitudModalidadRepository,
+        solicitudProyectoAreaConocimientoRepository,
+        solicitudProyectoClasificacionRepository,
+        solicitudProyectoEntidadFinanciadoraAjenaRepository,
+        solicitudEquipoRepository,
+        solicitudProyectoRepository,
+        solicitudProyectoResponsableEconomicoRepository,
+        solicitudEquipoSocioRepository,
+        solicitudPeriodoJustificacionRepository,
+        solicitudPeriodoPagoRepository,
+        solicitudSocioRepository,
+        solicitudRepository,
+        tipoConfidencialidadRepository,
+        validator);
   }
 
   @Test
@@ -419,6 +460,45 @@ class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Modelo Ejecución %s no disponible para la Unidad Gestión %s",
             proyecto.getModeloEjecucion().getNombre(), proyecto.getUnidadGestionRef());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void create_WithInactiveTipoConfidencialidad_ThrowsIllegalArgumentException() {
+    // given: Un Proyecto con un TipoConfidencialidad inactivo
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setTipoConfidencialidadId(1L);
+
+    TipoConfidencialidad tipoConfidencialidad = TipoConfidencialidad.builder()
+        .id(1L)
+        .build();
+
+    tipoConfidencialidad.setActivo(Boolean.FALSE);
+
+    BDDMockito.given(tipoConfidencialidadRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(tipoConfidencialidad));
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion porque el TipoConfidencialidad esta inactivo
+    Assertions.assertThatThrownBy(() -> service.create(proyecto))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Tipo de Confidencialidad no está activo", tipoConfidencialidad.getId());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void create_WithNonExistingTipoConfidencialidad_ThrowsNotFoundException() {
+    // given: Un Proyecto con un TipoConfidencialidad inexistente
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setTipoConfidencialidadId(1L);
+
+    BDDMockito.given(tipoConfidencialidadRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
+
+    // when: Creamos el Proyecto
+    // then: Lanza TipoConfidencialidadNotFoundException
+    Assertions.assertThatThrownBy(() -> service.create(proyecto))
+        .isInstanceOf(TipoConfidencialidadNotFoundException.class);
   }
 
   @Test
@@ -645,6 +725,46 @@ class ProyectoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion
     Throwable thrown = Assertions.catchThrowable(() -> this.service.update(proyecto));
     Assertions.assertThat(thrown).isInstanceOf(UserNotAuthorizedToAccessProyectoException.class);
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void update_WithChangedInactiveTipoConfidencialidad_ThrowsIllegalArgumentException() {
+    // given: Un Proyecto cuyo TipoConfidencialidad cambia a uno inactivo
+    Proyecto proyecto = generarMockProyecto(1L);
+    Proyecto proyectoActualizar = generarMockProyecto(1L);
+    proyectoActualizar.setTipoConfidencialidadId(2L);
+
+    TipoConfidencialidad tipoConfidencialidad = TipoConfidencialidad.builder().id(2L).build();
+    tipoConfidencialidad.setActivo(Boolean.FALSE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(tipoConfidencialidadRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(tipoConfidencialidad));
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza una excepcion porque el TipoConfidencialidad esta inactivo
+    Assertions.assertThatThrownBy(() -> service.update(proyectoActualizar))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Tipo de Confidencialidad no está activo", tipoConfidencialidad.getId());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void update_WithChangedNonExistingTipoConfidencialidad_ThrowsNotFoundException() {
+    // given: Un Proyecto cuyo TipoConfidencialidad cambia a uno inexistente
+    Proyecto proyecto = generarMockProyecto(1L);
+    Proyecto proyectoActualizar = generarMockProyecto(1L);
+    proyectoActualizar.setTipoConfidencialidadId(99L);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(tipoConfidencialidadRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza TipoConfidencialidadNotFoundException
+    Assertions.assertThatThrownBy(() -> service.update(proyectoActualizar))
+        .isInstanceOf(TipoConfidencialidadNotFoundException.class);
   }
 
   @Test
@@ -981,7 +1101,6 @@ class ProyectoServiceTest extends BaseServiceTest {
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
-    proyecto.setConfidencial(Boolean.FALSE);
     proyecto.setActivo(true);
 
     if (id != null) {

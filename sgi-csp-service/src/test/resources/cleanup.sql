@@ -258,3 +258,5 @@ DELETE FROM test.convocatoria_concepto_gasto_codigo_ec;
 DELETE FROM test.convocatoria_concepto_gasto;
 DELETE FROM test.tipo_requerimiento_nombre;
 DELETE FROM test.tipo_requerimiento;
+DELETE FROM test.tipo_confidencialidad_nombre;
+DELETE FROM test.tipo_confidencialidad;

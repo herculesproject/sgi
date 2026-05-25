@@ -277,14 +277,13 @@
     </div>
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
-      <!-- Confidencial -->
+      <!-- Tipo Confidencialidad -->
       <mat-form-field fxFlex="50%">
         <mat-label>{{'csp.proyecto.confidencial' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="confidencial" [required]="formPart.abiertoRequired">
-          <mat-option [value]="true">{{'label.si' | translate}}</mat-option>
-          <mat-option [value]="false">{{'label.no' | translate}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="formGroup.controls.confidencial.errors?.required">
+        <sgi-select-tipo-confidencialidad formControlName="tipoConfidencialidad"
+          [required]="formPart.abiertoRequired">
+        </sgi-select-tipo-confidencialidad>
+        <mat-error *ngIf="formGroup.controls.tipoConfidencialidad.errors?.required">
           {{'error.required.entity' | translate:msgParamConfidencialEntity}}
         </mat-error>
       </mat-form-field>

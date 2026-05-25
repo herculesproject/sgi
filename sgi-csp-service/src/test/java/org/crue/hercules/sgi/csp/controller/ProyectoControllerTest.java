@@ -1423,12 +1423,6 @@ class ProyectoControllerTest extends BaseControllerTest {
   }
 
   /**
-   * 
-   * MOCKS
-   * 
-   */
-
-  /**
    * Función que devuelve un objeto Proyecto
    * 
    * @param id id del Proyecto
@@ -1445,6 +1439,8 @@ class ProyectoControllerTest extends BaseControllerTest {
 
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
+
+    Long tipoConfidencialidadId = 100L;
 
     Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
     tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
@@ -1463,7 +1459,7 @@ class ProyectoControllerTest extends BaseControllerTest {
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
-    proyecto.setConfidencial(Boolean.FALSE);
+    proyecto.setTipoConfidencialidadId(tipoConfidencialidadId);
     proyecto.setActivo(true);
 
     if (id != null) {

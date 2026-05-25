@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.csp.exceptions.MissingInvestigadorPrincipalInProyec
 import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.TipoConfidencialidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoIntereses;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoObjetivos;
@@ -102,6 +103,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacio
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoConfidencialidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
@@ -134,6 +136,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustifi
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.repository.TipoConfidencialidadRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
@@ -196,7 +199,6 @@ public class ProyectoServiceImpl implements ProyectoService {
   private static final String MSG_KEY_MODELO = "modelo";
   private static final String MSG_KEY_TIPO = "tipo";
   private static final String MSG_KEY_UNIDAD_GESTION = "unidadGestion";
-  private static final String MSG_FIELD_CONFIDENCIAL = "confidencial";
   private static final String MSG_FIELD_COORDINADO = "coordinado";
   private static final String MSG_FIELD_PERMITE_PAQUETES_TRABAJO = "permitePaquetesTrabajo";
   private static final String MSG_FIELD_FECHA_FIN_ULTIMA_PRORROGA = "fechaFinUltimaProrroga";
@@ -210,56 +212,58 @@ public class ProyectoServiceImpl implements ProyectoService {
   private static final String MSG_FIELD_FECHA_FIN = "fechaFin";
 
   private final SgiConfigProperties sgiConfigProperties;
-  private final ProyectoRepository repository;
+
+  private final ContextoProyectoService contextoProyectoService;
+  private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
+  private final ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
+  private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
+  private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
+  private final ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository;
+  private final ConvocatoriaPartidaService convocatoriaPartidaService;
+  private final ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository;
+  private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
+  private final ConvocatoriaRepository convocatoriaRepository;
+  private final EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
   private final EstadoProyectoRepository estadoProyectoRepository;
   private final ModeloUnidadRepository modeloUnidadRepository;
-  private final ConvocatoriaRepository convocatoriaRepository;
-  private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
-  private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
-  private final ConvocatoriaEntidadConvocanteRepository convocatoriaEntidadConvocanteRepository;
-  private final ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
-  private final ConvocatoriaEntidadGestoraRepository convocatoriaEntidadGestoraRepository;
-  private final ProyectoEntidadGestoraService proyectoEntidadGestoraService;
-  private final ContextoProyectoService contextoProyectoService;
-  private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
-  private final ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
-  private final SolicitudRepository solicitudRepository;
-  private final SolicitudProyectoRepository solicitudProyectoRepository;
-  private final SolicitudModalidadRepository solicitudModalidadRepository;
-  private final SolicitudProyectoEquipoRepository solicitudEquipoRepository;
-  private final ProyectoEquipoService proyectoEquipoService;
-  private final SolicitudProyectoSocioRepository solicitudSocioRepository;
-  private final ProyectoSocioService proyectoSocioService;
-  private final SolicitudProyectoSocioEquipoRepository solicitudEquipoSocioRepository;
-  private final ProyectoSocioEquipoService proyectoEquipoSocioService;
-  private final SolicitudProyectoSocioPeriodoPagoRepository solicitudPeriodoPagoRepository;
-  private final ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService;
-  private final SolicitudProyectoSocioPeriodoJustificacionRepository solicitudPeriodoJustificacionRepository;
-  private final ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
-  private final ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
-  private final SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
+  private final ProgramaRepository programaRepository;
   private final ProyectoAreaConocimientoRepository proyectoAreaConocimientoRepository;
   private final ProyectoClasificacionRepository proyectoClasificacionRepository;
-  private final SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository;
-  private final SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository;
-  private final ProgramaRepository programaRepository;
-  private final ProyectoProrrogaRepository proyectoProrrogaRepository;
-  private final ProyectoPartidaService proyectoPartidaService;
-  private final ConvocatoriaPartidaService convocatoriaPartidaService;
-  private final ProyectoIVARepository proyectoIVARepository;
-  private final ProyectoProyectoSgeRepository proyectoProyectoSGERepository;
-  private final ProyectoConceptoGastoService proyectoConceptoGastoService;
   private final ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService;
-  private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
-  private final SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository;
-  private final ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
-  private final Validator validator;
-  private final ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository;
-  private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
-  private final EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
+  private final ProyectoConceptoGastoService proyectoConceptoGastoService;
+  private final ProyectoEntidadConvocanteService proyectoEntidadConvocanteService;
+  private final ProyectoEntidadFinanciadoraService proyectoEntidadFinanciadoraService;
+  private final ProyectoEntidadGestoraService proyectoEntidadGestoraService;
+  private final ProyectoEquipoService proyectoEquipoService;
   private final ProyectoFacturacionService proyectoFacturacionService;
   private final ProyectoHelper proyectoHelper;
+  private final ProyectoIVARepository proyectoIVARepository;
+  private final ProyectoPartidaService proyectoPartidaService;
+  private final ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository;
+  private final ProyectoPeriodoSeguimientoService proyectoPeriodoSeguimientoService;
+  private final ProyectoProrrogaRepository proyectoProrrogaRepository;
+  private final ProyectoProyectoSgeRepository proyectoProyectoSGERepository;
+  private final ProyectoRepository repository;
+  private final ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
+  private final ProyectoSocioEquipoService proyectoEquipoSocioService;
+  private final ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
+  private final ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService;
+  private final ProyectoSocioService proyectoSocioService;
   private final SgiApiSgempService sgiApiSgempService;
+  private final SolicitudModalidadRepository solicitudModalidadRepository;
+  private final SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository;
+  private final SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository;
+  private final SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository;
+  private final SolicitudProyectoEquipoRepository solicitudEquipoRepository;
+  private final SolicitudProyectoRepository solicitudProyectoRepository;
+  private final SolicitudProyectoResponsableEconomicoRepository solicitudProyectoResponsableEconomicoRepository;
+  private final SolicitudProyectoSocioEquipoRepository solicitudEquipoSocioRepository;
+  private final SolicitudProyectoSocioPeriodoJustificacionRepository solicitudPeriodoJustificacionRepository;
+  private final SolicitudProyectoSocioPeriodoPagoRepository solicitudPeriodoPagoRepository;
+  private final SolicitudProyectoSocioRepository solicitudSocioRepository;
+  private final SolicitudRepository solicitudRepository;
+  private final TipoConfidencialidadRepository tipoConfidencialidadRepository;
+  private final Validator validator;
 
   /**
    * Guarda la entidad {@link Proyecto}.
@@ -272,6 +276,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Proyecto create(Proyecto proyecto) {
     log.debug("create(Proyecto proyecto) - start");
     AssertHelper.idIsNull(proyecto.getId(), Proyecto.class);
+    checkTipoConfidencialidadActivo(proyecto.getTipoConfidencialidadId());
 
     Assert.isTrue(
         SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
@@ -393,7 +398,10 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setCodigoExterno(proyectoActualizar.getCodigoExterno());
       data.setCoordinado(proyectoActualizar.getCoordinado());
       data.setColaborativo(proyectoActualizar.getColaborativo());
-      data.setConfidencial(proyectoActualizar.getConfidencial());
+      if (!Objects.equals(data.getTipoConfidencialidadId(), proyectoActualizar.getTipoConfidencialidadId())) {
+        checkTipoConfidencialidadActivo(proyectoActualizar.getTipoConfidencialidadId());
+      }
+      data.setTipoConfidencialidadId(proyectoActualizar.getTipoConfidencialidadId());
       data.setConvocatoriaExterna(proyectoActualizar.getConvocatoriaExterna());
       data.setRolUniversidadId(proyectoActualizar.getRolUniversidadId());
       data.setFechaFin(proyectoActualizar.getFechaFin());
@@ -897,7 +905,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyEntidadesFinanciadoras(Long proyectoId, Long convocatoriaId) - start");
     List<ConvocatoriaEntidadFinanciadora> entidadesConvocatoria = convocatoriaEntidadFinanciadoraRepository
         .findByConvocatoriaId(convocatoriaId);
-    entidadesConvocatoria.stream().forEach(entidadConvocatoria -> {
+    entidadesConvocatoria.forEach(entidadConvocatoria -> {
       log.debug("Copy ConvocatoriaEntidadFinanciadora with id: {}", entidadConvocatoria.getId());
       ProyectoEntidadFinanciadora entidadProyecto = new ProyectoEntidadFinanciadora();
       entidadProyecto.setProyectoId(proyectoId);
@@ -971,7 +979,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyEntidadesGestoras(Long proyectoId, Long convocatoriaId) - start");
     List<ConvocatoriaEntidadGestora> entidadesConvocatoria = convocatoriaEntidadGestoraRepository
         .findAllByConvocatoriaId(proyecto.getConvocatoriaId());
-    entidadesConvocatoria.stream().forEach(entidadConvocatoria -> {
+    entidadesConvocatoria.forEach(entidadConvocatoria -> {
       log.debug("Copy copyEntidadesGestoras with id: {}", entidadConvocatoria.getId());
       ProyectoEntidadGestora entidadProyecto = new ProyectoEntidadGestora();
       entidadProyecto.setProyectoId(proyecto.getId());
@@ -1071,7 +1079,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("ccopyAreasConocimiento(Long proyectoId, Long solicitudProyectoId) - start");
     List<SolicitudProyectoAreaConocimiento> areasConocimineto = solicitudProyectoAreaConocimientoRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
-    areasConocimineto.stream().forEach(areaConocimentoSolicitud -> {
+    areasConocimineto.forEach(areaConocimentoSolicitud -> {
       log.debug("Copy SolicitudProyectoAreaConocimiento with id: {}", areaConocimentoSolicitud.getId());
       ProyectoAreaConocimiento areaConocimientoProyecto = new ProyectoAreaConocimiento();
       areaConocimientoProyecto.setProyectoId(proyectoId);
@@ -1092,7 +1100,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyClasificaciones(Long proyectoId, Long solicitudProyectoId) - start");
     List<SolicitudProyectoClasificacion> clasificaciones = solicitudProyectoClasificacionRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
-    clasificaciones.stream().forEach(clasificacionSolicitud -> {
+    clasificaciones.forEach(clasificacionSolicitud -> {
       log.debug("Copy SolicitudProyectoClasificacion with id: {}", clasificacionSolicitud.getId());
       ProyectoClasificacion clasificacionProyecto = new ProyectoClasificacion();
       clasificacionProyecto.setProyectoId(proyectoId);
@@ -1113,7 +1121,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyEntidadesConvocantesDeSolicitud(Long proyectoId) - start");
     List<SolicitudModalidad> entidadesSolicitud = solicitudModalidadRepository
         .findAllBySolicitudId(proyectoId);
-    entidadesSolicitud.stream().forEach(entidadSolicitud -> {
+    entidadesSolicitud.forEach(entidadSolicitud -> {
       log.debug("Copy SolicitudModalidad with id: {}", entidadSolicitud.getId());
       ProyectoEntidadConvocante entidadProyecto = new ProyectoEntidadConvocante();
       entidadProyecto.setProyectoId(proyectoId);
@@ -1137,7 +1145,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyEntidadesFinanciadorasDeSolicitud(Long proyectoId, Long solicitudProyectoId) - start");
     List<SolicitudProyectoEntidadFinanciadoraAjena> entidadesSolicitud = solicitudProyectoEntidadFinanciadoraAjenaRepository
         .findAllBySolicitudProyectoId(solicitudProyectoId);
-    entidadesSolicitud.stream().forEach(entidadSolicitud -> {
+    entidadesSolicitud.forEach(entidadSolicitud -> {
       log.debug("Copy SolicitudProyectoEntidadFinanciadoraAjena with id: {}", entidadSolicitud.getId());
       ProyectoEntidadFinanciadora entidadProyecto = new ProyectoEntidadFinanciadora();
       entidadProyecto.setProyectoId(proyectoId);
@@ -1364,7 +1372,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     Instant fechaFinProyecto = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
         : proyecto.getFechaFin();
 
-    solicitudProyectoSocios.stream().forEach(entidadSolicitud -> {
+    solicitudProyectoSocios.forEach(entidadSolicitud -> {
 
       log.debug("Copy SolicitudProyectoSocio with id: {}", entidadSolicitud.getId());
 
@@ -1482,7 +1490,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     Instant fechaFinProyecto = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
         : proyecto.getFechaFin();
 
-    solicitudPeriodoJustificacionRepository.findAllBySolicitudProyectoSocioId(solicitudProyectoId).stream()
+    solicitudPeriodoJustificacionRepository.findAllBySolicitudProyectoSocioId(solicitudProyectoId)
         .forEach(entidadPeriodoJustificacionSolicitud -> {
 
           log.debug("Copy ProyectoSocioPeriodoJustificacion with id: {}",
@@ -1713,7 +1721,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     Instant fechaFinProyecto = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
         : proyecto.getFechaFin();
 
-    conceptosGastoConvocatoria.stream().forEach(conceptoGastoConvocatoria -> {
+    conceptosGastoConvocatoria.forEach(conceptoGastoConvocatoria -> {
       log.debug("Copy ConvocatoriaConceptoGasto with id: {}", conceptoGastoConvocatoria.getId());
       ProyectoConceptoGasto conceptoGastoProyecto = new ProyectoConceptoGasto();
       conceptoGastoProyecto.setProyectoId(proyecto.getId());
@@ -1881,7 +1889,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         null, Pageable.unpaged());
 
     if (partidasConvocatoria != null && partidasConvocatoria.hasContent()) {
-      partidasConvocatoria.getContent().stream().forEach(partidaConvocatoria -> {
+      partidasConvocatoria.getContent().forEach(partidaConvocatoria -> {
         log.debug("Copy copyPartidasPresupuestarias with id: {}", partidaConvocatoria.getId());
         ProyectoPartida partidaProyecto = new ProyectoPartida();
         partidaProyecto.setProyectoId(proyectoId);
@@ -2312,7 +2320,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       AssertHelper.fieldNotNull(proyecto.getFechaFin(), Proyecto.class, MSG_FIELD_FECHA_FIN);
       AssertHelper.entityNotNull(proyecto.getFinalidad(), Proyecto.class, TipoFinalidad.class);
       AssertHelper.entityNotNull(proyecto.getAmbitoGeografico(), Proyecto.class, TipoAmbitoGeografico.class);
-      AssertHelper.fieldNotNull(proyecto.getConfidencial(), Proyecto.class, MSG_FIELD_CONFIDENCIAL);
+      AssertHelper.idNotNull(proyecto.getTipoConfidencialidadId(), TipoConfidencialidad.class);
       AssertHelper.fieldNotNull(proyecto.getCoordinado(), Proyecto.class, MSG_FIELD_COORDINADO);
 
       if (proyecto.getCoordinado() != null && proyecto.getCoordinado().booleanValue()) {
@@ -2375,8 +2383,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   /**
-   * Obtiene los ids de {@link Proyecto} modificados que esten
-   * activos y con {@link Proyecto#confidencial} a <code>false</code> que cumplan
+   * Obtiene los ids de {@link Proyecto} modificados que esten activos que cumplan
    * las condiciones indicadas en el filtro de búsqueda
    *
    * @param query información del filtro.
@@ -2399,7 +2406,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   /**
    * Obtiene los ids de {@link Proyecto} modificados que no esten
-   * activos y con {@link Proyecto#confidencial} a <code>false</code> que cumplan
+   * activos que cumplan
    * las condiciones indicadas en el filtro de búsqueda
    *
    * @param query información del filtro.
@@ -2442,7 +2449,7 @@ public class ProyectoServiceImpl implements ProyectoService {
                 .toList());
 
     if (!proyectosPeriodosJustificacionSinEstado.isEmpty()) {
-      proyectosPeriodosJustificacionSinEstado.stream().forEach(periodoJustificacion -> {
+      proyectosPeriodosJustificacionSinEstado.forEach(periodoJustificacion -> {
         periodoJustificacion
             .setEstado(this.createEstadoProyectoPeriodoJustificacionPendiente(periodoJustificacion.getId()));
         proyectoPeriodoJustificacionRepository.save(periodoJustificacion);
@@ -2773,6 +2780,28 @@ public class ProyectoServiceImpl implements ProyectoService {
     return convocatoriaPeriodoJustificacionObservaciones.stream()
         .map(ppjobs -> new ProyectoPeriodoJustificacionObservaciones(ppjobs.getLang(), ppjobs.getValue()))
         .collect(Collectors.toSet());
+  }
+
+  /**
+   * Comprueba que el {@link TipoConfidencialidad} existe y está activo.
+   *
+   * @param tipoConfidencialidadId Identificador del {@link TipoConfidencialidad}.
+   * @throws TipoConfidencialidadNotFoundException si no existe un
+   *                                               {@link TipoConfidencialidad}
+   *                                               con el id indicado.
+   */
+  private void checkTipoConfidencialidadActivo(Long tipoConfidencialidadId) {
+    if (tipoConfidencialidadId == null) {
+      return;
+    }
+
+    TipoConfidencialidad tipoConfidencialidad = tipoConfidencialidadRepository.findById(tipoConfidencialidadId)
+        .orElseThrow(() -> new TipoConfidencialidadNotFoundException(tipoConfidencialidadId));
+
+    AssertHelper.entityActivo(
+        Boolean.TRUE.equals(tipoConfidencialidad.getActivo()),
+        TipoConfidencialidad.class,
+        String.valueOf(tipoConfidencialidad.getId()));
   }
 
 }

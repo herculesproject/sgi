@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { SgiError, ValidationError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
-import { ESTADO_MAP, Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { Estado, ESTADO_MAP, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -198,13 +198,13 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
   protected saveOrUpdate(): Observable<IEstadoProyecto> {
     const estadoNew = this.getValue();
 
-    let confirmation$: Observable<boolean>
+    let confirmation$: Observable<boolean>;
     if (!!this.data.proyecto.fechaInicio
       && estadoNew.fechaEstado < this.data.proyecto.fechaInicio
       && [Estado.RENUNCIADO, Estado.RESCINDIDO].includes(estadoNew.estado)) {
-      confirmation$ = this.confirmDialogService.showConfirmationHtmlMessage(MSG_CAMBIO_ESTADO_CONFIRMACION_AVISO_FECHA)
+      confirmation$ = this.confirmDialogService.showConfirmationHtmlMessage(MSG_CAMBIO_ESTADO_CONFIRMACION_AVISO_FECHA);
     } else {
-      confirmation$ = this.confirmDialogService.showConfirmation(MSG_CAMBIO_ESTADO_CONFIRMACION)
+      confirmation$ = this.confirmDialogService.showConfirmation(MSG_CAMBIO_ESTADO_CONFIRMACION);
     }
 
     return confirmation$.pipe(
@@ -259,7 +259,7 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
       problems.push(this.buildValidationError(this.msgProyectoAmbitoGeograficoRequired));
     }
 
-    if (this.data.proyecto.confidencial === undefined || this.data.proyecto.confidencial === null) {
+    if (!this.data.proyecto.tipoConfidencialidad) {
       problems.push(this.buildValidationError(this.msgProyectoConfidencialRequired));
     }
 

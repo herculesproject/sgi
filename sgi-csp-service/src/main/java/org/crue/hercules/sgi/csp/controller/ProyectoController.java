@@ -1207,8 +1207,7 @@ public class ProyectoController {
 
   /**
    * Obtiene los ids de {@link Proyecto} modificados que esten
-   * activos y con {@link Proyecto#confidencial} a <code>false</code> que cumplan
-   * las condiciones indicadas en el filtro de búsqueda
+   * activos que cumplan las condiciones indicadas en el filtro de búsqueda
    * 
    * @param query filtro de búsqueda.
    * @return lista de ids de {@link Proyecto}.
@@ -1226,8 +1225,7 @@ public class ProyectoController {
 
   /**
    * Obtiene los ids de {@link Proyecto} modificados que no esten
-   * activos y con {@link Proyecto#confidencial} a <code>false</code> que cumplan
-   * las condiciones indicadas en el filtro de búsqueda
+   * activos que cumplan las condiciones indicadas en el filtro de búsqueda
    * 
    * @param query filtro de búsqueda.
    * @return lista de ids de {@link Proyecto}.

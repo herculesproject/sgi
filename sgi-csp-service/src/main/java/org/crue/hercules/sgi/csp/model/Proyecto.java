@@ -46,6 +46,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SuppressWarnings("java:S6539")
 public class Proyecto extends BaseEntity {
 
   /**
@@ -147,9 +148,9 @@ public class Proyecto extends BaseEntity {
   @JoinColumn(name = "tipo_ambito_geografico_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_AMBITOGEOGRAFICO"))
   private TipoAmbitoGeografico ambitoGeografico;
 
-  /** Confidencial */
-  @Column(name = "confidencial", nullable = true)
-  private Boolean confidencial;
+  /** Tipo Confidencialidad */
+  @Column(name = "tipo_confidencialidad_id", nullable = true)
+  private Long tipoConfidencialidadId;
 
   /** Clasificacion CVN */
   @Column(name = "clasificacion_cvn", length = 50, nullable = true)
@@ -250,134 +251,167 @@ public class Proyecto extends BaseEntity {
   @OneToOne(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final ContextoProyecto contexto = null;
 
   @ManyToOne
   @JoinColumn(name = "convocatoria_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_CONVOCATORIA"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final Convocatoria convocatoria = null;
 
   @ManyToOne
   @JoinColumn(name = "solicitud_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_SOLICITUD"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final Solicitud solicitud = null;
 
   @ManyToOne
   @JoinColumn(name = "rol_universidad", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_ROLSOCIO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final RolSocio rolUniversidad = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoDocumento> documentos = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoEntidadConvocante> entidadesConvocantes = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoEntidadFinanciadora> entidadesFinanciadoras = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoEntidadGestora> entidadesGestoras = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<EstadoProyecto> estados = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoEquipo> equipo = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoFase> fases = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoHito> hitos = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoPaqueteTrabajo> paquetesTrabajo = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoPeriodoSeguimiento> periodosSeguimiento = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoProrroga> prorrogas = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoSocio> socios = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoIVA> ivas = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoProyectoSge> identificadoresSge = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoAnualidad> proyectosAnualidad = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoPalabraClave> palabrasClave = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoResponsableEconomico> responsablesEconomicos = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoAreaConocimiento> areasConocimiento = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoConceptoGasto> conceptosGasto = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoFacturacion> facturacion = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoPartida> partidas = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ProyectoPeriodoJustificacion> periodosJustificacion = null;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "tipo_confidencialidad_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_TIPOCONFIDENCIALIDAD"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
+  private final TipoConfidencialidad tipoConfidencialidad = null;
 
 }

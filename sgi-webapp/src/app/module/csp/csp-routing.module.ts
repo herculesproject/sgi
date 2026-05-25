@@ -19,6 +19,7 @@ const MSG_FACTURAS_PREVISTAS_PENDIENTES_TITLE = marker('menu.csp.facturas-previs
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.csp.configuraciones.fuentes-financiacion');
 const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.csp.configuraciones.conceptos-gasto');
 const MSG_GESTION_LINEA_INVESTIGACION_TITLE = marker('menu.csp.configuraciones.lineas-investigacion');
+const MSG_GESTION_TIPO_CONFIDENCIALIDAD_TITLE = marker('menu.csp.tipo-confidencialidad');
 const MSG_GESTION_TIPO_DESCRIPTOR_GRUPO_TITLE = marker('menu.csp.configuraciones.tipos-descriptor-grupo');
 const MSG_GESTION_TIPO_GRUPO_TITLE = marker('menu.csp.configuraciones.tipos-grupo');
 const MSG_GRUPO_TITLE = marker('csp.grupo');
@@ -357,6 +358,19 @@ const routes: SgiRoutes = [
           title: MSG_TIPO_REGIMEN_CONCURRENCIA_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAnyAuthority: ['CSP-TRCO-V', 'CSP-TRCO-E', 'CSP-TRCO-C', 'CSP-TRCO-B', 'CSP-TRCO-R']
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_CONFIDENCIALIDAD,
+        loadChildren: () =>
+          import('./tipo-confidencialidad/tipo-confidencialidad.module').then(
+            (m) => m.TipoConfidencialidadModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_GESTION_TIPO_CONFIDENCIALIDAD_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-TCONF-V', 'CSP-TCONF-E', 'CSP-TCONF-C', 'CSP-TCONF-B', 'CSP-TCONF-R']
         }
       },
       {

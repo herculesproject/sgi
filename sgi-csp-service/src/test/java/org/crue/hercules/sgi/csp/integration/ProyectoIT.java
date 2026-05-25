@@ -3118,7 +3118,6 @@ class ProyectoIT extends BaseIT {
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
-    proyecto.setConfidencial(Boolean.FALSE);
     proyecto.setActivo(true);
 
     if (id != null) {
