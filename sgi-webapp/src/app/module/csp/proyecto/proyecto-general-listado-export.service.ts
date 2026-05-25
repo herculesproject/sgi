@@ -7,6 +7,7 @@ import { ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { CAUSA_EXENCION_MAP } from '@core/models/csp/proyecto';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { ITipoConfidencialidad } from '@core/models/csp/tipo-confidencialidad';
+import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
@@ -14,6 +15,7 @@ import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.se
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { TipoConfidencialidadService } from '@core/services/csp/tipo-confidencialidad/tipo-confidencialidad.service';
+import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
@@ -42,6 +44,7 @@ const FECHA_INICIO_KEY = marker('csp.proyecto.fecha-inicio');
 const FECHA_FIN_KEY = marker('csp.proyecto.fecha-fin');
 const FECHA_FIN_DEFINITIVA_KEY = marker('csp.proyecto.fecha-fin-definitiva');
 const CONFIDENCIAL_KEY = marker('csp.proyecto.confidencial');
+const TIPO_REGIMEN_CONCURRENCIA_KEY = marker('csp.proyecto.tipo-regimen-concurrencia');
 const CLASIFICACION_CVN_KEY = marker('csp.convocatoria.clasificacion-produccion-cientifica');
 const COORDINADO_KEY = marker('csp.proyecto.proyecto-coordinado');
 const ROL_UNIVERSIDAD_KEY = marker('csp.proyecto.rol-participacion-universidad');
@@ -59,6 +62,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
   private rolSocioCache = new Map<number, Observable<IRolSocio>>();
   private areaTematicaCache = new Map<number, Observable<IAreaTematica>>();
   private tipoConfidencialidadCache = new Map<number, Observable<ITipoConfidencialidad>>();
+  private tipoRegimenConcurrenciaCache = new Map<number, Observable<ITipoRegimenConcurrencia>>();
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -70,6 +74,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     private readonly areaTematicaService: AreaTematicaService,
     private readonly rolSocioService: RolSocioService,
     private readonly tipoConfidencialidadService: TipoConfidencialidadService,
+    private readonly tipoRegimenConcurrenciaService: TipoRegimenConcurrenciaService,
     private readonly percentPipe: PercentPipe,
   ) {
     super(translate);
@@ -80,6 +85,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     this.rolSocioCache.clear();
     this.areaTematicaCache.clear();
     this.tipoConfidencialidadCache.clear();
+    this.tipoRegimenConcurrenciaCache.clear();
   }
 
   public getData(proyectoData: IProyectoReportData): Observable<IProyectoReportData> {
@@ -93,6 +99,8 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
         ? this.getRolSocioCached(proyectoData.rolUniversidad.id) : of(null),
       tipoConfidencialidad: proyectoData.tipoConfidencialidad?.id
         ? this.getTipoConfidencialidadCached(proyectoData.tipoConfidencialidad.id) : of(null),
+      tipoRegimenConcurrencia: proyectoData.tipoRegimenConcurrencia?.id
+        ? this.getTipoRegimenConcurrenciaCached(proyectoData.tipoRegimenConcurrencia.id) : of(null),
     }).pipe(
       switchMap(result => {
         proyectoData.prorrogado = result.prorrogado;
@@ -101,6 +109,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
         proyectoData.unidadGestion = result.unidadGestion;
         proyectoData.rolUniversidad = result.rolUniversidad;
         proyectoData.tipoConfidencialidad = result.tipoConfidencialidad;
+        proyectoData.tipoRegimenConcurrencia = result.tipoRegimenConcurrencia;
 
         if (result.contextoProyecto?.areaTematica?.id) {
           return this.getAreaTematicaCached(result.contextoProyecto.areaTematica.id).pipe(
@@ -146,6 +155,14 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     }
 
     return this.tipoConfidencialidadCache.get(id);
+  }
+
+  private getTipoRegimenConcurrenciaCached(id: number): Observable<ITipoRegimenConcurrencia> {
+    if (!this.tipoRegimenConcurrenciaCache.has(id)) {
+      this.tipoRegimenConcurrenciaCache.set(id, this.tipoRegimenConcurrenciaService.findById(id).pipe(shareReplay(1)));
+    }
+
+    return this.tipoRegimenConcurrenciaCache.get(id);
   }
 
   public fillColumns(
@@ -246,6 +263,11 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
         type: ColumnType.STRING
       },
       {
+        title: this.translate.instant(TIPO_REGIMEN_CONCURRENCIA_KEY),
+        name: 'tipoRegimenConcurrencia',
+        type: ColumnType.STRING
+      },
+      {
         title: this.translate.instant(COORDINADO_KEY),
         name: 'coordinado',
         type: ColumnType.STRING
@@ -307,6 +329,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFinDefinitiva));
     elementsRow.push(this.languageService.getFieldValue(proyecto.tipoConfidencialidad?.nombre));
     elementsRow.push(proyecto.clasificacionCVN ? this.translate.instant(CLASIFICACION_CVN_MAP.get(proyecto.clasificacionCVN)) : '');
+    elementsRow.push(this.languageService.getFieldValue(proyecto.tipoRegimenConcurrencia?.nombre));
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.coordinado) ? this.getI18nBooleanYesNo(proyecto.coordinado) : '');
     elementsRow.push(this.languageService.getFieldValue(proyecto.rolUniversidad?.nombre));
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.colaborativo) ? this.getI18nBooleanYesNo(proyecto.colaborativo) : '');

@@ -6,7 +6,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { MSG_PARAMS } from '@core/i18n';
-import { ESTADO_MAP, Estado } from '@core/models/csp/estado-proyecto';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { CAUSA_EXENCION_MAP, IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
@@ -82,6 +82,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   msgParamUnidadGestionEntity = {};
   textoInfoAmbitoGeograficoConvocatoria: string;
   textoInfoFinalidadConvocatoria: string;
+  textoInfoTipoRegimenConcurrenciaConvocatoria: string;
   textoInfoModeloEjecucionConvocatoria: string;
   textoInfoUnidadGestionConvocatoria: string;
 
@@ -154,6 +155,15 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
           (value) => {
             if (value) {
               this.setTextoInfoAmbitoGeograficoConvocatoria();
+            }
+          }
+        ));
+
+      this.subscriptions.push(
+        this.formPart.tipoRegimenConcurrenciaConvocatoria$.subscribe(
+          (value) => {
+            if (value) {
+              this.setTextoInfoTipoRegimenConcurrenciaConvocatoria();
             }
           }
         ));
@@ -263,7 +273,9 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_PROYECTO_COORDINADO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamProyectoCoordinadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamProyectoCoordinadoEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
 
     this.translate.get(
       PROYECTO_ROL_UNIVERSIDAD_KEY,
@@ -286,7 +298,9 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     this.translate.get(
       PROYECTO_CAUSA_EXENCION_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamCausaExencionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamCausaExencionEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL
+    });
 
     this.translate.get(
       PROYECTO_IVA_KEY,
@@ -331,6 +345,20 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
         );
       })
     ).subscribe((value) => this.textoInfoAmbitoGeograficoConvocatoria = value);
+  }
+
+  setTextoInfoTipoRegimenConcurrenciaConvocatoria() {
+    this.translate.get(
+      this.languageService.getFieldValue(this.formPart.tipoRegimenConcurrenciaConvocatoria.nombre),
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_PROYECTO_VALUE_CONVOCATORIA,
+          { valueConvocatoria: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoInfoTipoRegimenConcurrenciaConvocatoria = value);
   }
 
   setTextoInfoUnidadGestionConvocatoria() {

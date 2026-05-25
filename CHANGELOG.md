@@ -26,6 +26,7 @@
 - [CSP] Añadida tabla maestra de tipos de descriptor de grupos de investigación con soporte i18n (configurable en *CSP > Configuración > Tipos de descriptor de grupos*) ([#54](https://github.com/herculesproject/sgi/issues/54)).
 - [CSP] Añadidos descriptores en los grupos de investigación ([#54](https://github.com/herculesproject/sgi/issues/54)).
 - [CSP] Añadida tabla maestra de tipos de confidencialidad de proyectos en sustitución del campo booleano anterior, con soporte i18n y personalizable por instalación (configurable en *CSP > Configuración > Tipos de confidencialidad*) ([#57](https://github.com/herculesproject/sgi/issues/57)).
+- [CSP] Añadido el campo régimen de concurrencia en los datos generales del proyecto, heredado de la convocatoria cuando el proyecto está vinculado a una ([#58](https://github.com/herculesproject/sgi/issues/58)).
 - [WEB] Añadido soporte en el componente compartido de subida de ficheros para la descarga del fichero asociado, tooltips configurables y validación de tamaño máximo ([#37](https://github.com/herculesproject/sgi/issues/37)).
 
 ### Fixed

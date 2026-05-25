@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
@@ -47,6 +47,7 @@ import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service'
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
+import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
 import { LanguageService } from '@core/services/language.service';
@@ -314,6 +315,7 @@ export class ProyectoActionService extends ActionService {
     private readonly solicitudProyectoSgeService: SolicitudProyectoSgeService,
     private readonly solicitudService: SolicitudService,
     private readonly tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    private readonly tipoRegimenConcurrenciaService: TipoRegimenConcurrenciaService,
     private readonly tipoFinalidadService: TipoFinalidadService,
     private readonly translate: TranslateService,
     private readonly unidadGestionService: UnidadGestionService,
@@ -339,8 +341,18 @@ export class ProyectoActionService extends ActionService {
     }
 
     this.fichaGeneral = new ProyectoFichaGeneralFragment(
-      logger, fb, id, proyectoService, unidadGestionService,
-      modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, proyectoIvaService,
+      logger,
+      fb,
+      id,
+      proyectoService,
+      unidadGestionService,
+      modeloEjecucionService,
+      tipoFinalidadService,
+      tipoAmbitoGeograficoService,
+      tipoRegimenConcurrenciaService,
+      convocatoriaService,
+      solicitudService,
+      proyectoIvaService,
       this.data?.readonly,
       this.data?.disableRolUniversidad,
       this.data?.hasAnyProyectoSocioCoordinador,
@@ -498,8 +510,14 @@ export class ProyectoActionService extends ActionService {
         );
         this.presupuesto = new ProyectoPresupuestoFragment(logger, id, proyectoService, proyectoAnualidadService,
           solicitudService, this.readonly, this.data?.isVisor);
-        this.responsableEconomico = new ProyectoResponsableEconomicoFragment(logger, id, proyectoService, proyectoResponsableEconomicoService,
-          personaService, this.readonly);
+        this.responsableEconomico = new ProyectoResponsableEconomicoFragment(
+          logger,
+          id,
+          proyectoService,
+          proyectoResponsableEconomicoService,
+          personaService,
+          this.readonly
+        );
         this.proyectoAgrupacionGasto = new ProyectoAgrupacionGastoFragment(this.data?.proyecto?.id, proyectoService,
           proyectoAgrupacionGastoService, this.readonly, this.data?.isVisor);
         this.proyectoCalendarioJustificacion = new ProyectoCalendarioJustificacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
@@ -514,7 +532,16 @@ export class ProyectoActionService extends ActionService {
           languageService
         );
         this.relaciones = new ProyectoRelacionFragment(
-          id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, grupoService, sgiAuthService);
+          id,
+          this.data.proyecto,
+          this.readonly,
+          relacionService,
+          convocatoriaService,
+          invencionService,
+          proyectoService,
+          grupoService,
+          sgiAuthService
+        );
         this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(
           this.data?.proyecto?.id,
           this.data?.proyecto,
@@ -664,7 +691,7 @@ export class ProyectoActionService extends ActionService {
 
           this.subscriptions.push(
             this.proyecto$.subscribe(proyecto => {
-              this.elegibilidad.proyecto$.next(proyecto)
+              this.elegibilidad.proyecto$.next(proyecto);
             })
           );
         }
@@ -700,7 +727,7 @@ export class ProyectoActionService extends ActionService {
 
         this.subscribeToMiembrosProyectoEquipoChangeList();
 
-        //Escucha cambios en la tabla de relaciones del componente relaciones y los emite al componente fichaGeneral
+        // Escucha cambios en la tabla de relaciones del componente relaciones y los emite al componente fichaGeneral
         this.subscribeToRelacionesChangeList();
       }
     }
@@ -786,7 +813,6 @@ export class ProyectoActionService extends ActionService {
 
     if (this.isEdit()) {
       if (this.fichaGeneral?.hasChanges()) {
-        this.fichaGeneral.colaborativo$
         const proyecto = this.fichaGeneral.getValue();
         if (!!proyecto.fechaInicio && !proyecto.fechaInicioStarted && (!!proyecto.solicitudId || !!proyecto.convocatoriaId)) {
 
@@ -811,14 +837,14 @@ export class ProyectoActionService extends ActionService {
                     || apartadosToBeCopied?.socios;
 
                   if (hasApartadosWithDates || hasApartadosToBeCopied) {
-                    const config = {
+                    const configModalCopiarApartados: MatDialogConfig<ProyectoCopiarApartadosModalData> = {
                       data: {
                         apartadosToBeCopied,
                         apartadosWithDates
-                      } as ProyectoCopiarApartadosModalData,
+                      }
                     };
 
-                    return this.matDialog.open(ProyectoCopiarAparatadosModalComponent, config).afterClosed().pipe(
+                    return this.matDialog.open(ProyectoCopiarAparatadosModalComponent, configModalCopiarApartados).afterClosed().pipe(
                       filter(aceptado => !!aceptado)
                     );
                   }

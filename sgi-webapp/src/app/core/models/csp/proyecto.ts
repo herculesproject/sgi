@@ -8,7 +8,7 @@ import { IEstadoProyecto } from './estado-proyecto';
 import { IProyectoIVA } from './proyecto-iva';
 import { IRolSocio } from './rol-socio';
 import { ITipoConfidencialidad } from './tipo-confidencialidad';
-import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad } from './tipos-configuracion';
+import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad, ITipoRegimenConcurrencia } from './tipos-configuracion';
 
 export interface IProyecto {
   /** Id */
@@ -47,6 +47,8 @@ export interface IProyecto {
   ambitoGeografico: ITipoAmbitoGeografico;
   /** tipoConfidencialidad */
   tipoConfidencialidad: ITipoConfidencialidad;
+  /** tipoRegimenConcurrencia */
+  tipoRegimenConcurrencia: ITipoRegimenConcurrencia;
   /** clasificacionCVN */
   clasificacionCVN: ClasificacionCVN;
   /** coordinado */

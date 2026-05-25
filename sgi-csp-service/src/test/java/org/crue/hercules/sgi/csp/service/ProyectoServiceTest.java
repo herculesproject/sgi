@@ -19,7 +19,9 @@ import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoConfidencialidadNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -37,6 +39,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoConfidencialidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
@@ -71,6 +74,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRep
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoConfidencialidadRepository;
+import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
@@ -199,6 +203,8 @@ class ProyectoServiceTest extends BaseServiceTest {
   @Mock
   private TipoConfidencialidadRepository tipoConfidencialidadRepository;
   @Mock
+  private TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
+  @Mock
   private ProyectoFacturacionService proyectoFacturacionService;
 
   @Autowired
@@ -262,6 +268,7 @@ class ProyectoServiceTest extends BaseServiceTest {
         solicitudSocioRepository,
         solicitudRepository,
         tipoConfidencialidadRepository,
+        tipoRegimenConcurrenciaRepository,
         validator);
   }
 
@@ -499,6 +506,99 @@ class ProyectoServiceTest extends BaseServiceTest {
     // then: Lanza TipoConfidencialidadNotFoundException
     Assertions.assertThatThrownBy(() -> service.create(proyecto))
         .isInstanceOf(TipoConfidencialidadNotFoundException.class);
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void create_WithInactiveTipoRegimenConcurrencia_ThrowsIllegalArgumentException() {
+    // given: Un Proyecto con un TipoRegimenConcurrencia inactivo y sin
+    // convocatoria asociada
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setTipoRegimenConcurrenciaId(1L);
+    proyecto.setConvocatoriaId(null);
+
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder().id(1L).build();
+    tipoRegimenConcurrencia.setActivo(Boolean.FALSE);
+
+    BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(tipoRegimenConcurrencia));
+
+    // when: Creamos el Proyecto
+    // then: Lanza una excepcion porque el TipoRegimenConcurrencia esta inactivo
+    Assertions.assertThatThrownBy(() -> service.create(proyecto))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Tipo de régimen de concurrencia no está activo", tipoRegimenConcurrencia.getId());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void create_WithNonExistingTipoRegimenConcurrencia_ThrowsNotFoundException() {
+    // given: Un Proyecto con un TipoRegimenConcurrencia inexistente
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setTipoRegimenConcurrenciaId(1L);
+
+    BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
+
+    // when: Creamos el Proyecto
+    // then: Lanza TipoRegimenConcurrenciaNotFoundException
+    Assertions.assertThatThrownBy(() -> service.create(proyecto))
+        .isInstanceOf(TipoRegimenConcurrenciaNotFoundException.class);
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void create_WithInactiveTipoRegimenConcurrenciaMatchingConvocatoria_ReturnsProyecto() {
+    // given: Un Proyecto con un TipoRegimenConcurrencia inactivo cuyo id
+    // coincide con el regimenConcurrencia de la convocatoria vinculada
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setTipoRegimenConcurrenciaId(1L);
+    proyecto.setConvocatoriaId(1L);
+
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder().id(1L).build();
+    tipoRegimenConcurrencia.setActivo(Boolean.FALSE);
+
+    Convocatoria convocatoria = Convocatoria.builder()
+        .id(1L)
+        .regimenConcurrencia(tipoRegimenConcurrencia)
+        .build();
+
+    BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(tipoRegimenConcurrencia));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoria));
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoCreado = invocation.getArgument(0);
+      if (proyectoCreado.getId() == null) {
+        proyectoCreado.setId(1L);
+      }
+      return proyectoCreado;
+    });
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto estadoProyectoCreado = invocation.getArgument(0);
+          estadoProyectoCreado.setId(1L);
+          return estadoProyectoCreado;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
+    modeloUnidad.setActivo(true);
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    // when: Creamos el Proyecto
+    Proyecto proyectoCreado = service.create(proyecto);
+
+    // then: El Proyecto se crea sin error pese a que el TipoRegimenConcurrencia
+    // está inactivo, porque coincide con el de la convocatoria
+    Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(proyectoCreado.getTipoRegimenConcurrenciaId()).as("getTipoRegimenConcurrenciaId()")
+        .isEqualTo(1L);
   }
 
   @Test
@@ -765,6 +865,49 @@ class ProyectoServiceTest extends BaseServiceTest {
     // then: Lanza TipoConfidencialidadNotFoundException
     Assertions.assertThatThrownBy(() -> service.update(proyectoActualizar))
         .isInstanceOf(TipoConfidencialidadNotFoundException.class);
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void update_WithChangedInactiveTipoRegimenConcurrencia_ThrowsIllegalArgumentException() {
+    // given: Un Proyecto sin convocatoria cuyo TipoRegimenConcurrencia cambia a uno
+    // inactivo
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setConvocatoriaId(null);
+    Proyecto proyectoActualizar = generarMockProyecto(1L);
+    proyectoActualizar.setTipoRegimenConcurrenciaId(2L);
+
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder().id(2L).build();
+    tipoRegimenConcurrencia.setActivo(Boolean.FALSE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(tipoRegimenConcurrencia));
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza una excepcion porque el TipoRegimenConcurrencia esta inactivo
+    Assertions.assertThatThrownBy(() -> service.update(proyectoActualizar))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Tipo de régimen de concurrencia no está activo", tipoRegimenConcurrencia.getId());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void update_WithChangedNonExistingTipoRegimenConcurrencia_ThrowsNotFoundException() {
+    // given: Un Proyecto cuyo TipoRegimenConcurrencia cambia a uno inexistente
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setConvocatoriaId(null);
+    Proyecto proyectoActualizar = generarMockProyecto(1L);
+    proyectoActualizar.setTipoRegimenConcurrenciaId(99L);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
+
+    // when: Actualizamos el Proyecto
+    // then: Lanza TipoRegimenConcurrenciaNotFoundException
+    Assertions.assertThatThrownBy(() -> service.update(proyectoActualizar))
+        .isInstanceOf(TipoRegimenConcurrenciaNotFoundException.class);
   }
 
   @Test

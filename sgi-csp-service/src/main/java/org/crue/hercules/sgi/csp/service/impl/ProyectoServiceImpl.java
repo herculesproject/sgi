@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoConfidencialidadNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoIntereses;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoObjetivos;
@@ -105,6 +106,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoConfidencialidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
@@ -137,6 +139,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRep
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoConfidencialidadRepository;
+import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
@@ -263,6 +266,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final SolicitudProyectoSocioRepository solicitudSocioRepository;
   private final SolicitudRepository solicitudRepository;
   private final TipoConfidencialidadRepository tipoConfidencialidadRepository;
+  private final TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
   private final Validator validator;
 
   /**
@@ -277,6 +281,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("create(Proyecto proyecto) - start");
     AssertHelper.idIsNull(proyecto.getId(), Proyecto.class);
     checkTipoConfidencialidadActivo(proyecto.getTipoConfidencialidadId());
+    checkTipoRegimenConcurrenciaActivo(proyecto.getTipoRegimenConcurrenciaId(), proyecto.getConvocatoriaId());
 
     Assert.isTrue(
         SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
@@ -402,6 +407,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         checkTipoConfidencialidadActivo(proyectoActualizar.getTipoConfidencialidadId());
       }
       data.setTipoConfidencialidadId(proyectoActualizar.getTipoConfidencialidadId());
+      if (!Objects.equals(data.getTipoRegimenConcurrenciaId(), proyectoActualizar.getTipoRegimenConcurrenciaId())) {
+        checkTipoRegimenConcurrenciaActivo(proyectoActualizar.getTipoRegimenConcurrenciaId(), data.getConvocatoriaId());
+      }
+      data.setTipoRegimenConcurrenciaId(proyectoActualizar.getTipoRegimenConcurrenciaId());
       data.setConvocatoriaExterna(proyectoActualizar.getConvocatoriaExterna());
       data.setRolUniversidadId(proyectoActualizar.getRolUniversidadId());
       data.setFechaFin(proyectoActualizar.getFechaFin());
@@ -1033,6 +1042,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
           .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
       proyecto.setAmbitoGeografico(convocatoria.getAmbitoGeografico());
+      proyecto.setTipoRegimenConcurrenciaId(
+          convocatoria.getRegimenConcurrencia() != null ? convocatoria.getRegimenConcurrencia().getId() : null);
       proyecto.setClasificacionCVN(convocatoria.getClasificacionCVN());
       proyecto.setExcelencia(convocatoria.getExcelencia());
       if (ObjectUtils.isEmpty(proyecto.getAnio())) {
@@ -2802,6 +2813,43 @@ public class ProyectoServiceImpl implements ProyectoService {
         Boolean.TRUE.equals(tipoConfidencialidad.getActivo()),
         TipoConfidencialidad.class,
         String.valueOf(tipoConfidencialidad.getId()));
+  }
+
+  /**
+   * Comprueba que el {@link TipoRegimenConcurrencia} asignado está activo. Si el
+   * valor coincide con el {@code regimenConcurrencia} de la {@link Convocatoria}
+   * a la que el proyecto está vinculado, se permite aunque esté inactivo.
+   *
+   * @param tipoRegimenConcurrenciaId Identificador del
+   *                                  {@link TipoRegimenConcurrencia}.
+   * @param convocatoriaId            Identificador de la {@link Convocatoria}
+   *                                  vinculada al proyecto.
+   * @throws TipoRegimenConcurrenciaNotFoundException si no existe un
+   *                                                  {@link TipoRegimenConcurrencia}
+   *                                                  con el id indicado.
+   */
+  private void checkTipoRegimenConcurrenciaActivo(Long tipoRegimenConcurrenciaId, Long convocatoriaId) {
+    if (tipoRegimenConcurrenciaId == null) {
+      return;
+    }
+
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = tipoRegimenConcurrenciaRepository
+        .findById(tipoRegimenConcurrenciaId)
+        .orElseThrow(() -> new TipoRegimenConcurrenciaNotFoundException(tipoRegimenConcurrenciaId));
+
+    if (convocatoriaId != null) {
+      Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
+          .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
+      if (convocatoria.getRegimenConcurrencia() != null
+          && tipoRegimenConcurrencia.getId().equals(convocatoria.getRegimenConcurrencia().getId())) {
+        return;
+      }
+    }
+
+    AssertHelper.entityActivo(
+        Boolean.TRUE.equals(tipoRegimenConcurrencia.getActivo()),
+        TipoRegimenConcurrencia.class,
+        String.valueOf(tipoRegimenConcurrencia.getId()));
   }
 
 }
