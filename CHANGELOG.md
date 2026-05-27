@@ -31,6 +31,7 @@
 
 ### Fixed
 - [CSP] Se corrige error al clonar una convocatoria cuando sus periodos de justificación tienen observaciones ([#62](https://github.com/herculesproject/sgi/issues/62)).
+- [CSP]  ([#62](https://github.com/herculesproject/sgi/issues/62)).
 
 ### Changed
 - [CSP] Reordenados los campos de la pantalla de datos generales del grupo de investigación ([#37](https://github.com/herculesproject/sgi/issues/37)).
