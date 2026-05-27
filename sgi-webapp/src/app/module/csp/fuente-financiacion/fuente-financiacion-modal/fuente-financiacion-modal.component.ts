@@ -109,7 +109,7 @@ export class FuenteFinanciacionModalComponent
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(this.fuenteFinanciacion?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
+      nombre: new FormControl(this.fuenteFinanciacion?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(550)]),
       descripcion: new FormControl(this.fuenteFinanciacion?.descripcion ?? [], [I18nValidators.maxLength(250)]),
       ambitoGeografico: new FormControl(this.fuenteFinanciacion?.tipoAmbitoGeografico ?? null),
       origen: new FormControl(this.fuenteFinanciacion?.tipoOrigenFuenteFinanciacion ?? null),

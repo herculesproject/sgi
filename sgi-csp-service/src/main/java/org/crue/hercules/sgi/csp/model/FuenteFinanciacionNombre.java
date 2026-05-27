@@ -39,8 +39,8 @@ public class FuenteFinanciacionNombre implements Serializable, I18nFieldValue {
   private Language lang;
 
   /** Nombre */
-  @Column(name = "value_", length = 50, nullable = false)
+  @Column(name = "value_", length = 550, nullable = false)
   @NotBlank
-  @Size(max = 50)
+  @Size(max = 550)
   private String value;
 }
