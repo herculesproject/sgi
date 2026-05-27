@@ -215,11 +215,9 @@
             {{'error.email.incorrect.format' | translate:msgParamEmailEntity}}
           </mat-error>
         </mat-form-field>
-      </div>
 
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Dirección -->
-        <mat-form-field>
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3 * 2 + 10px)">
           <mat-label>{{'csp.grupo.direccion' | translate}}</mat-label>
           <input matInput type="text" placeholder="{{'csp.grupo.direccion' | translate}}" formControlName="direccion">
           <mat-error *ngIf="formGroup.controls.direccion.errors?.maxlength">
@@ -453,11 +451,9 @@
             {{'error.email.incorrect.format' | translate:msgParamEmailEntity}}
           </mat-error>
         </mat-form-field>
-      </div>
 
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Dirección -->
-        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3 * 2 + 10px)">
           <mat-label>{{'csp.grupo.direccion' | translate}}</mat-label>
           <input matInput type="text" placeholder="{{'csp.grupo.direccion' | translate}}" formControlName="direccion">
           <mat-error *ngIf="formGroup.controls.direccion.errors?.maxlength">
