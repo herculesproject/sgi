@@ -31,7 +31,8 @@
 
 ### Fixed
 - [CSP] Se corrige error al clonar una convocatoria cuando sus periodos de justificación tienen observaciones ([#62](https://github.com/herculesproject/sgi/issues/62)).
-- [CSP]  ([#62](https://github.com/herculesproject/sgi/issues/62)).
+- [CSP] Corregido el nombre del concepto de gasto que se mostraba como `[object Object]` en el listado de códigos económicos no permitidos al añadir una partida de gasto en el presupuesto del proyecto ([#74](https://github.com/herculesproject/sgi/issues/74)).
+
 
 ### Changed
 - [CSP] Reordenados los campos de la pantalla de datos generales del grupo de investigación ([#37](https://github.com/herculesproject/sgi/issues/37)).
