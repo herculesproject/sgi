@@ -1,18 +1,12 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-  BACKSPACE,
-  DELETE,
-  ENTER,
-  hasModifierKey,
-  SPACE,
-} from '@angular/cdk/keycodes';
+import { hasModifierKey } from '@angular/cdk/keycodes';
 import { HttpEventType } from '@angular/common/http';
 import {
   Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component,
   DoCheck, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { MAT_FORM_FIELD, MatFormField, MatFormFieldControl } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { Observable, of, Subject, throwError } from 'rxjs';
@@ -35,9 +29,9 @@ export interface UploadEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line: no-host-metadata-property
   host: {
-    'role': 'search',
+    role: 'search',
     'aria-autocomplete': 'none',
-    'class': 'mat-select',
+    class: 'mat-select',
     '[attr.id]': 'id',
     '[attr.tabindex]': 'tabIndex',
     '[attr.aria-label]': 'ariaLabel || null',
@@ -185,7 +179,11 @@ export class SgiFileUploadComponent implements
   @Output() readonly uploadStart: Observable<void> = this.uploadEventChange.pipe(filter(e => e.status === 'start'), map(() => { }));
   @Output() readonly uploadEnd: Observable<void> = this.uploadEventChange.pipe(filter(e => e.status === 'end'), map(() => { }));
   @Output() readonly uploadError: Observable<void> = this.uploadEventChange.pipe(filter(e => e.status === 'error'), map(() => { }));
-  @Output() readonly uploadProgress: Observable<number> = this.uploadEventChange.pipe(filter(e => e.status === 'progress'), map((e) => e.progress));
+  @Output() readonly uploadProgress: Observable<number> = this.uploadEventChange
+    .pipe(
+      filter(e => e.status === 'progress'),
+      map((e) => e.progress)
+    );
 
   @Output()
   readonly selectionChange: EventEmitter<File> = new EventEmitter<File>();
@@ -283,18 +281,21 @@ export class SgiFileUploadComponent implements
 
   /** Handles all keydown events on the select. */
   protected handleKeydown(event: KeyboardEvent): void {
-    if (!this.disabled) {
-      const keyCode = event.keyCode;
+    if (this.disabled || hasModifierKey(event)) {
+      return;
+    }
 
-      if ((keyCode === ENTER || keyCode === SPACE) && !hasModifierKey(event)) {
-        event.preventDefault();
-        this.triggerUpload();
-      } else if ((keyCode === BACKSPACE || keyCode === DELETE) && !hasModifierKey(event)) {
-        event.preventDefault();
-        if (this._value) {
-          this._value = null;
-          this.propagateChanges();
-        }
+    const key = event.key;
+
+    if (key === 'Enter' || key === ' ') {
+      event.preventDefault();
+      this.triggerUpload();
+    } else if (key === 'Backspace' || key === 'Delete') {
+      event.preventDefault();
+
+      if (this._value) {
+        this._value = null;
+        this.propagateChanges();
       }
     }
   }
@@ -403,8 +404,14 @@ export class SgiFileUploadComponent implements
     if (files && files.length) {
       const file = files.item(0);
       if (this.maxFileSizeMb && file.size > this.maxFileSizeMb * 1024 * 1024) {
-        this.selection = null;
-        this.selectionChange.next(null);
+        this.fileUpload.nativeElement.value = null;
+        this._value = {
+          nombre: file.name,
+          tipo: file.type
+        } as IDocumento;
+        this.onChange(null);
+        this.onTouched();
+
         const existing = this.ngControl?.control?.errors ?? {};
         this.ngControl?.control?.setErrors({ ...existing, maxFileSize: true });
         this.changeDetectorRef.markForCheck();
