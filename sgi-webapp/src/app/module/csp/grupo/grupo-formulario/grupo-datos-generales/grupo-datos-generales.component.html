@@ -28,18 +28,9 @@
             {{'error.maxlength.entity' | translate:msgParamAcronimoEntity}}
           </mat-error>
         </mat-form-field>
-      </div>
-
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <!-- Solicitud -->
-        <mat-form-field *ngIf="formGroup.controls.solicitud?.value">
-          <mat-label>{{'csp.grupo.solicitud' | translate}}</mat-label>
-          <input matInput type="text" placeholder="{{'csp.grupo.solicitud' | translate}}" formControlName="solicitud"
-            [readonly]="true">
-        </mat-form-field>
 
         <!-- Codigo -->
-        <mat-form-field>
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
           <mat-label>{{'csp.grupo.codigo' | translate}}</mat-label>
           <input matInput type="text" placeholder="{{'csp.grupo.codigo' | translate}}" formControlName="codigo"
             required>
@@ -49,6 +40,13 @@
           <mat-error *ngIf="formGroup.controls.codigo.errors?.duplicated">
             {{ 'error.csp.grupo.codigo.duplicated' | translate }}
           </mat-error>
+        </mat-form-field>
+
+        <!-- Solicitud -->
+        <mat-form-field *ngIf="formGroup.controls.solicitud?.value" fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+          <mat-label>{{'csp.grupo.solicitud' | translate}}</mat-label>
+          <input matInput type="text" placeholder="{{'csp.grupo.solicitud' | translate}}" formControlName="solicitud"
+            [readonly]="true">
         </mat-form-field>
       </div>
 
