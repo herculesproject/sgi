@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.converter;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class ConvocatoriaFaseObservacionesConverter {
 
   public Set<ConvocatoriaFaseObservaciones> convertAll(List<I18nFieldValueDto> dtoList) {
     if (dtoList == null || dtoList.isEmpty()) {
-      return Set.of();
+      return new HashSet<>();
     }
     return dtoList.stream()
         .map(this::convert)
