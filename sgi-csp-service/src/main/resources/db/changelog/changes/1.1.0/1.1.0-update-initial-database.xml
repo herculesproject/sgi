@@ -268,13 +268,6 @@
       constraintName="FK_GRUPORELACIONINSTITUCIONAL_GRUPO"
       deferrable="false" initiallyDeferred="false"
       referencedColumnNames="id" referencedTableName="grupo" validate="true" />
-
-    <addUniqueConstraint columnNames="grupo_id, entidad_ref"
-      constraintName="UK_GRUPORELACIONINSTITUCIONAL_GRUPO_ENTIDADREF"
-      tableName="grupo_relacion_institucional" />
-    <addUniqueConstraint columnNames="grupo_id, institucion"
-      constraintName="UK_GRUPORELACIONINSTITUCIONAL_GRUPO_INSTITUCION"
-      tableName="grupo_relacion_institucional" />
   </changeSet>
 
   <changeSet author="master" id="1.1.0-18">
