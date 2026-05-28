@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SGP API</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.32.6/swagger-ui.css"
+    integrity="sha384-9Q2fpS+xeS4ffJy6CagnwoUl+4ldAYhOs9pgZuEKxypVModhmZFzeMlvVsAjf7uT" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="swagger-sgp"></div>
+
+  <script src="https://unpkg.com/swagger-ui-dist@5.32.6/swagger-ui-bundle.js"
+    integrity="sha384-EYdOaiRwn44zNjrw+Tfs06qYz9BGQVo2f4/pLY5i7VorbjnZNhdplAbTBk8FXHUJ"
+    crossorigin="anonymous"></script>
+  <script>
+    window.onload = () => {
+      SwaggerUIBundle({
+        url: "../openapi/sgp-openapi-definition.yml",
+        dom_id: "#swagger-sgp",
+      });
+    };
+  </script>
+</body>
+
+</html>
