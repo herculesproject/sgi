@@ -339,6 +339,30 @@ mat-form-field {
 /**/
 
 /**/
+/** ARBOLES */
+/**/
+
+// Estilos reutilizables para arboles <mat-tree>: envolver el arbol en .sgi-tree
+.sgi-tree {
+  display: block;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid map-get($sgi-custom-colors, divider);
+
+  .mat-tree-node button {
+    font-weight: 400;
+  }
+
+  mat-checkbox .mat-checkbox-layout {
+    white-space: normal;
+  }
+}
+
+/**/
+/** FIN ARBOLES */
+/**/
+
+/**/
 /** SELECTS */
 /**/
 

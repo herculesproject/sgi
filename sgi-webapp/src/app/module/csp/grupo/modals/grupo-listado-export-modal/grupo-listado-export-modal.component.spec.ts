@@ -23,6 +23,7 @@ import { GrupoListadoExportService } from '../../grupo-listado-export.service';
 import { GrupoPersonaAutorizadaListadoExportService } from '../../grupo-persona-autorizada-listado-export.service';
 import { GrupoRelacionInstitucionalListadoExportService } from '../../grupo-relacion-institucional-listado-export.service';
 import { GrupoResponsableEconomicoListadoExportService } from '../../grupo-responsable-economico-listado-export.service';
+import { GrupoUnidadVinculacionListadoExportService } from '../../grupo-unidad-vinculacion-listado-export.service';
 import { GrupoListadoExportModalComponent } from './grupo-listado-export-modal.component';
 
 
@@ -62,6 +63,7 @@ describe('GrupoListadoExportModalComponent', () => {
         GrupoPersonaAutorizadaListadoExportService,
         GrupoRelacionInstitucionalListadoExportService,
         GrupoResponsableEconomicoListadoExportService,
+        GrupoUnidadVinculacionListadoExportService,
         LuxonDatePipe,
         PercentPipe,
         SgiAuthService

@@ -29,6 +29,7 @@ import {
   GrupoRelacionInstitucionalComponent
 } from './grupo-formulario/grupo-relacion-institucional/grupo-relacion-institucional.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
+import { GrupoUnidadesVinculacionComponent } from './grupo-formulario/grupo-unidades-vinculacion/grupo-unidades-vinculacion.component';
 import { GrupoGeneralListadoExportService } from './grupo-general-listado-export.service';
 import { GrupoLineaInvestigacionListadoExportService } from './grupo-linea-investigacion-listado-export.service';
 import { GrupoListadoExportService } from './grupo-listado-export.service';
@@ -37,6 +38,7 @@ import { GrupoPersonaAutorizadaListadoExportService } from './grupo-persona-auto
 import { GrupoRelacionInstitucionalListadoExportService } from './grupo-relacion-institucional-listado-export.service';
 import { GrupoResponsableEconomicoListadoExportService } from './grupo-responsable-economico-listado-export.service';
 import { GrupoRoutingModule } from './grupo-routing.module';
+import { GrupoUnidadVinculacionListadoExportService } from './grupo-unidad-vinculacion-listado-export.service';
 import { GrupoDescriptorModalComponent } from './modals/grupo-descriptor-modal/grupo-descriptor-modal.component';
 import { GrupoEnlaceModalComponent } from './modals/grupo-enlace-modal/grupo-enlace-modal.component';
 import { GrupoEquipoInstrumentalModalComponent } from './modals/grupo-equipo-instrumental-modal/grupo-equipo-instrumental-modal.component';
@@ -45,14 +47,15 @@ import { GrupoListadoExportModalComponent } from './modals/grupo-listado-export-
 import { GrupoPersonaAutorizadaModalComponent } from './modals/grupo-persona-autorizada-modal/grupo-persona-autorizada-modal.component';
 import { GrupoRelacionInstitucionalModalComponent } from './modals/grupo-relacion-institucional-modal/grupo-relacion-institucional-modal.component';
 import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsable-economico-modal/grupo-responsable-economico-modal.component';
+import { GrupoUnidadVinculacionModalComponent } from './modals/grupo-unidad-vinculacion-modal/grupo-unidad-vinculacion-modal.component';
 
 @NgModule({
   declarations: [
     GrupoCrearComponent,
     GrupoDatosGeneralesComponent,
-    GrupoEditarComponent,
     GrupoDescriptorComponent,
     GrupoDescriptorModalComponent,
+    GrupoEditarComponent,
     GrupoEnlaceComponent,
     GrupoEnlaceModalComponent,
     GrupoEquipoInstrumentalComponent,
@@ -67,7 +70,9 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoRelacionInstitucionalComponent,
     GrupoRelacionInstitucionalModalComponent,
     GrupoResponsableEconomicoComponent,
-    GrupoResponsableEconomicoModalComponent
+    GrupoResponsableEconomicoModalComponent,
+    GrupoUnidadesVinculacionComponent,
+    GrupoUnidadVinculacionModalComponent
   ],
   imports: [
     CKEditorModule,
@@ -96,6 +101,7 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoPersonaAutorizadaListadoExportService,
     GrupoRelacionInstitucionalListadoExportService,
     GrupoResponsableEconomicoListadoExportService,
+    GrupoUnidadVinculacionListadoExportService,
     LuxonDatePipe,
     PercentPipe
   ]

@@ -45,6 +45,10 @@
         <mat-checkbox color="primary" class="checkbox" formControlName="showEquiposInstrumentales">
           {{'csp.grupo-equipo.equipo-instrumental' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
         </mat-checkbox>
+        <mat-checkbox *ngIf="isGrupoUnidadesVinculacionEnabled" color="primary" class="checkbox"
+          formControlName="showUnidadesVinculacion">
+          {{'csp.grupo-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
+        </mat-checkbox>
       </div>
     </div>
   </form>

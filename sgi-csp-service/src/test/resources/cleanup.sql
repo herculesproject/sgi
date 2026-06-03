@@ -10,6 +10,7 @@ DELETE FROM test.tipo_grupo_nombre;
 DELETE FROM test.tipo_grupo_descripcion;
 DELETE FROM test.tipo_grupo;
 DELETE FROM test.grupo_palabra_clave;
+DELETE FROM test.grupo_unidad_vinculacion;
 DELETE FROM test.grupo_linea_clasificacion;
 DELETE FROM test.grupo_linea_investigacion;
 DELETE FROM test.grupo_descriptor_texto;

@@ -18,6 +18,8 @@ import org.crue.hercules.sgi.csp.dto.GrupoInput;
 import org.crue.hercules.sgi.csp.dto.GrupoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.GrupoPalabraClaveOutput;
+import org.crue.hercules.sgi.csp.dto.GrupoUnidadVinculacionInput;
+import org.crue.hercules.sgi.csp.dto.GrupoUnidadVinculacionOutput;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -45,6 +47,7 @@ class GrupoIT extends BaseIT {
   private static final String PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO = GrupoController.PATH_GRUPO_BAREMABLE_GRUPO_REF_ANIO;
   private static final String PATH_MODIFICADOS_IDS = GrupoController.PATH_MODIFICADOS_IDS;
   private static final String PATH_PALABRAS_CLAVE = GrupoController.PATH_PALABRAS_CLAVE;
+  private static final String PATH_GRUPO_UNIDADES_VINCULACION = GrupoController.PATH_GRUPO_UNIDADES_VINCULACION;
   private static final String PATH_TODOS = GrupoController.PATH_TODOS;
   private static final String PATH_ID = GrupoController.PATH_ID;
   private static final String PATH_GRUPO_DESCRIPTOR = GrupoController.PATH_GRUPO_DESCRIPTORES;
@@ -593,6 +596,165 @@ class GrupoIT extends BaseIT {
 
     // then: 204 No Content
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
+      "classpath:scripts/grupo.sql",
+      "classpath:scripts/grupo_unidad_vinculacion.sql",
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findUnidadesVinculacion_WithPagingSortingAndFiltering_ReturnsGrupoUnidadVinculacionOutputSubList()
+      throws Exception {
+    // given: un Grupo con varias GrupoUnidadVinculacion y filtros de paginacion
+    String[] roles = { "CSP-GIN-E" };
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id,asc";
+    String filter = "id>=1;id<=3";
+
+    Long grupoId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_GRUPO_UNIDADES_VINCULACION)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(grupoId).toUri();
+
+    // when: se buscan las GrupoUnidadVinculacion del Grupo
+    final ResponseEntity<List<GrupoUnidadVinculacionOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null, roles), new ParameterizedTypeReference<List<GrupoUnidadVinculacionOutput>>() {
+        });
+
+    // then: 200 OK con la sublista paginada y los headers de paginacion
+    final String expectedSize = "3";
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo(expectedSize);
+
+    Assertions.assertThat(response.getBody()).isNotNull();
+
+    final List<GrupoUnidadVinculacionOutput> responseData = response.getBody().stream()
+        .sorted(new Comparator<GrupoUnidadVinculacionOutput>() {
+          @Override
+          public int compare(GrupoUnidadVinculacionOutput o1, GrupoUnidadVinculacionOutput o2) {
+            return o1.getId().compareTo(o2.getId());
+          }
+        })
+        .toList();
+    Assertions.assertThat(responseData).hasSize(Integer.valueOf(expectedSize));
+
+    Assertions.assertThat(responseData.get(0)).isNotNull();
+    Assertions.assertThat(responseData.get(1)).isNotNull();
+    Assertions.assertThat(responseData.get(2)).isNotNull();
+
+    Assertions.assertThat(responseData.get(0).getId()).isEqualTo(1);
+    Assertions.assertThat(responseData.get(1).getId()).isEqualTo(2);
+    Assertions.assertThat(responseData.get(2).getId()).isEqualTo(3);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
+      "classpath:scripts/grupo.sql",
+      "classpath:scripts/grupo_unidad_vinculacion.sql",
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void updateUnidadesVinculacion_WithNewRefs_ReplacesAll() throws Exception {
+    // given: un Grupo con unidades previas y una lista con nuevas referencias
+    String[] roles = { "CSP-GIN-E" };
+
+    Long grupoId = 1L;
+    List<GrupoUnidadVinculacionInput> toUpdate = Arrays.asList(
+        buildMockGrupoUnidadVinculacionInput("updated-01"),
+        buildMockGrupoUnidadVinculacionInput("updated-02"));
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_GRUPO_UNIDADES_VINCULACION)
+        .buildAndExpand(grupoId).toUri();
+
+    // when: se actualizan las GrupoUnidadVinculacion del Grupo con refs distintas
+    final ResponseEntity<List<GrupoUnidadVinculacionOutput>> response = restTemplate.exchange(uri, HttpMethod.PATCH,
+        buildRequest(null, toUpdate, roles), new ParameterizedTypeReference<List<GrupoUnidadVinculacionOutput>>() {
+        });
+
+    // then: 200 OK con solo las nuevas referencias
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull();
+
+    final List<GrupoUnidadVinculacionOutput> responseData = response.getBody().stream()
+        .sorted(Comparator.comparing(GrupoUnidadVinculacionOutput::getUnidadVinculacionRef))
+        .toList();
+    Assertions.assertThat(responseData).hasSize(2);
+    Assertions.assertThat(responseData.get(0).getUnidadVinculacionRef()).isEqualTo("updated-01");
+    Assertions.assertThat(responseData.get(1).getUnidadVinculacionRef()).isEqualTo("updated-02");
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/tipo-grupo.sql",
+      "classpath:scripts/grupo.sql",
+      "classpath:scripts/grupo_unidad_vinculacion.sql",
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void updateUnidadesVinculacion_WithSameRefs_PreservesIds() throws Exception {
+    // given: un Grupo con unidades existentes y se envía la misma lista
+    String[] roles = { "CSP-GIN-E" };
+
+    Long grupoId = 1L;
+    // unidad-01..unidad-05 corresponden a IDs 1..5 en el script SQL del grupo 1
+    List<GrupoUnidadVinculacionInput> toUpdate = Arrays.asList(
+        buildMockGrupoUnidadVinculacionInput("unidad-01"),
+        buildMockGrupoUnidadVinculacionInput("unidad-02"),
+        buildMockGrupoUnidadVinculacionInput("unidad-03"),
+        buildMockGrupoUnidadVinculacionInput("unidad-04"),
+        buildMockGrupoUnidadVinculacionInput("unidad-05"));
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_GRUPO_UNIDADES_VINCULACION)
+        .buildAndExpand(grupoId).toUri();
+
+    // when: se actualizan con la misma lista (ningún cambio real)
+    final ResponseEntity<List<GrupoUnidadVinculacionOutput>> response = restTemplate.exchange(uri, HttpMethod.PATCH,
+        buildRequest(null, toUpdate, roles), new ParameterizedTypeReference<List<GrupoUnidadVinculacionOutput>>() {
+        });
+
+    // then: 200 OK con los mismos items preservando sus IDs originales
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull();
+
+    final List<GrupoUnidadVinculacionOutput> responseData = response.getBody().stream()
+        .sorted(Comparator.comparing(GrupoUnidadVinculacionOutput::getId))
+        .toList();
+    Assertions.assertThat(responseData).hasSize(5);
+    Assertions.assertThat(responseData.get(0).getId()).isEqualTo(1L);
+    Assertions.assertThat(responseData.get(1).getId()).isEqualTo(2L);
+    Assertions.assertThat(responseData.get(2).getId()).isEqualTo(3L);
+    Assertions.assertThat(responseData.get(3).getId()).isEqualTo(4L);
+    Assertions.assertThat(responseData.get(4).getId()).isEqualTo(5L);
+    Assertions.assertThat(responseData.get(0).getUnidadVinculacionRef()).isEqualTo("unidad-01");
+    Assertions.assertThat(responseData.get(1).getUnidadVinculacionRef()).isEqualTo("unidad-02");
+    Assertions.assertThat(responseData.get(2).getUnidadVinculacionRef()).isEqualTo("unidad-03");
+    Assertions.assertThat(responseData.get(3).getUnidadVinculacionRef()).isEqualTo("unidad-04");
+    Assertions.assertThat(responseData.get(4).getUnidadVinculacionRef()).isEqualTo("unidad-05");
+  }
+
+  private GrupoUnidadVinculacionInput buildMockGrupoUnidadVinculacionInput(String unidadVinculacionRef) {
+    return GrupoUnidadVinculacionInput.builder()
+        .unidadVinculacionRef(unidadVinculacionRef)
+        .build();
   }
 
   private GrupoInput buildMockGrupo() {
