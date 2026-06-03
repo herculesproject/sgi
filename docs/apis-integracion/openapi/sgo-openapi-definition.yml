@@ -39,6 +39,10 @@ tags:
     description: Provincias
   - name: provincias-public
     description: Provincias (endpoints accesibles sin autentificación)
+  - name: unidades-vinculacion
+    description: Unidades de vinculación
+  - name: unidades-vinculacion-public
+    description: Unidades de vinculación (endpoints accesibles sin autentificación)
 
 paths:
   /areas-conocimiento:
@@ -88,7 +92,7 @@ paths:
           description: |-
             Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
             - nombre 
-            - padreId            
+            - padreId
           schema:
             type: string
           example: nombre==Área 1;
@@ -96,12 +100,12 @@ paths:
           x-sgi-pageable: true
           in: query
           description: |-
-            Criterios de ordenación. Formato: `campo,asc|desc`. 
+            Criterios de ordenación. Formato: `campo,asc|desc`.
           schema:
             type: string
             example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de áreas de conocimiento
           headers:
             X-Page-Count:
@@ -130,9 +134,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/AreaConocimientoOutput"
-        204:
+        "204":
           description: No hay áreas de conocimiento para los criterios de búsqueda utilizados.
-        400:
+        "400":
           description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
           content:
             application/json:
@@ -166,13 +170,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve el área de conocimiento
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AreaConocimientoOutput"
-        404:
+        "404":
           description: Área de conocimiento no encontrada
           content:
             application/json:
@@ -200,13 +204,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve el área de conocimiento
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AreaConocimientoOutput"
-        404:
+        "404":
           description: Área de conocimiento no encontrada
           content:
             application/json:
@@ -266,7 +270,7 @@ paths:
             type: string
             example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de centros
           headers:
             X-Page-Count:
@@ -300,9 +304,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/CentroOutput"
-        204:
+        "204":
           description: No hay centros para los criterios de búsqueda utilizados.
-        400:
+        "400":
           description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
           content:
             application/json:
@@ -331,13 +335,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve el centro
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CentroOutput"
-        404:
+        "404":
           description: Centro no encontrado
           content:
             application/json:
@@ -365,13 +369,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve el centro
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CentroOutput"
-        404:
+        "404":
           description: Centro no encontrado
           content:
             application/json:
@@ -425,7 +429,7 @@ paths:
           description: |-
             Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
             - `tipoClasificacion`
-            - `padreId`            
+            - `padreId`
           schema:
             type: string
           example: padreId=na="";tipoClasificacion==SECTORES_INDUSTRIALES
@@ -439,7 +443,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de clasificaciones
           headers:
             X-Page-Count:
@@ -468,14 +472,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ClasificacionOutput"
-      204:
-        description: No hay clasificaciones para los criterios de búsqueda utilizados.
-      400:
-        description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/BadRequestError"
+        "204":
+          description: No hay clasificaciones para los criterios de búsqueda utilizados.
+        "400":
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
 
   /clasificaciones/{id}:
     get:
@@ -496,18 +500,18 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve la clasificación
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClasificacionOutput"
-      404:
-        description: Clasificación no encontrada
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/NotFoundError"
+        "404":
+          description: Clasificación no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
 
   /public/clasificaciones:
     get:
@@ -550,7 +554,7 @@ paths:
           description: |-
             Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
             - `tipoClasificacion`
-            - `padreId`            
+            - `padreId`
           schema:
             type: string
           example: padreId=na="";tipoClasificacion==SECTORES_INDUSTRIALES
@@ -564,7 +568,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de clasificaciones
           headers:
             X-Page-Count:
@@ -593,14 +597,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ClasificacionOutput"
-      204:
-        description: No hay clasificaciones para los criterios de búsqueda utilizados.
-      400:
-        description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/BadRequestError"
+        "204":
+          description: No hay clasificaciones para los criterios de búsqueda utilizados.
+        "400":
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
 
   /public/clasificaciones/{id}:
     get:
@@ -615,28 +619,28 @@ paths:
 
         ### Consideraciones para la implementación
         - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
-    operationId: findClasificacionPublicById
-    parameters:
-      - name: id
-        in: path
-        description: Identificador de la clasificación
-        required: true
-        example: C1
-        schema:
-          type: string
-    responses:
-      200:
-        description: Devuelve la clasificación
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ClasificacionOutput"
-      404:
-        description: Clasificación no encontrada
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/NotFoundError"
+      operationId: findClasificacionPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la clasificación
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Devuelve la clasificación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClasificacionOutput"
+        "404":
+          description: Clasificación no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
 
   /comunidades-autonomas:
     get:
@@ -698,7 +702,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de comunidades autónomas
           headers:
             X-Page-Count:
@@ -727,9 +731,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ComunidadAutonomaOutput"
-        204:
+        "204":
           description: No hay comunidades autónomas para los criterios de búsqueda utilizados.
-        400:
+        "400":
           description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
           content:
             application/json:
@@ -758,13 +762,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve la comunidad autónoma
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ComunidadAutonomaOutput"
-        404:
+        "404":
           description: Comunidad autónoma no encontrada
           content:
             application/json:
@@ -827,7 +831,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de comunidades autónomas
           headers:
             X-Page-Count:
@@ -856,9 +860,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ComunidadAutonomaOutput"
-        204:
+        "204":
           description: No hay comunidades autónomas para los criterios de búsqueda utilizados.
-        400:
+        "400":
           description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
           content:
             application/json:
@@ -880,7 +884,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        200:
+        "200":
           description: Devuelve la lista de departamentos
           content:
             application/json:
@@ -888,7 +892,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/DepartamentoOutput"
-        204:
+        "204":
           description: No hay departamentos disponibles.
 
   /departamentos/{id}:
@@ -913,19 +917,18 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve el departamento
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DepartamentoOutput"
-        404:
+        "404":
           description: Departamento no encontrado
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/NotFoundError"
-
 
   /public/departamentos:
     get:
@@ -940,7 +943,7 @@ paths:
         - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
       operationId: findAllDepartamentosPublic
       responses:
-        200:
+        "200":
           description: Devuelve la lista de departamentos
           content:
             application/json:
@@ -948,7 +951,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/DepartamentoOutput"
-        204:
+        "204":
           description: No hay departamentos disponibles.
 
   /paises:
@@ -1008,7 +1011,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de países
           headers:
             X-Page-Count:
@@ -1037,7 +1040,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PaisOutput"
-        204:
+        "204":
           description: No hay países que cumplan con los filtros
 
   /paises/{id}:
@@ -1062,13 +1065,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve el país
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaisOutput"
-        404:
+        "404":
           description: País no encontrado
           content:
             application/json:
@@ -1115,7 +1118,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de países
           headers:
             X-Page-Count:
@@ -1144,7 +1147,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PaisOutput"
-        204:
+        "204":
           description: No hay países que cumplan con los filtros
 
   /palabras-clave:
@@ -1205,7 +1208,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de palabras clave
           headers:
             X-Page-Count:
@@ -1235,7 +1238,7 @@ paths:
                 items:
                   type: string
                 example: ["palabra1", "palabra12"]
-        204:
+        "204":
           description: No hay palabras clave que cumplan con los filtros de busqueda
     post:
       tags:
@@ -1261,7 +1264,7 @@ paths:
                 type: string
               example: ["palabra2", "palabra3"]
       responses:
-        200:
+        "200":
           description: palabras clave creadas correctamente
 
   /provincias:
@@ -1322,7 +1325,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de provincias
           headers:
             X-Page-Count:
@@ -1351,7 +1354,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ProvinciaOutput"
-        204:
+        "204":
           description: No hay provincias que cumplan con los filtros de búsqueda
 
   /provincias/{id}:
@@ -1376,13 +1379,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        "200":
           description: Devuelve la provincia
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProvinciaOutput"
-        404:
+        "404":
           description: Provincia no encontrada
           content:
             application/json:
@@ -1441,7 +1444,7 @@ paths:
             type: string
           example: nombre,asc
       responses:
-        200:
+        "200":
           description: Devuelve la lista de provincias
           headers:
             X-Page-Count:
@@ -1470,8 +1473,281 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ProvinciaOutput"
-        204:
+        "204":
           description: No hay provincias que cumplan con los filtros de búsqueda
+
+  /unidades-vinculacion:
+    get:
+      tags:
+        - unidades-vinculacion
+      summary: Devuelve una lista de unidades de vinculación
+      description: |-
+        Devuelve la lista de unidades de vinculación filtradas, ordenadas y paginadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `activo`
+        - `id`
+        - `predecesorId`
+
+        ### Módulos del SGI donde se utiliza
+        - CSP: **Grupos investigación ➜ Unidades de vinculación**, **Proyecto ➜ Unidades de vinculación**
+
+        ### Consideraciones para la implementación
+        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+        - Si no se envían parámetros de paginación, el servicio devolverá **todas las unidades de vinculación ordenadas alfabéticamente por nombre**.
+        - Este servicio permite construir estructuras jerárquicas mediante el campo `predecesorId`.
+      operationId: findAllUnidadesVinculacion
+      security:
+        - bearerAuth: []
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `activo`
+            - `id`
+            - `predecesorId`
+          schema:
+            type: string
+          examples:
+            filtroActivosSinPredecesor:
+              summary: Activos sin predecesor
+              value: predecesorId=na="";activo=="true"
+            filtroPorIds:
+              summary: Búsqueda por identificadores
+              value: id=in=("UV1","UV2")
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        "200":
+          description: Devuelve la lista de unidades de vinculación
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UnidadVinculacionOutput"
+        "204":
+          description: No hay unidades de vinculación para los criterios de búsqueda utilizados.
+        "400":
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /unidades-vinculacion/{id}:
+    get:
+      tags:
+        - unidades-vinculacion
+      summary: Detalles de la unidad de vinculación
+      description: |-
+        Devuelve la unidad de vinculación correspondiente al `id`.
+
+        ### Consideraciones para la implementación
+        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+      operationId: findUnidadVinculacionById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la unidad de vinculación
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Devuelve la unidad de vinculación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnidadVinculacionOutput"
+        "404":
+          description: Unidad de vinculación no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+
+  /public/unidades-vinculacion:
+    get:
+      tags:
+        - unidades-vinculacion-public
+      summary: Devuelve una lista paginada y filtrada de unidades de vinculación
+      description: |-
+        Versión pública del endpoint `GET /unidades-vinculacion`.
+        Devuelve la lista de unidades de vinculación filtradas, ordenadas y paginadas.
+        La búsqueda se realiza mediante una expresión en formato **RSQL** enviada en el parámetro `q`.
+
+        ### Búsquedas que deben soportarse
+        - `activo`
+        - `id`
+        - `predecesorId`
+
+        ### Consideraciones para la implementación
+        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+        - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
+      operationId: findAllUnidadesVinculacionPublic
+      x-sgi-return-page: true # Remplaza el List de la respuesta por un Page
+      parameters:
+        - name: X-Page
+          in: header
+          description: Nº de pagina
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 0
+        - name: X-Page-Size
+          in: header
+          description: Nº de elementos por página
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+          example: 5
+        - name: q
+          in: query
+          description: |-
+            Criterios de busqueda en formato RSQL. Se puede buscar por los siguientes campos:
+            - `activo`
+            - `id`
+            - `predecesorId`
+          schema:
+            type: string
+          example: predecesorId=na="";activo=="true"
+        - name: s
+          x-sgi-pageable: true # Sustituye este parametro en un Pageable al que se le pasa este parametro como ordenación.
+          in: query
+          description: |-
+            Criterios de ordenación. Formato: `campo,asc|desc`.
+            Si no se indica, por defecto se ordena por **nombre ascendente**.
+          schema:
+            type: string
+          example: nombre,asc
+      responses:
+        "200":
+          description: Devuelve la lista de unidades de vinculación
+          headers:
+            X-Page-Count:
+              description: Nº de páginas
+              schema:
+                type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              schema:
+                type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              schema:
+                type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              schema:
+                type: integer
+            X-Page:
+              description: Nº de página
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UnidadVinculacionOutput"
+        "204":
+          description: No hay unidades de vinculación para los criterios de búsqueda utilizados.
+        "400":
+          description: Parámetros no válidos (por ejemplo sintaxis RSQL incorrecta).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+
+  /public/unidades-vinculacion/{id}:
+    get:
+      tags:
+        - unidades-vinculacion-public
+      summary: Detalles de la unidad de vinculación
+      description: |-
+        Versión pública del endpoint `GET /unidades-vinculacion/{id}`.
+        Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
+
+        ### Consideraciones para la implementación
+        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+        - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
+      operationId: findUnidadVinculacionPublicById
+      parameters:
+        - name: id
+          in: path
+          description: Identificador de la unidad de vinculación
+          required: true
+          example: C1
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Devuelve la unidad de vinculación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnidadVinculacionOutput"
+        "404":
+          description: Unidad de vinculación no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
 
 components:
   schemas:
@@ -1553,6 +1829,24 @@ components:
         comunidadAutonomaId:
           type: string
           example: C1
+    UnidadVinculacionOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          example: UV1
+        nombre:
+          type: string
+          example: UNIDAD1
+        codigo:
+          type: string
+          example: UNI1
+        predecesorId:
+          type: string
+          example: null
+        activo:
+          type: boolean
+          example: true
 
     NotFoundError:
       type: object

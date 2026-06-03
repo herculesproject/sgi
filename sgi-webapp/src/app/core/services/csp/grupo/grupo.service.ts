@@ -12,6 +12,7 @@ import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autoriza
 import { IGrupoRelacionInstitucional } from '@core/models/csp/grupo-relacion-institucional';
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
+import { IGrupoUnidadVinculacion } from '@core/models/csp/grupo-unidad-vinculacion';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { environment } from '@env';
@@ -46,6 +47,9 @@ import { IGrupoResponsableEconomicoResponse } from '../grupo-responsable-economi
 import { GRUPO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from '../grupo-responsable-economico/grupo-responsable-economico-response.converter';
 import { IGrupoTipoResponse } from '../grupo-tipo/grupo-tipo-response';
 import { GRUPO_TIPO_RESPONSE_CONVERTER } from '../grupo-tipo/grupo-tipo-response.converter';
+import { GRUPO_UNIDAD_VINCULACION_REQUEST_CONVERTER } from '../grupo-unidad-vinculacion/grupo-unidad-vinculacion-request.converter';
+import { IGrupoUnidadVinculacionResponse } from '../grupo-unidad-vinculacion/grupo-unidad-vinculacion-response';
+import { GRUPO_UNIDAD_VINCULACION_RESPONSE_CONVERTER } from '../grupo-unidad-vinculacion/grupo-unidad-vinculacion-response.converter';
 import { ISolicitudResumenResponse } from '../solicitud/solicitud-resumen-response';
 import { SOLICITUD_RESUMEN_RESPONSE_CONVERTER } from '../solicitud/solicitud-resumen-response.converter';
 import { IGrupoRequest } from './grupo-request';
@@ -459,6 +463,34 @@ export class GrupoService extends _GrupoMixinBase {
       `${this.endpointUrl}/${id}/relaciones-institucionales`,
       options,
       GRUPO_RELACION_INSTITUCIONAL_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera las unidades de vinculación asociadas al grupo con el id indicado.
+   *
+   * @param id identificador del grupo
+   * @returns la lista de undades de vinculación del grupo
+   */
+  findUnidadesVinculacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IGrupoUnidadVinculacion>> {
+    return this.find<IGrupoUnidadVinculacionResponse, IGrupoUnidadVinculacion>(
+      `${this.endpointUrl}/${id}/unidades-vinculacion`,
+      options,
+      GRUPO_UNIDAD_VINCULACION_RESPONSE_CONVERTER);
+  }
+
+  /**
+   * Actualiza las unidades de vinculación asociadas al grupo con el id indicado.
+   *
+   * @param id identificador del grupo
+   * @param unidadesVinculacion unidades de vinculación a actualizar
+   * @returns la lista de undades de vinculación actualizada
+   */
+  updateUnidadesVinculacion(id: number, unidadesVinculacion: IGrupoUnidadVinculacion[]): Observable<IGrupoUnidadVinculacion[]> {
+    return this.http.patch<IGrupoUnidadVinculacionResponse[]>(`${this.endpointUrl}/${id}/unidades-vinculacion`,
+      GRUPO_UNIDAD_VINCULACION_REQUEST_CONVERTER.fromTargetArray(unidadesVinculacion)
+    ).pipe(
+      map((response => GRUPO_UNIDAD_VINCULACION_RESPONSE_CONVERTER.toTargetArray(response)))
     );
   }
 

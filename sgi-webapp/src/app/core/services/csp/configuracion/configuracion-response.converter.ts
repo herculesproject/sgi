@@ -1,4 +1,14 @@
-import { CalendarioFacturacionSgeIntegration, CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeEjecucionEconomicaFiltros, SgeFiltroAnualidades, SgeIntegracionesEccMenus, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
+import {
+  CalendarioFacturacionSgeIntegration,
+  CardinalidadRelacionSgiSge,
+  FacturasJustificantesColumnasFijasConfigurables,
+  IConfiguracion,
+  ModoEjecucion,
+  SgeEjecucionEconomicaFiltros,
+  SgeFiltroAnualidades,
+  SgeIntegracionesEccMenus,
+  ValidacionClasificacionGastos
+} from '@core/models/csp/configuracion';
 import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConfiguracionResponse } from './configuracion-response';
 
@@ -12,38 +22,46 @@ class ConfiguracionResponseConverter
       id: value.id,
       altaBuscadorSgeEnabled: value.altaBuscadorSgeEnabled,
       amortizacionFondosSgeEnabled: value.amortizacionFondosSgeEnabled,
-      calendarioFacturacionSgeIntegration: value.calendarioFacturacionSgeIntegration ? CalendarioFacturacionSgeIntegration[value.calendarioFacturacionSgeIntegration] : null,
+      calendarioFacturacionSgeIntegration: value.calendarioFacturacionSgeIntegration
+        ? CalendarioFacturacionSgeIntegration[value.calendarioFacturacionSgeIntegration] : null,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge ? CardinalidadRelacionSgiSge[value.cardinalidadRelacionSgiSge] : null,
       dedicacionMinimaGrupo: value.dedicacionMinimaGrupo,
       ejecucionEconomicaGruposEnabled: value.ejecucionEconomicaGruposEnabled,
-      facturasGastosColumnasFijasVisibles: value.facturasGastosColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
+      facturasGastosColumnasFijasVisibles: value.facturasGastosColumnasFijasVisibles?.split(',')
+        .map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
       formatoAnualidadAnio: value.formatoAnualidadAnio,
       formatoCodigoInternoProyecto: value.formatoCodigoInternoProyecto,
       formatoIdentificadorJustificacion: value.formatoIdentificadorJustificacion,
       formatoPartidaPresupuestaria: value.formatoPartidaPresupuestaria,
       gastosJustificadosSgeEnabled: value.gastosJustificadosSgeEnabled,
+      grupoUnidadesVinculacionEnabled: value.grupoUnidadesVinculacionEnabled,
       grupoImagenAspecto: value.grupoImagenAspecto,
       grupoImagenTamanioMaximo: value.grupoImagenTamanioMaximo,
       integracionesEccSgeEnabled: value.integracionesEccSgeEnabled?.split(',').map(ecc => SgeIntegracionesEccMenus[ecc]),
       modificacionProyectoSgeEnabled: value.modificacionProyectoSgeEnabled,
       notificacionPresupuestoSgeEnabled: value.notificacionPresupuestoSgeEnabled,
       partidasPresupuestariasSgeEnabled: value.partidasPresupuestariasSgeEnabled,
-      personalContratadoColumnasFijasVisibles: value.personalContratadoColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
+      personalContratadoColumnasFijasVisibles: value.personalContratadoColumnasFijasVisibles?.split(',')
+        .map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
       plantillaFormatoCodigoInternoProyecto: value.plantillaFormatoCodigoInternoProyecto,
       plantillaFormatoIdentificadorJustificacion: value.plantillaFormatoIdentificadorJustificacion,
       plantillaFormatoPartidaPresupuestaria: value.plantillaFormatoPartidaPresupuestaria,
       proyectoSgeAltaModoEjecucion: value.proyectoSgeAltaModoEjecucion ? ModoEjecucion[value.proyectoSgeAltaModoEjecucion] : null,
-      proyectoSgeModificacionModoEjecucion: value.proyectoSgeModificacionModoEjecucion ? ModoEjecucion[value.proyectoSgeModificacionModoEjecucion] : null,
+      proyectoSgeModificacionModoEjecucion: value.proyectoSgeModificacionModoEjecucion
+        ? ModoEjecucion[value.proyectoSgeModificacionModoEjecucion] : null,
       proyectoSocioPaisFilterEnabled: value.proyectoSocioPaisFilterEnabled,
       sectorIvaSgeEnabled: value.sectorIvaSgeEnabled,
       sgeDetalleOperacionesGastosDetalleEnabled: value.sgeDetalleOperacionesGastosDetalleEnabled,
-      sgeEjecucionEconomicaFiltros: value.sgeEjecucionEconomicaFiltros?.split(',').map(ecc => SgeEjecucionEconomicaFiltros[ecc]),
+      sgeEjecucionEconomicaFiltros: value.sgeEjecucionEconomicaFiltros?.split(',')
+        .map(ecc => SgeEjecucionEconomicaFiltros[ecc]),
       sgeEjecucionPresupuestariaGastosDetalleEnabled: value.sgeEjecucionPresupuestariaGastosDetalleEnabled,
       sgeEliminarRelacionProyectoEnabled: value.sgeEliminarRelacionProyectoEnabled,
       sgeFiltroAnualidades: value.sgeFiltroAnualidades ? SgeFiltroAnualidades[value.sgeFiltroAnualidades] : null,
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
-      validacionClasificacionGastos: value.validacionClasificacionGastos ? ValidacionClasificacionGastos[value.validacionClasificacionGastos] : null,
-      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s])
+      validacionClasificacionGastos: value.validacionClasificacionGastos
+        ? ValidacionClasificacionGastos[value.validacionClasificacionGastos] : null,
+      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',')
+        .map(s => FacturasJustificantesColumnasFijasConfigurables[s])
     };
   }
 
@@ -67,6 +85,7 @@ class ConfiguracionResponseConverter
       gastosJustificadosSgeEnabled: value.gastosJustificadosSgeEnabled,
       grupoImagenAspecto: value.grupoImagenAspecto,
       grupoImagenTamanioMaximo: value.grupoImagenTamanioMaximo,
+      grupoUnidadesVinculacionEnabled: value.grupoUnidadesVinculacionEnabled,
       integracionesEccSgeEnabled: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),
       modificacionProyectoSgeEnabled: value.modificacionProyectoSgeEnabled,
       notificacionPresupuestoSgeEnabled: value.notificacionPresupuestoSgeEnabled,

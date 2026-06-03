@@ -3,7 +3,14 @@ import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
-import { CALENDARIO_FACTURACION_SGE_INTEGRATION_MAP, CARDINALIDAD_RELACION_SGI_SGE_MAP, FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP, MODO_EJECUCION_MAP, SGE_EJECUCION_ECONOMICA_FILTROS_MAP, SGE_FILTRO_ANUALIDADES_MAP, SGE_INTEGRACIONES_ECC_MENUS_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
+import {
+  CALENDARIO_FACTURACION_SGE_INTEGRATION_MAP,
+  CARDINALIDAD_RELACION_SGI_SGE_MAP,
+  FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP,
+  MODO_EJECUCION_MAP, SGE_EJECUCION_ECONOMICA_FILTROS_MAP,
+  SGE_FILTRO_ANUALIDADES_MAP, SGE_INTEGRACIONES_ECC_MENUS_MAP,
+  VALIDACION_CLASIFICACION_GASTOS_MAP
+} from '@core/models/csp/configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { Observable, of } from 'rxjs';
@@ -59,38 +66,39 @@ export enum ConfigCsp {
   TITLE_EXPORTACIÓN = 'title-exportacion',
   TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS = 'title-integracion-sistemas-corporativos',
   // Config CSP service
-  CSP_ALTA_BUSCADOR_SGE_ENABLED = "altaBuscadorSgeEnabled",
-  CSP_AMORTIZACION_FONDOS_SGE_ENABLED = "amortizacionFondosSgeEnabled",
-  CSP_CALENDARIO_FACTURACION_SGE_INTEGRATION = "calendarioFacturacionSgeIntegration",
+  CSP_ALTA_BUSCADOR_SGE_ENABLED = 'altaBuscadorSgeEnabled',
+  CSP_AMORTIZACION_FONDOS_SGE_ENABLED = 'amortizacionFondosSgeEnabled',
+  CSP_CALENDARIO_FACTURACION_SGE_INTEGRATION = 'calendarioFacturacionSgeIntegration',
   CSP_CARDINALIDAD_RELACION_SGI_SGE = 'cardinalidadRelacionSgiSge',
   CSP_DEDICACION_MINIMA_GRUPO = 'dedicacionMinimaGrupo',
   CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED = 'ejecucionEconomicaGruposEnabled',
   CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES = 'facturasGastosColumnasFijasVisibles',
-  CSP_FORMATO_ANUALIDAD_ANIO = "formatoAnualidadAnio",
+  CSP_FORMATO_ANUALIDAD_ANIO = 'formatoAnualidadAnio',
   CSP_FORMATO_CODIGO_INTERNO_PROYECTO = 'formatoCodigoInternoProyecto',
   CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA = 'plantillaFormatoCodigoInternoProyecto',
   CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION = 'formatoIdentificadorJustificacion',
   CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA = 'plantillaFormatoIdentificadorJustificacion',
   CSP_FORMATO_PARTIDA_PRESUPUESTARIA = 'formatoPartidaPresupuestaria',
   CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA = 'plantillaFormatoPartidaPresupuestaria',
-  CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED = "gastosJustificadosSgeEnabled",
+  CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED = 'gastosJustificadosSgeEnabled',
+  CSP_GRUPO_UNIDADES_VINCULACION_ENABLED = 'grupoUnidadesVinculacionEnabled',
   CSP_GRUPO_IMAGEN_ASPECTO = 'grupoImagenAspecto',
   CSP_GRUPO_IMAGEN_TAMANIO_MAXIMO = 'grupoImagenTamanioMaximo',
-  CSP_INTEGRACIONES_ECC_SGE_ENABLED = "integracionesEccSgeEnabled",
-  CSP_MODIFICACION_PROYECTO_SGE_ENABLED = "modificacionProyectoSgeEnabled",
+  CSP_INTEGRACIONES_ECC_SGE_ENABLED = 'integracionesEccSgeEnabled',
+  CSP_MODIFICACION_PROYECTO_SGE_ENABLED = 'modificacionProyectoSgeEnabled',
   CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED = 'notificacionPresupuestoSgeEnabled',
-  CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED = "partidasPresupuestariasSgeEnabled",
+  CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED = 'partidasPresupuestariasSgeEnabled',
   CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES = 'personalContratadoColumnasFijasVisibles',
-  CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION = "proyectoSgeAltaModoEjecucion",
-  CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION = "proyectoSgeModificacionModoEjecucion",
+  CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION = 'proyectoSgeAltaModoEjecucion',
+  CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION = 'proyectoSgeModificacionModoEjecucion',
   CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED = 'proyectoSocioPaisFilterEnabled',
-  CSP_SECTOR_IVA_SGE_ENABLED = "sectorIvaSgeEnabled",
+  CSP_SECTOR_IVA_SGE_ENABLED = 'sectorIvaSgeEnabled',
   CSP_SGE_DETALLE_OPERACIONES_GASTO_DETALLE_ENABLED = 'sgeDetalleOperacionesGastosDetalleEnabled',
-  CSP_SGE_EJECUCION_ECONOMICA_FILTROS = "sgeEjecucionEconomicaFiltros",
+  CSP_SGE_EJECUCION_ECONOMICA_FILTROS = 'sgeEjecucionEconomicaFiltros',
   CSP_SGE_EJECUCION_PRESUPUESTARIA_GASTO_DETALLE_ENABLED = 'sgeEjecucionPresupuestariaGastosDetalleEnabled',
   CSP_SGE_ELIMINAR_RELACION_PROYECTO_ENABLED = 'sgeEliminarRelacionProyectoEnabled',
   CSP_SGE_FILTRO_ANUALIDADES = 'sgeFiltroAnualidades',
-  CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED = "solicitudesSinConvocatoriaInvestigadorEnabled",
+  CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED = 'solicitudesSinConvocatoriaInvestigadorEnabled',
   CSP_VALIDACION_CLASIFICACION_GASTOS = 'validacionClasificacionGastos',
   CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES = 'viajesDietasColumnasFijasVisibles',
 }
@@ -119,6 +127,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_GRUPO_IMAGEN_ASPECTO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_GRUPO_IMAGEN_ASPECTO`), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_GRUPO_IMAGEN_ASPECTO.description`) }],
     [ConfigCsp.CSP_GRUPO_IMAGEN_TAMANIO_MAXIMO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_GRUPO_IMAGEN_TAMANIO_MAXIMO`), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_GRUPO_IMAGEN_TAMANIO_MAXIMO.description`) }],
     [ConfigCsp.CSP_DEDICACION_MINIMA_GRUPO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO.description`) }],
+    [ConfigCsp.CSP_GRUPO_UNIDADES_VINCULACION_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_GRUPO_UNIDADES_VINCULACION_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_GRUPO_UNIDADES_VINCULACION_ENABLED.description`) }],
     [ConfigCsp.TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.integracion-sistemas-corporativos`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_CARDINALIDAD_RELACION_SGI_SGE, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE`), options: this.getCardinalidadRelacionSgiSgeValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE.description`) }],
     [ConfigCsp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION`), options: this.getModosEjecucionValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION.description`) }],
@@ -159,7 +168,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.TITLE_PROYECTO_EXTERNO, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.proyecto-externo`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS, { type: ConfigType.EMAILS, label: marker(`adm.config.csp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS_UO`), required: true, module: ConfigModule.CNF }],
     [ConfigCsp.CSP_COM_PROYECTO_EXT_RECEP_NOTIFICACION_CVN_DESTINATARIOS, { type: ConfigType.EMAILS, label: marker(`adm.config.csp.CSP_COM_PROYECTO_EXT_RECEP_NOTIFICACION_CVN_DESTINATARIOS`), required: true, module: ConfigModule.CNF }],
-    //Límite exportación excel
+    // Límite exportación excel
     [ConfigCsp.TITLE_EXPORTACIÓN, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.exportacion`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_LISTADO`), required: false, module: ConfigModule.CNF }],
     [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_LISTADO`), required: false, module: ConfigModule.CNF }],

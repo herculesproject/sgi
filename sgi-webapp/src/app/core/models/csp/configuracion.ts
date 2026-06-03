@@ -1,4 +1,4 @@
-import { marker } from "@biesbjerg/ngx-translate-extract-marker";
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 export enum ValidacionClasificacionGastos {
   VALIDACION = 'VALIDACION',
@@ -7,9 +7,9 @@ export enum ValidacionClasificacionGastos {
 }
 
 export enum CalendarioFacturacionSgeIntegration {
-  INTEGRACION_LECTURA_ESCRITURA = "INTEGRACION_LECTURA_ESCRITURA",
-  INTEGRACION_SOLO_LECTURA = "INTEGRACION_SOLO_LECTURA",
-  SIN_INTEGRACION = "SIN_INTEGRACION"
+  INTEGRACION_LECTURA_ESCRITURA = 'INTEGRACION_LECTURA_ESCRITURA',
+  INTEGRACION_SOLO_LECTURA = 'INTEGRACION_SOLO_LECTURA',
+  SIN_INTEGRACION = 'SIN_INTEGRACION'
 }
 
 export enum CardinalidadRelacionSgiSge {
@@ -58,10 +58,11 @@ export const VALIDACION_CLASIFICACION_GASTOS_MAP: Map<ValidacionClasificacionGas
   [ValidacionClasificacionGastos.ELEGIBILIDAD, marker(`csp.validacion-clasificacion-gastos.ELEGIBILIDAD`)]
 ]);
 
-export const FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP: Map<FacturasJustificantesColumnasFijasConfigurables, string> = new Map([
-  [FacturasJustificantesColumnasFijasConfigurables.CLASIFICACION_SGE, marker(`csp.facturas-justificantes-columnas-fijas-configurables.CLASIFICACION_SGE`)],
-  [FacturasJustificantesColumnasFijasConfigurables.APLICACION_PRESUPUESTARIA, marker(`csp.facturas-justificantes-columnas-fijas-configurables.APLICACION_PRESUPUESTARIA`)]
-]);
+export const FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP:
+  Map<FacturasJustificantesColumnasFijasConfigurables, string> = new Map([
+    [FacturasJustificantesColumnasFijasConfigurables.CLASIFICACION_SGE, marker(`csp.facturas-justificantes-columnas-fijas-configurables.CLASIFICACION_SGE`)],
+    [FacturasJustificantesColumnasFijasConfigurables.APLICACION_PRESUPUESTARIA, marker(`csp.facturas-justificantes-columnas-fijas-configurables.APLICACION_PRESUPUESTARIA`)]
+  ]);
 
 export const SGE_FILTRO_ANUALIDADES_MAP: Map<SgeFiltroAnualidades, string> = new Map([
   [SgeFiltroAnualidades.ANUALIDADES_OPCIONALES, marker(`csp.sge-filtro-anualidades.ANUALIDADES_OPCIONALES`)],
@@ -127,7 +128,7 @@ export const SGE_EJECUCION_ECONOMICA_FILTROS_MAP: Map<SgeEjecucionEconomicaFiltr
 
 export interface IConfiguracion {
   id: number;
-  /** Habilitar que se muestre el buscador de proyectos económicos al pulsar el botón de "Añadir identificador SGE" en la pantalla de  "Configuración económica - Identificación" */
+  /** Habilitar que se muestre el buscador de proyectos económicos en la pantalla de  "Configuración económica - Identificación" */
   altaBuscadorSgeEnabled: boolean;
   /** Expresión regular para validar el formato del código de las partidas presupuestarias */
   formatoPartidaPresupuestaria: string;
@@ -169,9 +170,9 @@ export interface IConfiguracion {
   proyectoSgeAltaModoEjecucion: ModoEjecucion;
   /** Determina si la modificacion del proyecto económico en el SGE se realiza de forma sincrona o de forma asíncrona */
   proyectoSgeModificacionModoEjecucion: ModoEjecucion;
-  /** Determina si hay integración del calendario facturación con el SGE para indicar si se van a notificar las facturas previstas validadas del calendario de facturación al SGE */
+  /** Determina si hay integración del calendario facturación con el SGE para ver si se notifican las facturas previstas validadas al SGE */
   calendarioFacturacionSgeIntegration: CalendarioFacturacionSgeIntegration;
-  /** Columnas a mostrar en Facturas y gastos (ejecución económica - facturas y justificantes) *//** Columnas a mostrar en Personal Contratado (ejecución económica - facturas y justificantes) */
+  /** Columnas a mostrar en Facturas y gastos (ejecución económica - facturas y justificantes) */
   facturasGastosColumnasFijasVisibles: FacturasJustificantesColumnasFijasConfigurables[];
   /** Columnas a mostrar en Viajes y dietas (ejecución económica - facturas y justificantes) */
   viajesDietasColumnasFijasVisibles: FacturasJustificantesColumnasFijasConfigurables[];
@@ -195,4 +196,6 @@ export interface IConfiguracion {
   sgeEjecucionEconomicaFiltros: SgeEjecucionEconomicaFiltros[];
   /** Habilita la acción eliminar relación proyecto SGI - identificador SGE */
   sgeEliminarRelacionProyectoEnabled: boolean;
+  /** Habilitar visibilidad de Unidades de vinculación en Grupos de investigación */
+  grupoUnidadesVinculacionEnabled: boolean;
 }

@@ -1,0 +1,40 @@
+<form class="form-inline" [formGroup]="formGroup">
+  <!-- Tipo de unidad -->
+  <div>
+    <mat-form-field>
+      <mat-label>{{'csp.grupo-unidad-vinculacion.tipo-unidad' | translate}}</mat-label>
+      <sgi-select-entity formControlName="tipo" [options]="tipos$ | async" required>
+      </sgi-select-entity>
+    </mat-form-field>
+  </div>
+  <!-- Árbol de unidades -->
+  <div class="sgi-tree">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.unidadVinculacion.nombre"
+          [disabled]="node.childsLoaded && node.childs.length === 0" (click)="onToggleNode(node)">
+          <mat-icon color="primary" class="mat-icon-rtl-mirror">
+            {{node.childsLoaded && node.childs.length === 0 ? ''
+            : (treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right')}}
+          </mat-icon>
+        </button>
+        <mat-checkbox color="primary" [checked]="node.checked" (change)="onCheckNode(node, $event)"
+          [disabled]="node.disabled">
+          {{node.unidadVinculacion.nombre}}
+        </mat-checkbox>
+      </mat-tree-node>
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.unidadVinculacion.nombre"
+          (click)="onToggleNode(node)">
+          <mat-icon color="primary" class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        <mat-checkbox color="primary" [checked]="node.checked" (change)="onCheckNode(node, $event)"
+          [disabled]="node.disabled">
+          {{node.unidadVinculacion.nombre}}
+        </mat-checkbox>
+      </mat-tree-node>
+    </mat-tree>
+  </div>
+</form>

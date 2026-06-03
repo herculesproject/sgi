@@ -361,4 +361,39 @@
     <modifyDataType tableName="fuente_financiacion_nombre" columnName="value_" newDataType="VARCHAR(550)" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-26">
+    <addColumn tableName="configuracion">
+      <column name="grupo_unidades_vinculacion_enabled" defaultValueBoolean="false" type="boolean" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-27">
+    <createSequence incrementBy="1" sequenceName="grupo_unidad_vinculacion_seq" startValue="1" />
+  </changeSet>
+
+  <changeSet author="master" id="1.1.0-28">
+    <createTable tableName="grupo_unidad_vinculacion">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="grupo_unidad_vinculacionPK" />
+      </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="unidad_vinculacion_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addForeignKeyConstraint baseColumnNames="grupo_id" baseTableName="grupo_unidad_vinculacion"
+      constraintName="FK_GRUPOUNIDADVINCULACION_GRUPO" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+
+    <addUniqueConstraint tableName="grupo_unidad_vinculacion" columnNames="grupo_id, unidad_vinculacion_ref"
+      constraintName="UK_GRUPOUNIDADVINCULACION_GRUPOID_UNIDADVINCULACIONREF" />
+  </changeSet>
+
 </databaseChangeLog>

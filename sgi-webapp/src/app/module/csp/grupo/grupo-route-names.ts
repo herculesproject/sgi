@@ -9,5 +9,6 @@ export const GRUPO_ROUTE_NAMES = {
   PERSONA_AUTORIZADA: 'persona-autorizada',
   LINEA_INVESTIGACION: 'linea-investigacion',
   RELACION_INSTITUCIONAL: 'relaciones-institucionales',
-  DESCRIPTOR: 'descriptores'
+  DESCRIPTOR: 'descriptores',
+  UNIDADES_VINCULACION: 'unidades-vinculacion'
 };

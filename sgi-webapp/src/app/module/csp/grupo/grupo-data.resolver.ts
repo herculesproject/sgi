@@ -9,7 +9,7 @@ import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 import { IGrupoData } from './grupo.action.service';
@@ -48,40 +48,38 @@ export class GrupoDataResolver extends SgiResolverResolver<IGrupoData> {
           return throwError('NOT_FOUND');
         }
 
-        return of(
-          {
-            grupo: { id: grupoId } as IGrupo,
-            isGrupoEspecialInvestigacion: value.especialInvestigacion,
-            isInvestigador
-          } as IGrupoData
+        return forkJoin({
+          isReadOnly: this.isReadOnly$(isInvestigador, grupoId),
+          isEjecucionEconomicaGruposEnabled: this.configService.isEjecucionEconomicaGruposEnabled(),
+          isGrupoUnidadesVinculacionEnabled: this.configService.isGrupoUnidadesVinculacionEnabled(),
+        }).pipe(
+          map(({ isReadOnly, isEjecucionEconomicaGruposEnabled, isGrupoUnidadesVinculacionEnabled }) => {
+            return {
+              grupo: { id: grupoId } as IGrupo,
+              isGrupoEspecialInvestigacion: value.especialInvestigacion,
+              isInvestigador,
+              readonly: isReadOnly,
+              isEjecucionEconomicaGruposEnabled,
+              isGrupoUnidadesVinculacionEnabled,
+            };
+          })
         );
-      }),
-      switchMap(data => this.isReadonly(data, grupoId)),
-      switchMap(data => this.configService.isEjecucionEconomicaGruposEnabled().pipe(
-        map(isEnabled => {
-          data.isEjecucionEconomicaGruposEnabled = isEnabled;
-          return data;
-        })
-      ))
+      })
     );
   }
 
-  private isReadonly(data: IGrupoData, grupoId: number): Observable<IGrupoData> {
-    if (data.isInvestigador) {
-      data.readonly = true;
-      return of(data);
-    } else if (grupoId) {
-      return this.service.modificable(grupoId)
-        .pipe(
-          map((value: boolean) => {
-            data.readonly = !value;
-            return data;
-          })
-        );
-    } else {
-      data.readonly = false;
-      return of(data);
+  private isReadOnly$(isInvestigador: boolean, grupoId: number): Observable<boolean> {
+    if (isInvestigador) {
+      return of(true);
     }
+
+    if (grupoId) {
+      return this.service.modificable(grupoId).pipe(
+        map(modificable => !modificable)
+      );
+    }
+
+    return of(false);
   }
 
   private hasViewAuthorityInv(): boolean {

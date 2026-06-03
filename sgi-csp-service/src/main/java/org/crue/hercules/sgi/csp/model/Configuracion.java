@@ -129,9 +129,14 @@ public class Configuracion extends BaseEntity {
     FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA("plantillaFormatoIdentificadorJustificacion"),
     /** Dedicacion minima grupo <code>dedicacionMinimaGrupo</code> */
     DEDICACION_MINIMA_GRUPO("dedicacionMinimaGrupo"),
-    /** Relación de aspecto para la imagen del grupo <code>grupoImagenAspecto</code> */
+    /**
+     * Relación de aspecto para la imagen del grupo <code>grupoImagenAspecto</code>
+     */
     GRUPO_IMAGEN_ASPECTO("grupoImagenAspecto"),
-    /** Tamaño máximo en MB para la imagen del grupo <code>grupoImagenTamanioMaximo</code> */
+    /**
+     * Tamaño máximo en MB para la imagen del grupo
+     * <code>grupoImagenTamanioMaximo</code>
+     */
     GRUPO_IMAGEN_TAMANIO_MAXIMO("grupoImagenTamanioMaximo"),
     /** Formato codigo interno proyecto <code>formatoCodigoInternoProyecto</code> */
     FORMATO_CODIGO_INTERNO_PROYECTO("formatoCodigoInternoProyecto"),
@@ -253,7 +258,12 @@ public class Configuracion extends BaseEntity {
     /**
      * Habilita la acción eliminar relación proyecto SGI - identificador SGE
      */
-    SGE_ELIMINAR_RELACION_PROYECTO_ENABLED("sgeEliminarRelacionProyectoEnabled");
+    SGE_ELIMINAR_RELACION_PROYECTO_ENABLED("sgeEliminarRelacionProyectoEnabled"),
+    /**
+     * Habilitar visibilidad de Unidades de vinculación en Grupos de investigación
+     * <code>grupoUnidadesVinculacionEnabled</code>
+     */
+    GRUPO_UNIDADES_VINCULACION_ENABLED("grupoUnidadesVinculacionEnabled");
 
     private final String key;
 
@@ -483,6 +493,12 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_eliminar_relacion_proyecto", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean sgeEliminarRelacionProyectoEnabled;
 
+  /**
+   * Habilitar visibilidad de Unidades de vinculación en Grupos de investigación
+   */
+  @Column(name = "grupo_unidades_vinculacion_enabled", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean grupoUnidadesVinculacionEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -553,6 +569,8 @@ public class Configuracion extends BaseEntity {
         return this.getSgeEjecucionEconomicaFiltros();
       case SGE_ELIMINAR_RELACION_PROYECTO_ENABLED:
         return this.getSgeEliminarRelacionProyectoEnabled();
+      case GRUPO_UNIDADES_VINCULACION_ENABLED:
+        return this.getGrupoUnidadesVinculacionEnabled();
       default:
         return null;
     }
@@ -671,6 +689,9 @@ public class Configuracion extends BaseEntity {
         break;
       case SGE_ELIMINAR_RELACION_PROYECTO_ENABLED:
         this.setSgeEliminarRelacionProyectoEnabled(Boolean.valueOf(newValue));
+        break;
+      case GRUPO_UNIDADES_VINCULACION_ENABLED:
+        this.setGrupoUnidadesVinculacionEnabled(Boolean.valueOf(newValue));
         break;
     }
   }

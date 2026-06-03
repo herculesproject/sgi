@@ -23,6 +23,7 @@ import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
+import { UnidadVinculacionService } from '@core/services/sgo/unidad-vinculacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { SgiAuthService } from '@herculesproject/framework/auth';
@@ -40,6 +41,7 @@ import { GrupoLineaInvestigacionFragment } from './grupo-formulario/grupo-linea-
 import { GrupoPersonaAutorizadaFragment } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.fragment';
 import { GrupoRelacionInstitucionalFragment } from './grupo-formulario/grupo-relacion-institucional/grupo-relacion-institucional.fragment';
 import { GrupoResponsableEconomicoFragment } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.fragment';
+import { GrupoUnidadesVinculacionFragment } from './grupo-formulario/grupo-unidades-vinculacion/grupo-unidades-vinculacion.fragment';
 import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 
 export interface IGrupoData {
@@ -47,6 +49,7 @@ export interface IGrupoData {
   isInvestigador: boolean;
   isEjecucionEconomicaGruposEnabled: boolean;
   isGrupoEspecialInvestigacion: boolean;
+  isGrupoUnidadesVinculacionEnabled: boolean;
   readonly: boolean;
 }
 
@@ -65,7 +68,8 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     PERSONA_AUTORIZADA: 'persona-autorizada',
     LINEA_INVESTIGACION: 'linea-investigacion',
     RELACION_INSTITUCIONAL: 'relacion-institucional',
-    DESCRIPTOR: 'descriptor'
+    DESCRIPTOR: 'descriptor',
+    UNIDADES_VINCULACION: 'unidades-vinculacion'
   };
 
   private datosGenerales: GrupoDatosGeneralesFragment;
@@ -77,9 +81,14 @@ export class GrupoActionService extends ActionService implements OnDestroy {
   private lineasInvestigacion: GrupoLineaInvestigacionFragment;
   private relacionesInstitucionales: GrupoRelacionInstitucionalFragment;
   private descriptores: GrupoDescriptorFragment;
+  private unidadesVinculacion: GrupoUnidadesVinculacionFragment;
 
   private readonly data: IGrupoData;
   public readonly id: number;
+
+  get isGrupoUnidadesVinculacionEnabled(): boolean {
+    return this.data?.isGrupoUnidadesVinculacionEnabled;
+  }
 
   get isInvestigador(): boolean {
     return this.data.isInvestigador ?? (this.isModuleINV() && this.hasAnyAuthorityInv());
@@ -118,6 +127,7 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     private readonly sgiAuthService: SgiAuthService,
     private readonly tipoEnlaceService: TipoEnlaceService,
     private readonly tipoGrupoDescriptorService: TipoDescriptorGrupoService,
+    private readonly unidadVinculacionService: UnidadVinculacionService,
     private readonly vinculacionService: VinculacionService,
   ) {
     super();
@@ -213,7 +223,15 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       this.data?.readonly
     );
 
+    this.unidadesVinculacion = new GrupoUnidadesVinculacionFragment(
+      this.id,
+      grupoService,
+      unidadVinculacionService,
+      this.data?.readonly
+    );
+
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
+    this.addFragment(this.FRAGMENT.UNIDADES_VINCULACION, this.unidadesVinculacion);
     this.addFragment(this.FRAGMENT.EQUIPO_INVESTIGACION, this.equiposInvestigacion);
     this.addFragment(this.FRAGMENT.RESPONSABLE_ECONOMICO, this.responsablesEconomicos);
     this.addFragment(this.FRAGMENT.EQUIPO_INSTRUMENTAL, this.equiposInstrumentales);

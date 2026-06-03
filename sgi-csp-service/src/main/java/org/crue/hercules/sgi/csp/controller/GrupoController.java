@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.converter.GrupoPersonaAutorizadaConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoRelacionInstitucionalConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoResponsableEconomicoConverter;
 import org.crue.hercules.sgi.csp.converter.GrupoTipoConverter;
+import org.crue.hercules.sgi.csp.converter.GrupoUnidadVinculacionConverter;
 import org.crue.hercules.sgi.csp.converter.SolicitudConverter;
 import org.crue.hercules.sgi.csp.dto.GrupoDescriptorOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoDto;
@@ -33,6 +34,8 @@ import org.crue.hercules.sgi.csp.dto.GrupoPersonaAutorizadaOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoRelacionInstitucionalOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.GrupoTipoOutput;
+import org.crue.hercules.sgi.csp.dto.GrupoUnidadVinculacionInput;
+import org.crue.hercules.sgi.csp.dto.GrupoUnidadVinculacionOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudResumenOutput;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Grupo;
@@ -47,6 +50,7 @@ import org.crue.hercules.sgi.csp.model.GrupoPersonaAutorizada;
 import org.crue.hercules.sgi.csp.model.GrupoRelacionInstitucional;
 import org.crue.hercules.sgi.csp.model.GrupoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.GrupoTipo;
+import org.crue.hercules.sgi.csp.model.GrupoUnidadVinculacion;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -62,6 +66,7 @@ import org.crue.hercules.sgi.csp.service.GrupoRelacionInstitucionalService;
 import org.crue.hercules.sgi.csp.service.GrupoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.GrupoService;
 import org.crue.hercules.sgi.csp.service.GrupoTipoService;
+import org.crue.hercules.sgi.csp.service.GrupoUnidadVinculacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -126,6 +131,7 @@ public class GrupoController {
   public static final String PATH_GRUPO_PERSONA_AUTORIZADA = PATH_ID + "/personas-autorizadas";
   public static final String PATH_GRUPO_LINEA_INVESTIGACION = PATH_ID + "/lineas-investigacion";
   public static final String PATH_GRUPO_RELACION_INSTITUCIONAL = PATH_ID + "/relaciones-institucionales";
+  public static final String PATH_GRUPO_UNIDADES_VINCULACION = PATH_ID + "/unidades-vinculacion";
   public static final String PATH_SOLICITUD = PATH_ID + "/solicitud";
   public static final String PATH_MODIFICABLE = PATH_ID + "/modificable";
   public static final String PATH_DTO = PATH_ID + "/grupo-dto";
@@ -143,6 +149,7 @@ public class GrupoController {
   private final GrupoResponsableEconomicoService grupoResponsableEconomicoService;
   private final GrupoService service;
   private final GrupoTipoService grupoTipoService;
+  private final GrupoUnidadVinculacionService grupoUnidadVinculacionService;
   private final SolicitudService solicitudService;
   // Converters
   private final GrupoConverter converter;
@@ -157,6 +164,7 @@ public class GrupoController {
   private final GrupoRelacionInstitucionalConverter grupoRelacionInstitucionalConverter;
   private final GrupoResponsableEconomicoConverter grupoResponsableEconomicoConverter;
   private final GrupoTipoConverter grupoTipoConverter;
+  private final GrupoUnidadVinculacionConverter grupoUnidadVinculacionConverter;
   private final SolicitudConverter solicitudConverter;
 
   /**
@@ -821,6 +829,48 @@ public class GrupoController {
         .convert(grupoRelacionInstitucionalService.findAllByGrupo(id, query, paging));
     log.debug("findAllGrupoRelacionInstitucional - response: {}", SgiLogUtils.page(page));
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve las {@link GrupoUnidadVinculacion} asociadas al {@link Grupo} con el
+   * id indicado.
+   *
+   * @param id     identificador del {@link Grupo}.
+   * @param query  filtro de búsqueda.
+   * @param paging información de la paginación.
+   * @return {@link GrupoUnidadVinculacion} correspondientes al {@link Grupo}.
+   */
+  @GetMapping(PATH_GRUPO_UNIDADES_VINCULACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-C', 'CSP-GIN-INV-VR')")
+  public Page<GrupoUnidadVinculacionOutput> findUnidadesVinculacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findUnidadesVinculacion - id: {}, query: {}, paging: {}", id, query, SgiLogUtils.pageable(paging));
+    Page<GrupoUnidadVinculacionOutput> output = grupoUnidadVinculacionConverter
+        .convert(grupoUnidadVinculacionService.findByGrupoId(id, query, paging));
+    log.debug("findUnidadesVinculacion - response: {}", SgiLogUtils.page(output));
+    return output;
+  }
+
+  /**
+   * Actualiza la lista de {@link GrupoUnidadVinculacion} asociadas al
+   * {@link Grupo} con el id indicado.
+   *
+   * @param id                  identificador del {@link Grupo}.
+   * @param unidadesVinculacion nueva lista de {@link GrupoUnidadVinculacion} del
+   *                            {@link Grupo}.
+   * @return la nueva lista de {@link GrupoUnidadVinculacion} asociadas al
+   *         {@link Grupo}.
+   */
+  @PatchMapping(PATH_GRUPO_UNIDADES_VINCULACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-GIN-E', 'CSP-GIN-C')")
+  public ResponseEntity<List<GrupoUnidadVinculacionOutput>> updateUnidadesVinculacion(@PathVariable Long id,
+      @Valid @RequestBody List<GrupoUnidadVinculacionInput> unidadesVinculacion) {
+    log.debug("updateUnidadesVinculacion - id: {}, unidades: {}", id, unidadesVinculacion);
+    List<GrupoUnidadVinculacionOutput> output = grupoUnidadVinculacionConverter
+        .convertGrupoUnidades(
+            grupoUnidadVinculacionService.updateUnidadesVinculacion(id,
+                grupoUnidadVinculacionConverter.convertGrupoUnidadesInput(unidadesVinculacion)));
+    return new ResponseEntity<>(output, HttpStatus.OK);
   }
 
 }

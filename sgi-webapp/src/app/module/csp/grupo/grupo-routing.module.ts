@@ -22,6 +22,7 @@ import {
   GrupoRelacionInstitucionalComponent
 } from './grupo-formulario/grupo-relacion-institucional/grupo-relacion-institucional.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
+import { GrupoUnidadesVinculacionComponent } from './grupo-formulario/grupo-unidades-vinculacion/grupo-unidades-vinculacion.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GRUPO_ROUTE_NAMES } from './grupo-route-names';
 import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
@@ -131,6 +132,11 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_ROUTE_NAMES.DESCRIPTOR,
         component: GrupoDescriptorComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.UNIDADES_VINCULACION,
+        component: GrupoUnidadesVinculacionComponent,
         canDeactivate: [FragmentGuard],
       },
     ]

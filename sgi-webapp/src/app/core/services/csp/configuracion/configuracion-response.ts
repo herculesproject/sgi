@@ -14,6 +14,7 @@ export interface IConfiguracionResponse {
   gastosJustificadosSgeEnabled: boolean;
   grupoImagenAspecto: string;
   grupoImagenTamanioMaximo: number;
+  grupoUnidadesVinculacionEnabled: boolean;
   integracionesEccSgeEnabled: string;
   modificacionProyectoSgeEnabled: boolean;
   notificacionPresupuestoSgeEnabled: boolean;

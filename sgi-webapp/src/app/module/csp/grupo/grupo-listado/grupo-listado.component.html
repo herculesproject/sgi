@@ -78,19 +78,29 @@
         </mat-form-field>
       </div>
 
+      <!-- Línea investigación -->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <!-- Palabras clave -->
-        <mat-form-field fxFlex="60%">
-          <mat-label>{{'csp.grupo.palabras-clave' | translate}}</mat-label>
-          <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
-            placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
-        </mat-form-field>
-
-        <!-- Lineas investigación -->
-        <mat-form-field fxFlex="40%">
+        <mat-form-field fxFlex>
           <mat-label>{{'csp.grupo.linea-investigacion' | translate}}</mat-label>
           <sgi-select-entity formControlName="lineaInvestigacion" [options]="lineasInvestigacion$ | async">
           </sgi-select-entity>
+        </mat-form-field>
+      </div>
+
+      <!-- Unidades de vinculación -->
+      <div *ngIf="isGrupoUnidadesVinculacionEnabled" fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex>
+          <mat-label>{{'csp.grupo-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
+          <sgi-select-unidad-vinculacion formControlName="unidadVinculacion"></sgi-select-unidad-vinculacion>
+        </mat-form-field>
+      </div>
+
+      <!-- Palabras clave -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex>
+          <mat-label>{{'csp.grupo.palabras-clave' | translate}}</mat-label>
+          <sgi-palabra-clave formControlName="palabrasClave" id="palabrasClave"
+            placeholder="{{'csp.grupo.palabras-clave' | translate}}"></sgi-palabra-clave>
         </mat-form-field>
       </div>
 

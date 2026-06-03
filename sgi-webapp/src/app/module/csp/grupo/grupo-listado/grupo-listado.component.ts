@@ -3,7 +3,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
@@ -23,10 +22,10 @@ import { SgiAuthService } from '@herculesproject/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
-import { GrupoListadoExportModalComponent } from '../modals/grupo-listado-export-modal/grupo-listado-export-modal.component';
+import { GrupoListadoExportModalComponent, IGrupoExportModalData } from '../modals/grupo-listado-export-modal/grupo-listado-export-modal.component';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
 const MSG_ERROR_DELETE = marker('error.delete.entity');
@@ -69,10 +68,21 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
   readonly lineasInvestigacion$ = new BehaviorSubject<ILineaInvestigacion[]>([]);
 
   private limiteRegistrosExportacionExcel: string;
+  // tslint:disable-next-line: variable-name
   private _isEjecucionEconomicaGruposEnabled: boolean;
+  // tslint:disable-next-line: variable-name
+  private _isGrupoUnidadesVinculacionEnabled: boolean;
 
   get isEjecucionEconomicaGruposEnabled(): boolean {
     return this._isEjecucionEconomicaGruposEnabled ?? false;
+  }
+
+  get isGrupoUnidadesVinculacionEnabled(): boolean {
+    return this._isGrupoUnidadesVinculacionEnabled ?? false;
+  }
+
+  get MSG_PARAMS() {
+    return MSG_PARAMS;
   }
 
   constructor(
@@ -96,7 +106,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
         return 'nombre.value';
       }
       return column;
-    }
+    };
   }
 
   ngOnInit(): void {
@@ -112,6 +122,12 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
     this.suscripciones.push(
       this.configCspService.isEjecucionEconomicaGruposEnabled().subscribe(value => {
         this._isEjecucionEconomicaGruposEnabled = value;
+      })
+    );
+
+    this.suscripciones.push(
+      this.configCspService.isGrupoUnidadesVinculacionEnabled().subscribe(value => {
+        this._isGrupoUnidadesVinculacionEnabled = value;
       })
     );
 
@@ -168,7 +184,12 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
       .and(
         'lineasInvestigacion.id',
         SgiRestFilterOperator.EQUALS,
-        controls.lineaInvestigacion.value?.id ? controls.lineaInvestigacion.value?.id.toString() : null
+        controls.lineaInvestigacion.value?.id?.toString()
+      )
+      .and(
+        'unidadesVinculacion.unidadVinculacionRef',
+        SgiRestFilterOperator.EQUALS,
+        controls.unidadVinculacion.value?.id?.toString()
       );
     if (controls.activo.value !== 'todos') {
       rsqlFilter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
@@ -253,7 +274,8 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
       fechaInicioDesde: new FormControl(),
       fechaInicioHasta: new FormControl(),
       palabrasClave: new FormControl(null),
-      lineaInvestigacion: new FormControl(null)
+      lineaInvestigacion: new FormControl(null),
+      unidadVinculacion: new FormControl(null)
     });
   }
 
@@ -263,7 +285,10 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
       filter(investigadoresPrincipales => !!investigadoresPrincipales),
       map(investigadoresPrincipales => investigadoresPrincipales.map(investigador => investigador.persona.id)),
       tap(investigadoresPrincipales => idsInvestigadoresPrincipales = [...investigadoresPrincipales]),
-      switchMap(investigadoresPrincipales => investigadoresPrincipales?.length ? this.personaService.findAllByIdIn(investigadoresPrincipales).pipe(map(r => r.items)) : of([])),
+      switchMap(investigadoresPrincipales => investigadoresPrincipales?.length
+        ? this.personaService.findAllByIdIn(investigadoresPrincipales).pipe(map(r => r.items))
+        : of([])
+      ),
       map(investigadoresPrincipales => {
         grupo.investigadoresPrincipales = investigadoresPrincipales;
         if (grupo.investigadoresPrincipales.length < idsInvestigadoresPrincipales.length) {
@@ -271,7 +296,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
             ...idsInvestigadoresPrincipales
               .filter(id => !grupo.investigadoresPrincipales.some(i => i.id === id))
               .map(id => ({ id } as IPersona))
-          )
+          );
         }
 
         return grupo;
@@ -413,10 +438,11 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
   }
 
   openExportModal(): void {
-    const data: IBaseExportModalData = {
+    const data: IGrupoExportModalData = {
       findOptions: this.findOptions,
       totalRegistrosExportacionExcel: this.totalElementos,
-      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel),
+      isGrupoUnidadesVinculacionEnabled: this.isGrupoUnidadesVinculacionEnabled
     };
 
     const config = {

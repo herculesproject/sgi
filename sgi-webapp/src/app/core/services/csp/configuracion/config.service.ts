@@ -1,9 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfigValue } from '@core/models/cnf/config-value';
-import { CalendarioFacturacionSgeIntegration, CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeEjecucionEconomicaFiltros, SgeIntegracionesEccMenus } from '@core/models/csp/configuracion';
+import {
+  CalendarioFacturacionSgeIntegration,
+  CardinalidadRelacionSgiSge,
+  FacturasJustificantesColumnasFijasConfigurables,
+  IConfiguracion,
+  ModoEjecucion,
+  SgeEjecucionEconomicaFiltros,
+  SgeIntegracionesEccMenus
+} from '@core/models/csp/configuracion';
 import { environment } from '@env';
-import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@herculesproject/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigCsp } from 'src/app/module/adm/config-csp/config-csp.component';
@@ -146,6 +154,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
 
   isSgeEliminarRelacionProyectoEnabled(): Observable<boolean> {
     return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_SGE_ELIMINAR_RELACION_PROYECTO_ENABLED);
+  }
+
+  isGrupoUnidadesVinculacionEnabled(): Observable<boolean> {
+    return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_GRUPO_UNIDADES_VINCULACION_ENABLED);
   }
 
   private getValueByConfigKey<T>(configKey: ConfigCsp): Observable<T> {

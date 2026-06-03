@@ -146,46 +146,61 @@ public class Grupo extends BaseActivableEntity {
   @JoinColumn(name = "solicitud_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_GRUPO_SOLICITUD"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final Solicitud solicitud = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<GrupoEquipo> miembrosEquipo = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<SolicitudGrupo> solicitudesGrupo = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<GrupoPersonaAutorizada> personasAutorizadas = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<GrupoPalabraClave> palabrasClave = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<GrupoLineaInvestigacion> lineasInvestigacion = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<GrupoResponsableEconomico> responsableEconomicos = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<GrupoEnlace> enlaces = null;
 
   @OneToMany(mappedBy = "grupo")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<GrupoEquipoInstrumental> equipoInstrumental = null;
+
+  @OneToMany(mappedBy = "grupo")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
+  private final List<GrupoUnidadVinculacion> unidadesVinculacion = null;
 
 }

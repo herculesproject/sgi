@@ -4,6 +4,13 @@
       [route]="[GRUPO_ROUTE_NAMES.DATOS_GENERALES]" [title]="'label.datos-generales' | translate"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
     </sgi-action-fragment-menu-item>
+    <ng-container *ngIf="actionService.isGrupoUnidadesVinculacionEnabled">
+      <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR']"
+        [route]="[GRUPO_ROUTE_NAMES.UNIDADES_VINCULACION]"
+        [title]="'csp.grupo-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.UNIDADES_VINCULACION)">
+      </sgi-action-fragment-menu-item>
+    </ng-container>
     <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-INV-VR']"
       [route]="[GRUPO_ROUTE_NAMES.EQUIPO_INVESTIGACION]"
       [title]="'csp.grupo-equipo.equipo-investigacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"

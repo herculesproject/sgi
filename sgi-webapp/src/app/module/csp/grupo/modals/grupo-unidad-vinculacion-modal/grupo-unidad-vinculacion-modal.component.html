@@ -1,0 +1,16 @@
+<sgi-dialog-header title="{{'csp.grupo-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}">
+</sgi-dialog-header>
+<sgi-dialog-content>
+  <sgi-unidad-vinculacion-tree [selectedRefs]="data?.selectedUnidadesVinculacionRefs" [onlyActive]="data?.onlyActive"
+    (selectionChange)="onSelectionChange($event)">
+  </sgi-unidad-vinculacion-tree>
+</sgi-dialog-content>
+<mat-dialog-actions>
+  <button color="accent" (click)="doAction()" [disabled]="actionDisabled" mat-raised-button type="submit">
+    <mat-icon class="save-icon">save</mat-icon>
+    {{'btn.ok' | translate}}
+  </button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{'btn.cancel' | translate}}
+  </button>
+</mat-dialog-actions>

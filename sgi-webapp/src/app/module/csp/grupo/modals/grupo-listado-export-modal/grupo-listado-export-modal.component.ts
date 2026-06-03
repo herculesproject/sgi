@@ -12,6 +12,10 @@ import { GrupoListadoExportService, IGrupoReportOptions } from '../../grupo-list
 
 const GRUPO_KEY = marker('csp.grupo');
 
+export interface IGrupoExportModalData extends IBaseExportModalData {
+  isGrupoUnidadesVinculacionEnabled: boolean;
+}
+
 @Component({
   templateUrl: './grupo-listado-export-modal.component.html',
   styleUrls: ['./grupo-listado-export-modal.component.scss']
@@ -30,11 +34,15 @@ export class GrupoListadoExportModalComponent extends BaseExportModalComponent<I
     return this.modalData.limiteRegistrosExportacionExcel;
   }
 
+  get isGrupoUnidadesVinculacionEnabled(): boolean {
+    return this.modalData.isGrupoUnidadesVinculacionEnabled ?? false;
+  }
+
   constructor(
     matDialogRef: MatDialogRef<GrupoListadoExportModalComponent>,
     translate: TranslateService,
     grupoListadoExportService: GrupoListadoExportService,
-    @Inject(MAT_DIALOG_DATA) private modalData: IBaseExportModalData
+    @Inject(MAT_DIALOG_DATA) private modalData: IGrupoExportModalData
   ) {
     super(grupoListadoExportService, translate, matDialogRef);
   }
@@ -64,6 +72,10 @@ export class GrupoListadoExportModalComponent extends BaseExportModalComponent<I
       showEquiposInstrumentales: new FormControl(true),
       showRelacionesInstitucionales: new FormControl(true),
     });
+
+    if (this.isGrupoUnidadesVinculacionEnabled) {
+      formGroup.addControl('showUnidadesVinculacion', new FormControl(true));
+    }
 
     Object.keys(formGroup.controls).forEach(controlName => {
       if (controlName.startsWith('show')) {
@@ -96,6 +108,7 @@ export class GrupoListadoExportModalComponent extends BaseExportModalComponent<I
         showLineasInvestigacion: this.formGroup.controls.showLineasInvestigacion.value,
         showEquiposInstrumentales: this.formGroup.controls.showEquiposInstrumentales.value,
         showRelacionesInstitucionales: this.formGroup.controls.showRelacionesInstitucionales.value,
+        showUnidadesVinculacion: this.formGroup.controls.showUnidadesVinculacion?.value ?? false,
         columnMinWidth: 120
       }
     };
