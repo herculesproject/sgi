@@ -160,6 +160,14 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_GRUPO_UNIDADES_VINCULACION_ENABLED);
   }
 
+  isProyectoUnidadesVinculacionEnabled(): Observable<boolean> {
+    return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED);
+  }
+
+  isProyectoAreasConocimientoEnabled(): Observable<boolean> {
+    return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_PROYECTO_AREAS_CONOCIMIENTO_ENABLED);
+  }
+
   private getValueByConfigKey<T>(configKey: ConfigCsp): Observable<T> {
     return this.findById(configKey).pipe(
       map(configValue => configValue?.value)

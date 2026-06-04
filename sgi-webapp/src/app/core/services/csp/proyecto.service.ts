@@ -48,6 +48,7 @@ import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoResponsableEconomico } from '@core/models/csp/proyecto-responsable-economico';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
+import { IProyectoUnidadVinculacion } from '@core/models/csp/proyecto-unidad-vinculacion';
 import { IProyectosCompetitivosPersonas } from '@core/models/csp/proyectos-competitivos-personas';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { ISolicitud } from '@core/models/csp/solicitud';
@@ -119,6 +120,9 @@ import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-ec
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
 import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
 import { PROYECTO_SOCIO_RESPONSE_CONVERTER } from './proyecto-socio/proyecto-socio.converter';
+import { PROYECTO_UNIDAD_VINCULACION_REQUEST_CONVERTER } from './proyecto-unidad-vinculacion/proyecto-unidad-vinculacion-request.converter';
+import { IProyectoUnidadVinculacionResponse } from './proyecto-unidad-vinculacion/proyecto-unidad-vinculacion-response';
+import { PROYECTO_UNIDAD_VINCULACION_RESPONSE_CONVERTER } from './proyecto-unidad-vinculacion/proyecto-unidad-vinculacion-response.converter';
 import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response';
 import { PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response.converter';
 import { IRequerimientoJustificacionResponse } from './requerimiento-justificacion/requerimiento-justificacion-response';
@@ -126,6 +130,7 @@ import { REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from './requerimiento-
 import { ISolicitudOnlyTituloResponse } from './solicitud/solicitud-only-titulo-response';
 import { SOLICITUD_ONLY_TITULO_RESPONSE_CONVERTER } from './solicitud/solicitud-only-titulo-response.converter';
 
+// tslint:disable-next-line: variable-name
 const _ProyectoServiceMixinBase:
   CreateCtor<IProyecto, IProyecto, IProyectoResponse, IProyectoResponse> &
   UpdateCtor<number, IProyecto, IProyecto, IProyectoResponse, IProyectoResponse> &
@@ -1009,7 +1014,7 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
   }
 
   /**
-   * Devuelve la informacion de cuales de los apartados de la convocatoria y/o se van copiar 
+   * Devuelve la informacion de cuales de los apartados de la convocatoria y/o se van copiar
    *
    * @param id Id del proyecto
    */
@@ -1023,7 +1028,7 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
    * Marca la fecha de inicio del proyecto como inicializada y hace la copia de
    * los apartados de la convocatoria y de la solicitud dependientes de la
    * inicializacion de la fecha
-   * 
+   *
    * @param id Id del proyecto
    */
   initFechaInicio(id: number): Observable<IProyecto> {
@@ -1033,13 +1038,43 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
   /**
    * Obtiene la lista de anualidades de un proyecto comprendidas entre su fecha
    * de inicio y us fecha de fin o fecha de fin definitiva si esta informada
-   * 
+   *
    * @param id Identificador de {@link Proyecto}
-   * @return la lista de anualidades del proyecto, y una lista vacia si no tiene anualidades 
+   * @return la lista de anualidades del proyecto, y una lista vacia si no tiene anualidades
    */
   getAnualidadesProyecto(id: number): Observable<string[]> {
     return this.get<string[]>(`${this.endpointUrl}/${id}/anualidades-fechas-proyecto`).pipe(
       map(response => response ?? [])
+    );
+  }
+
+  /**
+   * Recupera las unidades de vinculación asociadas al proyecto con el id indicado.
+   *
+   * @param id identificador del proyecto
+   * @param options opciones de búsqueda
+   * @returns la lista de unidades de vinculación del proyecto
+   */
+  findUnidadesVinculacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoUnidadVinculacion>> {
+    return this.find<IProyectoUnidadVinculacionResponse, IProyectoUnidadVinculacion>(
+      `${this.endpointUrl}/${id}/unidades-vinculacion`,
+      options,
+      PROYECTO_UNIDAD_VINCULACION_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Actualiza las unidades de vinculación asociadas al proyecto con el id indicado.
+   *
+   * @param id identificador del proyecto
+   * @param unidadesVinculacion unidades de vinculación a actualizar
+   * @returns la lista de unidades de vinculación actualizada
+   */
+  updateUnidadesVinculacion(id: number, unidadesVinculacion: IProyectoUnidadVinculacion[]): Observable<IProyectoUnidadVinculacion[]> {
+    return this.http.patch<IProyectoUnidadVinculacionResponse[]>(`${this.endpointUrl}/${id}/unidades-vinculacion`,
+      PROYECTO_UNIDAD_VINCULACION_REQUEST_CONVERTER.fromTargetArray(unidadesVinculacion)
+    ).pipe(
+      map((response => PROYECTO_UNIDAD_VINCULACION_RESPONSE_CONVERTER.toTargetArray(response)))
     );
   }
 

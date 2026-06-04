@@ -19,7 +19,8 @@
     <div class="row-visibility">
 
       <div class="columns-visibility">
-        <mat-checkbox color="primary" class="checkbox" formControlName="showAreasConocimiento">
+        <mat-checkbox *ngIf="isProyectoAreasConocimientoEnabled" color="primary" class="checkbox"
+          formControlName="showAreasConocimiento">
           {{'label.areas-conocimiento' | translate}}
         </mat-checkbox>
         <mat-checkbox color="primary" class="checkbox" formControlName="showClasificaciones">
@@ -49,11 +50,11 @@
         <mat-checkbox color="primary" class="checkbox" formControlName="showSocios">
           {{'csp.proyecto-socio' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
         </mat-checkbox>
-      </div>
-      <div class="columns-visibility">
         <mat-checkbox color="primary" class="checkbox" formControlName="showProrrogas">
           {{'label.csp.documentos.prorroga' | translate}}
         </mat-checkbox>
+      </div>
+      <div class="columns-visibility">
         <mat-checkbox color="primary" class="checkbox" formControlName="showConvocatoria">
           {{'csp.ejecucion-economica.convocatoria' | translate}}
         </mat-checkbox>
@@ -80,6 +81,10 @@
         </mat-checkbox>
         <mat-checkbox color="primary" class="checkbox" formControlName="showGruposInvestigacionIp">
           {{'csp.proyecto.export.grupos-investigacion-ip' | translate}}
+        </mat-checkbox>
+        <mat-checkbox *ngIf="isProyectoUnidadesVinculacionEnabled" color="primary" class="checkbox"
+          formControlName="showUnidadesVinculacion">
+          {{'csp.proyecto-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}
         </mat-checkbox>
       </div>
     </div>

@@ -63,8 +63,7 @@ public class GrupoUnidadVinculacionService {
 
   /**
    * Actualiza la lista de {@link GrupoUnidadVinculacion} del {@link Grupo}.
-   * Elimina las que ya no están en la nueva lista y añade las que son nuevas,
-   * preservando los datos de auditoría de las no modificadas.
+   * Elimina las que ya no están en la nueva lista y añade las que son nuevas.
    *
    * @param grupoId             el id del {@link Grupo}.
    * @param unidadesVinculacion la lista con las nuevas unidades de vinculación.

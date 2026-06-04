@@ -17,6 +17,7 @@ import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
+import org.crue.hercules.sgi.csp.model.Configuracion;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoConfidencialidadNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
@@ -75,6 +76,9 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoConfidencialidadRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
@@ -82,9 +86,11 @@ import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +106,8 @@ import org.springframework.security.test.context.support.WithMockUser;
  */
 class ProyectoServiceTest extends BaseServiceTest {
 
+  @Mock
+  private ConfiguracionService configuracionService;
   @Mock
   private ProyectoRepository repository;
   @Mock
@@ -218,6 +226,7 @@ class ProyectoServiceTest extends BaseServiceTest {
     proyectoHelper = new ProyectoHelper(repository, proyectoEquipoRepository, proyectoResponsableEconomicoRepository);
     service = new ProyectoServiceImpl(
         sgiConfigProperties,
+        configuracionService,
         contextoProyectoService,
         convocatoriaConceptoGastoCodigoEcRepository,
         convocatoriaConceptoGastoRepository,
@@ -1197,9 +1206,145 @@ class ProyectoServiceTest extends BaseServiceTest {
     }
   }
 
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void createProyectoBySolicitud_WithAreasConocimientoEnabled_CopiesAreasConocimiento() {
+    // given
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setFechaInicio(null);
+    proyecto.setFechaFin(null);
+
+    EstadoSolicitud estadoSolicitud = EstadoSolicitud.builder()
+        .id(1L)
+        .estado(EstadoSolicitud.Estado.CONCEDIDA)
+        .build();
+
+    Solicitud solicitud = Solicitud.builder()
+        .id(1L)
+        .estado(estadoSolicitud)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
+        .unidadGestionRef("2")
+        .build();
+
+    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(1L).build();
+
+    Configuracion configuracion = Configuracion.builder()
+        .proyectoAreasConocimientoEnabled(Boolean.TRUE)
+        .build();
+
+    BDDMockito.given(solicitudRepository.findById(1L)).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(1L)).willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(configuracionService.findConfiguracion()).willReturn(configuracion);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoGuardado = invocation.getArgument(0);
+      if (proyectoGuardado.getId() == null) {
+        proyectoGuardado.setId(1L);
+      }
+      return proyectoGuardado;
+    });
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto ep = invocation.getArgument(0);
+          ep.setId(1L);
+          return ep;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef("2");
+    modeloUnidad.setActivo(true);
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    BDDMockito.given(solicitudProyectoAreaConocimientoRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+    BDDMockito.given(solicitudProyectoClasificacionRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+    BDDMockito.given(solicitudModalidadRepository.findAllBySolicitudId(ArgumentMatchers.anyLong()))
+        .willReturn(List.of());
+    BDDMockito.given(solicitudProyectoEntidadFinanciadoraAjenaRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+
+    // when
+    service.createProyectoBySolicitud(1L, proyecto);
+
+    // then: se llama a copyAreasConocimiento porque está habilitado
+    Mockito.verify(solicitudProyectoAreaConocimientoRepository)
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void createProyectoBySolicitud_WithAreasConocimientoDisabled_DoesNotCopyAreasConocimiento() {
+    // given
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setFechaInicio(null);
+    proyecto.setFechaFin(null);
+
+    EstadoSolicitud estadoSolicitud = EstadoSolicitud.builder()
+        .id(1L)
+        .estado(EstadoSolicitud.Estado.CONCEDIDA)
+        .build();
+
+    Solicitud solicitud = Solicitud.builder()
+        .id(1L)
+        .estado(estadoSolicitud)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
+        .unidadGestionRef("2")
+        .build();
+
+    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(1L).build();
+
+    Configuracion configuracion = Configuracion.builder()
+        .proyectoAreasConocimientoEnabled(Boolean.FALSE)
+        .build();
+
+    BDDMockito.given(solicitudRepository.findById(1L)).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(1L)).willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(configuracionService.findConfiguracion()).willReturn(configuracion);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoGuardado = invocation.getArgument(0);
+      if (proyectoGuardado.getId() == null) {
+        proyectoGuardado.setId(1L);
+      }
+      return proyectoGuardado;
+    });
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto ep = invocation.getArgument(0);
+          ep.setId(1L);
+          return ep;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef("2");
+    modeloUnidad.setActivo(true);
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    BDDMockito.given(solicitudProyectoClasificacionRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+    BDDMockito.given(solicitudModalidadRepository.findAllBySolicitudId(ArgumentMatchers.anyLong()))
+        .willReturn(List.of());
+    BDDMockito.given(solicitudProyectoEntidadFinanciadoraAjenaRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+
+    // when
+    service.createProyectoBySolicitud(1L, proyecto);
+
+    // then: NO se llama a copyAreasConocimiento porque está deshabilitado
+    Mockito.verify(solicitudProyectoAreaConocimientoRepository, Mockito.never())
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong());
+  }
+
   /**
    * Función que devuelve un objeto Proyecto
-   * 
+   *
    * @param id id del Proyecto
    * @return el objeto Proyecto
    */

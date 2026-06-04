@@ -425,4 +425,10 @@ public class Proyecto extends BaseEntity {
   @SuppressWarnings("java:S1170")
   private final TipoRegimenConcurrencia tipoRegimenConcurrencia = null;
 
+  @OneToMany(mappedBy = "proyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
+  private final List<ProyectoUnidadVinculacion> unidadesVinculacion = null;
+
 }

@@ -4,13 +4,14 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { Module } from '@core/module';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
+import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, forkJoin, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
 import { IProyectoData } from './proyecto.action.service';
@@ -29,7 +30,8 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
     private service: ProyectoService,
     private rolSocioService: RolSocioService,
     private solicitudService: SolicitudService,
-    private authService: SgiAuthService
+    private authService: SgiAuthService,
+    private configService: ConfigService
   ) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
@@ -54,76 +56,44 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
 
         return of(data);
       }),
-      switchMap(data => {
-        if (!data.proyecto.rolUniversidad) {
-          return of(data);
-        }
+      switchMap(data => forkJoin({
+        rolUniversidad: data.proyecto.rolUniversidad
+          ? this.rolSocioService.findById(data.proyecto.rolUniversidad.id)
+          : of(null),
+        hasPeriodosPago: this.service.hasPeriodosPago(data.proyecto.id),
+        hasPeriodosJustificacion: this.service.hasPeriodosJustificacion(data.proyecto.id),
+        modificable: data?.proyecto?.id ? this.service.modificable(data.proyecto.id) : of(true),
+        hasCoordinador: data?.proyecto?.id
+          ? this.service.hasAnyProyectoSocioWithRolCoordinador(data.proyecto.id)
+          : of(false),
+        solicitud: !data.isInvestigador && data.proyecto?.solicitudId
+          ? this.solicitudService.findById(data.proyecto.solicitudId)
+          : of(null),
+        isProyectoUnidadesVinculacionEnabled: this.configService.isProyectoUnidadesVinculacionEnabled(),
+        isProyectoAreasConocimientoEnabled: this.configService.isProyectoAreasConocimientoEnabled(),
+      }).pipe(
+        map(({ rolUniversidad, hasPeriodosPago, hasPeriodosJustificacion, modificable, hasCoordinador, solicitud,
+          isProyectoUnidadesVinculacionEnabled, isProyectoAreasConocimientoEnabled }) => {
 
-        return this.rolSocioService.findById(data.proyecto.rolUniversidad.id).pipe(
-          map(rolSocio => {
-            data.proyecto.rolUniversidad = rolSocio;
-            return data;
-          })
-        )
-      }),
-      switchMap(data => {
-        return forkJoin([this.service.hasPeriodosPago(data.proyecto.id), this.service.hasPeriodosJustificacion(data.proyecto.id)])
-          .pipe(
-            map((response) => {
-              data.disableRolUniversidad = response[0] || response[1];
-              return data;
-            })
-          );
-      }),
-      switchMap(data => !data.isInvestigador ? this.fillDatosSolicitud(data) : of(data)),
-      switchMap(data => this.hasAnyProyectoSocioWithRolCoordinador(data)),
-      switchMap(data => this.isReadonly(data))
-    );
-  }
+          data.disableRolUniversidad = hasPeriodosPago || hasPeriodosJustificacion;
+          data.hasAnyProyectoSocioCoordinador = hasCoordinador;
+          data.isProyectoAreasConocimientoEnabled = isProyectoAreasConocimientoEnabled;
+          data.isProyectoUnidadesVinculacionEnabled = isProyectoUnidadesVinculacionEnabled;
+          data.readonly = !modificable;
 
-  private isReadonly(data: IProyectoData): Observable<IProyectoData> {
-    if (data?.proyecto?.id) {
-      return this.service.modificable(data?.proyecto?.id)
-        .pipe(
-          map((value: boolean) => {
-            data.readonly = !value;
-            return data;
-          })
-        );
-    } else {
-      data.readonly = false;
-      return of(data);
-    }
-  }
+          if (rolUniversidad) {
+            data.proyecto.rolUniversidad = rolUniversidad;
+          }
 
-  private hasAnyProyectoSocioWithRolCoordinador(data: IProyectoData): Observable<IProyectoData> {
-    if (data?.proyecto?.id) {
-      return this.service.hasAnyProyectoSocioWithRolCoordinador(data?.proyecto?.id)
-        .pipe(
-          map((value: boolean) => {
-            data.hasAnyProyectoSocioCoordinador = value;
-            return data;
-          })
-        );
-    } else {
-      data.hasAnyProyectoSocioCoordinador = false;
-      return of(data);
-    }
-  }
-
-  private fillDatosSolicitud(data: IProyectoData): Observable<IProyectoData> {
-    if (data?.proyecto?.solicitudId) {
-      return this.solicitudService.findById(data.proyecto.solicitudId)
-        .pipe(
-          map(solicitud => {
+          if (solicitud) {
             data.solicitanteRefSolicitud = solicitud.solicitante?.id;
             data.solicitudFormularioSolicitud = solicitud.formularioSolicitud;
-            return data;
-          })
-        );
-    } else {
-      return of(data);
-    }
+          }
+
+          return data;
+        })
+      ))
+    );
   }
 
   private hasViewAuthorityInv(): boolean {

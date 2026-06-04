@@ -28,4 +28,5 @@ export const PROYECTO_ROUTE_NAMES = {
   CALENDARIO_JUSTIFICACION: 'calendario-justificacion',
   CONSULTA_PRESUPUESTO: 'consulta-presupuesto',
   RELACIONES: 'relaciones',
+  UNIDADES_VINCULACION: 'unidades-vinculacion',
 };

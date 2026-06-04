@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoConfidencialidadNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
+import org.crue.hercules.sgi.csp.model.Configuracion;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoIntereses;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoObjetivos;
@@ -145,6 +146,7 @@ import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredica
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEntidadConvocanteSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
+import org.crue.hercules.sgi.csp.service.ConfiguracionService;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoCodigoEcService;
@@ -216,6 +218,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   private final SgiConfigProperties sgiConfigProperties;
 
+  private final ConfiguracionService configuracionService;
   private final ContextoProyectoService contextoProyectoService;
   private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
   private final ConvocatoriaConceptoGastoRepository convocatoriaConceptoGastoRepository;
@@ -2124,7 +2127,13 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyNoDateDependentSolicitudItems(proyectoId: {}, solicitudProyectoId: {}) - start", proyecto.getId(),
         solicitudProyecto.getId());
     this.copyContexto(proyecto.getId(), solicitudProyecto);
-    this.copyAreasConocimiento(proyecto.getId(), solicitudProyecto.getId());
+
+    Configuracion configuracion = configuracionService.findConfiguracion();
+
+    if (Boolean.TRUE.equals(configuracion.getProyectoAreasConocimientoEnabled())) {
+      this.copyAreasConocimiento(proyecto.getId(), solicitudProyecto.getId());
+    }
+
     this.copyClasificaciones(proyecto.getId(), solicitudProyecto.getId());
     this.copyEntidadesConvocantesDeSolicitud(proyecto.getId());
     this.copyEntidadesFinanciadorasDeSolicitud(proyecto.getId(), solicitudProyecto.getId());
