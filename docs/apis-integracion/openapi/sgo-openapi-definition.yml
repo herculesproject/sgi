@@ -1491,10 +1491,10 @@ paths:
         - `predecesorId`
 
         ### Módulos del SGI donde se utiliza
-        - CSP: **Grupos investigación ➜ Unidades de vinculación**, **Proyecto ➜ Unidades de vinculación**
+        - CSP: **Grupos investigación ➜ Unidades de vinculación**, **Proyecto ➜ Unidades de vinculación**, **Solicitud ➜ Datos proyecto ➜ Unidades de vinculación**
 
         ### Consideraciones para la implementación
-        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP.
         - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
         - Si no se envían parámetros de paginación, el servicio devolverá **todas las unidades de vinculación ordenadas alfabéticamente por nombre**.
         - Este servicio permite construir estructuras jerárquicas mediante el campo `predecesorId`.
@@ -1592,7 +1592,7 @@ paths:
         Devuelve la unidad de vinculación correspondiente al `id`.
 
         ### Consideraciones para la implementación
-        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP.
       operationId: findUnidadVinculacionById
       security:
         - bearerAuth: []
@@ -1634,7 +1634,7 @@ paths:
         - `predecesorId`
 
         ### Consideraciones para la implementación
-        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP.
         - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
         - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el **ESB** o desde la propia implementación de la integración.
       operationId: findAllUnidadesVinculacionPublic
@@ -1724,7 +1724,7 @@ paths:
         Devuelve los mismos datos, pero **no requiere autenticación** desde el SGI.
 
         ### Consideraciones para la implementación
-        - Su implementación es **opcional**, sólo es necesario si se habilita la gestión de unidades de vinculación en el módulo CSP (desactivada por defecto).
+        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP.
         - Si los sistemas corporativos requieren autenticación, esta puede gestionarse desde el ESB o desde la propia implementación de la integración.
       operationId: findUnidadVinculacionPublicById
       parameters:

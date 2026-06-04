@@ -46,7 +46,7 @@ class SolicitudProyectoServiceTest extends BaseServiceTest {
   private SolicitudProyectoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new SolicitudProyectoServiceImpl(repository, solicitudRepository, solicitudService,
         convocatoriaEntidadFinanciadoraRepository, convocatoriaEntidadGestoraRepository,
         solicitudProyectoEntidadRepository);
@@ -190,35 +190,6 @@ class SolicitudProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithExistingId_NoReturnsAnyException() {
-    // given: existing SolicitudProyecto
-    Long id = 1L;
-
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
-
-    Assertions.assertThatCode(
-        // when: delete by existing id
-        () -> service.delete(id))
-        // then: no exception is thrown
-        .doesNotThrowAnyException();
-  }
-
-  @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
-
-    Assertions.assertThatThrownBy(
-        // when: delete
-        () -> service.delete(id))
-        // then: NotFoundException is thrown
-        .isInstanceOf(SolicitudProyectoNotFoundException.class);
-  }
-
-  @Test
   void findById_ReturnsSolicitudProyecto() {
     // given: Un SolicitudProyecto con el id buscado
     Long idBuscado = 1L;
@@ -233,7 +204,7 @@ class SolicitudProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsSolicitudProyectoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsSolicitudProyectoNotFoundException() {
     // given: Ningun SolicitudProyecto con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -261,7 +232,7 @@ class SolicitudProyectoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findBySolicitudId_WithSolicitudIdNotExist_ThrowsSolicitudProyectoNotFoundException() throws Exception {
+  void findBySolicitudId_WithSolicitudIdNotExist_ThrowsSolicitudProyectoNotFoundException() {
     // given: Ningun SolicitudProyecto con el solicitud id buscado
     Long idSolicitud = 1L;
 
@@ -280,11 +251,12 @@ class SolicitudProyectoServiceTest extends BaseServiceTest {
    */
   private SolicitudProyecto generarSolicitudProyecto(Long solicitudProyectoId) {
 
-    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
-        .acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE).tipoPresupuesto(TipoPresupuesto.GLOBAL)
+    return SolicitudProyecto.builder()
+        .id(solicitudProyectoId)
+        .acronimo("acronimo-" + solicitudProyectoId)
+        .colaborativo(Boolean.TRUE)
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL)
         .build();
-
-    return solicitudProyecto;
   }
 
 }

@@ -29,6 +29,7 @@
 - [CSP] Añadido el campo régimen de concurrencia en los datos generales del proyecto, heredado de la convocatoria cuando el proyecto está vinculado a una ([#58](https://github.com/herculesproject/sgi/issues/58)).
 - [CSP] Añadido el apartado Unidades de vinculación en grupos de investigación y añadido filtro por unidades de vinculación en el buscador ampliado de grupos. ([#56](https://github.com/herculesproject/sgi/issues/56)).
 - [CSP] Añadido el apartado Unidades de vinculación en proyectos, con filtro por unidades en el buscador avanzado y nuevas variables de configuración para habilitar unidades de vinculación y áreas de conocimiento en proyectos ([#59](https://github.com/herculesproject/sgi/issues/59)).
+- [CSP] Añadido el apartado Unidades de vinculación en solicitudes, al crear un proyecto desde la solicitud se copian las unidades de la solicitud al proyecto. El apartado de áreas de conocimiento y el nuevo apartado unidades de vinculación de solicitudes pasan a ser opcionales mediante las mismas variables de configuración que en proyecto ([#86](https://github.com/herculesproject/sgi/issues/86)).
 - [WEB] Añadido soporte en el componente compartido de subida de ficheros para la descarga del fichero asociado, tooltips configurables y validación de tamaño máximo ([#37](https://github.com/herculesproject/sgi/issues/37)).
 
 ### Fixed

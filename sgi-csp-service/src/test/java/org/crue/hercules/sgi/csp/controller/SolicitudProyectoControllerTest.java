@@ -1,12 +1,20 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.converter.SolicitudProyectoUnidadVinculacionConverter;
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoUnidadVinculacionInput;
+import org.crue.hercules.sgi.csp.dto.SolicitudProyectoUnidadVinculacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoUnidadVinculacion;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoUnidadVinculacionService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -16,6 +24,8 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -36,9 +46,14 @@ class SolicitudProyectoControllerTest extends BaseControllerTest {
   private SolicitudProyectoSocioService solicitudProyectoSocioService;
   @MockBean
   private SolicitudProyectoEntidadFinanciadoraAjenaService solicitudProyectoEntidadFinanciadoraAjenaService;
+  @MockBean
+  private SolicitudProyectoUnidadVinculacionService solicitudProyectoUnidadVinculacionService;
+  @MockBean
+  private SolicitudProyectoUnidadVinculacionConverter solicitudProyectoUnidadVinculacionConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/solicitudproyecto";
+  private static final String PATH_UNIDADES_VINCULACION = "/unidades-vinculacion";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
@@ -100,8 +115,7 @@ class SolicitudProyectoControllerTest extends BaseControllerTest {
         .willAnswer(new Answer<SolicitudProyecto>() {
           @Override
           public SolicitudProyecto answer(InvocationOnMock invocation) throws Throwable {
-            SolicitudProyecto givenData = invocation.getArgument(0, SolicitudProyecto.class);
-            return givenData;
+            return invocation.getArgument(0, SolicitudProyecto.class);
           }
         });
 
@@ -134,40 +148,6 @@ class SolicitudProyectoControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, updatedSolicitudProyecto.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(updatedSolicitudProyecto)))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: 404 error
-        .andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
-  void delete_WithExistingId_Return204() throws Exception {
-    // given: existing id
-    Long id = 1L;
-    BDDMockito.doNothing().when(service).delete(ArgumentMatchers.anyLong());
-    // when: delete by id
-    mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
-  void delete_WithoutId_Return404() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-
-    BDDMockito.willThrow(new SolicitudProyectoNotFoundException(id)).given(service)
-        .delete(ArgumentMatchers.<Long>any());
-
-    // when: delete by non existing id
-    mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -216,23 +196,91 @@ class SolicitudProyectoControllerTest extends BaseControllerTest {
 
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  void findUnidadesVinculacion_ReturnsPage() throws Exception {
+    // given: una SolicitudProyecto con una unidad de vinculación
+    Long id = 1L;
+    SolicitudProyectoUnidadVinculacion entity = SolicitudProyectoUnidadVinculacion.builder()
+        .id(1L)
+        .solicitudProyectoId(id)
+        .unidadVinculacionRef("unidad-1")
+        .build();
+    SolicitudProyectoUnidadVinculacionOutput output = SolicitudProyectoUnidadVinculacionOutput.builder()
+        .id(1L)
+        .unidadVinculacionRef("unidad-1")
+        .build();
+    BDDMockito.given(solicitudProyectoUnidadVinculacionService
+        .findBySolicitudProyectoId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .willReturn(new PageImpl<>(Arrays.asList(entity)));
+    BDDMockito.given(solicitudProyectoUnidadVinculacionConverter
+        .convert(ArgumentMatchers.<Page<SolicitudProyectoUnidadVinculacion>>any()))
+        .willReturn(new PageImpl<>(Arrays.asList(output)));
+
+    // when: se consultan las unidades de vinculación de la SolicitudProyecto
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_UNIDADES_VINCULACION, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: se devuelve la página con la unidad de vinculación
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("[0].id").value(output.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("[0].unidadVinculacionRef").value(output.getUnidadVinculacionRef()));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  void updateUnidadesVinculacion_ReturnsList() throws Exception {
+    // given: una lista de unidades de vinculación a establecer
+    Long id = 1L;
+    SolicitudProyectoUnidadVinculacionInput input = SolicitudProyectoUnidadVinculacionInput.builder()
+        .unidadVinculacionRef("unidad-1")
+        .build();
+    SolicitudProyectoUnidadVinculacion entity = SolicitudProyectoUnidadVinculacion.builder()
+        .id(1L)
+        .solicitudProyectoId(id)
+        .unidadVinculacionRef("unidad-1")
+        .build();
+    SolicitudProyectoUnidadVinculacionOutput output = SolicitudProyectoUnidadVinculacionOutput.builder()
+        .id(1L)
+        .unidadVinculacionRef("unidad-1")
+        .build();
+    BDDMockito.given(solicitudProyectoUnidadVinculacionConverter
+        .convertSolicitudProyectoUnidadesInput(ArgumentMatchers.anyList()))
+        .willReturn(Arrays.asList(entity));
+    BDDMockito.given(solicitudProyectoUnidadVinculacionService
+        .updateUnidadesVinculacion(ArgumentMatchers.anyLong(), ArgumentMatchers.anyList()))
+        .willReturn(Arrays.asList(entity));
+    BDDMockito.given(solicitudProyectoUnidadVinculacionConverter
+        .convertSolicitudProyectoUnidades(ArgumentMatchers.anyList()))
+        .willReturn(Arrays.asList(output));
+
+    // when: se actualiza la lista de unidades de vinculación
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_UNIDADES_VINCULACION, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(List.of(input))))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: se devuelve la lista actualizada
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("[0].id").value(output.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("[0].unidadVinculacionRef").value(output.getUnidadVinculacionRef()));
+  }
+
   /**
    * Función que devuelve un objeto SolicitudProyecto
-   * 
+   *
    * @param solicitudProyectoId
    * @param solicitudId
    * @return el objeto SolicitudProyecto
    */
   private SolicitudProyecto generarSolicitudProyecto(Long solicitudProyectoId) {
-
-    // formatter: off
-
-    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(solicitudProyectoId)
-        .acronimo("acronimo-" + solicitudProyectoId).colaborativo(Boolean.TRUE).tipoPresupuesto(TipoPresupuesto.GLOBAL)
-        .coordinado(Boolean.TRUE).build();
-
-    // formatter: on
-
-    return solicitudProyecto;
+    return SolicitudProyecto.builder()
+        .id(solicitudProyectoId)
+        .acronimo("acronimo-" + solicitudProyectoId)
+        .colaborativo(Boolean.TRUE)
+        .tipoPresupuesto(TipoPresupuesto.GLOBAL)
+        .coordinado(Boolean.TRUE)
+        .build();
   }
 }

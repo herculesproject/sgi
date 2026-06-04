@@ -24,40 +24,42 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Relación entre un {@link Proyecto} y una unidad de vinculación del SGO.
- * La unidad concreta se identifica por la referencia externa {@code unidadRef}.
+ * Relación entre un {@link SolicitudProyecto} y una unidad de vinculación del
+ * SGO.
+ * La unidad concreta se identifica por la referencia externa
+ * {@code unidadVinculacionRef}.
  */
 @Entity
-@Table(name = ProyectoUnidadVinculacion.TABLE_NAME, uniqueConstraints = {
-    @UniqueConstraint(name = "UK_PROYECTOUNIDADVINCULACION_PROYECTOID_UNIDADVINCULACIONREF", columnNames = {
-        "proyecto_id", "unidad_vinculacion_ref" })
+@Table(name = SolicitudProyectoUnidadVinculacion.TABLE_NAME, uniqueConstraints = {
+    @UniqueConstraint(name = "UK_SOLPROYUNIDADVINCULACION_SOLID_UNIDADVINCULACIONREF", columnNames = {
+        "solicitud_proyecto_id", "unidad_vinculacion_ref" })
 })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "proyecto")
-public class ProyectoUnidadVinculacion extends BaseEntity {
+@ToString(exclude = "solicitudProyecto")
+public class SolicitudProyectoUnidadVinculacion extends BaseEntity {
 
-  protected static final String TABLE_NAME = "proyecto_unidad_vinculacion";
+  protected static final String TABLE_NAME = "solicitud_proyecto_unidad_vinculacion";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
-  /** Longitud máxima de la referencia a la unidad de vinculación. */
   public static final int UNIDAD_VINCULACION_REF_LENGTH = 50;
 
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ProyectoUnidadVinculacion.SEQUENCE_NAME)
-  @SequenceGenerator(name = ProyectoUnidadVinculacion.SEQUENCE_NAME, sequenceName = ProyectoUnidadVinculacion.SEQUENCE_NAME, allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SolicitudProyectoUnidadVinculacion.SEQUENCE_NAME)
+  @SequenceGenerator(name = SolicitudProyectoUnidadVinculacion.SEQUENCE_NAME, sequenceName = SolicitudProyectoUnidadVinculacion.SEQUENCE_NAME, allocationSize = 1)
   private Long id;
 
   /**
-   * Identificador del {@link Proyecto} al que pertenece la unidad de vinculación.
+   * Identificador del {@link SolicitudProyecto} al que pertenece la unidad de
+   * vinculación.
    */
-  @Column(name = "proyecto_id", nullable = false)
-  private Long proyectoId;
+  @Column(name = "solicitud_proyecto_id", nullable = false)
+  private Long solicitudProyectoId;
 
   /** Referencia a la unidad en el SGO. */
   @Column(name = "unidad_vinculacion_ref", length = UNIDAD_VINCULACION_REF_LENGTH, nullable = false)
@@ -65,10 +67,10 @@ public class ProyectoUnidadVinculacion extends BaseEntity {
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOUNIDADVINCULACION_PROYECTO"))
+  @JoinColumn(name = "solicitud_proyecto_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTOUNIDADVINCULACION_SOLICITUDPROYECTO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   @SuppressWarnings("java:S1170")
-  private final Proyecto proyecto = null;
+  private final SolicitudProyecto solicitudProyecto = null;
 
 }

@@ -35,13 +35,6 @@ public interface SolicitudProyectoService {
   SolicitudProyecto findById(final Long id);
 
   /**
-   * Elimina el {@link SolicitudProyecto}.
-   *
-   * @param id Id del {@link SolicitudProyecto}.
-   */
-  void delete(Long id);
-
-  /**
    * Obtiene la {@link SolicitudProyecto} para una {@link Solicitud}.
    *
    * @param solicitudId el id de la {@link Solicitud}.

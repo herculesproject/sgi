@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { BaseExportModalComponent } from '@core/component/base-export/base-export-modal.component';
@@ -11,6 +11,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { ISolicitudReportOptions, SolicitudListadoExportService } from '../../solicitud-listado-export.service';
 
 const SOLICITUD_KEY = marker('csp.solicitud');
+
+export interface ISolicitudExportModalData extends IBaseExportModalData {
+  isSolicitudProyectoUnidadesVinculacionEnabled: boolean;
+  isSolicitudProyectoAreasConocimientoEnabled: boolean;
+}
 
 @Component({
   templateUrl: './solicitud-listado-export-modal.component.html',
@@ -30,11 +35,19 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
     return this.modalData.limiteRegistrosExportacionExcel;
   }
 
+  get isSolicitudProyectoAreasConocimientoEnabled(): boolean {
+    return this.modalData.isSolicitudProyectoAreasConocimientoEnabled ?? false;
+  }
+
+  get isSolicitudProyectoUnidadesVinculacionEnabled(): boolean {
+    return this.modalData.isSolicitudProyectoUnidadesVinculacionEnabled ?? false;
+  }
+
   constructor(
     matDialogRef: MatDialogRef<SolicitudListadoExportModalComponent>,
     translate: TranslateService,
     solicitudListadoExportService: SolicitudListadoExportService,
-    @Inject(MAT_DIALOG_DATA) private modalData: IBaseExportModalData
+    @Inject(MAT_DIALOG_DATA) private readonly modalData: ISolicitudExportModalData
   ) {
     super(solicitudListadoExportService, translate, matDialogRef);
   }
@@ -59,7 +72,6 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
       showSolicitudEntidadesConvocantes: new FormControl(true),
       showPlanesInvestigacion: new FormControl(true),
       showSolicitudProyectoFichaGeneral: new FormControl(true),
-      showSolicitudProyectoAreasConocimiento: new FormControl(true),
       showSolicitudProyectoClasificaciones: new FormControl(true),
       showSolicitudProyectoEquipo: new FormControl(true),
       showSolicitudProyectoResponsableEconomico: new FormControl(true),
@@ -68,6 +80,14 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
       showSolicitudRrhh: new FormControl(true),
       showGruposInvestigacionIp: new FormControl(true)
     });
+
+    if (this.isSolicitudProyectoAreasConocimientoEnabled) {
+      formGroup.addControl('showSolicitudProyectoAreasConocimiento', new FormControl(true));
+    }
+
+    if (this.isSolicitudProyectoUnidadesVinculacionEnabled) {
+      formGroup.addControl('showSolicitudProyectoUnidadesVinculacion', new FormControl(true));
+    }
 
     Object.keys(formGroup.controls).forEach(key => {
       if (key.startsWith('show')) {
@@ -78,10 +98,10 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
           }
 
           let cont = 0;
-          Object.keys(formGroup.controls).forEach(key => {
-            if (key.startsWith('show') && !formGroup.get(key).value) {
+          Object.keys(formGroup.controls).forEach(k => {
+            if (k.startsWith('show') && !formGroup.get(k).value) {
               formGroup.controls.showTodos.setValue(false, { emitEvent: false });
-              if (key === 'showSolicitudEntidadesConvocantes') {
+              if (k === 'showSolicitudEntidadesConvocantes') {
                 formGroup.controls.showPlanesInvestigacion.setValue(false, { emitEvent: false });
               }
               cont++;
@@ -89,7 +109,7 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
               formGroup.controls.showTodos.setValue(true, { emitEvent: false });
             }
           });
-        }))
+        }));
       }
     });
 
@@ -105,7 +125,7 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
         showSolicitudEntidadesConvocantes: this.formGroup.controls.showSolicitudEntidadesConvocantes.value,
         showPlanesInvestigacion: this.formGroup.controls.showPlanesInvestigacion.value,
         showSolicitudProyectoFichaGeneral: this.formGroup.controls.showSolicitudProyectoFichaGeneral.value,
-        showSolicitudProyectoAreasConocimiento: this.formGroup.controls.showSolicitudProyectoAreasConocimiento.value,
+        showSolicitudProyectoAreasConocimiento: this.formGroup.controls.showSolicitudProyectoAreasConocimiento?.value ?? false,
         showSolicitudProyectoClasificaciones: this.formGroup.controls.showSolicitudProyectoClasificaciones.value,
         showSolicitudProyectoEquipo: this.formGroup.controls.showSolicitudProyectoEquipo.value,
         showSolicitudProyectoResponsableEconomico: this.formGroup.controls.showSolicitudProyectoResponsableEconomico.value,
@@ -113,6 +133,7 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
         showSolicitudProyectoEntidadesFinanciadoras: this.formGroup.controls.showSolicitudProyectoEntidadesFinanciadoras.value,
         showSolicitudRrhh: this.formGroup.controls.showSolicitudRrhh.value,
         showGruposInvestigacionIps: this.formGroup.controls.showGruposInvestigacionIp.value,
+        showSolicitudProyectoUnidadesVinculacion: this.formGroup.controls.showSolicitudProyectoUnidadesVinculacion?.value ?? false,
         columnMinWidth: 120
       }
     };
@@ -126,6 +147,5 @@ export class SolicitudListadoExportModalComponent extends BaseExportModalCompone
   protected getGender() {
     return MSG_PARAMS.GENDER.FEMALE;
   }
-
 
 }

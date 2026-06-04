@@ -7,6 +7,7 @@ import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudRrhhTutor } from '@core/models/csp/solicitud-rrhh-tutor';
 import { Module } from '@core/module';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
+import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudRrhhService } from '@core/services/csp/solicitud-rrhh/solicitud-rrhh.service';
@@ -14,7 +15,7 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, forkJoin, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SOLICITUD_ROUTE_PARAMS } from './solicitud-route-params';
 import { ISolicitudData } from './solicitud.action.service';
@@ -23,11 +24,12 @@ const MSG_NOT_FOUND = marker('error.load');
 
 export const SOLICITUD_DATA_KEY = 'solicitudData';
 
-const ALLOWED_PROYECTO_LINK_ESTADOS = [
+const ALLOWED_PROYECTO_LINK_ESTADOS = new Set([
   Estado.CONCEDIDA,
   Estado.CONCEDIDA_PROVISIONAL,
   Estado.CONCEDIDA_PROVISIONAL_ALEGADA,
-  Estado.CONCEDIDA_PROVISIONAL_NO_ALEGADA];
+  Estado.CONCEDIDA_PROVISIONAL_NO_ALEGADA
+]);
 
 @Injectable()
 export class SolicitudDataResolver extends SgiResolverResolver<ISolicitudData> {
@@ -36,11 +38,12 @@ export class SolicitudDataResolver extends SgiResolverResolver<ISolicitudData> {
     logger: NGXLogger,
     router: Router,
     snackBar: SnackBarService,
-    private service: SolicitudService,
-    private authService: SgiAuthService,
-    private solicitudProyectoService: SolicitudProyectoService,
-    private solicitudRrhhService: SolicitudRrhhService,
-    private rolSocioService: RolSocioService
+    private readonly service: SolicitudService,
+    private readonly authService: SgiAuthService,
+    private readonly configService: ConfigService,
+    private readonly solicitudProyectoService: SolicitudProyectoService,
+    private readonly solicitudRrhhService: SolicitudRrhhService,
+    private readonly rolSocioService: RolSocioService
   ) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
@@ -56,25 +59,18 @@ export class SolicitudDataResolver extends SgiResolverResolver<ISolicitudData> {
           solicitud
         } as ISolicitudData;
       }),
-      switchMap(data => {
-        return this.service.existsSolictudProyecto(data.solicitud.id).pipe(
-          map(exists => {
-            data.hasSolicitudProyecto = exists;
-            return data;
-          })
-        );
-      }),
-      switchMap(data => {
-        const modificable$ = isInvestigador
+      switchMap(data => forkJoin({
+        hasSolicitudProyecto: this.service.existsSolictudProyecto(data.solicitud.id),
+        modificable: isInvestigador
           ? this.service.modificableByInvestigador(data.solicitud.id)
-          : this.service.modificableByUO(data.solicitud.id);
-        return modificable$.pipe(
-          map(value => {
-            data.readonly = !value;
-            return data;
-          })
-        );
-      }),
+          : this.service.modificableByUO(data.solicitud.id),
+      }).pipe(
+        map(({ hasSolicitudProyecto, modificable }) => {
+          data.hasSolicitudProyecto = hasSolicitudProyecto;
+          data.readonly = !modificable;
+          return data;
+        })
+      )),
       switchMap(data => {
         data.isInvestigador = isInvestigador;
 
@@ -111,50 +107,52 @@ export class SolicitudDataResolver extends SgiResolverResolver<ISolicitudData> {
 
         );
       }),
-      switchMap(data => {
-        if (data.hasSolicitudProyecto) {
-          return this.service.findSolicitudProyecto(data.solicitud.id)
-            .pipe(
-              map(solicitudProyecto => {
-                return { ...data, solicitudProyecto };
-              })
-            );
-        }
-        return of(data);
-      }),
-      switchMap(data => {
-        if (!data.solicitudProyecto?.rolUniversidad) {
-          return of(data);
-        }
-
-        return this.rolSocioService.findById(data.solicitudProyecto.rolUniversidad.id).pipe(
-          map(rolSocio => {
-            data.solicitudProyecto.rolUniversidad = rolSocio;
-            return data;
-          })
-        )
-      }),
-      switchMap(data => this.hasAnyProyectoSocioWithRolCoordinador(data)),
-      switchMap(data => {
-        if (data.hasSolicitudProyecto) {
-          return this.checkIfSolicitudProyectoSocioHasPeriodosPagoAndJustificacion(data);
-        }
-        return of(data);
-      }),
-      switchMap(data => {
-        if (data.solicitud && ALLOWED_PROYECTO_LINK_ESTADOS.includes(data.solicitud.estado.estado)) {
-          return this.service.findIdsProyectosBySolicitudId(data.solicitud.id).pipe(
-            map(response => {
-              return {
-                ...data,
-                proyectosIds: response
-              };
-            })
-          );
-        }
-        return of(data);
-      })
-    );
+      switchMap(data => forkJoin({
+        solicitudProyecto: data.hasSolicitudProyecto
+          ? this.service.findSolicitudProyecto(data.solicitud.id)
+          : of(null),
+        proyectosIds: ALLOWED_PROYECTO_LINK_ESTADOS.has(data.solicitud?.estado?.estado)
+          ? this.service.findIdsProyectosBySolicitudId(data.solicitud.id)
+          : of(null),
+        isProyectoAreasConocimientoEnabled: this.configService.isProyectoAreasConocimientoEnabled(),
+        isProyectoUnidadesVinculacionEnabled: this.configService.isProyectoUnidadesVinculacionEnabled(),
+      }).pipe(
+        map(({ solicitudProyecto, proyectosIds, isProyectoAreasConocimientoEnabled, isProyectoUnidadesVinculacionEnabled }) => {
+          if (solicitudProyecto) {
+            data.solicitudProyecto = solicitudProyecto;
+          }
+          if (proyectosIds) {
+            data.proyectosIds = proyectosIds;
+          }
+          data.isProyectoAreasConocimientoEnabled = isProyectoAreasConocimientoEnabled;
+          data.isProyectoUnidadesVinculacionEnabled = isProyectoUnidadesVinculacionEnabled;
+          return data;
+        })
+      )),
+      switchMap(data => forkJoin({
+        rolUniversidad: data.solicitudProyecto?.rolUniversidad
+          ? this.rolSocioService.findById(data.solicitudProyecto.rolUniversidad.id)
+          : of(null),
+        hasCoordinador: data.solicitudProyecto
+          ? this.solicitudProyectoService.hasAnySolicitudProyectoSocioWithRolCoordinador(data.solicitudProyecto.id)
+          : of(false),
+        hasPeriodosPago: data.solicitudProyecto?.id
+          ? this.solicitudProyectoService.hasPeriodosPago(data.solicitudProyecto.id)
+          : of(false),
+        hasPeriodosJustificacion: data.solicitudProyecto?.id
+          ? this.solicitudProyectoService.hasPeriodosJustificacion(data.solicitudProyecto.id)
+          : of(false),
+      }).pipe(
+        map(({ rolUniversidad, hasCoordinador, hasPeriodosPago, hasPeriodosJustificacion }) => {
+          if (rolUniversidad) {
+            data.solicitudProyecto.rolUniversidad = rolUniversidad;
+          }
+          data.hasAnySolicitudProyectoSocioWithRolCoordinador = hasCoordinador;
+          data.hasPopulatedPeriodosSocios = hasPeriodosPago || hasPeriodosJustificacion;
+          return data;
+        })
+      ))
+    ) as Observable<ISolicitudData>;
   }
 
   private hasViewAuthorityInv(): boolean {
@@ -170,36 +168,6 @@ export class SolicitudDataResolver extends SgiResolverResolver<ISolicitudData> {
         'CSP-SOL-V_' + solicitud.unidadGestion.id
       ]
     );
-  }
-
-  private checkIfSolicitudProyectoSocioHasPeriodosPagoAndJustificacion(data: ISolicitudData):
-    Observable<ISolicitudData> {
-
-    if (!data.solicitudProyecto?.id) {
-      return of(data);
-    }
-
-    return forkJoin([this.solicitudProyectoService.hasPeriodosPago(data.solicitudProyecto.id),
-    this.solicitudProyectoService.hasPeriodosJustificacion(data.solicitudProyecto.id)])
-      .pipe(
-        map(response => {
-          data.hasPopulatedPeriodosSocios = response[0] || response[1];
-          return data;
-        })
-      );
-  }
-
-  private hasAnyProyectoSocioWithRolCoordinador(data: ISolicitudData): Observable<ISolicitudData> {
-    if (data?.solicitudProyecto) {
-      return this.solicitudProyectoService.hasAnySolicitudProyectoSocioWithRolCoordinador(data?.solicitudProyecto.id).pipe(
-        map((value: boolean) => {
-          data.hasAnySolicitudProyectoSocioWithRolCoordinador = value;
-          return data;
-        }));
-    } else {
-      data.hasAnySolicitudProyectoSocioWithRolCoordinador = false;
-      return of(data);
-    }
   }
 
 }

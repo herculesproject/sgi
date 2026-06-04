@@ -87,6 +87,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.ProyectoUnidadVinculacion;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
@@ -104,6 +105,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoUnidadVinculacion;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoConfidencialidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -127,6 +129,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionReposito
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoUnidadVinculacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionRepository;
@@ -138,6 +141,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoReposito
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoUnidadVinculacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoConfidencialidadRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
@@ -255,6 +259,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ProyectoSocioPeriodoJustificacionService proyectoSocioPeriodoJustificacionService;
   private final ProyectoSocioPeriodoPagoService proyectoSocioPeriodoPagoService;
   private final ProyectoSocioService proyectoSocioService;
+  private final ProyectoUnidadVinculacionRepository proyectoUnidadVinculacionRepository;
   private final SgiApiSgempService sgiApiSgempService;
   private final SolicitudModalidadRepository solicitudModalidadRepository;
   private final SolicitudProyectoAreaConocimientoRepository solicitudProyectoAreaConocimientoRepository;
@@ -267,6 +272,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final SolicitudProyectoSocioPeriodoJustificacionRepository solicitudPeriodoJustificacionRepository;
   private final SolicitudProyectoSocioPeriodoPagoRepository solicitudPeriodoPagoRepository;
   private final SolicitudProyectoSocioRepository solicitudSocioRepository;
+  private final SolicitudProyectoUnidadVinculacionRepository solicitudProyectoUnidadVinculacionRepository;
   private final SolicitudRepository solicitudRepository;
   private final TipoConfidencialidadRepository tipoConfidencialidadRepository;
   private final TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
@@ -1123,6 +1129,30 @@ public class ProyectoServiceImpl implements ProyectoService {
       this.proyectoClasificacionRepository.save(clasificacionProyecto);
     });
     log.debug("copyClasificaciones(Long proyectoId, Long solicitudProyectoId) - end");
+  }
+
+  /**
+   * Copia las unidades de vinculación de una {@link Solicitud} a un
+   * {@link Proyecto}
+   *
+   * @param proyectoId          id del {@link Proyecto}
+   * @param solicitudProyectoId id de la {@link SolicitudProyecto}
+   */
+  private void copyUnidadesVinculacion(Long proyectoId, Long solicitudProyectoId) {
+    log.debug("copyUnidadesVinculacion - proyectoId: {}, solicitudProyectoId: {}", proyectoId, solicitudProyectoId);
+    List<SolicitudProyectoUnidadVinculacion> unidadesVinculacion = solicitudProyectoUnidadVinculacionRepository
+        .findAllBySolicitudProyectoId(solicitudProyectoId);
+
+    unidadesVinculacion.forEach(unidadVinculacionSolicitud -> {
+      log.debug("Copying SolicitudProyectoUnidadVinculacion with id: {} to proyectoId: {}",
+          unidadVinculacionSolicitud.getId(), proyectoId);
+
+      ProyectoUnidadVinculacion unidadVinculacionProyecto = new ProyectoUnidadVinculacion();
+      unidadVinculacionProyecto.setProyectoId(proyectoId);
+      unidadVinculacionProyecto.setUnidadVinculacionRef(unidadVinculacionSolicitud.getUnidadVinculacionRef());
+
+      this.proyectoUnidadVinculacionRepository.save(unidadVinculacionProyecto);
+    });
   }
 
   /**
@@ -2132,6 +2162,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     if (Boolean.TRUE.equals(configuracion.getProyectoAreasConocimientoEnabled())) {
       this.copyAreasConocimiento(proyecto.getId(), solicitudProyecto.getId());
+    }
+
+    if (Boolean.TRUE.equals(configuracion.getProyectoUnidadesVinculacionEnabled())) {
+      this.copyUnidadesVinculacion(proyecto.getId(), solicitudProyecto.getId());
     }
 
     this.copyClasificaciones(proyecto.getId(), solicitudProyecto.getId());

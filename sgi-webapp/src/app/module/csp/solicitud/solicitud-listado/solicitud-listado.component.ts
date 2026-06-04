@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
@@ -18,6 +17,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
+import { ConfigService as CspConfigService } from '@core/services/csp/configuracion/config.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -32,9 +32,9 @@ import { from, merge, Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
-import { ISolicitudCrearProyectoModalData, SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
+import { SolicitudCrearProyectoModalComponent } from '../modals/solicitud-crear-proyecto-modal/solicitud-crear-proyecto-modal.component';
 import { SolicitudGrupoModalComponent } from '../modals/solicitud-grupo-modal/solicitud-grupo-modal.component';
-import { SolicitudListadoExportModalComponent } from '../modals/solicitud-listado-export-modal/solicitud-listado-export-modal.component';
+import { ISolicitudExportModalData, SolicitudListadoExportModalComponent } from '../modals/solicitud-listado-export-modal/solicitud-listado-export-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
@@ -83,9 +83,23 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   msgParamUnidadGestionEntity = {};
   msgParamGrupoEntity = {};
 
-  private convocatoriaId: number;
+  private readonly convocatoriaId: number;
 
   private limiteRegistrosExportacionExcel: string;
+
+  // tslint:disable-next-line: variable-name
+  private _isSolicitudProyectoAreasConocimientoEnabled: boolean;
+
+  // tslint:disable-next-line: variable-name
+  private _isSolicitudProyectoUnidadesVinculacionEnabled: boolean;
+
+  get isSolicitudProyectoAreasConocimientoEnabled(): boolean {
+    return this._isSolicitudProyectoAreasConocimientoEnabled ?? false;
+  }
+
+  get isSolicitudProyectoUnidadesVinculacionEnabled(): boolean {
+    return this._isSolicitudProyectoUnidadesVinculacionEnabled ?? false;
+  }
 
   get tipoColectivoSolicitante() {
     return TipoColectivo.SOLICITANTE_CSP;
@@ -113,16 +127,17 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
   constructor(
     private readonly logger: NGXLogger,
-    private dialogService: DialogService,
+    private readonly dialogService: DialogService,
     protected snackBarService: SnackBarService,
-    private solicitudService: SolicitudService,
-    private personaService: PersonaService,
-    private matDialog: MatDialog,
+    private readonly solicitudService: SolicitudService,
+    private readonly personaService: PersonaService,
+    private readonly matDialog: MatDialog,
     private readonly translate: TranslateService,
-    private convocatoriaService: ConvocatoriaService,
-    private authService: SgiAuthService,
+    private readonly convocatoriaService: ConvocatoriaService,
+    private readonly authService: SgiAuthService,
     route: ActivatedRoute,
-    private readonly cnfService: ConfigService
+    private readonly cnfService: ConfigService,
+    private readonly cspConfigService: CspConfigService
   ) {
     super(translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -145,7 +160,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         return 'titulo.value';
       }
       return column;
-    }
+    };
   }
 
   ngOnInit(): void {
@@ -170,7 +185,14 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.suscripciones.push(
       this.cnfService.getLimiteRegistrosExportacionExcel('csp-exp-max-num-registros-excel-solicitud-listado').subscribe(value => {
         this.limiteRegistrosExportacionExcel = value;
-      }));
+      }),
+      this.cspConfigService.isProyectoAreasConocimientoEnabled().subscribe(value => {
+        this._isSolicitudProyectoAreasConocimientoEnabled = value;
+      }),
+      this.cspConfigService.isProyectoUnidadesVinculacionEnabled().subscribe(value => {
+        this._isSolicitudProyectoUnidadesVinculacionEnabled = value;
+      })
+    );
   }
 
   private loadForm() {
@@ -465,7 +487,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value)
         .and('solicitudProyecto.rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString())
         .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.id?.toString())
-        .and('tipoFinalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString());
+        .and('tipoFinalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString())
+        .and('unidadesVinculacion.unidadVinculacionRef', SgiRestFilterOperator.EQUALS, controls.unidadVinculacion.value?.id?.toString());
 
       if (controls.estadoSolicitudHistorico.value) {
         rsqlFilter
@@ -473,7 +496,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
           .and('historicoEstadoFechaDesde',
             SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEstadoSolicitudDesde.value))
           .and('historicoEstadoFechaHasta',
-            SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEstadoSolicitudHasta.value))
+            SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEstadoSolicitudHasta.value));
       }
 
       const palabrasClave = controls.palabrasClave.value as string[];
@@ -594,7 +617,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
             solicitudProyecto: solicitudProyectoDatos,
             convocatoria: solicitudData.convocatoria,
             nombreSolicitante: solicitudData.nombreSolicitante
-          } as ISolicitudCrearProyectoModalData
+          }
         };
         const dialogRef = this.matDialog.open(SolicitudCrearProyectoModalComponent, config);
         dialogRef.afterClosed().subscribe(
@@ -610,10 +633,12 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   }
 
   openExportModal(): void {
-    const data: IBaseExportModalData = {
+    const data: ISolicitudExportModalData = {
       findOptions: this.findOptions,
       totalRegistrosExportacionExcel: this.totalElementos,
-      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel),
+      isSolicitudProyectoAreasConocimientoEnabled: this.isSolicitudProyectoAreasConocimientoEnabled,
+      isSolicitudProyectoUnidadesVinculacionEnabled: this.isSolicitudProyectoUnidadesVinculacionEnabled
     };
 
     const config = {

@@ -17,14 +17,16 @@ import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
-import org.crue.hercules.sgi.csp.model.Configuracion;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoConfidencialidadNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
+import org.crue.hercules.sgi.csp.model.Configuracion;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -35,6 +37,10 @@ import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
+import org.crue.hercules.sgi.csp.model.ProyectoUnidadVinculacion;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoUnidadVinculacion;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoConfidencialidad;
@@ -62,6 +68,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoUnidadVinculacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudModalidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionRepository;
@@ -73,12 +80,10 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoReposito
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoUnidadVinculacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoConfidencialidadRepository;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
-import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
@@ -86,7 +91,7 @@ import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
@@ -214,6 +219,10 @@ class ProyectoServiceTest extends BaseServiceTest {
   private TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
   @Mock
   private ProyectoFacturacionService proyectoFacturacionService;
+  @Mock
+  private ProyectoUnidadVinculacionRepository proyectoUnidadVinculacionRepository;
+  @Mock
+  private SolicitudProyectoUnidadVinculacionRepository solicitudProyectoUnidadVinculacionRepository;
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
@@ -263,6 +272,7 @@ class ProyectoServiceTest extends BaseServiceTest {
         proyectoSocioPeriodoJustificacionService,
         proyectoSocioPeriodoPagoService,
         proyectoSocioService,
+        proyectoUnidadVinculacionRepository,
         sgiApiSgempService,
         solicitudModalidadRepository,
         solicitudProyectoAreaConocimientoRepository,
@@ -275,6 +285,7 @@ class ProyectoServiceTest extends BaseServiceTest {
         solicitudPeriodoJustificacionRepository,
         solicitudPeriodoPagoRepository,
         solicitudSocioRepository,
+        solicitudProyectoUnidadVinculacionRepository,
         solicitudRepository,
         tipoConfidencialidadRepository,
         tipoRegimenConcurrenciaRepository,
@@ -1340,6 +1351,152 @@ class ProyectoServiceTest extends BaseServiceTest {
     // then: NO se llama a copyAreasConocimiento porque está deshabilitado
     Mockito.verify(solicitudProyectoAreaConocimientoRepository, Mockito.never())
         .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong());
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void createProyectoBySolicitud_WithUnidadesVinculacionEnabled_CopiesUnidadesVinculacion() {
+    // given: una solicitud con una unidad de vinculación y la configuración de
+    // unidades de vinculación habilitada
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setFechaInicio(null);
+    proyecto.setFechaFin(null);
+
+    EstadoSolicitud estadoSolicitud = EstadoSolicitud.builder()
+        .id(1L)
+        .estado(EstadoSolicitud.Estado.CONCEDIDA)
+        .build();
+
+    Solicitud solicitud = Solicitud.builder()
+        .id(1L)
+        .estado(estadoSolicitud)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
+        .unidadGestionRef("2")
+        .build();
+
+    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(1L).build();
+
+    Configuracion configuracion = Configuracion.builder()
+        .proyectoUnidadesVinculacionEnabled(Boolean.TRUE)
+        .build();
+
+    BDDMockito.given(solicitudRepository.findById(1L)).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(1L)).willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(configuracionService.findConfiguracion()).willReturn(configuracion);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoGuardado = invocation.getArgument(0);
+      if (proyectoGuardado.getId() == null) {
+        proyectoGuardado.setId(1L);
+      }
+      return proyectoGuardado;
+    });
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto ep = invocation.getArgument(0);
+          ep.setId(1L);
+          return ep;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef("2");
+    modeloUnidad.setActivo(true);
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    SolicitudProyectoUnidadVinculacion unidadSolicitud = SolicitudProyectoUnidadVinculacion.builder()
+        .id(1L)
+        .solicitudProyectoId(1L)
+        .unidadVinculacionRef("unidad-1")
+        .build();
+    BDDMockito.given(solicitudProyectoUnidadVinculacionRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of(unidadSolicitud));
+    BDDMockito.given(solicitudProyectoClasificacionRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+    BDDMockito.given(solicitudModalidadRepository.findAllBySolicitudId(ArgumentMatchers.anyLong()))
+        .willReturn(List.of());
+    BDDMockito.given(solicitudProyectoEntidadFinanciadoraAjenaRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+
+    // when: se crea el proyecto desde la solicitud
+    service.createProyectoBySolicitud(1L, proyecto);
+
+    // then: se copia la unidad de vinculación de la solicitud al proyecto
+    ArgumentCaptor<ProyectoUnidadVinculacion> unidadCaptor = ArgumentCaptor.forClass(ProyectoUnidadVinculacion.class);
+    Mockito.verify(proyectoUnidadVinculacionRepository).save(unidadCaptor.capture());
+    Assertions.assertThat(unidadCaptor.getValue().getProyectoId()).isEqualTo(1L);
+    Assertions.assertThat(unidadCaptor.getValue().getUnidadVinculacionRef()).isEqualTo("unidad-1");
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-C_2" })
+  void createProyectoBySolicitud_WithUnidadesVinculacionDisabled_DoesNotCopyUnidadesVinculacion() {
+    // given: la configuración de unidades de vinculación deshabilitada
+    Proyecto proyecto = generarMockProyecto(null);
+    proyecto.setFechaInicio(null);
+    proyecto.setFechaFin(null);
+
+    EstadoSolicitud estadoSolicitud = EstadoSolicitud.builder()
+        .id(1L)
+        .estado(EstadoSolicitud.Estado.CONCEDIDA)
+        .build();
+
+    Solicitud solicitud = Solicitud.builder()
+        .id(1L)
+        .estado(estadoSolicitud)
+        .formularioSolicitud(FormularioSolicitud.PROYECTO)
+        .unidadGestionRef("2")
+        .build();
+
+    SolicitudProyecto solicitudProyecto = SolicitudProyecto.builder().id(1L).build();
+
+    Configuracion configuracion = Configuracion.builder()
+        .proyectoUnidadesVinculacionEnabled(Boolean.FALSE)
+        .build();
+
+    BDDMockito.given(solicitudRepository.findById(1L)).willReturn(Optional.of(solicitud));
+    BDDMockito.given(solicitudProyectoRepository.findById(1L)).willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(configuracionService.findConfiguracion()).willReturn(configuracion);
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
+      Proyecto proyectoGuardado = invocation.getArgument(0);
+      if (proyectoGuardado.getId() == null) {
+        proyectoGuardado.setId(1L);
+      }
+      return proyectoGuardado;
+    });
+    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
+        .will((InvocationOnMock invocation) -> {
+          EstadoProyecto ep = invocation.getArgument(0);
+          ep.setId(1L);
+          return ep;
+        });
+
+    ModeloUnidad modeloUnidad = new ModeloUnidad();
+    modeloUnidad.setId(1L);
+    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
+    modeloUnidad.setUnidadGestionRef("2");
+    modeloUnidad.setActivo(true);
+    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
+
+    BDDMockito.given(solicitudProyectoClasificacionRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+    BDDMockito.given(solicitudModalidadRepository.findAllBySolicitudId(ArgumentMatchers.anyLong()))
+        .willReturn(List.of());
+    BDDMockito.given(solicitudProyectoEntidadFinanciadoraAjenaRepository
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong())).willReturn(List.of());
+
+    // when: se crea el proyecto desde la solicitud
+    service.createProyectoBySolicitud(1L, proyecto);
+
+    // then: NO se copian unidades de vinculación porque está deshabilitado
+    Mockito.verify(solicitudProyectoUnidadVinculacionRepository, Mockito.never())
+        .findAllBySolicitudProyectoId(ArgumentMatchers.anyLong());
+    Mockito.verify(proyectoUnidadVinculacionRepository, Mockito.never())
+        .save(ArgumentMatchers.<ProyectoUnidadVinculacion>any());
   }
 
   /**

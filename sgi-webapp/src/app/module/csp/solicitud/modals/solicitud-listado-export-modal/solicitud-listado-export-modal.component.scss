@@ -12,13 +12,12 @@ $border-color: map-get($sgi-custom-colors, divider);
 
   .row-visibility {
     padding-top: 0.5rem;
-    display: flex;
-    justify-content: space-between;
+    column-count: 3;
+    column-gap: 1em;
 
-    .columns-visibility {
-      display: flex;
-      flex-direction: column;
-      padding-right: 1em;
+    .checkbox {
+      display: block;
+      break-inside: avoid;
     }
   }
 

@@ -47,6 +47,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
+import { UnidadVinculacionService } from '@core/services/sgo/unidad-vinculacion.service';
 import { CategoriaProfesionalService } from '@core/services/sgp/categoria-profesional.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { DatosContactoService } from '@core/services/sgp/datos-contacto/datos-contacto.service';
@@ -58,7 +59,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, NEVER, Observable, Subject, of, throwError } from 'rxjs';
+import { BehaviorSubject, NEVER, Observable, of, Subject, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { PROYECTO_ROUTE_NAMES } from '../proyecto/proyecto-route-names';
@@ -78,6 +79,7 @@ import { SolicitudProyectoPresupuestoEntidadesFragment } from './solicitud-formu
 import { SolicitudProyectoPresupuestoGlobalFragment } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.fragment';
 import { SolicitudProyectoResponsableEconomicoFragment } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.fragment';
 import { SolicitudProyectoSocioFragment } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.fragment';
+import { SolicitudProyectoUnidadesVinculacionFragment } from './solicitud-formulario/solicitud-proyecto-unidades-vinculacion/solicitud-proyecto-unidades-vinculacion.fragment';
 import { SolicitudRrhhMemoriaFragment } from './solicitud-formulario/solicitud-rrhh-memoria/solicitud-rrhh-memoria.fragment';
 import { SolicitudRrhhRequisitosConvocatoriaFragment } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.fragment';
 import { SolicitudRrhhSolitanteFragment } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.fragment';
@@ -101,6 +103,8 @@ export interface ISolicitudData {
   modificableEstadoAsTutor: boolean;
   isTutor: boolean;
   isInvestigador: boolean;
+  isProyectoAreasConocimientoEnabled: boolean;
+  isProyectoUnidadesVinculacionEnabled: boolean;
 }
 
 @Injectable()
@@ -124,27 +128,29 @@ export class SolicitudActionService extends ActionService {
     SOLICITANTE: 'solicitante',
     TUTOR: 'tutor',
     REQUISITOS_CONVOCATORIA: 'requisitos-convocatoria',
-    MEMORIA: 'memoria'
+    MEMORIA: 'memoria',
+    UNIDADES_VINCULACION: 'unidades-vinculacion'
   };
 
-  private datosGenerales: SolicitudDatosGeneralesFragment;
-  private historicoEstado: SolicitudHistoricoEstadosFragment;
-  private documentos: SolicitudDocumentosFragment;
-  private proyectoDatos: SolicitudProyectoFichaGeneralFragment;
-  private areaConocimiento: SolicitudProyectoAreaConocimientoFragment;
-  private hitos: SolicitudHitosFragment;
-  private equipoProyecto: SolicitudEquipoProyectoFragment;
-  private socio: SolicitudProyectoSocioFragment;
-  private entidadesFinanciadoras: SolicitudProyectoEntidadesFinanciadorasFragment;
-  private desglosePresupuestoGlobal: SolicitudProyectoPresupuestoGlobalFragment;
-  private desglosePresupuestoEntidades: SolicitudProyectoPresupuestoEntidadesFragment;
-  private clasificaciones: SolicitudProyectoClasificacionesFragment;
-  private responsableEconomico: SolicitudProyectoResponsableEconomicoFragment;
-  private autoevaluacion: SolicitudAutoevaluacionFragment;
-  private solicitanteRrhh: SolicitudRrhhSolitanteFragment;
-  private tutorRrhh: SolicitudRrhhTutorFragment;
-  private requisitosConvocatoriaRrhh: SolicitudRrhhRequisitosConvocatoriaFragment;
-  private memoriaRrhh: SolicitudRrhhMemoriaFragment;
+  private readonly datosGenerales: SolicitudDatosGeneralesFragment;
+  private readonly historicoEstado: SolicitudHistoricoEstadosFragment;
+  private readonly documentos: SolicitudDocumentosFragment;
+  private readonly proyectoDatos: SolicitudProyectoFichaGeneralFragment;
+  private readonly unidadesVinculacion: SolicitudProyectoUnidadesVinculacionFragment;
+  private readonly areaConocimiento: SolicitudProyectoAreaConocimientoFragment;
+  private readonly hitos: SolicitudHitosFragment;
+  private readonly equipoProyecto: SolicitudEquipoProyectoFragment;
+  private readonly socio: SolicitudProyectoSocioFragment;
+  private readonly entidadesFinanciadoras: SolicitudProyectoEntidadesFinanciadorasFragment;
+  private readonly desglosePresupuestoGlobal: SolicitudProyectoPresupuestoGlobalFragment;
+  private readonly desglosePresupuestoEntidades: SolicitudProyectoPresupuestoEntidadesFragment;
+  private readonly clasificaciones: SolicitudProyectoClasificacionesFragment;
+  private readonly responsableEconomico: SolicitudProyectoResponsableEconomicoFragment;
+  private readonly autoevaluacion: SolicitudAutoevaluacionFragment;
+  private readonly solicitanteRrhh: SolicitudRrhhSolitanteFragment;
+  private readonly tutorRrhh: SolicitudRrhhTutorFragment;
+  private readonly requisitosConvocatoriaRrhh: SolicitudRrhhRequisitosConvocatoriaFragment;
+  private readonly memoriaRrhh: SolicitudRrhhMemoriaFragment;
 
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
   readonly showHitos$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -232,6 +238,14 @@ export class SolicitudActionService extends ActionService {
     return this.data?.isInvestigador ?? (this.isModuleINV() && this.hasAnyAuthorityInv());
   }
 
+  get isProyectoAreasConocimientoEnabled(): boolean {
+    return this.data?.isProyectoAreasConocimientoEnabled ?? true;
+  }
+
+  get isProyectoUnidadesVinculacionEnabled(): boolean {
+    return this.data?.isProyectoUnidadesVinculacionEnabled ?? false;
+  }
+
   get hasProyectoCoordinadoAndCoordinadorExterno$() {
     return this.proyectoDatos.coordinadorExterno$;
   }
@@ -242,10 +256,10 @@ export class SolicitudActionService extends ActionService {
 
   constructor(
     logger: NGXLogger,
-    private route: ActivatedRoute,
-    private solicitudService: SolicitudService,
+    private readonly route: ActivatedRoute,
+    private readonly solicitudService: SolicitudService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
-    private convocatoriaService: ConvocatoriaService,
+    private readonly convocatoriaService: ConvocatoriaService,
     empresaService: EmpresaService,
     personaService: PersonaService,
     solicitudModalidadService: SolicitudModalidadService,
@@ -259,7 +273,7 @@ export class SolicitudActionService extends ActionService {
     solicitudProyectoPresupuestoService: SolicitudProyectoPresupuestoService,
     solicitudProyectoClasificacionService: SolicitudProyectoClasificacionService,
     clasificacionService: ClasificacionService,
-    private authService: SgiAuthService,
+    private readonly authService: SgiAuthService,
     solicitudProyectoAreaConocimiento: SolicitudProyectoAreaConocimientoService,
     areaConocimientoService: AreaConocimientoService,
     solicitudProyectoResponsableEconomicoService: SolicitudProyectoResponsableEconomicoService,
@@ -269,9 +283,9 @@ export class SolicitudActionService extends ActionService {
     vinculacionService: VinculacionService,
     convocatoriaRequisitoIpService: ConvocatoriaRequisitoIPService,
     convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    private dialogService: DialogService,
+    private readonly dialogService: DialogService,
     rolProyectoService: RolProyectoService,
-    private translate: TranslateService,
+    private readonly translate: TranslateService,
     datosPersonalesService: DatosPersonalesService,
     palabraClaveService: PalabraClaveService,
     solicitudGrupoService: SolicitudGrupoService,
@@ -285,7 +299,8 @@ export class SolicitudActionService extends ActionService {
     solicitudRrhhRequisitoNivelAcademicoService: SolicitudRrhhRequisitoNivelAcademicoService,
     documentoService: DocumentoService,
     rolSocioService: RolSocioService,
-    languageService: LanguageService
+    languageService: LanguageService,
+    unidadVinculacionService: UnidadVinculacionService
   ) {
     super();
 
@@ -337,8 +352,20 @@ export class SolicitudActionService extends ActionService {
       this.estadoAndDocumentosReadonly
     );
 
-    this.areaConocimiento = new SolicitudProyectoAreaConocimientoFragment(this.data?.solicitud?.id,
-      solicitudProyectoAreaConocimiento, solicitudService, areaConocimientoService, this.readonly);
+    this.unidadesVinculacion = new SolicitudProyectoUnidadesVinculacionFragment(
+      this.data?.solicitud?.id,
+      solicitudProyectoService,
+      unidadVinculacionService,
+      this.readonly
+    );
+
+    this.areaConocimiento = new SolicitudProyectoAreaConocimientoFragment(
+      this.data?.solicitud?.id,
+      solicitudProyectoAreaConocimiento,
+      solicitudService,
+      areaConocimientoService,
+      this.readonly
+    );
     this.hitos = new SolicitudHitosFragment(this.data?.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(this.data?.solicitud?.id, solicitudService, this.readonly);
     this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(
@@ -404,7 +431,13 @@ export class SolicitudActionService extends ActionService {
       personaService,
       this.readonly
     );
-    this.autoevaluacion = new SolicitudAutoevaluacionFragment(this.data?.solicitud, formlyService, checklistService, authService, languageService);
+    this.autoevaluacion = new SolicitudAutoevaluacionFragment(
+      this.data?.solicitud,
+      formlyService,
+      checklistService,
+      authService,
+      languageService
+    );
 
     // Fragments Socitudes Rrhh
     this.solicitanteRrhh = new SolicitudRrhhSolitanteFragment(
@@ -484,6 +517,7 @@ export class SolicitudActionService extends ActionService {
 
         this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
         this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
+        this.addFragment(this.FRAGMENT.UNIDADES_VINCULACION, this.unidadesVinculacion);
         this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
         this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
         this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
@@ -760,6 +794,7 @@ export class SolicitudActionService extends ActionService {
         && this.isFormularioSolicitudProyecto()
         && !this.proyectoDatos.isEdit()
         && (this.areaConocimiento.hasChanges()
+          || this.unidadesVinculacion.hasChanges()
           || this.clasificaciones.hasChanges()
           || this.equipoProyecto.hasChanges()
           || this.autoevaluacion.hasChanges())) {
