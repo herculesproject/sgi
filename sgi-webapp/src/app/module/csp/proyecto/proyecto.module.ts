@@ -27,6 +27,7 @@ import { ProyectoPeriodoJustificacionModalComponent } from './modals/proyecto-pe
 import { ProyectoPlazosModalComponent } from './modals/proyecto-plazos-modal/proyecto-plazos-modal.component';
 import { ProyectoRelacionModalComponent } from './modals/proyecto-relacion-modal/proyecto-relacion-modal.component';
 import { ProyectoResponsableEconomicoModalComponent } from './modals/proyecto-responsable-economico-modal/proyecto-responsable-economico-modal.component';
+import { ProyectoUnidadVinculacionModalComponent } from './modals/proyecto-unidad-vinculacion-modal/proyecto-unidad-vinculacion-modal.component';
 import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-convocante-plan.pipe';
 import { ProyectoAreaConocimientoListadoExportService } from './proyecto-area-conocimiento-listado-export.service';
 import { ProyectoCalendarioFacturacionListadoExportService } from './proyecto-calendario-facturacion-listado-export.service';
@@ -71,6 +72,7 @@ import { ProyectoProyectosSgeComponent } from './proyecto-formulario/proyecto-pr
 import { ProyectoRelacionesComponent } from './proyecto-formulario/proyecto-relaciones/proyecto-relaciones.component';
 import { ProyectoResponsableEconomicoComponent } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.component';
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
+import { ProyectoUnidadesVinculacionComponent } from './proyecto-formulario/proyecto-unidades-vinculacion/proyecto-unidades-vinculacion.component';
 import { ProyectoGeneralListadoExportService } from './proyecto-general-listado-export.service';
 import { ProyectoGruposInvestigacionIpListadoExportService } from './proyecto-grupos-investigacion-ips-listado-export.service';
 import { ProyectoHeaderListadoExportService } from './proyecto-header-listado-export.service';
@@ -85,6 +87,7 @@ import { ProyectoResponsableEconomicoListadoExportService } from './proyecto-res
 import { ProyectoRoutingModule } from './proyecto-routing.module';
 import { ProyectoSocioListadoExportService } from './proyecto-socio-listado-export.service';
 import { ProyectoSolicitudListadoExportService } from './proyecto-solicitud-listado-export.service';
+import { ProyectoUnidadVinculacionListadoExportService } from './proyecto-unidad-vinculacion-listado-export.service';
 
 @NgModule({
   declarations: [
@@ -134,7 +137,9 @@ import { ProyectoSolicitudListadoExportService } from './proyecto-solicitud-list
     ProyectoRelacionModalComponent,
     ProyectoResponsableEconomicoComponent,
     ProyectoResponsableEconomicoModalComponent,
-    ProyectoSociosComponent
+    ProyectoSociosComponent,
+    ProyectoUnidadesVinculacionComponent,
+    ProyectoUnidadVinculacionModalComponent
   ],
   imports: [
     CommonModule,
@@ -181,7 +186,8 @@ import { ProyectoSolicitudListadoExportService } from './proyecto-solicitud-list
     ProyectoRelacionListadoExportService,
     ProyectoResponsableEconomicoListadoExportService,
     ProyectoSocioListadoExportService,
-    ProyectoSolicitudListadoExportService
+    ProyectoSolicitudListadoExportService,
+    ProyectoUnidadVinculacionListadoExportService
   ]
 })
 export class ProyectoModule { }

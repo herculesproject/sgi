@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.csp.converter.ProyectoFaseConverter;
+import org.crue.hercules.sgi.csp.converter.ProyectoUnidadVinculacionConverter;
 import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaOnlyTituloOutput;
@@ -24,6 +25,8 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoUnidadVinculacionInput;
+import org.crue.hercules.sgi.csp.dto.ProyectoUnidadVinculacionOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectosCompetitivosPersonas;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudOnlyTituloOutput;
@@ -57,6 +60,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoUnidadVinculacion;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -91,8 +95,10 @@ import org.crue.hercules.sgi.csp.service.ProyectoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.ProyectoUnidadVinculacionService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -158,6 +164,7 @@ public class ProyectoController {
   public static final String PATH_SOLICITUD = PATH_ID + PATH_SEPARATOR + "solicitud";
   public static final String PATH_SOLICITUD_INV = PATH_ID + PATH_SEPARATOR + "solicitud-inv";
   public static final String PATH_CONVOCATORIA = PATH_ID + PATH_SEPARATOR + "convocatoria";
+  public static final String PATH_PROYECTO_UNIDADES_VINCULACION = PATH_ID + PATH_SEPARATOR + "unidades-vinculacion";
 
   private final ModelMapper modelMapper;
 
@@ -182,6 +189,8 @@ public class ProyectoController {
   private final ProyectoHitoService proyectoHitoService;
   private final ProyectoPalabraClaveService proyectoPalabraClaveService;
   private final ProyectoPaqueteTrabajoService proyectoPaqueteTrabajoService;
+  private final ProyectoUnidadVinculacionService proyectoUnidadVinculacionService;
+  private final ProyectoUnidadVinculacionConverter proyectoUnidadVinculacionConverter;
   private final ProyectoPartidaService proyectoPartidaService;
   private final ProyectoPeriodoJustificacionService proyectoPeriodoJustificacionService;
   private final ProyectoPeriodoSeguimientoDocumentoService proyectoPeriodoSeguimientoDocumentoService;
@@ -330,12 +339,6 @@ public class ProyectoController {
   }
 
   /**
-   * 
-   * PROYECTO HITO
-   * 
-   */
-
-  /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoHito} del
    * {@link Proyecto}.
    * 
@@ -360,12 +363,6 @@ public class ProyectoController {
     log.debug("findAllProyectoHito(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
-
-  /**
-   * 
-   * PROYECTO FASE
-   * 
-   */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoFase} del
@@ -394,12 +391,6 @@ public class ProyectoController {
   }
 
   /**
-   * 
-   * PROYECTO PAQUETE TRABAJO
-   * 
-   */
-
-  /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoPaqueteTrabajo} del
    * {@link Proyecto}.
    * 
@@ -426,12 +417,6 @@ public class ProyectoController {
   }
 
   /**
-   * 
-   * PROYECTO SOCIO
-   * 
-   */
-
-  /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoSocio} del
    * {@link Proyecto}.
    * 
@@ -456,12 +441,6 @@ public class ProyectoController {
     log.debug("findAllProyectoSocio(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
-
-  /**
-   * 
-   * PROYECTO ENTIDAD FINANCIADORA
-   * 
-   */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoEntidadFinanciadora}
@@ -491,12 +470,6 @@ public class ProyectoController {
   }
 
   /**
-   * 
-   * PROYECTO DOCUMENTOS
-   * 
-   */
-
-  /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoDocumento} del
    * {@link Proyecto}.
    * 
@@ -522,12 +495,6 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
-
-  /**
-   * 
-   * PROYECTO PERIODO SEGUIMIENTO
-   * 
-   */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoPeriodoSeguimiento}
@@ -556,12 +523,6 @@ public class ProyectoController {
   }
 
   /**
-   * 
-   * PROYECTO ENTIDAD GESTORA
-   * 
-   */
-
-  /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoEntidadGestora} del
    * {@link Proyecto}.
    * 
@@ -586,12 +547,6 @@ public class ProyectoController {
     log.debug("findAllProyectoEntidadGestora(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
-
-  /**
-   * 
-   * PROYECTO EQUIPO
-   * 
-   */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoEquipo} del
@@ -619,12 +574,6 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
-
-  /**
-   * 
-   * PROYECTO PRÓRROGA
-   * 
-   */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoProrroga} del
@@ -672,12 +621,6 @@ public class ProyectoController {
   }
 
   /**
-   * 
-   * PROYECTO ESTADO
-   * 
-   */
-
-  /**
    * Devuelve una lista de EstadoProyecto paginada y filtrada de {@link Proyecto}.
    * 
    * @param id     Identificador de {@link Proyecto}.
@@ -702,12 +645,6 @@ public class ProyectoController {
     return new ResponseEntity<>(page, HttpStatus.OK);
 
   }
-
-  /**
-   * 
-   * SOLICITUD
-   * 
-   */
 
   /**
    * Crea nuevo {@link Proyecto} a partir de los datos de una {@link Solicitud}
@@ -926,12 +863,6 @@ public class ProyectoController {
     log.debug("findAllProyectoPartida(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
-
-  /**
-   * 
-   * PROYECTO CONCEPTO GASTOS
-   * 
-   */
 
   /**
    * Devuelve una lista paginada y filtrada de {@link ProyectoConceptoGasto}
@@ -1345,7 +1276,7 @@ public class ProyectoController {
       @Valid @RequestBody List<ProyectoPalabraClaveInput> palabrasClave) {
     log.debug("updatePalabrasClave(Long proyectoId, List<ProyectoPalabraClaveInput> palabrasClave) - start");
 
-    palabrasClave.stream().forEach(palabraClave -> {
+    palabrasClave.forEach(palabraClave -> {
       if (!palabraClave.getProyectoId().equals(proyectoId)) {
         throw new NoRelatedEntitiesException(ProyectoPalabraClave.class, Proyecto.class);
       }
@@ -1855,6 +1786,49 @@ public class ProyectoController {
     log.debug("getAnualidadesFechasProyecto(Long id) - end");
     return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
         : new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve las {@link ProyectoUnidadVinculacion} asociadas al {@link Proyecto}
+   * con el id indicado.
+   *
+   * @param id     identificador del {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging información de la paginación.
+   * @return {@link ProyectoUnidadVinculacion} correspondientes al
+   *         {@link Proyecto}.
+   */
+  @GetMapping(PATH_PROYECTO_UNIDADES_VINCULACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-INV-VR')")
+  public Page<ProyectoUnidadVinculacionOutput> findUnidadesVinculacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findUnidadesVinculacion - id: {}, query: {}, paging: {}", id, query, SgiLogUtils.pageable(paging));
+    Page<ProyectoUnidadVinculacionOutput> output = proyectoUnidadVinculacionConverter
+        .convert(proyectoUnidadVinculacionService.findByProyectoId(id, query, paging));
+    log.debug("findUnidadesVinculacion - response: {}", SgiLogUtils.page(output));
+    return output;
+  }
+
+  /**
+   * Actualiza la lista de {@link ProyectoUnidadVinculacion} asociadas al
+   * {@link Proyecto} con el id indicado.
+   *
+   * @param id                  identificador del {@link Proyecto}.
+   * @param unidadesVinculacion nueva lista de {@link ProyectoUnidadVinculacion}
+   *                            del {@link Proyecto}.
+   * @return la nueva lista de {@link ProyectoUnidadVinculacion} asociadas al
+   *         {@link Proyecto}.
+   */
+  @PatchMapping(PATH_PROYECTO_UNIDADES_VINCULACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-C')")
+  public ResponseEntity<List<ProyectoUnidadVinculacionOutput>> updateUnidadesVinculacion(@PathVariable Long id,
+      @Valid @RequestBody List<ProyectoUnidadVinculacionInput> unidadesVinculacion) {
+    log.debug("updateUnidadesVinculacion - id: {}, unidades: {}", id, unidadesVinculacion);
+    List<ProyectoUnidadVinculacionOutput> output = proyectoUnidadVinculacionConverter
+        .convertProyectoUnidades(
+            proyectoUnidadVinculacionService.updateUnidadesVinculacion(id,
+                proyectoUnidadVinculacionConverter.convertProyectoUnidadesInput(unidadesVinculacion)));
+    return new ResponseEntity<>(output, HttpStatus.OK);
   }
 
 }

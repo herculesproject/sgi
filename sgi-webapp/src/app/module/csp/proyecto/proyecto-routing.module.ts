@@ -8,7 +8,7 @@ import { Module } from '@core/module';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard, SgiAuthRoutes } from '@herculesproject/framework/auth';
 import { ProyectoCrearComponent } from './proyecto-crear/proyecto-crear.component';
-import { PROYECTO_DATA_KEY, ProyectoDataResolver } from './proyecto-data.resolver';
+import { ProyectoDataResolver, PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoEditarComponent } from './proyecto-editar/proyecto-editar.component';
 import { ProyectoAgrupacionesGastoComponent } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.component';
 import { ProyectoAmortizacionFondosComponent } from './proyecto-formulario/proyecto-amortizacion-fondos/proyecto-amortizacion-fondos.component';
@@ -37,6 +37,7 @@ import { ProyectoProyectosSgeComponent } from './proyecto-formulario/proyecto-pr
 import { ProyectoRelacionesComponent } from './proyecto-formulario/proyecto-relaciones/proyecto-relaciones.component';
 import { ProyectoResponsableEconomicoComponent } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.component';
 import { ProyectoSociosComponent } from './proyecto-formulario/proyecto-socios/proyecto-socios.component';
+import { ProyectoUnidadesVinculacionComponent } from './proyecto-formulario/proyecto-unidades-vinculacion/proyecto-unidades-vinculacion.component';
 import { ProyectoListadoComponent } from './proyecto-listado/proyecto-listado.component';
 import { PROYECTO_ROUTE_NAMES } from './proyecto-route-names';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
@@ -291,6 +292,11 @@ const routes: SgiAuthRoutes = [
       {
         path: PROYECTO_ROUTE_NAMES.RELACIONES,
         component: ProyectoRelacionesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PROYECTO_ROUTE_NAMES.UNIDADES_VINCULACION,
+        component: ProyectoUnidadesVinculacionComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

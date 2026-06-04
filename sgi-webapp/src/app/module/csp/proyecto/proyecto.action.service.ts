@@ -66,6 +66,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
+import { UnidadVinculacionService } from '@core/services/sgo/unidad-vinculacion.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -109,6 +110,7 @@ import { ProyectoProyectosSgeFragment } from './proyecto-formulario/proyecto-pro
 import { ProyectoRelacionFragment } from './proyecto-formulario/proyecto-relaciones/proyecto-relaciones.fragment';
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
+import { ProyectoUnidadesVinculacionFragment } from './proyecto-formulario/proyecto-unidades-vinculacion/proyecto-unidades-vinculacion.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
 
 const MSG_SOLICITUDES = marker('csp.solicitud');
@@ -123,6 +125,8 @@ export interface IProyectoData {
   hasAnyProyectoSocioCoordinador: boolean;
   isVisor: boolean;
   isInvestigador: boolean;
+  isProyectoUnidadesVinculacionEnabled: boolean;
+  isProyectoAreasConocimientoEnabled: boolean;
 }
 
 @Injectable()
@@ -155,7 +159,8 @@ export class ProyectoActionService extends ActionService {
     CONSULTA_PRESUPUESTO: 'consulta-presupuesto',
     AMORTIZACION_FONDOS: 'amortizacion-fondos',
     RELACIONES: 'relaciones',
-    CALENDARIO_FACTURACION: 'calendario-facturacion'
+    CALENDARIO_FACTURACION: 'calendario-facturacion',
+    UNIDADES_VINCULACION: 'unidades-vinculacion'
   };
 
   private fichaGeneral: ProyectoFichaGeneralFragment;
@@ -185,6 +190,7 @@ export class ProyectoActionService extends ActionService {
   private amortizacionFondos: ProyectoAmortizacionFondosFragment;
   private relaciones: ProyectoRelacionFragment;
   private proyectoCalendarioFacturacion: ProyectoCalendarioFacturacionFragment;
+  private unidadesVinculacion: ProyectoUnidadesVinculacionFragment;
 
   private readonly data: IProyectoData;
 
@@ -257,6 +263,14 @@ export class ProyectoActionService extends ActionService {
     return this.data?.isInvestigador ?? (this.isModuleINV() && this.hasAnyAuthorityInv());
   }
 
+  get isProyectoUnidadesVinculacionEnabled(): boolean {
+    return this.data?.isProyectoUnidadesVinculacionEnabled ?? false;
+  }
+
+  get isProyectoAreasConocimientoEnabled(): boolean {
+    return this.data?.isProyectoAreasConocimientoEnabled ?? true;
+  }
+
   constructor(
     fb: FormBuilder,
     logger: NGXLogger,
@@ -321,6 +335,7 @@ export class ProyectoActionService extends ActionService {
     private readonly unidadGestionService: UnidadGestionService,
     private readonly viculacionService: VinculacionService,
     private readonly grupoService: GrupoService,
+    private readonly unidadVinculacionService: UnidadVinculacionService,
     private readonly languageService: LanguageService,
     private readonly snackBarService: SnackBarService,
   ) {
@@ -553,6 +568,12 @@ export class ProyectoActionService extends ActionService {
           configService,
           this.isInvestigador
         );
+        this.unidadesVinculacion = new ProyectoUnidadesVinculacionFragment(
+          id,
+          proyectoService,
+          unidadVinculacionService,
+          this.readonly
+        );
 
         this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
         this.addFragment(this.FRAGMENT.SOCIOS, this.socios);
@@ -580,6 +601,7 @@ export class ProyectoActionService extends ActionService {
         this.addFragment(this.FRAGMENT.AMORTIZACION_FONDOS, this.amortizacionFondos);
         this.addFragment(this.FRAGMENT.RELACIONES, this.relaciones);
         this.addFragment(this.FRAGMENT.CALENDARIO_FACTURACION, this.proyectoCalendarioFacturacion);
+        this.addFragment(this.FRAGMENT.UNIDADES_VINCULACION, this.unidadesVinculacion);
 
         this.proyectoEquipo.initialize();
 

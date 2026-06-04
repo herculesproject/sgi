@@ -4,11 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { ESTADO_MAP, Estado } from '@core/models/csp/estado-proyecto';
+import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -27,11 +26,11 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOpt
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subscription, from, merge, of } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { SOLICITUD_ACTION_LINK_KEY } from '../../solicitud/solicitud.action.service';
-import { ProyectoListadoExportModalComponent } from '../modals/proyecto-listado-export-modal/proyecto-listado-export-modal.component';
+import { IProyectoExportModalData, ProyectoListadoExportModalComponent } from '../modals/proyecto-listado-export-modal/proyecto-listado-export-modal.component';
 
 const MSG_ERROR = marker('error.load');
 const MSG_BUTTON_NEW = marker('btn.add.entity');
@@ -85,10 +84,26 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   private limiteRegistrosExportacionExcel: string;
 
+  // tslint:disable-next-line: variable-name
   private _isProyectoSocioPaisFilterEnabled: boolean;
 
   get isProyectoSocioPaisFilterEnabled(): boolean {
     return this._isProyectoSocioPaisFilterEnabled ?? false;
+  }
+
+  // tslint:disable-next-line: variable-name
+  private _isProyectoAreasConocimientoEnabled: boolean;
+
+  get isProyectoAreasConocimientoEnabled(): boolean {
+    return this._isProyectoAreasConocimientoEnabled ?? false;
+  }
+
+
+  // tslint:disable-next-line: variable-name
+  private _isProyectoUnidadesVinculacionEnabled: boolean;
+
+  get isProyectoUnidadesVinculacionEnabled(): boolean {
+    return this._isProyectoUnidadesVinculacionEnabled ?? false;
   }
 
   get ESTADO_MAP() {
@@ -131,7 +146,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         return 'titulo.value';
       }
       return column;
-    }
+    };
   }
 
   ngOnInit(): void {
@@ -167,6 +182,18 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         this._isProyectoSocioPaisFilterEnabled = isProyectoSocioPaisFilterEnabled;
       })
     );
+
+    this.subscriptions.push(
+      this.cspConfigService.isProyectoAreasConocimientoEnabled().subscribe(value => {
+        this._isProyectoAreasConocimientoEnabled = value;
+      })
+    );
+
+    this.subscriptions.push(
+      this.cspConfigService.isProyectoUnidadesVinculacionEnabled().subscribe(value => {
+        this._isProyectoUnidadesVinculacionEnabled = value;
+      })
+    );
   }
 
   private loadForm() {
@@ -199,7 +226,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       palabrasClave: new FormControl(null),
       modeloEjecucion: new FormControl(null),
       finalidad: new FormControl(null),
-      rolUniversidad: new FormControl(null)
+      rolUniversidad: new FormControl(null),
+      unidadVinculacion: new FormControl(null)
     });
     this.loadAmbitoGeografico();
     this.loadColectivos();
@@ -401,7 +429,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('solicitudId', SgiRestFilterOperator.EQUALS, this.solicitudId?.toString())
       .and('modeloEjecucion.id', SgiRestFilterOperator.EQUALS, controls.modeloEjecucion.value?.id?.toString())
       .and('finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString())
-      .and('rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString());
+      .and('rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString())
+      .and('unidadesVinculacion.unidadVinculacionRef', SgiRestFilterOperator.EQUALS, controls.unidadVinculacion.value?.id?.toString());
 
     const palabrasClave = controls.palabrasClave.value as string[];
     if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
@@ -533,7 +562,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
     return this.rolProyectoService.findAll(queryOptions).pipe(
       switchMap(response => from(response.items).pipe(
-        mergeMap(rolProyecto => this.rolProyectoService.findAllColectivos(rolProyecto.id).pipe(map(response => response.items))),
+        mergeMap(rolProyecto => this.rolProyectoService.findAllColectivos(rolProyecto.id).pipe(map(r => r.items))),
       )),
       toArray(),
       map(colectivos => [...new Set<string>([].concat(...colectivos))])
@@ -541,10 +570,12 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   openExportModal(): void {
-    const data: IBaseExportModalData = {
+    const data: IProyectoExportModalData = {
       findOptions: this.findOptions,
       totalRegistrosExportacionExcel: this.totalElementos,
-      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel),
+      isProyectoAreasConocimientoEnabled: this.isProyectoAreasConocimientoEnabled,
+      isProyectoUnidadesVinculacionEnabled: this.isProyectoUnidadesVinculacionEnabled
     };
 
     const config = {

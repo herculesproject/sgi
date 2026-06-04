@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -37,6 +37,7 @@ import { ProyectoRelacionListadoExportService } from '../../proyecto-relacion-li
 import { ProyectoResponsableEconomicoListadoExportService } from '../../proyecto-responsable-economico-listado-export.service';
 import { ProyectoSocioListadoExportService } from '../../proyecto-socio-listado-export.service';
 import { ProyectoSolicitudListadoExportService } from '../../proyecto-solicitud-listado-export.service';
+import { ProyectoUnidadVinculacionListadoExportService } from '../../proyecto-unidad-vinculacion-listado-export.service';
 import { ProyectoListadoExportModalComponent } from './proyecto-listado-export-modal.component';
 
 describe('ProyectoListadoExportModalComponent', () => {
@@ -91,6 +92,7 @@ describe('ProyectoListadoExportModalComponent', () => {
         ProyectoResponsableEconomicoListadoExportService,
         ProyectoSocioListadoExportService,
         ProyectoSolicitudListadoExportService,
+        ProyectoUnidadVinculacionListadoExportService,
         SgiAuthService
       ]
     })

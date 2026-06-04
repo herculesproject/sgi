@@ -12,6 +12,11 @@ import { IProyectoReportOptions, ProyectoListadoExportService } from '../../proy
 
 const PROYECTO_KEY = marker('csp.proyecto');
 
+export interface IProyectoExportModalData extends IBaseExportModalData {
+  isProyectoUnidadesVinculacionEnabled: boolean;
+  isProyectoAreasConocimientoEnabled: boolean;
+}
+
 @Component({
   templateUrl: './proyecto-listado-export-modal.component.html',
   styleUrls: ['./proyecto-listado-export-modal.component.scss']
@@ -30,11 +35,19 @@ export class ProyectoListadoExportModalComponent extends BaseExportModalComponen
     return this.modalData.limiteRegistrosExportacionExcel;
   }
 
+  get isProyectoUnidadesVinculacionEnabled(): boolean {
+    return this.modalData.isProyectoUnidadesVinculacionEnabled ?? false;
+  }
+
+  get isProyectoAreasConocimientoEnabled(): boolean {
+    return this.modalData.isProyectoAreasConocimientoEnabled ?? false;
+  }
+
   constructor(
     matDialogRef: MatDialogRef<ProyectoListadoExportModalComponent>,
     translate: TranslateService,
     proyectoListadoExportService: ProyectoListadoExportService,
-    @Inject(MAT_DIALOG_DATA) private modalData: IBaseExportModalData
+    @Inject(MAT_DIALOG_DATA) private modalData: IProyectoExportModalData
   ) {
     super(proyectoListadoExportService, translate, matDialogRef);
   }
@@ -56,7 +69,6 @@ export class ProyectoListadoExportModalComponent extends BaseExportModalComponen
     const formGroup = new FormGroup({
       outputType: new FormControl(this.outputType, Validators.required),
       showTodos: new FormControl(true),
-      showAreasConocimiento: new FormControl(true),
       showClasificaciones: new FormControl(true),
       showRelaciones: new FormControl(true),
       showEntidadGestora: new FormControl(true),
@@ -78,6 +90,14 @@ export class ProyectoListadoExportModalComponent extends BaseExportModalComponen
       showGruposInvestigacionIp: new FormControl(true)
     });
 
+    if (this.isProyectoUnidadesVinculacionEnabled) {
+      formGroup.addControl('showAreasConocimiento', new FormControl(true));
+    }
+
+    if (this.isProyectoUnidadesVinculacionEnabled) {
+      formGroup.addControl('showUnidadesVinculacion', new FormControl(true));
+    }
+
     Object.keys(formGroup.controls).forEach(key => {
       if (key.startsWith('show')) {
         this.subscriptions.push(formGroup.get(key).valueChanges.subscribe(() => {
@@ -87,10 +107,10 @@ export class ProyectoListadoExportModalComponent extends BaseExportModalComponen
           }
 
           let cont = 0;
-          Object.keys(formGroup.controls).forEach(key => {
-            if (key.startsWith('show') && !formGroup.get(key).value) {
+          Object.keys(formGroup.controls).forEach(k => {
+            if (k.startsWith('show') && !formGroup.get(k).value) {
               formGroup.controls.showTodos.setValue(false, { emitEvent: false });
-              if (key === 'showEntidadesConvocantes') {
+              if (k === 'showEntidadesConvocantes') {
                 formGroup.controls.showPlanesInvestigacion.setValue(false, { emitEvent: false });
               }
               cont++;
@@ -98,7 +118,7 @@ export class ProyectoListadoExportModalComponent extends BaseExportModalComponen
               formGroup.controls.showTodos.setValue(true, { emitEvent: false });
             }
           });
-        }))
+        }));
       }
     });
 
@@ -110,7 +130,7 @@ export class ProyectoListadoExportModalComponent extends BaseExportModalComponen
       outputType: this.formGroup.controls.outputType.value,
       reportOptions: {
         findOptions: this.modalData.findOptions,
-        showAreasConocimiento: this.formGroup.controls.showAreasConocimiento.value,
+        showAreasConocimiento: this.formGroup.controls.showAreasConocimiento?.value ?? false,
         showClasificaciones: this.formGroup.controls.showClasificaciones.value,
         showRelaciones: this.formGroup.controls.showRelaciones.value,
         showEntidadGestora: this.formGroup.controls.showEntidadGestora.value,
@@ -130,6 +150,7 @@ export class ProyectoListadoExportModalComponent extends BaseExportModalComponen
         showCalendarioJustificacion: this.formGroup.controls.showCalendarioJustificacion.value,
         showCalendarioFacturacion: this.formGroup.controls.showCalendarioFacturacion.value,
         showGruposInvestigacionIps: this.formGroup.controls.showGruposInvestigacionIp.value,
+        showUnidadesVinculacion: this.formGroup.controls.showUnidadesVinculacion?.value ?? false,
         columnMinWidth: 120
       }
     };

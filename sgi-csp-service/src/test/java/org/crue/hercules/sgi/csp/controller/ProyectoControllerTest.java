@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.converter.ProyectoFaseConverter;
+import org.crue.hercules.sgi.csp.converter.ProyectoUnidadVinculacionConverter;
 import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.dto.ProyectoFaseAvisoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoFaseOutput;
@@ -79,6 +80,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoResponsableEconomicoService;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.csp.service.ProyectoUnidadVinculacionService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -207,6 +209,12 @@ class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudService solicitudService;
+
+  @MockBean
+  private ProyectoUnidadVinculacionService proyectoUnidadVinculacionService;
+
+  @MockBean
+  private ProyectoUnidadVinculacionConverter proyectoUnidadVinculacionConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";

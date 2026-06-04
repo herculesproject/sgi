@@ -146,6 +146,7 @@ DELETE FROM test.notificacion_proyecto_externo_cvn_titulo;
 DELETE FROM test.notificacion_proyecto_externo_cvn;
 DELETE FROM test.proyecto_titulo;
 DELETE FROM test.proyecto_observaciones;
+DELETE FROM test.proyecto_unidad_vinculacion;
 DELETE FROM test.proyecto;
 DELETE FROM test.rol_proyecto_colectivo;
 DELETE FROM test.rol_proyecto_nombre;

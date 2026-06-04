@@ -263,7 +263,17 @@ public class Configuracion extends BaseEntity {
      * Habilitar visibilidad de Unidades de vinculación en Grupos de investigación
      * <code>grupoUnidadesVinculacionEnabled</code>
      */
-    GRUPO_UNIDADES_VINCULACION_ENABLED("grupoUnidadesVinculacionEnabled");
+    GRUPO_UNIDADES_VINCULACION_ENABLED("grupoUnidadesVinculacionEnabled"),
+    /**
+     * Habilitar visibilidad de Unidades de vinculación en Proyectos
+     * <code>proUnidadesVinculacion</code>
+     */
+    PROYECTO_UNIDADES_VINCULACION_ENABLED("proyectoUnidadesVinculacionEnabled"),
+    /**
+     * Habilitar menú de Áreas de conocimiento en Proyectos y Solicitudes
+     * <code>proAreasConocimiento</code>
+     */
+    PROYECTO_AREAS_CONOCIMIENTO_ENABLED("proyectoAreasConocimientoEnabled");
 
     private final String key;
 
@@ -499,6 +509,18 @@ public class Configuracion extends BaseEntity {
   @Column(name = "grupo_unidades_vinculacion_enabled", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean grupoUnidadesVinculacionEnabled;
 
+  /**
+   * Habilitar visibilidad de Unidades de vinculación en Proyectos
+   */
+  @Column(name = "proyecto_unidades_vinculacion_enabled", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean proyectoUnidadesVinculacionEnabled;
+
+  /**
+   * Habilitar menú de Áreas de conocimiento en Proyectos y Solicitudes
+   */
+  @Column(name = "proyecto_areas_conocimiento_enabled", columnDefinition = "boolean default true", nullable = false, unique = true)
+  private Boolean proyectoAreasConocimientoEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -571,6 +593,10 @@ public class Configuracion extends BaseEntity {
         return this.getSgeEliminarRelacionProyectoEnabled();
       case GRUPO_UNIDADES_VINCULACION_ENABLED:
         return this.getGrupoUnidadesVinculacionEnabled();
+      case PROYECTO_UNIDADES_VINCULACION_ENABLED:
+        return this.getProyectoUnidadesVinculacionEnabled();
+      case PROYECTO_AREAS_CONOCIMIENTO_ENABLED:
+        return this.getProyectoAreasConocimientoEnabled();
       default:
         return null;
     }
@@ -692,6 +718,12 @@ public class Configuracion extends BaseEntity {
         break;
       case GRUPO_UNIDADES_VINCULACION_ENABLED:
         this.setGrupoUnidadesVinculacionEnabled(Boolean.valueOf(newValue));
+        break;
+      case PROYECTO_UNIDADES_VINCULACION_ENABLED:
+        this.setProyectoUnidadesVinculacionEnabled(Boolean.valueOf(newValue));
+        break;
+      case PROYECTO_AREAS_CONOCIMIENTO_ENABLED:
+        this.setProyectoAreasConocimientoEnabled(Boolean.valueOf(newValue));
         break;
     }
   }
