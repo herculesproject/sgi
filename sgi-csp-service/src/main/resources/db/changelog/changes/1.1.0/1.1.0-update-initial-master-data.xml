@@ -131,4 +131,79 @@
     <dropColumn tableName="tipo_confidencialidad" columnName="codigo" />
   </changeSet>
 
+  <changeSet author="master" id="1.1.0-fix-configuracion-defaults-null">
+      <!-- v0.5.0 -->
+      <update tableName="configuracion">
+        <column name="gin_ejecucion_economica" valueBoolean="true" />
+        <where>gin_ejecucion_economica IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="partidas_presupuestarias_sge" valueBoolean="false" />
+        <where>partidas_presupuestarias_sge IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_amortizacion_fondos" valueBoolean="true" />
+        <where>sge_amortizacion_fondos IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_alta_buscador" valueBoolean="true" />
+        <where>sge_alta_buscador IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_gastos_justificados" valueBoolean="true" />
+        <where>sge_gastos_justificados IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_modificacion" valueBoolean="false" />
+        <where>sge_modificacion IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_sector_iva" valueBoolean="true" />
+        <where>sge_sector_iva IS NULL</where>
+      </update>
+      <!-- v0.9.0 -->
+      <update tableName="configuracion">
+        <column name="csp_pro_socio_pais_filter_enabled" valueBoolean="true" />
+        <where>csp_pro_socio_pais_filter_enabled IS NULL</where>
+      </update>
+      <!-- v0.10.0 -->
+      <update tableName="configuracion">
+        <column name="inv_solicitudes_sin_convocatoria" valueBoolean="false" />
+        <where>inv_solicitudes_sin_convocatoria IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_notificacion_presupuesto" valueBoolean="false" />
+        <where>sge_notificacion_presupuesto IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="pro_anualidad_anio_formato" valueBoolean="true" />
+        <where>pro_anualidad_anio_formato IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_ejecucionpresupuestaria_gastos_detalle" valueBoolean="false" />
+        <where>sge_ejecucionpresupuestaria_gastos_detalle IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_detalleoperaciones_gastos_detalle" valueBoolean="false" />
+        <where>sge_detalleoperaciones_gastos_detalle IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="sge_eliminar_relacion_proyecto" valueBoolean="false" />
+        <where>sge_eliminar_relacion_proyecto IS NULL</where>
+      </update>
+      <!-- v1.1.0 -->
+      <update tableName="configuracion">
+        <column name="grupo_unidades_vinculacion_enabled" valueBoolean="false" />
+        <where>grupo_unidades_vinculacion_enabled IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="proyecto_unidades_vinculacion_enabled" valueBoolean="false" />
+        <where>proyecto_unidades_vinculacion_enabled IS NULL</where>
+      </update>
+      <update tableName="configuracion">
+        <column name="proyecto_areas_conocimiento_enabled" valueBoolean="true" />
+        <where>proyecto_areas_conocimiento_enabled IS NULL</where>
+      </update>
+    </changeSet>
+
 </databaseChangeLog>
