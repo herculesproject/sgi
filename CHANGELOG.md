@@ -35,6 +35,8 @@
 ### Fixed
 - [CSP] Se corrige error al clonar una convocatoria cuando sus periodos de justificación tienen observaciones ([#62](https://github.com/herculesproject/sgi/issues/62)).
 - [CSP] Corregido el nombre del concepto de gasto que se mostraba como `[object Object]` en el listado de códigos económicos no permitidos al añadir una partida de gasto en el presupuesto del proyecto ([#74](https://github.com/herculesproject/sgi/issues/74)).
+- [CSP] Corregidos valores NULL en columnas booleanas de `configuracion` en SQL Server y Oracle, donde el valor por defecto no se aplica automáticamente a las filas existentes al añadir columnas ([#90](https://github.com/herculesproject/sgi/issues/90)).
+
 
 
 ### Changed
