@@ -19,5 +19,6 @@ export const SOLICITUD_ROUTE_NAMES = {
   SOLICITANTE: 'solicitante',
   TUTOR: 'tutor',
   REQUISITOS_CONVOCATORIA: 'requisitos-convocatoria',
-  MEMORIA: 'memoria'
+  MEMORIA: 'memoria',
+  UNIDADES_VINCULACION: 'unidades-vinculacion'
 };

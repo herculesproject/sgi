@@ -167,42 +167,56 @@ public class SolicitudProyecto extends BaseEntity {
   @JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTO_SOLICITUD"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final Solicitud solicitud = null;
 
   @ManyToOne
   @JoinColumn(name = "rol_universidad", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDPROYECTO_ROLSOCIO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final RolSocio rolUniversidad = null;
 
   @OneToMany(mappedBy = "solicitudProyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<SolicitudProyectoEquipo> equipo = null;
 
   @OneToMany(mappedBy = "solicitudProyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<SolicitudProyectoEntidadFinanciadoraAjena> entidadesFinanciadorasAjenas = null;
 
   @OneToMany(mappedBy = "solicitudProyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<SolicitudProyectoPresupuesto> presupuesto = null;
 
   @OneToMany(mappedBy = "solicitudProyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<SolicitudProyectoSocio> socios = null;
 
   @OneToMany(mappedBy = "solicitudProyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<SolicitudProyectoEntidad> entidades = null;
 
   @OneToMany(mappedBy = "solicitudProyecto")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<SolicitudProyectoResponsableEconomico> responsablesEconomicos = null;
+
+  @OneToMany(mappedBy = "solicitudProyecto")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
+  private final List<SolicitudProyectoUnidadVinculacion> unidadesVinculacion = null;
 
 }

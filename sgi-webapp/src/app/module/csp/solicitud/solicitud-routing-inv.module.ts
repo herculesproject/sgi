@@ -11,7 +11,7 @@ import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { SOLICITUD_PROYECTO_PRESUPUESTO_AJENA_KEY, SOLICITUD_PROYECTO_PRESUPUESTO_FINANCIADORA_KEY } from '../solicitud-proyecto-presupuesto/solicitud-proyecto-presupuesto-data.resolver';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
 import { SolicitudCrearGuard } from './solicitud-crear/solicitud-crear.guard';
-import { SOLICITUD_DATA_KEY, SolicitudDataResolver } from './solicitud-data.resolver';
+import { SolicitudDataResolver, SOLICITUD_DATA_KEY } from './solicitud-data.resolver';
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
 import { SolicitudAutoevaluacionComponent } from './solicitud-formulario/solicitud-autoevaluacion/solicitud-autoevaluacion.component';
 import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
@@ -26,6 +26,7 @@ import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/s
 import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-entidades/solicitud-proyecto-presupuesto-entidades.component';
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
+import { SolicitudProyectoUnidadesVinculacionComponent } from './solicitud-formulario/solicitud-proyecto-unidades-vinculacion/solicitud-proyecto-unidades-vinculacion.component';
 import { SolicitudRrhhMemoriaComponent } from './solicitud-formulario/solicitud-rrhh-memoria/solicitud-rrhh-memoria.component';
 import { SolicitudRrhhRequisitosConvocatoriaComponent } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.component';
 import { SolicitudRrhhSolitanteComponent } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.component';
@@ -105,6 +106,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.PROYECTO_AREA_CONOCIMIENTO,
         component: SolicitudProyectoAreaConocimientoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.UNIDADES_VINCULACION,
+        component: SolicitudProyectoUnidadesVinculacionComponent,
         canDeactivate: [FragmentGuard]
       },
       {

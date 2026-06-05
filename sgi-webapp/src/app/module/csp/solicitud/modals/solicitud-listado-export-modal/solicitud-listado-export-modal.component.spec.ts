@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -24,6 +24,7 @@ import { SolicitudProyectoEquipoListadoExportService } from '../../solicitud-pro
 import { SolicitudProyectoFichaGeneralListadoExportService } from '../../solicitud-proyecto-ficha-general-listado-export.service';
 import { SolicitudProyectoResponsableEconomicoListadoExportService } from '../../solicitud-proyecto-responsable-economico-listado-export.service';
 import { SolicitudProyectoSocioListadoExportService } from '../../solicitud-proyecto-socio-listado-export.service';
+import { SolicitudProyectoUnidadVinculacionListadoExportService } from '../../solicitud-proyecto-unidad-vinculacion-listado-export.service';
 import { SolicitudRrhhListadoExportService } from '../../solicitud-rrhh-listado-export.service';
 import { SolicitudListadoExportModalComponent } from './solicitud-listado-export-modal.component';
 
@@ -66,6 +67,7 @@ describe('SolicitudListadoExportModalComponent', () => {
         SolicitudProyectoFichaGeneralListadoExportService,
         SolicitudProyectoResponsableEconomicoListadoExportService,
         SolicitudProyectoSocioListadoExportService,
+        SolicitudProyectoUnidadVinculacionListadoExportService,
         SolicitudRrhhListadoExportService
       ]
     })

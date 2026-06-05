@@ -63,6 +63,7 @@ DELETE FROM test.solicitud_proyecto_socio;
 DELETE FROM test.solicitud_proyecto_entidad;
 DELETE FROM test.solicitud_proyecto_entidad_financiadora_ajena;
 DELETE FROM test.solicitud_proyecto_equipo;
+DELETE FROM test.solicitud_proyecto_unidad_vinculacion;
 DELETE FROM test.anualidad_gasto;
 DELETE FROM test.anualidad_ingreso;
 DELETE FROM test.proyecto_periodo_amortizacion;

@@ -8,8 +8,8 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessSolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToChangeEstadoSolicitudException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudException;
-import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
@@ -309,8 +309,7 @@ public class SolicitudAuthorityHelper extends AuthorityHelper {
   private boolean validateCambioEstadoInvestigador(Estado estadoActual, Estado nuevoEstado) {
     boolean isCambioEstadoValido;
     switch (estadoActual) {
-      case BORRADOR:
-      case RECHAZADA:
+      case BORRADOR, RECHAZADA:
         isCambioEstadoValido = nuevoEstado.equals(Estado.SOLICITADA) || nuevoEstado.equals(Estado.DESISTIDA);
         break;
       case SUBSANACION:

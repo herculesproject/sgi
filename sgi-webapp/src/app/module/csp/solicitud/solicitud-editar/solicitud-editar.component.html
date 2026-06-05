@@ -12,7 +12,13 @@
           [title]="'label.ficha-general' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTO_DATOS)">
         </sgi-action-fragment-menu-item>
-        <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.PROYECTO_AREA_CONOCIMIENTO]"
+        <sgi-action-fragment-menu-item *ngIf="actionService.isProyectoUnidadesVinculacionEnabled"
+          [route]="[SOLICITUD_ROUTE_NAMES.UNIDADES_VINCULACION]"
+          [title]="'csp.solicitud-proyecto-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.UNIDADES_VINCULACION)">
+        </sgi-action-fragment-menu-item>
+        <sgi-action-fragment-menu-item *ngIf="actionService.isProyectoAreasConocimientoEnabled"
+          [route]="[SOLICITUD_ROUTE_NAMES.PROYECTO_AREA_CONOCIMIENTO]"
           [title]="'label.areas-conocimiento' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO)">
         </sgi-action-fragment-menu-item>

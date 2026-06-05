@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -113,7 +112,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
             .build());
 
     return repository.findById(solicitudProyecto.getId()).map(
-        (solicitudProyectoExistente) -> updateExistingSolicitudProyecto(solicitudProyecto, solicitudProyectoExistente))
+        solicitudProyectoExistente -> updateExistingSolicitudProyecto(solicitudProyecto, solicitudProyectoExistente))
         .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyecto.getId()));
   }
 
@@ -159,26 +158,6 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
         .orElseThrow(() -> new SolicitudProyectoNotFoundException(id));
     log.debug("findById(Long id) - end");
     return returnValue;
-  }
-
-  /**
-   * Elimina la {@link SolicitudProyecto}.
-   *
-   * @param id Id del {@link SolicitudProyecto}.
-   */
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    log.debug("delete(Long id) - start");
-
-    AssertHelper.idNotNull(id, SolicitudProyecto.class);
-    if (!repository.existsById(id)) {
-      throw new SolicitudProyectoNotFoundException(id);
-    }
-
-    repository.deleteById(id);
-    log.debug("delete(Long id) - end");
-
   }
 
   /**
@@ -270,7 +249,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
               solicitudProyectoEntidadFinanciadora.setSolicitudProyectoId(solicitudProyectoId);
               solicitudProyectoEntidadFinanciadora.setConvocatoriaEntidadFinanciadora(convocatoriaEntidadFinanciadora);
               return solicitudProyectoEntidadFinanciadora;
-            }).collect(Collectors.toList());
+            }).toList();
 
         solicitudProyectoEntidadRepository.saveAll(solicitudProyectoEntidadesFinanciadoras);
 
@@ -281,7 +260,7 @@ public class SolicitudProyectoServiceImpl implements SolicitudProyectoService {
               solicitudProyectoEntidadGestora.setSolicitudProyectoId(solicitudProyectoId);
               solicitudProyectoEntidadGestora.setConvocatoriaEntidadGestora(convocatoriaEntidadGestora);
               return solicitudProyectoEntidadGestora;
-            }).collect(Collectors.toList());
+            }).toList();
 
         solicitudProyectoEntidadRepository.saveAll(solicitudProyectoEntidadesGestoras);
       }

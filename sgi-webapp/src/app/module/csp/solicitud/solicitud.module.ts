@@ -19,6 +19,7 @@ import { SolicitudListadoExportModalComponent } from './modals/solicitud-listado
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
 import { SolicitudProyectoPresupuestoListadoExportModalComponent } from './modals/solicitud-proyecto-presupuesto-listado-export-modal/solicitud-proyecto-presupuesto-listado-export-modal.component';
 import { SolicitudProyectoResponsableEconomicoModalComponent } from './modals/solicitud-proyecto-responsable-economico-modal/solicitud-proyecto-responsable-economico-modal.component';
+import { SolicitudProyectoUnidadVinculacionModalComponent } from './modals/solicitud-proyecto-unidad-vinculacion-modal/solicitud-proyecto-unidad-vinculacion-modal.component';
 import { SolicitudRrhhAcreditarCategoriaProfesionalModalComponent } from './modals/solicitud-rrhh-acreditar-categoria-profesional/solicitud-rrhh-acreditar-categoria-profesional-modal.component';
 import { SolicitudRrhhAcreditarNivelAcademicoModalComponent } from './modals/solicitud-rrhh-acreditar-nivel-academico/solicitud-rrhh-acreditar-nivel-academico-modal.component';
 import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.component';
@@ -40,6 +41,7 @@ import { SolicitudProyectoPresupuestoEntidadesComponent } from './solicitud-form
 import { SolicitudProyectoPresupuestoGlobalComponent } from './solicitud-formulario/solicitud-proyecto-presupuesto-global/solicitud-proyecto-presupuesto-global.component';
 import { SolicitudProyectoResponsableEconomicoComponent } from './solicitud-formulario/solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico.component';
 import { SolicitudProyectoSocioComponent } from './solicitud-formulario/solicitud-proyecto-socio/solicitud-proyecto-socio.component';
+import { SolicitudProyectoUnidadesVinculacionComponent } from './solicitud-formulario/solicitud-proyecto-unidades-vinculacion/solicitud-proyecto-unidades-vinculacion.component';
 import { SolicitudRrhhMemoriaComponent } from './solicitud-formulario/solicitud-rrhh-memoria/solicitud-rrhh-memoria.component';
 import { SolicitudRrhhRequisitosConvocatoriaComponent } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.component';
 import { SolicitudRrhhSolitanteComponent } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.component';
@@ -56,6 +58,7 @@ import { SolicitudProyectoFichaGeneralListadoExportService } from './solicitud-p
 import { SolicitudProyectoPresupuestoListadoExportService } from './solicitud-proyecto-presupuesto-listado-export.service';
 import { SolicitudProyectoResponsableEconomicoListadoExportService } from './solicitud-proyecto-responsable-economico-listado-export.service';
 import { SolicitudProyectoSocioListadoExportService } from './solicitud-proyecto-socio-listado-export.service';
+import { SolicitudProyectoUnidadVinculacionListadoExportService } from './solicitud-proyecto-unidad-vinculacion-listado-export.service';
 import { SolicitudRoutingModule } from './solicitud-routing.module';
 import { SolicitudRrhhListadoExportService } from './solicitud-rrhh-listado-export.service';
 
@@ -86,6 +89,8 @@ import { SolicitudRrhhListadoExportService } from './solicitud-rrhh-listado-expo
     SolicitudProyectoPresupuestoListadoExportModalComponent,
     SolicitudProyectoResponsableEconomicoComponent,
     SolicitudProyectoResponsableEconomicoModalComponent,
+    SolicitudProyectoUnidadVinculacionModalComponent,
+    SolicitudProyectoUnidadesVinculacionComponent,
     SolicitudProyectoSocioComponent,
     SolicitudRrhhAcreditarCategoriaProfesionalModalComponent,
     SolicitudRrhhAcreditarNivelAcademicoModalComponent,
@@ -125,6 +130,7 @@ import { SolicitudRrhhListadoExportService } from './solicitud-rrhh-listado-expo
     SolicitudProyectoPresupuestoListadoExportService,
     SolicitudProyectoResponsableEconomicoListadoExportService,
     SolicitudProyectoSocioListadoExportService,
+    SolicitudProyectoUnidadVinculacionListadoExportService,
     SolicitudRrhhListadoExportService
   ]
 })
