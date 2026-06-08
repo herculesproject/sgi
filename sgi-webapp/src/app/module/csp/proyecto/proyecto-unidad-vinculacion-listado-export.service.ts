@@ -17,7 +17,7 @@ import { IProyectoReportData, IProyectoReportOptions } from './proyecto-listado-
 
 const UNIDAD_KEY = marker('csp.proyecto-unidad-vinculacion');
 const TIPO_UNIDAD_KEY = marker('csp.proyecto-unidad-vinculacion.tipo-unidad');
-const UNIDAD_FIELD_KEY = marker('csp.proyecto-unidad-vinculacion.unidad');
+const VALOR_KEY = marker('csp.proyecto-unidad-vinculacion.valor');
 
 const TIPO_UNIDAD_FIELD = 'tipoUnidad';
 const UNIDAD_FIELD = 'unidad';
@@ -31,8 +31,8 @@ export class ProyectoUnidadVinculacionListadoExportService
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private proyectoService: ProyectoService,
-    private unidadVinculacionService: UnidadVinculacionService
+    private readonly proyectoService: ProyectoService,
+    private readonly unidadVinculacionService: UnidadVinculacionService
   ) {
     super(translate);
   }
@@ -51,10 +51,6 @@ export class ProyectoUnidadVinculacionListadoExportService
     );
   }
 
-  /**
-   * Construye el listado de unidades de vinculación del proyecto resolviendo, en lote contra el SGO, tanto el detalle
-   * de cada unidad asignada (`unidadVinculacion`) como su elemento raíz en la jerarquía (`tipoUnidad`).
-   */
   private populateUnidadesVinculacionConTipo(items: IProyectoUnidadVinculacion[]): Observable<IProyectoUnidadVinculacionListado[]> {
     if (!items?.length) {
       return of([]);
@@ -144,25 +140,29 @@ export class ProyectoUnidadVinculacionListadoExportService
 
   private getColumnsUnidadExcel(proyectos: IProyectoReportData[]): ISgiColumnReport[] {
     const columns: ISgiColumnReport[] = [];
-
-    const maxNumUnidades = Math.max(...proyectos.map(p => p.unidadesVinculacion ? p.unidadesVinculacion.length : 0));
     const titleUnidadesVinculacion = this.translate.instant(UNIDAD_KEY, MSG_PARAMS.CARDINALIRY.PLURAL);
+    const titleTipo = this.translate.instant(TIPO_UNIDAD_KEY);
+    const titleValor = this.translate.instant(VALOR_KEY);
 
-    for (let i = 0; i < maxNumUnidades; i++) {
-      const idx: string = String(i + 1);
+    this.getDistinctTiposUnidad(proyectos).forEach((tipoUnidad, tipoIdx) => {
+      const indexTipo = String(tipoIdx + 1);
 
       columns.push({
-        name: TIPO_UNIDAD_FIELD + idx,
-        title: `${titleUnidadesVinculacion}: ${this.translate.instant(TIPO_UNIDAD_KEY)} ${idx}`,
+        name: TIPO_UNIDAD_FIELD + indexTipo,
+        title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleTipo}`,
         type: ColumnType.STRING,
       });
 
-      columns.push({
-        name: UNIDAD_FIELD + idx,
-        title: `${titleUnidadesVinculacion}: ${this.translate.instant(UNIDAD_FIELD_KEY)} ${idx}`,
-        type: ColumnType.STRING,
-      });
-    }
+      const maxUnidades = this.getMaxNumUnidadesByTipo(proyectos, tipoUnidad.id);
+      for (let j = 0; j < maxUnidades; j++) {
+        const indexValor = String(j + 1);
+        columns.push({
+          name: `${UNIDAD_FIELD}${indexTipo}_${indexValor}`,
+          title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleValor} ${indexValor}`,
+          type: ColumnType.STRING,
+        });
+      }
+    });
 
     return columns;
   }
@@ -172,23 +172,38 @@ export class ProyectoUnidadVinculacionListadoExportService
     const elementsRow: any[] = [];
 
     if (this.isExcelOrCsv(reportConfig.outputType)) {
-      const maxNumUnidades = Math.max(...proyectos.map(p => p.unidadesVinculacion ? p.unidadesVinculacion.length : 0));
-      for (let i = 0; i < maxNumUnidades; i++) {
-        const unidad = proyecto.unidadesVinculacion ? proyecto.unidadesVinculacion[i] ?? null : null;
-        this.fillRowExcel(elementsRow, unidad);
-      }
+      this.getDistinctTiposUnidad(proyectos).forEach(tipoUnidad => {
+        const unidades = (proyecto.unidadesVinculacion ?? []).filter(unidad => unidad.tipoUnidad?.id === tipoUnidad.id);
+        elementsRow.push(tipoUnidad.nombre ?? '');
+
+        const maxUnidades = this.getMaxNumUnidadesByTipo(proyectos, tipoUnidad.id);
+        for (let j = 0; j < maxUnidades; j++) {
+          elementsRow.push(unidades[j]?.unidadVinculacion?.nombre ?? '');
+        }
+      });
     }
     return elementsRow;
   }
 
-  private fillRowExcel(elementsRow: any[], proyectoUnidadVinculacion: IProyectoUnidadVinculacionListado): void {
-    if (proyectoUnidadVinculacion) {
-      elementsRow.push(proyectoUnidadVinculacion.tipoUnidad?.nombre ?? '');
-      elementsRow.push(proyectoUnidadVinculacion.unidadVinculacion?.nombre ?? '');
-    } else {
-      elementsRow.push('');
-      elementsRow.push('');
-    }
+  private getDistinctTiposUnidad(proyectos: IProyectoReportData[]): IUnidadVinculacion[] {
+    const tiposUnidad = new Map<string, IUnidadVinculacion>();
+    proyectos.forEach(proyecto =>
+      (proyecto.unidadesVinculacion ?? []).forEach(unidad => {
+        if (unidad.tipoUnidad?.id != null) {
+          tiposUnidad.set(unidad.tipoUnidad.id, unidad.tipoUnidad);
+        }
+      })
+    );
+    return [...tiposUnidad.values()].sort((a, b) => (a.nombre ?? '').localeCompare(b.nombre ?? ''));
+  }
+
+  private getMaxNumUnidadesByTipo(proyectos: IProyectoReportData[], tipoUnidadId: string): number {
+    return Math.max(
+      ...proyectos.map(proyecto => (proyecto.unidadesVinculacion ?? [])
+        .filter(unidad => unidad.tipoUnidad?.id === tipoUnidadId)
+        .length
+      )
+    );
   }
 
 }
