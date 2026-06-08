@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
@@ -10,13 +10,13 @@ import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { Module } from '@core/module';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
-import { LanguageService } from '@core/services/language.service';
+import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 
@@ -49,10 +49,10 @@ export class SolicitudGrupoModalComponent extends DialogActionComponent<ISolicit
     @Inject(MAT_DIALOG_DATA) data: ISolicitudGrupo,
     private readonly translate: TranslateService,
     private readonly router: Router,
-    private grupoService: GrupoService,
-    private solicitudService: SolicitudService,
-    private vinculacionService: VinculacionService,
-    private languageService: LanguageService
+    private readonly grupoService: GrupoService,
+    private readonly personaService: PersonaService,
+    private readonly solicitudService: SolicitudService,
+    private readonly vinculacionService: VinculacionService
   ) {
     super(matDialogRef, false);
     this.solicitudGrupo = { ...data };
@@ -92,12 +92,27 @@ export class SolicitudGrupoModalComponent extends DialogActionComponent<ISolicit
   protected saveOrUpdate(): Observable<ISolicitudGrupo> {
     const solicitudGrupoNew = this.getValue();
 
-    return this.vinculacionService.findByPersonaId(solicitudGrupoNew.solicitud.solicitante.id).pipe(
-      catchError((err) => {
-        this.logger.error(err);
-        return of(null);
+    const personaId = solicitudGrupoNew.solicitud.solicitante.id;
+
+    return forkJoin({
+      persona: this.personaService.findById(personaId).pipe(
+        catchError((err) => {
+          this.logger.error(err);
+          return of(null);
+        })
+      ),
+      vinculacion: this.vinculacionService.findByPersonaId(personaId).pipe(
+        catchError((err) => {
+          this.logger.error(err);
+          return of(null);
+        })
+      )
+    }).pipe(
+      switchMap(({ persona, vinculacion }) => {
+        const emailPrincipal = persona?.emails?.find(email => email.principal)?.email ?? null;
+        solicitudGrupoNew.grupo.email = emailPrincipal;
+        return this.grupoService.getNextCodigo(vinculacion ? vinculacion.departamento.id : SGI_DEP);
       }),
-      switchMap(vinculacion => this.grupoService.getNextCodigo(vinculacion ? vinculacion.departamento.id : SGI_DEP)),
       switchMap(codigoGenerated => {
         solicitudGrupoNew.grupo.codigo = codigoGenerated;
         return this.solicitudService.createGrupoBySolicitud(solicitudGrupoNew.solicitud.id, solicitudGrupoNew.grupo);
