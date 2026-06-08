@@ -13,6 +13,7 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { GrupoCrearComponent } from './grupo-crear/grupo-crear.component';
 import { GrupoDataResolver } from './grupo-data.resolver';
+import { GrupoDescriptorListadoExportService } from './grupo-descriptor-listado-export.service';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoEnlaceListadoExportService } from './grupo-enlace-listado-export.service';
 import { GrupoEquipoInstrumentalListadoExportService } from './grupo-equipo-instrumental-listado-export.service';
@@ -97,6 +98,7 @@ import { GrupoUnidadVinculacionModalComponent } from './modals/grupo-unidad-vinc
     GrupoEquipoListadoExportService,
     GrupoGeneralListadoExportService,
     GrupoLineaInvestigacionListadoExportService,
+    GrupoDescriptorListadoExportService,
     GrupoListadoExportService,
     GrupoPersonaAutorizadaListadoExportService,
     GrupoRelacionInstitucionalListadoExportService,

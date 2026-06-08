@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IGrupo } from '@core/models/csp/grupo';
+import { IGrupoDescriptor } from '@core/models/csp/grupo-descriptor';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
 import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
@@ -21,6 +22,7 @@ import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { GrupoLineaClasificacionListado } from '../grupo-linea-investigacion/grupo-linea-investigacion-formulario/grupo-linea-clasificaciones/grupo-linea-clasificaciones.fragment';
+import { GrupoDescriptorListadoExportService } from './grupo-descriptor-listado-export.service';
 import { GrupoEnlaceListadoExportService } from './grupo-enlace-listado-export.service';
 import { GrupoEquipoInstrumentalListadoExportService } from './grupo-equipo-instrumental-listado-export.service';
 import { GrupoEquipoListadoExportService } from './grupo-equipo-listado-export.service';
@@ -45,6 +47,7 @@ export interface IGrupoReportData extends IGrupo {
   lineasEquiposInstrumentales?: IGrupoLineaEquipoInstrumental[];
   relacionesInstitucionales?: IGrupoRelacionInstitucional[];
   unidadesVinculacion?: IGrupoUnidadVinculacionListado[];
+  descriptores?: IGrupoDescriptor[];
 }
 
 export interface IGrupoReportOptions extends IReportOptions {
@@ -56,6 +59,7 @@ export interface IGrupoReportOptions extends IReportOptions {
   showEquiposInstrumentales: boolean;
   showRelacionesInstitucionales: boolean;
   showUnidadesVinculacion: boolean;
+  showDescriptores: boolean;
 }
 
 @Injectable()
@@ -73,6 +77,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     private readonly grupoEquipoInstrumentalListadoExportService: GrupoEquipoInstrumentalListadoExportService,
     private readonly grupoRelacionInstitucionalListadoExportService: GrupoRelacionInstitucionalListadoExportService,
     private readonly grupoUnidadListadoExportService: GrupoUnidadVinculacionListadoExportService,
+    private readonly grupoDescriptorListadoExportService: GrupoDescriptorListadoExportService,
     protected reportService: ReportService
   ) {
     super(reportService);
@@ -124,6 +129,9 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
         if (reportConfig.reportOptions?.showUnidadesVinculacion) {
           row.elements.push(...this.grupoUnidadListadoExportService.fillRows(grupos, index, reportConfig));
         }
+        if (reportConfig.reportOptions?.showDescriptores) {
+          row.elements.push(...this.grupoDescriptorListadoExportService.fillRows(grupos, index, reportConfig));
+        }
 
         return row;
       })
@@ -139,6 +147,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     observable$ = this.grupoService.findTodos(findOptions);
 
     this.grupoUnidadListadoExportService.clearCache();
+    this.grupoDescriptorListadoExportService.clearCache();
 
     return observable$.pipe(
       map((grupos) => {
@@ -177,7 +186,8 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
       this.getDataReportEnlace(grupoData, reportOptions),
       this.getDataReportPersonaAutorizada(grupoData, reportOptions),
       this.getDataReportRelacionInstitucional(grupoData, reportOptions),
-      this.getDataReportUnidad(grupoData, reportOptions)
+      this.getDataReportUnidad(grupoData, reportOptions),
+      this.getDataReportDescriptor(grupoData, reportOptions)
     ).pipe(
       takeLast(1),
       catchError((err) => {
@@ -289,6 +299,18 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     }
   }
 
+  private getDataReportDescriptor(
+    grupoData: IGrupoReportData,
+    reportOptions: IGrupoReportOptions
+  ): Observable<IGrupoReportData> {
+    if (reportOptions?.showDescriptores) {
+      return this.grupoDescriptorListadoExportService.getData(grupoData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(grupoData);
+    }
+  }
+
   protected getColumns(resultados: IGrupoReportData[], reportConfig: IReportConfig<IGrupoReportOptions>):
     Observable<ISgiColumnReport[]> {
     const columns: ISgiColumnReport[] = [];
@@ -318,6 +340,9 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     }
     if (reportConfig.reportOptions?.showUnidadesVinculacion) {
       columns.push(... this.grupoUnidadListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showDescriptores) {
+      columns.push(... this.grupoDescriptorListadoExportService.fillColumns(resultados, reportConfig));
     }
 
     return of(columns);
