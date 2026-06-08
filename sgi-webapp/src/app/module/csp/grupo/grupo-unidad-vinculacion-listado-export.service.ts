@@ -17,7 +17,7 @@ import { IGrupoReportData, IGrupoReportOptions } from './grupo-listado-export.se
 
 const UNIDAD_KEY = marker('csp.grupo-unidad-vinculacion');
 const TIPO_UNIDAD_KEY = marker('csp.grupo-unidad-vinculacion.tipo-unidad');
-const UNIDAD_FIELD_KEY = marker('csp.grupo-unidad-vinculacion.unidad');
+const VALOR_KEY = marker('csp.grupo-unidad-vinculacion.valor');
 
 const TIPO_UNIDAD_FIELD = 'tipoUnidad';
 const UNIDAD_FIELD = 'unidad';
@@ -30,8 +30,8 @@ export class GrupoUnidadVinculacionListadoExportService extends AbstractTableExp
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private grupoService: GrupoService,
-    private unidadVinculacionService: UnidadVinculacionService
+    private readonly grupoService: GrupoService,
+    private readonly unidadVinculacionService: UnidadVinculacionService
   ) {
     super(translate);
   }
@@ -50,10 +50,6 @@ export class GrupoUnidadVinculacionListadoExportService extends AbstractTableExp
     );
   }
 
-  /**
-   * Construye el listado de unidades de vinculación del grupo resolviendo, en lote contra el SGO, tanto el detalle de
-   * cada unidad asignada (`unidadVinculacion`) como su elemento raíz en la jerarquía (`tipoUnidad`).
-   */
   private populateUnidadesVinculacionConTipo(items: IGrupoUnidadVinculacion[]): Observable<IGrupoUnidadVinculacionListado[]> {
     if (!items?.length) {
       return of([]);
@@ -154,25 +150,29 @@ export class GrupoUnidadVinculacionListadoExportService extends AbstractTableExp
 
   private getColumnsUnidadExcel(grupos: IGrupoReportData[]): ISgiColumnReport[] {
     const columns: ISgiColumnReport[] = [];
-
-    const maxNumUnidades = Math.max(...grupos.map(g => g.unidadesVinculacion ? g.unidadesVinculacion.length : 0));
     const titleUnidadesVinculacion = this.translate.instant(UNIDAD_KEY, MSG_PARAMS.CARDINALIRY.PLURAL);
+    const titleTipo = this.translate.instant(TIPO_UNIDAD_KEY);
+    const titleValor = this.translate.instant(VALOR_KEY);
 
-    for (let i = 0; i < maxNumUnidades; i++) {
-      const idx: string = String(i + 1);
+    this.getDistinctTiposUnidad(grupos).forEach((tipoUnidad, tipoIdx) => {
+      const indexTipo = String(tipoIdx + 1);
 
       columns.push({
-        name: TIPO_UNIDAD_FIELD + idx,
-        title: `${titleUnidadesVinculacion}: ${this.translate.instant(TIPO_UNIDAD_KEY)} ${idx}`,
+        name: TIPO_UNIDAD_FIELD + indexTipo,
+        title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleTipo}`,
         type: ColumnType.STRING,
       });
 
-      columns.push({
-        name: UNIDAD_FIELD + idx,
-        title: `${titleUnidadesVinculacion}: ${this.translate.instant(UNIDAD_FIELD_KEY)} ${idx}`,
-        type: ColumnType.STRING,
-      });
-    }
+      const maxUnidades = this.getMaxNumUnidadesByTipo(grupos, tipoUnidad.id);
+      for (let j = 0; j < maxUnidades; j++) {
+        const indexValor = String(j + 1);
+        columns.push({
+          name: `${UNIDAD_FIELD}${indexTipo}_${indexValor}`,
+          title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleValor} ${indexValor}`,
+          type: ColumnType.STRING,
+        });
+      }
+    });
 
     return columns;
   }
@@ -182,23 +182,38 @@ export class GrupoUnidadVinculacionListadoExportService extends AbstractTableExp
     const elementsRow: any[] = [];
 
     if (this.isExcelOrCsv(reportConfig.outputType)) {
-      const maxNumUnidades = Math.max(...grupos.map(g => g.unidadesVinculacion ? g.unidadesVinculacion.length : 0));
-      for (let i = 0; i < maxNumUnidades; i++) {
-        const unidad = grupo.unidadesVinculacion ? grupo.unidadesVinculacion[i] ?? null : null;
-        this.fillRowExcel(elementsRow, unidad);
-      }
+      this.getDistinctTiposUnidad(grupos).forEach(tipoUnidad => {
+        const unidades = (grupo.unidadesVinculacion ?? []).filter(unidad => unidad.tipoUnidad?.id === tipoUnidad.id);
+        elementsRow.push(tipoUnidad.nombre ?? '');
+
+        const maxUnidades = this.getMaxNumUnidadesByTipo(grupos, tipoUnidad.id);
+        for (let j = 0; j < maxUnidades; j++) {
+          elementsRow.push(unidades[j]?.unidadVinculacion?.nombre ?? '');
+        }
+      });
     }
     return elementsRow;
   }
 
-  private fillRowExcel(elementsRow: any[], grupoUnidadVinculacion: IGrupoUnidadVinculacionListado): void {
-    if (grupoUnidadVinculacion) {
-      elementsRow.push(grupoUnidadVinculacion.tipoUnidad?.nombre ?? '');
-      elementsRow.push(grupoUnidadVinculacion.unidadVinculacion?.nombre ?? '');
-    } else {
-      elementsRow.push('');
-      elementsRow.push('');
-    }
+  private getDistinctTiposUnidad(grupos: IGrupoReportData[]): IUnidadVinculacion[] {
+    const tiposUnidad = new Map<string, IUnidadVinculacion>();
+    grupos.forEach(grupo =>
+      (grupo.unidadesVinculacion ?? []).forEach(unidad => {
+        if (unidad.tipoUnidad?.id != null) {
+          tiposUnidad.set(unidad.tipoUnidad.id, unidad.tipoUnidad);
+        }
+      })
+    );
+    return [...tiposUnidad.values()].sort((a, b) => (a.nombre ?? '').localeCompare(b.nombre ?? ''));
+  }
+
+  private getMaxNumUnidadesByTipo(grupos: IGrupoReportData[], tipoUnidadId: string): number {
+    return Math.max(
+      ...grupos.map(grupo => (grupo.unidadesVinculacion ?? [])
+        .filter(unidad => unidad.tipoUnidad?.id === tipoUnidadId)
+        .length
+      )
+    );
   }
 
 }

@@ -18,7 +18,7 @@ import { ISolicitudReportData, ISolicitudReportOptions } from './solicitud-lista
 
 const UNIDAD_KEY = marker('csp.solicitud-proyecto-unidad-vinculacion');
 const TIPO_UNIDAD_KEY = marker('csp.solicitud-proyecto-unidad-vinculacion.tipo-unidad');
-const UNIDAD_FIELD_KEY = marker('csp.solicitud-proyecto-unidad-vinculacion.unidad');
+const VALOR_KEY = marker('csp.solicitud-proyecto-unidad-vinculacion.valor');
 
 const TIPO_UNIDAD_FIELD = 'tipoUnidad';
 const UNIDAD_FIELD = 'unidad';
@@ -61,10 +61,6 @@ export class SolicitudProyectoUnidadVinculacionListadoExportService
     );
   }
 
-  /**
-   * Construye el listado de unidades de vinculación de la solicitud resolviendo, en lote contra el SGO, tanto el detalle
-   * de cada unidad asignada (`unidadVinculacion`) como su elemento raíz en la jerarquía (`tipoUnidad`).
-   */
   private populateUnidadesVinculacionConTipo(
     items: ISolicitudProyectoUnidadVinculacion[]
   ): Observable<ISolicitudProyectoUnidadVinculacionListado[]> {
@@ -156,26 +152,29 @@ export class SolicitudProyectoUnidadVinculacionListadoExportService
 
   private getColumnsUnidadExcel(solicitudes: ISolicitudReportData[]): ISgiColumnReport[] {
     const columns: ISgiColumnReport[] = [];
-
-    const maxNumUnidades = Math.max(...solicitudes.map(s => s.unidadesVinculacion ? s.unidadesVinculacion.length : 0));
     const titleUnidadesVinculacion = this.translate.instant(UNIDAD_KEY, MSG_PARAMS.CARDINALIRY.PLURAL);
+    const titleTipo = this.translate.instant(TIPO_UNIDAD_KEY);
+    const titleValor = this.translate.instant(VALOR_KEY);
 
-    for (let i = 0; i < maxNumUnidades; i++) {
-      const idx: string = String(i + 1);
+    this.getDistinctTiposUnidad(solicitudes).forEach((tipoUnidad, tipoIdx) => {
+      const indexTipo = String(tipoIdx + 1);
 
-      columns.push(
-        {
-          name: TIPO_UNIDAD_FIELD + idx,
-          title: `${titleUnidadesVinculacion}: ${this.translate.instant(TIPO_UNIDAD_KEY)} ${idx}`,
+      columns.push({
+        name: TIPO_UNIDAD_FIELD + indexTipo,
+        title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleTipo}`,
+        type: ColumnType.STRING,
+      });
+
+      const maxUnidades = this.getMaxNumUnidadesByTipo(solicitudes, tipoUnidad.id);
+      for (let j = 0; j < maxUnidades; j++) {
+        const indexValor = String(j + 1);
+        columns.push({
+          name: `${UNIDAD_FIELD}${indexTipo}_${indexValor}`,
+          title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleValor} ${indexValor}`,
           type: ColumnType.STRING,
-        },
-        {
-          name: UNIDAD_FIELD + idx,
-          title: `${titleUnidadesVinculacion}: ${this.translate.instant(UNIDAD_FIELD_KEY)} ${idx}`,
-          type: ColumnType.STRING,
-        }
-      );
-    }
+        });
+      }
+    });
 
     return columns;
   }
@@ -185,26 +184,38 @@ export class SolicitudProyectoUnidadVinculacionListadoExportService
     const elementsRow: any[] = [];
 
     if (this.isExcelOrCsv(reportConfig.outputType)) {
-      const maxNumUnidades = Math.max(...solicitudes.map(s => s.unidadesVinculacion ? s.unidadesVinculacion.length : 0));
-      for (let i = 0; i < maxNumUnidades; i++) {
-        const unidad = solicitud.unidadesVinculacion ? solicitud.unidadesVinculacion[i] ?? null : null;
-        this.fillRowExcel(elementsRow, unidad);
-      }
+      this.getDistinctTiposUnidad(solicitudes).forEach(tipoUnidad => {
+        const unidades = (solicitud.unidadesVinculacion ?? []).filter(unidad => unidad.tipoUnidad?.id === tipoUnidad.id);
+        elementsRow.push(tipoUnidad.nombre ?? '');
+
+        const maxUnidades = this.getMaxNumUnidadesByTipo(solicitudes, tipoUnidad.id);
+        for (let j = 0; j < maxUnidades; j++) {
+          elementsRow.push(unidades[j]?.unidadVinculacion?.nombre ?? '');
+        }
+      });
     }
     return elementsRow;
   }
 
-  private fillRowExcel(elementsRow: any[], solicitudProyectoUnidadVinculacion: ISolicitudProyectoUnidadVinculacionListado): void {
-    if (solicitudProyectoUnidadVinculacion) {
-      elementsRow.push(
-        solicitudProyectoUnidadVinculacion.tipoUnidad?.nombre ?? '',
-        solicitudProyectoUnidadVinculacion.unidadVinculacion?.nombre ?? '');
-    } else {
-      elementsRow.push(
-        '',
-        ''
-      );
-    }
+  private getDistinctTiposUnidad(solicitudes: ISolicitudReportData[]): IUnidadVinculacion[] {
+    const tiposUnidad = new Map<string, IUnidadVinculacion>();
+    solicitudes.forEach(solicitud =>
+      (solicitud.unidadesVinculacion ?? []).forEach(unidad => {
+        if (unidad.tipoUnidad?.id != null) {
+          tiposUnidad.set(unidad.tipoUnidad.id, unidad.tipoUnidad);
+        }
+      })
+    );
+    return [...tiposUnidad.values()].sort((a, b) => (a.nombre ?? '').localeCompare(b.nombre ?? ''));
+  }
+
+  private getMaxNumUnidadesByTipo(solicitudes: ISolicitudReportData[], tipoUnidadId: string): number {
+    return Math.max(
+      ...solicitudes.map(solicitud => (solicitud.unidadesVinculacion ?? [])
+        .filter(unidad => unidad.tipoUnidad?.id === tipoUnidadId)
+        .length
+      )
+    );
   }
 
 }
