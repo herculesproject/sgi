@@ -80,6 +80,9 @@ jobs:
       - name: Install chrome
         uses: browser-actions/setup-chrome@v2
 
+      - name: Build framework library
+        run: npm run build-framework
+
       - name: Run tests framework with coverage
         run: npm run test-framework -- --watch=false --code-coverage
 
