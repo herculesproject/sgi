@@ -857,7 +857,7 @@
   "csp.grupo-persona-autorizada.fecha-fin": "Fecha fin",
   "csp.grupo-persona-autorizada.fecha-inicio": "Fecha inicio",
   "csp.grupo-persona-autorizada.nombre": "Nombre",
-  "csp.grupo-relacion-institucional": "Relación{count,plural, =0{} one{} other{es}} institucional{count,plural, =0{} one{} other{es}}",
+  "csp.grupo-relacion-institucional": "Relaci{count,plural, =0{ones} one{ón} other{ones}} institucional{count,plural, =0{es} one{} other{es}}",
   "csp.grupo-relacion-institucional.entidad": "Entidad",
   "csp.grupo-relacion-institucional.export.prefix": "Relaciones",
   "csp.grupo-relacion-institucional.institucion": "Institución",
