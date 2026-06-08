@@ -8,65 +8,145 @@ defaults:
     working-directory: sgi-webapp
 
 jobs:
-  build:
-    name: Build & Test
+  install:
+    name: Install dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v6
 
       - name: Use Node.js 14
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "14.x"
 
-      - name: Install chrome
-        uses: browser-actions/setup-chrome@v2
+      - name: Cache node_modules
+        id: node-modules-cache
+        uses: actions/cache@v5
+        with:
+          path: sgi-webapp/node_modules
+          key: node-modules-${{ runner.os }}-node14-${{ hashFiles('sgi-webapp/package-lock.json') }}
 
       - name: Install dependencies
-        run: npm install
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+  build:
+    name: Build for production
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Node.js 14
+        uses: actions/setup-node@v6
+        with:
+          node-version: "14.x"
+
+      - name: Restore node_modules
+        uses: actions/cache@v5
+        with:
+          path: sgi-webapp/node_modules
+          key: node-modules-${{ runner.os }}-node14-${{ hashFiles('sgi-webapp/package-lock.json') }}
 
       - name: Build for production
         run: npm run build -- --prod
 
-      - name: Run tests framework with coverage
-        run: npm run test-framework -- --watch=false --code-coverage
-
-      - name: Run tests with coverage
-        run: npm run test-ci -- --code-coverage
-
       - name: Upload build artifact
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: webapp-build
           path: sgi-webapp/dist/
           retention-days: 1
 
-      - name: Upload coverage artifact
-        if: github.event_name == 'push'
-        uses: actions/upload-artifact@v4
+  test-framework:
+    name: Test framework
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Node.js 14
+        uses: actions/setup-node@v6
         with:
-          name: webapp-coverage
-          path: sgi-webapp/coverage/
+          node-version: "14.x"
+
+      - name: Restore node_modules
+        uses: actions/cache@v5
+        with:
+          path: sgi-webapp/node_modules
+          key: node-modules-${{ runner.os }}-node14-${{ hashFiles('sgi-webapp/package-lock.json') }}
+
+      - name: Install chrome
+        uses: browser-actions/setup-chrome@v2
+
+      - name: Build framework library
+        run: npm run build-framework
+
+      - name: Run tests framework with coverage
+        run: npm run test-framework -- --watch=false --code-coverage
+
+      - name: Upload framework coverage artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v7
+        with:
+          name: webapp-coverage-framework
+          path: sgi-webapp/coverage/framework/
+          retention-days: 1
+
+  test-webapp:
+    name: Test webapp
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Node.js 14
+        uses: actions/setup-node@v6
+        with:
+          node-version: "14.x"
+
+      - name: Restore node_modules
+        uses: actions/cache@v5
+        with:
+          path: sgi-webapp/node_modules
+          key: node-modules-${{ runner.os }}-node14-${{ hashFiles('sgi-webapp/package-lock.json') }}
+
+      - name: Install chrome
+        uses: browser-actions/setup-chrome@v2
+
+      - name: Run tests with coverage
+        run: npm run test-ci -- --code-coverage
+
+      - name: Upload webapp coverage artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v7
+        with:
+          name: webapp-coverage-app
+          path: sgi-webapp/coverage/sgi-webapp/
           retention-days: 1
 
   sonar:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
-    needs: build
+    needs: [test-framework, test-webapp]
     if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Download coverage artifact
-        uses: actions/download-artifact@v4
+      - name: Download framework coverage artifact
+        uses: actions/download-artifact@v8
         with:
-          name: webapp-coverage
-          path: sgi-webapp/coverage/
+          name: webapp-coverage-framework
+          path: sgi-webapp/coverage/framework/
+
+      - name: Download webapp coverage artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: webapp-coverage-app
+          path: sgi-webapp/coverage/sgi-webapp/
 
       - name: SonarQube analysis framework
         uses: SonarSource/sonarqube-scan-action@v5.2.0
@@ -105,15 +185,13 @@ jobs:
   docker:
     name: Docker Build & Push
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, test-framework, test-webapp]
     if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v6
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: webapp-build
           path: sgi-webapp/dist/
@@ -142,7 +220,7 @@ jobs:
 
       - name: Log in to Docker Hub
         if: steps.check-docker.outputs.exists != 'true'
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -150,7 +228,7 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         if: steps.check-docker.outputs.exists != 'true'
         id: docker-metadata
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: herculesproject/sgi-webapp
           labels: |
@@ -162,7 +240,7 @@ jobs:
 
       - name: Build and push Docker image
         if: steps.check-docker.outputs.exists != 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: "./sgi-webapp"
           push: true
