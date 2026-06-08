@@ -71,6 +71,7 @@ export class GrupoListadoExportModalComponent extends BaseExportModalComponent<I
       showLineasInvestigacion: new FormControl(true),
       showEquiposInstrumentales: new FormControl(true),
       showRelacionesInstitucionales: new FormControl(true),
+      showDescriptores: new FormControl(true),
     });
 
     if (this.isGrupoUnidadesVinculacionEnabled) {
@@ -109,6 +110,7 @@ export class GrupoListadoExportModalComponent extends BaseExportModalComponent<I
         showEquiposInstrumentales: this.formGroup.controls.showEquiposInstrumentales.value,
         showRelacionesInstitucionales: this.formGroup.controls.showRelacionesInstitucionales.value,
         showUnidadesVinculacion: this.formGroup.controls.showUnidadesVinculacion?.value ?? false,
+        showDescriptores: this.formGroup.controls.showDescriptores.value,
         columnMinWidth: 120
       }
     };

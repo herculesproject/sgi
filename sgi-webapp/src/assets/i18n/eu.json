@@ -801,6 +801,7 @@
   "csp.grupo-descriptor": "Deskriptore{count,plural,=0{} one{} other{k}}",
   "csp.grupo-descriptor.texto": "Deskribapena",
   "csp.grupo-descriptor.tipo-descriptor-grupo": "Deskriptore mota",
+  "csp.grupo-descriptor.valor": "Balioa",
   "csp.grupo-enlace": "Lotura{count,plural, =0{} one{} other{k}}",
   "csp.grupo-enlace.enlace": "Lotura",
   "csp.grupo-enlace.tipo-enlace": "Lotura mota",

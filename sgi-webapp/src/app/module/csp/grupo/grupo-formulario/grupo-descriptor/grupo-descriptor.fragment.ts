@@ -15,7 +15,7 @@ export class GrupoDescriptorFragment extends Fragment {
     key: number,
     private readonly grupoService: GrupoService,
     private readonly grupoDescriptorService: GrupoDescriptorService,
-    private readonly tipoGrupoDescriptorService: TipoDescriptorGrupoService,
+    private readonly tipoDescriptorGrupoService: TipoDescriptorGrupoService,
     public readonly readonly: boolean,
   ) {
     super(key);
@@ -63,7 +63,7 @@ export class GrupoDescriptorFragment extends Fragment {
 
   deleteGrupoDescriptor(wrapper: StatusWrapper<IGrupoDescriptor>) {
     const current = this.descriptores$.value;
-    const index = current.findIndex((value) => value === wrapper);
+    const index = current.indexOf(wrapper);
 
     if (index >= 0) {
       if (!wrapper.created) {
@@ -122,7 +122,7 @@ export class GrupoDescriptorFragment extends Fragment {
           .pipe(
             map((updated) => {
               updated.tipoDescriptorGrupo = wrapper.value.tipoDescriptorGrupo;
-              const index = this.descriptores$.value.findIndex((current) => current === wrapper);
+              const index = this.descriptores$.value.indexOf(wrapper);
               this.descriptores$.value[index] = new StatusWrapper<IGrupoDescriptor>(updated);
               this.descriptores$.next(this.descriptores$.value);
             })
@@ -148,7 +148,7 @@ export class GrupoDescriptorFragment extends Fragment {
           .pipe(
             map((created) => {
               created.tipoDescriptorGrupo = data.value.tipoDescriptorGrupo;
-              const index = this.descriptores$.value.findIndex((current) => current === data);
+              const index = this.descriptores$.value.indexOf(data);
               this.descriptores$.value[index] = new StatusWrapper<IGrupoDescriptor>(created);
               this.descriptores$.next(this.descriptores$.value);
             })
@@ -168,7 +168,7 @@ export class GrupoDescriptorFragment extends Fragment {
       return of(descriptores);
     }
 
-    return this.tipoGrupoDescriptorService.findAllByIdIn(ids).pipe(
+    return this.tipoDescriptorGrupoService.findAllByIdIn(ids).pipe(
       map((response) => {
         const tiposDescriptorById = new Map<number, ITipoDescriptorGrupo>(response.items.map((t) => [t.id, t]));
         descriptores.forEach((descriptor) => {

@@ -801,6 +801,7 @@
   "csp.grupo-descriptor": "Descriptor{count,plural,=0{} one{} other{s}}",
   "csp.grupo-descriptor.texto": "Descripció",
   "csp.grupo-descriptor.tipo-descriptor-grupo": "Tipus de descriptor",
+  "csp.grupo-descriptor.valor": "Valor",
   "csp.grupo-enlace": "Enllaç{count,plural, =0{} one{} other{s}}",
   "csp.grupo-enlace.enlace": "Enllaç",
   "csp.grupo-enlace.tipo-enlace": "Tipus d'enllaç",
