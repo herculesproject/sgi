@@ -10,12 +10,17 @@ import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { GRUPO_DATA_KEY, GrupoDataResolver } from './grupo-data.resolver';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';
+import { GrupoDescriptorComponent } from './grupo-formulario/grupo-descriptor/grupo-descriptor.component';
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
 import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.component';
 import { GrupoEquipoInvestigacionComponent } from './grupo-formulario/grupo-equipo-investigacion/grupo-equipo-investigacion.component';
 import { GrupoLineaInvestigacionComponent } from './grupo-formulario/grupo-linea-investigacion-listado/grupo-linea-investigacion.component';
 import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.component';
+import {
+  GrupoRelacionInstitucionalComponent
+} from './grupo-formulario/grupo-relacion-institucional/grupo-relacion-institucional.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
+import { GrupoUnidadesVinculacionComponent } from './grupo-formulario/grupo-unidades-vinculacion/grupo-unidades-vinculacion.component';
 import { GrupoListadoInvComponent } from './grupo-listado-inv/grupo-listado-inv.component';
 import { GRUPO_ROUTE_NAMES } from './grupo-route-names';
 import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
@@ -87,6 +92,21 @@ const routes: SgiRoutes = [
       {
         path: GRUPO_ROUTE_NAMES.LINEA_INVESTIGACION,
         component: GrupoLineaInvestigacionComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.RELACION_INSTITUCIONAL,
+        component: GrupoRelacionInstitucionalComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.DESCRIPTOR,
+        component: GrupoDescriptorComponent,
+        canDeactivate: [FragmentGuard],
+      },
+      {
+        path: GRUPO_ROUTE_NAMES.UNIDADES_VINCULACION,
+        component: GrupoUnidadesVinculacionComponent,
         canDeactivate: [FragmentGuard],
       },
     ]
