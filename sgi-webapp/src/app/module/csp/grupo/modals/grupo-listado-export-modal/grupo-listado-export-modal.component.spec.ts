@@ -14,6 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { GrupoDescriptorListadoExportService } from '../../grupo-descriptor-listado-export.service';
 import { GrupoEnlaceListadoExportService } from '../../grupo-enlace-listado-export.service';
 import { GrupoEquipoInstrumentalListadoExportService } from '../../grupo-equipo-instrumental-listado-export.service';
 import { GrupoEquipoListadoExportService } from '../../grupo-equipo-listado-export.service';
@@ -64,6 +65,7 @@ describe('GrupoListadoExportModalComponent', () => {
         GrupoRelacionInstitucionalListadoExportService,
         GrupoResponsableEconomicoListadoExportService,
         GrupoUnidadVinculacionListadoExportService,
+        GrupoDescriptorListadoExportService,
         LuxonDatePipe,
         PercentPipe,
         SgiAuthService
