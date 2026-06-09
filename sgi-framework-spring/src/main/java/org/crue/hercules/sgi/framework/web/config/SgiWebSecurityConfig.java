@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,9 @@ public class SgiWebSecurityConfig {
 
   @Value("${spring.security.csrf.enable:true}")
   private boolean csrfEnabled;
+
+  @Value("${spring.security.csrf.cookie-path:/}")
+  private String csrfCookiePath;
 
   @Value("${spring.security.frameoptions.enable:true}")
   private boolean frameoptionsEnabled;
@@ -91,7 +95,7 @@ public class SgiWebSecurityConfig {
       // @formatter:off
       http
         // CSRF protection by cookie
-        .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
+        .csrf(csrf -> csrf.csrfTokenRepository(csrfTokenRepository()));
       // @formatter:on
     } else {
       // @formatter:off
@@ -136,8 +140,36 @@ public class SgiWebSecurityConfig {
   }
 
   /**
+   * Creates the {@link CsrfTokenRepository} that stores the CSRF token in a
+   * cookie readable by JavaScript (so the SPA can echo it back in the
+   * {@code X-XSRF-TOKEN} header).
+   * <p>
+   * The cookie path is forced to the value of the
+   * {@code spring.security.csrf.cookie-path} property (defaults to {@code /})
+   * instead of letting {@link CookieCsrfTokenRepository} derive it from the
+   * servlet context path. When several services are served under different path
+   * prefixes on the same host (e.g. {@code /api/csp} behind an ingress that does
+   * not rewrite the prefix, forcing a {@code server.servlet.context-path}),
+   * deriving the path from the context produces {@code XSRF-TOKEN} cookies scoped
+   * to different paths. The browser then keeps several cookies with the same name
+   * and may send a different one than the server validates against, resulting in
+   * spurious {@code 403 Invalid CSRF Token} errors. A fixed path collapses them
+   * into a single cookie. It remains configurable in case a deployment needs a
+   * different scope.
+   *
+   * @return the {@link CsrfTokenRepository}
+   */
+  protected CsrfTokenRepository csrfTokenRepository() {
+    log.debug("csrfTokenRepository() - start");
+    CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+    csrfTokenRepository.setCookiePath(csrfCookiePath);
+    log.debug("csrfTokenRepository() - end");
+    return csrfTokenRepository;
+  }
+
+  /**
    * Creates new {@link KeycloakOidcUserService}.
-   * 
+   *
    * @return the {@link KeycloakOidcUserService}
    */
   protected OAuth2UserService<OidcUserRequest, OidcUser> keycloakOidcUserService() {

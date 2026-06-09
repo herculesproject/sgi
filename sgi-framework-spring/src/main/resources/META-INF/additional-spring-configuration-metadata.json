@@ -6,6 +6,12 @@
       "defaultValue": "true"
     },
     {
+      "name": "spring.security.csrf.cookie-path",
+      "type": "java.lang.String",
+      "description": "Path of the CSRF (XSRF-TOKEN) cookie. Forced to a fixed value instead of being derived from the servlet context-path to avoid duplicated XSRF-TOKEN cookies (and spurious 403) when services are served under different path prefixes on the same host.",
+      "defaultValue": "/"
+    },
+    {
       "name": "spring.security.frameoptions.enable",
       "type": "java.lang.Boolean",
       "defaultValue": "true"
