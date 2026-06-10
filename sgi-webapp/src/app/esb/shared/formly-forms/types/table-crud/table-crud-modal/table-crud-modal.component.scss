@@ -5,6 +5,10 @@
     display: block;
   }
 
+  formly-field-mat-radio mat-radio-button {
+    padding: 5px 15px 0px 0px;
+  }
+
   formly-validation-message {
     color: map-get($palette-warn, $warn-color);
     font-size: 75%;
