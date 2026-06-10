@@ -4,6 +4,7 @@ import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { TranslateService } from '@ngx-translate/core';
 import { IValidationError } from './models/validation-error';
 import { IValidatorOptions } from './models/validator-options';
+import { buildCustomMessage } from './utils.validator';
 
 const MSG_FORMLY_VALIDATIONS_EMAIL_PRINCIPAL_UNIQUE = marker('msg.formly.validations.email-principal-unique');
 const MSG_FORMLY_VALIDATIONS_EMAIL_PRINCIPAL_REQUIRED = marker('msg.formly.validations.email-principal-required');
@@ -28,16 +29,16 @@ export function emailPrincipalUniqueValidator(
   let customMessage: string;
   let defatultMessage: string;
   if (controlValues.some(c => c.principal)) {
-    customMessage = options.messagePrincipalUnique ? eval('`' + options.messagePrincipalUnique + '`') : null;
+    customMessage = buildCustomMessage(options.messagePrincipalUnique);
     defatultMessage = MSG_FORMLY_VALIDATIONS_EMAIL_PRINCIPAL_UNIQUE;
   } else {
-    customMessage = options.messagePrincipalRequired ? eval('`' + options.messagePrincipalRequired + '`') : null;
+    customMessage = buildCustomMessage(options.messagePrincipalRequired);
     defatultMessage = MSG_FORMLY_VALIDATIONS_EMAIL_PRINCIPAL_REQUIRED;
   }
 
   return {
     name: 'email-principal-unique',
-    customMessage: customMessage,
-    defatultMessage: defatultMessage
-  }
+    customMessage,
+    defatultMessage
+  };
 }

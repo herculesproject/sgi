@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { IValidationError } from './models/validation-error';
 import { IValidatorOptions } from './models/validator-options';
+import { buildCustomMessage } from './utils.validator';
 
 const MSG_FORMLY_VALIDATIONS_MULTICHECKBOX_RESTRICTED = marker('msg.formly.validations.multicheckbox-restricted');
 
@@ -14,12 +15,12 @@ export interface IMulticheckboxValidatorOptions extends IValidatorOptions {
       option: string,
       incompatibleOptions: string[]
     }[]
-  }
+  };
 }
 
 interface IMulticheckboxOption {
-  value: string,
-  label: string
+  value: string;
+  label: string;
 }
 
 interface IIncompatibilities {
@@ -45,12 +46,12 @@ export function multicheckboxRestricted(
 
   return {
     name: 'multicheckbox-restricted',
-    customMessage: options.message ? eval('`' + options.message + '`') : null,
+    customMessage: buildCustomMessage(options.message, { option1, option2 }),
     defatultMessage: translate.instant(
       MSG_FORMLY_VALIDATIONS_MULTICHECKBOX_RESTRICTED,
       {
-        option1: option1,
-        option2: option2
+        option1,
+        option2
       }
     )
   };
@@ -61,11 +62,11 @@ function getIncompatibleOptions(controlValues: string[], options: IMulticheckbox
     return null;
   }
 
-  let currentControlValue = controlValues.shift();
+  const currentControlValue = controlValues.shift();
 
   const incompatibleOptions = options.restrictions.notValidCombinations.find(c => c.option === currentControlValue)?.incompatibleOptions;
   const incompatibility = incompatibleOptions.find(option => controlValues.includes(option));
-  if (!!incompatibility) {
+  if (incompatibility) {
     return {
       option1: currentControlValue,
       option2: incompatibility
@@ -83,4 +84,4 @@ function getDisplayValue(options: IMulticheckboxOption[] | Observable<IMultichec
   if (Array.isArray(options)) {
     return options.find(option => option.value === optionValue)?.label ?? optionValue;
   }
-} 
+}

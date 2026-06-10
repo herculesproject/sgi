@@ -4,6 +4,7 @@ import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { TranslateService } from '@ngx-translate/core';
 import { IValidationError } from './models/validation-error';
 import { IValidatorOptions } from './models/validator-options';
+import { buildCustomMessage } from './utils.validator';
 
 const MSG_FORMLY_VALIDATIONS_EMAIL = marker('msg.formly.validations.email');
 
@@ -22,7 +23,7 @@ export function emailValidator(
 
   return {
     name: 'email',
-    customMessage: options.message ? eval('`' + options.message + '`') : null,
+    customMessage: buildCustomMessage(options.message, { controlValue: control.value }),
     defatultMessage: translate.instant(MSG_FORMLY_VALIDATIONS_EMAIL)
   };
 }
