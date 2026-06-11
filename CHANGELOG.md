@@ -13,6 +13,10 @@
        ### Fixed            Corrección de errores
        ### Security         Correcciones de vulnerabilidades
 -->
+## 1.1.0 (2026-06-11)
+
+**Notas de actualización:** [1.1.0](/docs/upgrade/1.1.0.md)
+
 ### Added
 - Añadido soporte para el idioma catalán ([#23](https://github.com/herculesproject/sgi/issues/23)).
 - Añadidos nuevos componentes para poder ser utilizados en los formularios de memoria ([#33](https://github.com/herculesproject/sgi/issues/33)).
