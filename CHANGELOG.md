@@ -37,6 +37,7 @@
 - [CSP] Corregido el nombre del concepto de gasto que se mostraba como `[object Object]` en el listado de códigos económicos no permitidos al añadir una partida de gasto en el presupuesto del proyecto ([#74](https://github.com/herculesproject/sgi/issues/74)).
 - [CSP] Corregidos valores NULL en columnas booleanas de `configuracion` en SQL Server y Oracle, donde el valor por defecto no se aplica automáticamente a las filas existentes al añadir columnas ([#90](https://github.com/herculesproject/sgi/issues/90)).
 - Corregido el error 403 (`InvalidCsrfTokenException`) en las peticiones a endpoints públicos (`/public/**`) en despliegues donde los servicios se sirven bajo un prefijo de ruta (`server.servlet.context-path`, p. ej. `/api/csp`), causado por cookies `XSRF-TOKEN` duplicadas con distinto `path`. La cookie CSRF se emite ahora con un `path` fijo (`/` por defecto, configurable con `spring.security.csrf.cookie-path`) ([#99](https://github.com/herculesproject/sgi/issues/99)).
+- [WEB] Corregido un error al usar validaciones a nivel de formulario (p. ej., la comparación de fechas entre campos) cuando el apartado o el campo implicado está oculto ([#101](https://github.com/herculesproject/sgi/issues/101)).
 
 
 
@@ -45,6 +46,9 @@
 - [CSP] Ampliado el tamaño máximo de los campos título (1000 caracteres) y observaciones (8000 caracteres) del proyecto ([#63](https://github.com/herculesproject/sgi/issues/63)).
 - [CSP] Ampliado el tamaño máximo del campo nombre (550 caracteres) de la fuente de financiación ([#64](https://github.com/herculesproject/sgi/issues/64)).
 - [ETI] Añadir reemplazo de placeholders de nombre de comité en esquemas Formly para el contexto dev ([#36](https://github.com/herculesproject/sgi/issues/36)).
+
+### Security
+- [WEB] Eliminado el uso de `eval` en la generación de los mensajes personalizados de los validadores de los formularios dinámicos (formly), que permitía ejecutar código arbitrario desde mensajes configurables externamente (clobs en BD, integraciones) ([#101](https://github.com/herculesproject/sgi/issues/101)).
 
 ## 1.0.0 (2026-02-26)
 

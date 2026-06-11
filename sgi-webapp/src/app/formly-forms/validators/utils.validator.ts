@@ -1,6 +1,6 @@
 import { FormArray, FormGroup, ValidationErrors } from '@angular/forms';
-import { IValidatorOptions } from './models/validator-options';
 import { IValidatorCompareToOptions } from './models/validator-compare-to-options';
+import { IValidatorOptions } from './models/validator-options';
 
 
 export function requiredChecked(formGroup: FormGroup): ValidationErrors {
@@ -65,4 +65,36 @@ function getFormStateProperty(formState: any, propertyPath: string[]): any {
   }
 
   return formState[currentPath];
+}
+
+/**
+ * Interpola en `message` los placeholders cuyo nombre esté presente en `variables`.
+ *
+ * Se admiten dos sintaxis: `${variable}` (forma canónica) y `{{variable}}` (aceptada por
+ * compatibilidad con mensajes provenientes de integraciones externas). Solo se sustituyen nombres
+ * de variable (`\w+`) del diccionario proporcionado; cualquier otro placeholder se deja intacto.
+ * No se evalúan expresiones, por lo que el mensaje, aunque sea configurable externamente, no puede
+ * ejecutar código.
+ *
+ * @param message plantilla del mensaje (puede ser null/undefined)
+ * @param variables variables permitidas para la interpolación
+ * @returns el mensaje interpolado, o null si no hay mensaje
+ */
+export function buildCustomMessage(
+  message: string | null | undefined,
+  variables: Record<string, unknown> = {}
+): string | null {
+  if (!message) {
+    return null;
+  }
+
+  return message.replace(
+    /\$\{(\w+)\}|\{\{(\w+)\}\}/g,
+    (match, dollarName, braceName) => {
+      const variableName = dollarName ?? braceName;
+      return variableName in variables
+        ? String(variables[variableName])
+        : match;
+    }
+  );
 }

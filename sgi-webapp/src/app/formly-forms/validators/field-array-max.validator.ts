@@ -4,6 +4,7 @@ import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { TranslateService } from '@ngx-translate/core';
 import { IValidationError } from './models/validation-error';
 import { IValidatorOptions } from './models/validator-options';
+import { buildCustomMessage } from './utils.validator';
 
 const MSG_FORMLY_VALIDATIONS_FIELD_ARRAY_MAX = marker('msg.formly.validations.field-array-max');
 
@@ -26,11 +27,11 @@ export function fieldArrayMax(
 
   return {
     name: 'field-array-max',
-    customMessage: options.message ? eval('`' + options.message.replace('{{max}}', max.toString()) + '`') : null,
+    customMessage: buildCustomMessage(options.message, { max }),
     defatultMessage: translate.instant(
       MSG_FORMLY_VALIDATIONS_FIELD_ARRAY_MAX,
       {
-        max: max
+        max
       }
     )
   };

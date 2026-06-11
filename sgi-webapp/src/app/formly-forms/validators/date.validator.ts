@@ -6,15 +6,17 @@ import { DateTime } from 'luxon';
 import { IValidationError } from './models/validation-error';
 import { IValidatorCompareToOptions } from './models/validator-compare-to-options';
 import { IValidatorOptions } from './models/validator-options';
-import { getOptionsCompareValues as getCompareValue } from './utils.validator';
+import { buildCustomMessage, getOptionsCompareValues as getCompareValue } from './utils.validator';
 
 const MSG_FORMLY_VALIDATIONS_DATE_IS_AFTER = marker('msg.formly.validations.date-is-after');
 const MSG_FORMLY_VALIDATIONS_DATE_IS_BETWEEN = marker('msg.formly.validations.date-is-between');
 
-export interface IDateValidatorOptions extends IValidatorOptions, Partial<Pick<IValidatorCompareToOptions, 'formStateProperty' | 'value'>> {
+export interface IDateValidatorOptions
+  extends IValidatorOptions, Partial<Pick<IValidatorCompareToOptions, 'formStateProperty' | 'value'>> {
 }
 
-export interface IDateBetweenValidatorOptions extends IValidatorOptions, Partial<Pick<IValidatorCompareToOptions, 'formStateProperties' | 'values'>> {
+export interface IDateBetweenValidatorOptions
+  extends IValidatorOptions, Partial<Pick<IValidatorCompareToOptions, 'formStateProperties' | 'values'>> {
 }
 
 export function dateIsAfter(
@@ -24,10 +26,14 @@ export function dateIsAfter(
   translate: TranslateService
 ): IValidationError {
   let valueToCompare: DateTime | string = getCompareValue(field.options.formState, options);
-  let controlValue: DateTime | string = options.errorPath ? control.value[options.errorPath] : control.value;
+  let controlValue: DateTime | string = options.errorPath ? control.value?.[options.errorPath] : control.value;
+
+  if (!controlValue) {
+    return null;
+  }
 
   if (control instanceof FormGroup && options.errorPath && options.compareTo === 'formStateProperty') {
-    control.controls[options.errorPath].markAsTouched();
+    control.controls[options.errorPath]?.markAsTouched();
   }
 
   if (typeof valueToCompare === 'string') {
@@ -44,7 +50,10 @@ export function dateIsAfter(
 
   return {
     name: 'date-is-after',
-    customMessage: options.message ? eval('`' + options.message + '`') : null,
+    customMessage: buildCustomMessage(options.message, {
+      controlValue: controlValue.setLocale(translate.currentLang).toLocaleString(DateTime.DATE_SHORT),
+      valueToCompare: valueToCompare.setLocale(translate.currentLang).toLocaleString(DateTime.DATE_SHORT)
+    }),
     defatultMessage: translate.instant(
       MSG_FORMLY_VALIDATIONS_DATE_IS_AFTER,
       {
@@ -60,8 +69,12 @@ export function dateIsBetween(
   options: IDateBetweenValidatorOptions,
   translate: TranslateService
 ): IValidationError {
-  let [minDate, maxDate]: (DateTime | string)[] = getCompareValue(field.options.formState, options);
-  let controlValue: DateTime | string = options.errorPath ? control.value[options.errorPath] : control.value;
+  let [minDate, maxDate]: (DateTime | string)[] = getCompareValue(field.options.formState, options) ?? [];
+  let controlValue: DateTime | string = options.errorPath ? control.value?.[options.errorPath] : control.value;
+
+  if (!controlValue) {
+    return null;
+  }
 
   if (typeof minDate === 'string') {
     minDate = DateTime.fromISO(minDate);
@@ -81,7 +94,11 @@ export function dateIsBetween(
 
   return {
     name: 'date-is-between',
-    customMessage: options.message ? eval('`' + options.message + '`') : null,
+    customMessage: buildCustomMessage(options.message, {
+      controlValue: controlValue.setLocale(translate.currentLang).toLocaleString(DateTime.DATE_SHORT),
+      minDate: minDate.setLocale(translate.currentLang).toLocaleString(DateTime.DATE_SHORT),
+      maxDate: maxDate.setLocale(translate.currentLang).toLocaleString(DateTime.DATE_SHORT)
+    }),
     defatultMessage: translate.instant(
       MSG_FORMLY_VALIDATIONS_DATE_IS_BETWEEN,
       {
@@ -91,3 +108,4 @@ export function dateIsBetween(
     )
   };
 }
+
