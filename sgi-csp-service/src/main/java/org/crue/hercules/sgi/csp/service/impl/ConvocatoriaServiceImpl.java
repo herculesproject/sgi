@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.Identifiable;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -167,8 +168,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     convocatoria.setActivo(Boolean.TRUE);
 
-    Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, null);
-    Convocatoria returnValue = repository.save(validConvocatoria);
+    validarDatosConvocatoria(convocatoria, null);
+    Convocatoria returnValue = repository.save(convocatoria);
 
     log.debug("create(Convocatoria convocatoria) - end");
     return returnValue;
@@ -191,29 +192,29 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     return repository.findById(convocatoria.getId()).map(data -> {
       authorityHelper.checkUserHasAuthorityModifyConvocatoria(data);
-      Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, data);
+      validarDatosConvocatoria(convocatoria, data);
 
-      data.setUnidadGestionRef(validConvocatoria.getUnidadGestionRef());
-      data.setModeloEjecucion(validConvocatoria.getModeloEjecucion());
-      data.setCodigo(validConvocatoria.getCodigo());
-      data.setFechaPublicacion(validConvocatoria.getFechaPublicacion());
-      data.setFechaProvisional(validConvocatoria.getFechaProvisional());
-      data.setFechaConcesion(validConvocatoria.getFechaConcesion());
-      data.setTitulo(validConvocatoria.getTitulo());
-      data.setObjeto(validConvocatoria.getObjeto());
-      data.setObservaciones(validConvocatoria.getObservaciones());
-      data.setFinalidad(validConvocatoria.getFinalidad());
-      data.setRegimenConcurrencia(validConvocatoria.getRegimenConcurrencia());
-      data.setFormularioSolicitud(validConvocatoria.getFormularioSolicitud());
-      data.setDuracion(validConvocatoria.getDuracion());
-      data.setAmbitoGeografico(validConvocatoria.getAmbitoGeografico());
-      data.setClasificacionCVN(validConvocatoria.getClasificacionCVN());
-      data.setActivo(validConvocatoria.getActivo());
-      data.setExcelencia(validConvocatoria.getExcelencia());
-      data.setCodigoInterno(validConvocatoria.getCodigoInterno());
-      data.setAnio(validConvocatoria.getAnio());
+      data.setActivo(convocatoria.getActivo());
+      data.setAmbitoGeografico(convocatoria.getAmbitoGeografico());
+      data.setAnio(convocatoria.getAnio());
+      data.setClasificacionCVN(convocatoria.getClasificacionCVN());
+      data.setCodigo(convocatoria.getCodigo());
+      data.setCodigoInterno(convocatoria.getCodigoInterno());
+      data.setDuracion(convocatoria.getDuracion());
+      data.setExcelencia(convocatoria.getExcelencia());
+      data.setFechaConcesion(convocatoria.getFechaConcesion());
+      data.setFechaProvisional(convocatoria.getFechaProvisional());
+      data.setFechaPublicacion(convocatoria.getFechaPublicacion());
+      data.setFinalidad(convocatoria.getFinalidad());
+      data.setFormularioSolicitud(convocatoria.getFormularioSolicitud());
+      data.setModeloEjecucion(convocatoria.getModeloEjecucion());
+      data.setObjeto(convocatoria.getObjeto());
+      data.setObservaciones(convocatoria.getObservaciones());
+      data.setRegimenConcurrencia(convocatoria.getRegimenConcurrencia());
+      data.setTitulo(convocatoria.getTitulo());
+      data.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
 
-      Convocatoria returnValue = repository.save(validConvocatoria);
+      Convocatoria returnValue = repository.save(data);
 
       log.debug("update(Convocatoria convocatoria) - end");
       return returnValue;
@@ -637,14 +638,27 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   }
 
   /**
-   * Comprueba y valida los datos de una convocatoria.
-   * 
-   * @param datosConvocatoria
-   * @param datosOriginales
-   * @return convocatoria con los datos validados
+   * Comprueba y valida los datos de una {@link Convocatoria} y sus entidades
+   * relacionadas (disponibilidad y estado activo).
+   *
+   * @param datosConvocatoria datos de la {@link Convocatoria} a validar.
+   * @param datosOriginales   datos actuales de la {@link Convocatoria}.
    */
-  private Convocatoria validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) {
+  private void validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) {
     log.debug("validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) - start");
+
+    if (isEntityWithoutId(datosConvocatoria.getModeloEjecucion())) {
+      datosConvocatoria.setModeloEjecucion(null);
+    }
+    if (isEntityWithoutId(datosConvocatoria.getFinalidad())) {
+      datosConvocatoria.setFinalidad(null);
+    }
+    if (isEntityWithoutId(datosConvocatoria.getRegimenConcurrencia())) {
+      datosConvocatoria.setRegimenConcurrencia(null);
+    }
+    if (isEntityWithoutId(datosConvocatoria.getAmbitoGeografico())) {
+      datosConvocatoria.setAmbitoGeografico(null);
+    }
 
     // Campos obligatorios en estado Registrada
     if (datosConvocatoria.getEstado() == Convocatoria.Estado.REGISTRADA) {
@@ -730,7 +744,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
                 .parameter(MSG_KEY_FIELD, modeloUnidad.get().getModeloEjecucion().getNombre())
                 .build());
       }
-      datosConvocatoria.setModeloEjecucion(modeloUnidad.get().getModeloEjecucion());
     }
 
     // TipoFinalidad
@@ -774,36 +787,30 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
                 .parameter(MSG_KEY_FIELD, modeloTipoFinalidad.get().getTipoFinalidad().getNombre())
                 .build());
       }
-      datosConvocatoria.setFinalidad(modeloTipoFinalidad.get().getTipoFinalidad());
     }
 
     // TipoRegimenConcurrencia
     if (datosConvocatoria.getRegimenConcurrencia() != null) {
-      if (datosConvocatoria.getRegimenConcurrencia().getId() == null) {
-        datosConvocatoria.setRegimenConcurrencia(null);
-      } else {
 
-        Optional<TipoRegimenConcurrencia> tipoRegimenConcurrencia = tipoRegimenConcurrenciaRepository
-            .findById(datosConvocatoria.getRegimenConcurrencia().getId());
+      Optional<TipoRegimenConcurrencia> tipoRegimenConcurrencia = tipoRegimenConcurrenciaRepository
+          .findById(datosConvocatoria.getRegimenConcurrencia().getId());
 
-        Assert.isTrue(tipoRegimenConcurrencia.isPresent(),
+      Assert.isTrue(tipoRegimenConcurrencia.isPresent(),
+          () -> ProblemMessage.builder()
+              .key(MSG_ENTITY_EXISTS)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_REGIMEN_CONCURRENCIA))
+              .parameter(MSG_KEY_FIELD, datosConvocatoria.getRegimenConcurrencia().getNombre())
+              .build());
+
+      // Permitir no activos solo si estamos modificando y es el mismo
+      if (datosOriginales == null || (datosOriginales.getRegimenConcurrencia() != null
+          && (!tipoRegimenConcurrencia.get().getId().equals(datosOriginales.getRegimenConcurrencia().getId())))) {
+        Assert.isTrue(tipoRegimenConcurrencia.get().getActivo(),
             () -> ProblemMessage.builder()
-                .key(MSG_ENTITY_EXISTS)
+                .key(MSG_ENTITY_INACTIVO)
                 .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_REGIMEN_CONCURRENCIA))
-                .parameter(MSG_KEY_FIELD, datosConvocatoria.getRegimenConcurrencia().getNombre())
+                .parameter(MSG_KEY_FIELD, tipoRegimenConcurrencia.get().getNombre())
                 .build());
-
-        // Permitir no activos solo si estamos modificando y es el mismo
-        if (datosOriginales == null || (datosOriginales.getRegimenConcurrencia() != null
-            && (!tipoRegimenConcurrencia.get().getId().equals(datosOriginales.getRegimenConcurrencia().getId())))) {
-          Assert.isTrue(tipoRegimenConcurrencia.get().getActivo(),
-              () -> ProblemMessage.builder()
-                  .key(MSG_ENTITY_INACTIVO)
-                  .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_REGIMEN_CONCURRENCIA))
-                  .parameter(MSG_KEY_FIELD, tipoRegimenConcurrencia.get().getNombre())
-                  .build());
-        }
-        datosConvocatoria.setRegimenConcurrencia(tipoRegimenConcurrencia.get());
       }
     }
 
@@ -825,7 +832,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
                 .parameter(MSG_KEY_FIELD, tipoAmbitoGeografico.get().getNombre())
                 .build());
       }
-      datosConvocatoria.setAmbitoGeografico(tipoAmbitoGeografico.get());
     }
 
     // Comprueba que la duracion no sea menor que el ultimo mes del ultimo
@@ -854,8 +860,16 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     }
 
     log.debug("validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) - end");
+  }
 
-    return datosConvocatoria;
+  /**
+   * Indica si una entidad relacionada se ha recibido sin id.
+   *
+   * @param entity entidad relacionada.
+   * @return {@code true} si la entidad no es {@code null} pero no tiene id.
+   */
+  private static boolean isEntityWithoutId(Identifiable entity) {
+    return entity != null && entity.getId() == null;
   }
 
   /**

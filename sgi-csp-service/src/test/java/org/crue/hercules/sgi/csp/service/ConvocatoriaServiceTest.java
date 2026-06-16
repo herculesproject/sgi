@@ -227,6 +227,114 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
+  void create_WithModeloEjecucionWithoutId_NormalizesToNull() {
+    // given: Convocatoria con ModeloEjecucion sin id
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria = Convocatoria.builder()
+        .unidadGestionRef("2")
+        .titulo(convocatoriaTitulo)
+        .modeloEjecucion(new ModeloEjecucion())
+        .build();
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any()))
+        .willAnswer(invocation -> {
+          Convocatoria entity = invocation.getArgument(0, Convocatoria.class);
+          entity.setId(1L);
+          return entity;
+        });
+
+    // when: create Convocatoria
+    Convocatoria created = service.create(convocatoria);
+
+    // then: ModeloEjecucion sin id se trata como si se recibe a null
+    Assertions.assertThat(created.getModeloEjecucion()).isNull();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
+  void create_WithFinalidadWithoutId_NormalizesToNull() {
+    // given: Convocatoria con TipoFinalidad sin id
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria = Convocatoria.builder()
+        .unidadGestionRef("2")
+        .titulo(convocatoriaTitulo)
+        .finalidad(new TipoFinalidad())
+        .build();
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any()))
+        .willAnswer(invocation -> {
+          Convocatoria entity = invocation.getArgument(0, Convocatoria.class);
+          entity.setId(1L);
+          return entity;
+        });
+
+    // when: create Convocatoria
+    Convocatoria created = service.create(convocatoria);
+
+    // then: TipoFinalidad sin id se trata como si se recibe a null
+    Assertions.assertThat(created.getFinalidad()).isNull();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
+  void create_WithRegimenConcurrenciaWithoutId_NormalizesToNull() {
+    // given: Convocatoria con TipoRegimenConcurrencia sin id
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria = Convocatoria.builder()
+        .unidadGestionRef("2")
+        .titulo(convocatoriaTitulo)
+        .regimenConcurrencia(new TipoRegimenConcurrencia())
+        .build();
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any()))
+        .willAnswer(invocation -> {
+          Convocatoria entity = invocation.getArgument(0, Convocatoria.class);
+          entity.setId(1L);
+          return entity;
+        });
+
+    // when: create Convocatoria
+    Convocatoria created = service.create(convocatoria);
+
+    // then: TipoRegimenConcurrencia sin id se trata como si se recibe a null
+    Assertions.assertThat(created.getRegimenConcurrencia()).isNull();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
+  void create_WithAmbitoGeograficoWithoutId_NormalizesToNull() {
+    // given: Convocatoria con TipoAmbitoGeografico sin id
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
+    Convocatoria convocatoria = Convocatoria.builder()
+        .unidadGestionRef("2")
+        .titulo(convocatoriaTitulo)
+        .ambitoGeografico(new TipoAmbitoGeografico())
+        .build();
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any()))
+        .willAnswer(invocation -> {
+          Convocatoria entity = invocation.getArgument(0, Convocatoria.class);
+          entity.setId(1L);
+          return entity;
+        });
+
+    // when: create Convocatoria
+    Convocatoria created = service.create(convocatoria);
+
+    // then: TipoAmbitoGeografico sin id se trata como si se recibe a null
+    Assertions.assertThat(created.getAmbitoGeografico()).isNull();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-C" })
   void create_WithId_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with id filled
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -574,7 +682,11 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    Convocatoria convocatoriaDb = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaDb.setCreatedBy("user-original");
+    convocatoriaDb.setCreationDate(Instant.parse("2020-01-01T00:00:00Z"));
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaDb));
 
     BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(configuracionSolicitud));
@@ -629,6 +741,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getAmbitoGeografico().getId()).isEqualTo(convocatoria.getAmbitoGeografico().getId());
     Assertions.assertThat(updated.getClasificacionCVN()).isEqualTo(convocatoria.getClasificacionCVN());
     Assertions.assertThat(updated.getActivo()).isEqualTo(convocatoria.getActivo());
+    Assertions.assertThat(updated.getCreatedBy()).isEqualTo("user-original");
+    Assertions.assertThat(updated.getCreationDate()).isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
   }
 
   @Test

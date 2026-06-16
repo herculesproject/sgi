@@ -10,14 +10,14 @@
 */
 
 -- CONVOCATORIA_ENLACE
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (1, 'CONV-PART-01', 1, 'GASTO');
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (2, 'CONV-PART-02', 2, 'GASTO');
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (3, 'CONV-PART-03', 3, 'INGRESO');
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (4, 'CONV-PART-04', 4, 'GASTO');
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (5, 'CONV-PART-05', 5, 'GASTO');
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (6, 'CONV-PART-06', 1, 'INGRESO');
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (7, 'CONV-PART-07', 1, 'INGRESO');
-INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida) VALUES (8, 'CONV-PART-08', 1, 'INGRESO');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (1, 'CONV-PART-01', 1, 'GASTO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (2, 'CONV-PART-02', 2, 'GASTO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (3, 'CONV-PART-03', 3, 'INGRESO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (4, 'CONV-PART-04', 4, 'GASTO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (5, 'CONV-PART-05', 5, 'GASTO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (6, 'CONV-PART-06', 1, 'INGRESO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (7, 'CONV-PART-07', 1, 'INGRESO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
+INSERT INTO test.convocatoria_partida (id, codigo, convocatoria_id, tipo_partida, created_by, creation_date, last_modified_by, last_modified_date) VALUES (8, 'CONV-PART-08', 1, 'INGRESO', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
 
 -- CONVOCATORIA_ENLACE_DESCRIPCION
 INSERT INTO test.convocatoria_partida_descripcion (convocatoria_partida_id, lang, value_) VALUES (1, 'es', 'Testing 1');

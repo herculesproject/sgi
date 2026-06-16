@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,9 +36,7 @@ class ConvocatoriaPartidaIT extends BaseIT {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", roles)));
 
-    HttpEntity<ConvocatoriaPartida> request = new HttpEntity<>(entity, headers);
-
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -139,6 +138,13 @@ class ConvocatoriaPartidaIT extends BaseIT {
         .isEqualTo(convocatoriaPartidaToUpdate.getConvocatoriaId());
     Assertions.assertThat(convocatoriaPartidaUpdated.getTipoPartida()).as("getTipoPartida()")
         .isEqualTo(convocatoriaPartidaToUpdate.getTipoPartida());
+    Assertions.assertThat(convocatoriaPartidaUpdated.getCreatedBy()).as("getCreatedBy()").isEqualTo("test-user");
+    Assertions.assertThat(convocatoriaPartidaUpdated.getCreationDate()).as("getCreationDate()")
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
+    Assertions.assertThat(convocatoriaPartidaUpdated.getLastModifiedBy()).as("getLastModifiedBy()").isEqualTo("user");
+    Assertions.assertThat(convocatoriaPartidaUpdated.getLastModifiedDate()).as("getLastModifiedDate()")
+        .isNotNull()
+        .isNotEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
   }
 
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -186,7 +192,7 @@ class ConvocatoriaPartidaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  private ConvocatoriaPartida buildMockConvocatoriaPartida(Long convocatoriaPartidaId) throws Exception {
+  private ConvocatoriaPartida buildMockConvocatoriaPartida(Long convocatoriaPartidaId) {
     Set<ConvocatoriaPartidaDescripcion> descripcionConvocatoriaPartida = new HashSet<>();
     descripcionConvocatoriaPartida.add(new ConvocatoriaPartidaDescripcion(Language.ES, "Test Created Success"));
 

@@ -67,6 +67,6 @@ INSERT INTO test.convocatoria_fase_observaciones (convocatoria_fase_id, lang, va
 INSERT INTO test.convocatoria_fase_observaciones (convocatoria_fase_id, lang, value_) VALUES (2, 'es', 'observaciones-2');
 
 -- CONFIGURACION SOLICITUD
-INSERT INTO test.configuracion_solicitud 
-(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
-VALUES(1, 1, TRUE, 1, 12345);
+INSERT INTO test.configuracion_solicitud
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, created_by, creation_date, last_modified_by, last_modified_date)
+VALUES(1, 1, TRUE, 1, 12345, 'original-user', '2021-01-01T00:00:00Z', 'original-user', '2021-01-01T00:00:00Z');

@@ -49,6 +49,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SuppressWarnings("java:S6539")
 public class Convocatoria extends BaseEntity {
 
   /**
@@ -178,91 +179,109 @@ public class Convocatoria extends BaseEntity {
   @OneToOne(mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final ConfiguracionSolicitud configuracionSolicitud = null;
 
   @OneToOne(mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final RequisitoEquipo requisitoEquipo = null;
 
   @OneToOne(mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final RequisitoIP requisitoIP = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaAreaTematica> areasTematicas = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaConceptoGasto> conceptosGasto = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaDocumento> documentos = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaEnlace> enlaces = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaEntidadConvocante> entidadesConvocantes = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaEntidadFinanciadora> entidadesFinanciadoras = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaEntidadGestora> entidadesGestoras = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaFase> fases = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaHito> hitos = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaPeriodoJustificacion> periodosJustificacion = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaPeriodoSeguimientoCientifico> periodosSeguimiento = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<Proyecto> proyectos = null;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<Solicitud> solicitudes = null;
 
   @OneToMany(mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaPalabraClave> palabrasClave = null;
 
   @OneToMany(mappedBy = "convocatoria")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @SuppressWarnings("java:S1170")
   private final List<ConvocatoriaPartida> partidas = null;
 
 }
