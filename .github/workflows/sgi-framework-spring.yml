@@ -23,6 +23,10 @@ jobs:
           distribution: "temurin"
           cache: maven
 
+      - name: Install sgi-starter-parent
+        working-directory: sgi-starter-parent
+        run: mvn -B install -DskipTests
+
       - name: Test
         run: mvn -B test
 
@@ -45,6 +49,10 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+
+      - name: Install sgi-starter-parent
+        working-directory: sgi-starter-parent
+        run: mvn -B install -DskipTests
 
       - name: SonarQube analysis
         run: mvn -B verify -DskipTests sonar:sonar
@@ -94,6 +102,11 @@ jobs:
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Install sgi-starter-parent
+        if: steps.check-maven.outputs.exists != 'true'
+        working-directory: sgi-starter-parent
+        run: mvn -B install -DskipTests
 
       - name: Deploy to Central
         if: steps.check-maven.outputs.exists != 'true'
