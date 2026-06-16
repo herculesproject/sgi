@@ -88,7 +88,7 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
   @Override
   @Transactional
   public ConfiguracionSolicitud update(ConfiguracionSolicitud configuracionSolicitud, Long convocatoriaId) {
-    log.debug("update(ConfiguracionSolicitud configuracionSolicitud) - start");
+    log.debug("update - convocatoriaId: {}, data: {}", convocatoriaId, configuracionSolicitud);
 
     AssertHelper.idNotNull(convocatoriaId, Convocatoria.class);
 
@@ -101,10 +101,7 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
       data.setFasePresentacionSolicitudes(configuracionSolicitud.getFasePresentacionSolicitudes());
       data.setImporteMaximoSolicitud(configuracionSolicitud.getImporteMaximoSolicitud());
 
-      ConfiguracionSolicitud returnValue = repository.save(configuracionSolicitud);
-
-      log.debug("update(ConfiguracionSolicitud configuracionSolicitud) - end");
-      return returnValue;
+      return repository.save(data);
     }).orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(configuracionSolicitud.getId()));
   }
 

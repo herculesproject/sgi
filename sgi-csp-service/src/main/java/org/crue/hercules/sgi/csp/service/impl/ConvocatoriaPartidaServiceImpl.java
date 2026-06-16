@@ -87,18 +87,18 @@ public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaServic
   @Transactional
   @Validated({ BaseEntity.Update.class })
   public ConvocatoriaPartida update(@Valid ConvocatoriaPartida convocatoriaPartidaActualizar) {
-    log.debug("update(ConvocatoriaPartida convocatoriaPartidaActualizar) - start");
+    log.debug("update - id: {}, data: {}", convocatoriaPartidaActualizar.getId(),
+        convocatoriaPartidaActualizar);
 
     AssertHelper.idNotNull(convocatoriaPartidaActualizar.getId(), ConvocatoriaPartida.class);
     this.validate(convocatoriaPartidaActualizar);
 
-    // Restricción de convocatorias asociadas a proyectos con presupuesto
-
     return repository.findById(convocatoriaPartidaActualizar.getId()).map(convocatoriaPartida -> {
-
-      ConvocatoriaPartida returnValue = repository.save(convocatoriaPartidaActualizar);
-      log.debug("update(ConvocatoriaPartida convocatoriaPartidaActualizar) - end");
-      return returnValue;
+      convocatoriaPartida.setCodigo(convocatoriaPartidaActualizar.getCodigo());
+      convocatoriaPartida.setPartidaRef(convocatoriaPartidaActualizar.getPartidaRef());
+      convocatoriaPartida.setDescripcion(convocatoriaPartidaActualizar.getDescripcion());
+      convocatoriaPartida.setTipoPartida(convocatoriaPartidaActualizar.getTipoPartida());
+      return repository.save(convocatoriaPartida);
     }).orElseThrow(() -> new ConvocatoriaPartidaNotFoundException(convocatoriaPartidaActualizar.getId()));
   }
 

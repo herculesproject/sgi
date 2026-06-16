@@ -21,7 +21,7 @@ import { anioValidator } from '@core/validators/anio-validator';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, Observable, Subject, from, merge, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface AreaTematicaData {
@@ -45,13 +45,13 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private convocatoriaService: ConvocatoriaService,
-    private proyectoService: ProyectoService,
-    private empresaService: EmpresaService,
-    private convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
-    private unidadGestionService: UnidadGestionService,
-    private convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
-    private configuracionSolicitudService: ConfiguracionSolicitudService,
+    private readonly convocatoriaService: ConvocatoriaService,
+    private readonly proyectoService: ProyectoService,
+    private readonly empresaService: EmpresaService,
+    private readonly convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
+    private readonly unidadGestionService: UnidadGestionService,
+    private readonly convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
+    private readonly configuracionSolicitudService: ConfiguracionSolicitudService,
     public isConvocatoriaVinculada: boolean,
     public hasEditPerm: boolean,
     private readonly palabraClaveService: PalabraClaveService
@@ -240,33 +240,30 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   private checkIfAddAreaTematicaIsAllowed(): void {
-    const fechaActual = DateTime.now();
-    if (this.isEdit()) {
-      this.configuracionSolicitudService.findByConvocatoriaId(this.getKey() as number).pipe(
-        map(configuracionSolicitud => {
-          if (configuracionSolicitud === null && this.hasEditPerm) {
-            this.showAddAreaTematica = true;
-          }
-          else if (configuracionSolicitud.fasePresentacionSolicitudes === null && this.hasEditPerm) {
-            this.showAddAreaTematica = true;
-          }
-          return configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio ?? null;
-        })
-      ).subscribe(fechaInicio => {
-        if ((this.convocatoria.estado === Estado.REGISTRADA || this.convocatoria.estado === Estado.BORRADOR)
-          && (fechaInicio === null || fechaInicio > fechaActual) && this.hasEditPerm) {
-          return this.showAddAreaTematica = true;
-        }
-        return this.showAddAreaTematica = false;
-      });
-    } else {
+    if (!this.isEdit()) {
       this.showAddAreaTematica = true;
+      return;
     }
+
+    const fechaActual = DateTime.now();
+
+    this.subscriptions.push(
+      this.configuracionSolicitudService.findByConvocatoriaId(this.getKey() as number).pipe(
+        map(configuracionSolicitud => configuracionSolicitud?.fasePresentacionSolicitudes?.fechaInicio ?? null)
+      ).subscribe(fechaInicio => {
+        const plazoPresentacionNoIniciado = fechaInicio === null || fechaInicio > fechaActual;
+
+        this.showAddAreaTematica = this.hasEditPerm && (
+          this.convocatoria.estado === Estado.BORRADOR ||
+          (this.convocatoria.estado === Estado.REGISTRADA && plazoPresentacionNoIniciado)
+        );
+      })
+    );
   }
 
   private checkHasProyectoVinculado(key): void {
     this.subscriptions.push(this.proyectoService.findAllProyectosByConvocatoria(key).subscribe(
-      (proyectos) => this.hasProyectoVinculado$.next(Boolean(!!proyectos.total))
+      (proyectos) => this.hasProyectoVinculado$.next(Boolean(proyectos.total))
     ));
   }
 

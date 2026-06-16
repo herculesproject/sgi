@@ -110,16 +110,15 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
   @Override
   @Transactional
   public ConvocatoriaAreaTematica update(ConvocatoriaAreaTematica convocatoriaAreaTematicaActualizar) {
-    log.debug("update(ConvocatoriaAreaTematica convocatoriaAreaTematicaActualizar) - start");
+    log.debug("update - id: {}, data: {}", convocatoriaAreaTematicaActualizar.getId(),
+        convocatoriaAreaTematicaActualizar);
 
     AssertHelper.idNotNull(convocatoriaAreaTematicaActualizar.getId(), ConvocatoriaAreaTematica.class);
 
     return repository.findById(convocatoriaAreaTematicaActualizar.getId()).map(convocatoriaAreaTematica -> {
-
+      convocatoriaAreaTematica.setAreaTematica(convocatoriaAreaTematicaActualizar.getAreaTematica());
       convocatoriaAreaTematica.setObservaciones(convocatoriaAreaTematicaActualizar.getObservaciones());
-      ConvocatoriaAreaTematica returnValue = repository.save(convocatoriaAreaTematicaActualizar);
-      log.debug("update(ConvocatoriaAreaTematica convocatoriaAreaTematicaActualizar) - end");
-      return returnValue;
+      return repository.save(convocatoriaAreaTematica);
     }).orElseThrow(() -> new ConvocatoriaAreaTematicaNotFoundException(convocatoriaAreaTematicaActualizar.getId()));
   }
 

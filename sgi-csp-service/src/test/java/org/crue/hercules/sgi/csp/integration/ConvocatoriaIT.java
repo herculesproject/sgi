@@ -170,6 +170,10 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseData.getClasificacionCVN()).as("getClasificacionCVN()")
         .isEqualTo(convocatoria.getClasificacionCVN());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+    Assertions.assertThat(responseData.getCreatedBy()).as("getCreatedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.getCreationDate()).as("getCreationDate()").isNotNull();
+    Assertions.assertThat(responseData.getLastModifiedBy()).as("getLastModifiedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.getLastModifiedDate()).as("getLastModifiedDate()").isNotNull();
 
   }
 
@@ -224,6 +228,13 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseData.getClasificacionCVN()).as("getClasificacionCVN()")
         .isEqualTo(convocatoria.getClasificacionCVN());
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(convocatoria.getActivo());
+    Assertions.assertThat(responseData.getCreatedBy()).as("getCreatedBy()").isEqualTo("original-user");
+    Assertions.assertThat(responseData.getCreationDate()).as("getCreationDate()")
+        .isEqualTo(Instant.parse("2021-01-01T00:00:00Z"));
+    Assertions.assertThat(responseData.getLastModifiedBy()).as("getLastModifiedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.getLastModifiedDate()).as("getLastModifiedDate()")
+        .isNotNull()
+        .isNotEqualTo(Instant.parse("2021-01-01T00:00:00Z"));
   }
 
   @Sql
@@ -1898,11 +1909,6 @@ class ConvocatoriaIT extends BaseIT {
         .palabraClaveRef(palabraRef)
         .build();
   }
-
-  /**
-   * 
-   * * MOCK
-   */
 
   /**
    * Función que genera Convocatoria

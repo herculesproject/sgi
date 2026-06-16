@@ -49,8 +49,7 @@ class ConfiguracionSolicitudIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s",
         tokenBuilder.buildToken("user", "CSP-CON-C", "CSP-CON-E", "CSP-CON-B", "CSP-CON-V", "CSP-SOL-V")));
 
-    HttpEntity<ConfiguracionSolicitud> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql
@@ -79,6 +78,10 @@ class ConfiguracionSolicitudIT extends BaseIT {
         .isEqualTo(configuracionSolicitud.getFasePresentacionSolicitudes().getId());
     Assertions.assertThat(responseData.getImporteMaximoSolicitud()).as("getImporteMaximoSolicitud()")
         .isEqualTo(configuracionSolicitud.getImporteMaximoSolicitud());
+    Assertions.assertThat(responseData.getCreatedBy()).as("getCreatedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.getCreationDate()).as("getCreationDate()").isNotNull();
+    Assertions.assertThat(responseData.getLastModifiedBy()).as("getLastModifiedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.getLastModifiedDate()).as("getLastModifiedDate()").isNotNull();
   }
 
   @Sql
@@ -110,6 +113,13 @@ class ConfiguracionSolicitudIT extends BaseIT {
         .as("getFasePresentacionSolicitudes().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getImporteMaximoSolicitud()).as("getImporteMaximoSolicitud()")
         .isEqualTo(BigDecimal.valueOf(54321));
+    Assertions.assertThat(responseData.getCreatedBy()).as("getCreatedBy()").isEqualTo("original-user");
+    Assertions.assertThat(responseData.getCreationDate()).as("getCreationDate()")
+        .isEqualTo(Instant.parse("2021-01-01T00:00:00Z"));
+    Assertions.assertThat(responseData.getLastModifiedBy()).as("getLastModifiedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.getLastModifiedDate()).as("getLastModifiedDate()")
+        .isNotNull()
+        .isNotEqualTo(Instant.parse("2021-01-01T00:00:00Z"));
   }
 
   @Sql
@@ -256,7 +266,6 @@ class ConfiguracionSolicitudIT extends BaseIT {
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-1"));
 
-    // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
         .nombre(nombreTipoFase)
@@ -275,16 +284,13 @@ class ConfiguracionSolicitudIT extends BaseIT {
         .observaciones(obsConvocatoriaFase)
         .build();
 
-    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+    return ConfiguracionSolicitud.builder()
         .id(configuracionSolicitudId)
         .convocatoriaId(convocatoriaId)
         .tramitacionSGI(Boolean.TRUE)
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
         .build();
-    // @formatter:on
-
-    return configuracionSolicitud;
   }
 
 }

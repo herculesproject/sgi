@@ -13,6 +13,10 @@
        ### Fixed            Corrección de errores
        ### Security         Correcciones de vulnerabilidades
 -->
+
+### Fixed
+- [CSP][CON] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al modificar una convocatoria y sus entidades relacionadas ([#103](https://github.com/herculesproject/sgi/issues/103)).
+
 ## 1.1.0 (2026-06-11)
 
 **Notas de actualización:** [1.1.0](/docs/upgrade/1.1.0.md)

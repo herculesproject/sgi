@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import java.time.Instant;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -32,8 +33,7 @@ class ConvocatoriaAreaTematicaIT extends BaseIT {
     headers.set("Authorization",
         String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-CON-C", "CSP-CON-E")));
 
-    HttpEntity<ConvocatoriaAreaTematica> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql
@@ -85,6 +85,13 @@ class ConvocatoriaAreaTematicaIT extends BaseIT {
         .isEqualTo(convocatoriaAreaTematicaExistente.getAreaTematica().getId());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo(convocatoriaAreaTematica.getObservaciones());
+    Assertions.assertThat(responseData.getCreatedBy()).as("getCreatedBy()").isEqualTo("test-user");
+    Assertions.assertThat(responseData.getCreationDate()).as("getCreationDate()")
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
+    Assertions.assertThat(responseData.getLastModifiedBy()).as("getLastModifiedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.getLastModifiedDate()).as("getLastModifiedDate()")
+        .isNotNull()
+        .isNotEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
   }
 
   @Sql

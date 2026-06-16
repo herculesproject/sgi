@@ -31,8 +31,8 @@ INSERT INTO test.tipo_ambito_geografico (id, activo) VALUES (1, true);
 INSERT INTO test.tipo_ambito_geografico_nombre (tipo_ambito_geografico_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- CONVOCATORIA
-INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
-VALUES (1, 'unidad-001', 1, 'codigo-001', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'REGISTRADA', 12, 1, 'AYUDAS', true);
+INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo, created_by, creation_date, last_modified_by, last_modified_date)
+VALUES (1, 'unidad-001', 1, 'codigo-001', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'REGISTRADA', 12, 1, 'AYUDAS', true, 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
 
 -- CONVOCATORIA_TITULO
 INSERT INTO test.convocatoria_titulo (convocatoria_id, lang, value_) VALUES (1, 'es', 'titulo-001');
@@ -64,4 +64,4 @@ INSERT INTO test.area_tematica_descripcion (area_tematica_id, lang, value_) VALU
 
 
 -- CONVOCATORIA AREA TEMATICA
-INSERT INTO test.convocatoria_area_tematica (id, convocatoria_id, area_tematica_id, observaciones) VALUES (1, 1, 2, 'observaciones-001');
+INSERT INTO test.convocatoria_area_tematica (id, convocatoria_id, area_tematica_id, observaciones, created_by, creation_date, last_modified_by, last_modified_date) VALUES (1, 1, 2, 'observaciones-001', 'test-user', '2020-01-01 00:00:00', 'test-user', '2020-01-01 00:00:00');
