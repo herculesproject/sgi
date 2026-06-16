@@ -38,6 +38,17 @@ jobs:
           distribution: "temurin"
           cache: maven
 
+      # Build the shared Maven dependencies (sgi-starter-parent parent POM and
+      # sgi-framework-spring library) so the service can be built even when the
+      # current version isn't published in Maven Central yet (e.g. on PRs).
+      - name: Install sgi-starter-parent
+        working-directory: sgi-starter-parent
+        run: mvn -B install -DskipTests
+
+      - name: Install sgi-framework-spring
+        working-directory: sgi-framework-spring
+        run: mvn -B install -DskipTests
+
       - name: Package (skip tests)
         working-directory: ${{ inputs.service-name }}
         run: mvn -B package -DskipTests -Pprod
@@ -48,6 +59,18 @@ jobs:
         with:
           name: packaged-${{ inputs.service-name }}
           path: ${{ inputs.service-name }}/target
+          retention-days: 1
+
+      # Upload shared dependencies (parent POM + framework jar)
+      - name: Package shared dependencies from local Maven repo
+        run: tar -czf sgi-m2-deps.tgz -C ~/.m2/repository io/github/herculesproject/sgi
+
+      - name: Upload shared dependencies
+        uses: actions/upload-artifact@v4
+        with:
+          name: m2-sgi-deps-${{ inputs.service-name }}
+          path: sgi-m2-deps.tgz
+          if-no-files-found: error
           retention-days: 1
 
   test:
@@ -65,6 +88,16 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+
+      - name: Download shared dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: m2-sgi-deps-${{ inputs.service-name }}
+
+      - name: Restore shared dependencies into local Maven repo
+        run: |
+          mkdir -p ~/.m2/repository
+          tar -xzf sgi-m2-deps.tgz -C ~/.m2/repository
 
       - name: Download packaged artifacts
         uses: actions/download-artifact@v4
@@ -133,6 +166,16 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+
+      - name: Download shared dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: m2-sgi-deps-${{ inputs.service-name }}
+
+      - name: Restore shared dependencies into local Maven repo
+        run: |
+          mkdir -p ~/.m2/repository
+          tar -xzf sgi-m2-deps.tgz -C ~/.m2/repository
 
       - name: Download packaged artifacts
         uses: actions/download-artifact@v4
@@ -204,6 +247,16 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+
+      - name: Download shared dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: m2-sgi-deps-${{ inputs.service-name }}
+
+      - name: Restore shared dependencies into local Maven repo
+        run: |
+          mkdir -p ~/.m2/repository
+          tar -xzf sgi-m2-deps.tgz -C ~/.m2/repository
 
       - name: Download UT coverage data
         uses: actions/download-artifact@v4
@@ -316,6 +369,16 @@ jobs:
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Download shared dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: m2-sgi-deps-${{ inputs.service-name }}
+
+      - name: Restore shared dependencies into local Maven repo
+        run: |
+          mkdir -p ~/.m2/repository
+          tar -xzf sgi-m2-deps.tgz -C ~/.m2/repository
 
       - name: Check if artifact already exists in Maven Central
         id: check-maven
