@@ -37,8 +37,7 @@ class ProyectoEquipoIT extends BaseIT {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH")));
 
-    HttpEntity<ProyectoEquipo> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   private HttpEntity<List<ProyectoEquipo>> buildRequestList(HttpHeaders headers, List<ProyectoEquipo> entity)
@@ -48,17 +47,18 @@ class ProyectoEquipoIT extends BaseIT {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-PRO-E")));
 
-    HttpEntity<List<ProyectoEquipo>> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
-      "classpath:scripts/modelo_unidad.sql", "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
       "classpath:scripts/tipo_ambito_geografico.sql",
       "classpath:scripts/tipo_regimen_concurrencia.sql",
       "classpath:scripts/convocatoria.sql",
       "classpath:scripts/proyecto.sql",
-      "classpath:scripts/estado_proyecto.sql", "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/rol_proyecto.sql",
       "classpath:scripts/proyecto_equipo.sql" })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -125,7 +125,7 @@ class ProyectoEquipoIT extends BaseIT {
 
     Assertions.assertThat(responseFindAllProyectoEquipo.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ProyectoEquipo> responseDataFindAll = responseFindAllProyectoEquipo.getBody();
-    Assertions.assertThat(responseDataFindAll.size()).as("size()").isEqualTo(proyectoEquipos.size());
+    Assertions.assertThat(responseDataFindAll).as("size()").hasSize(proyectoEquipos.size());
     Assertions.assertThat(responseDataFindAll.get(0).getId()).as("responseDataFindAll.get(0).getId()")
         .isEqualTo(responseData.get(0).getId());
     Assertions.assertThat(responseDataFindAll.get(1).getId()).as("responseDataFindAll.get(1).getId()")
@@ -158,9 +158,90 @@ class ProyectoEquipoIT extends BaseIT {
     Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()").isEqualTo("2020-01-15T23:59:59Z");
   }
 
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_equipo.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_WithChanges_PreservaCamposAuditoria() throws Exception {
+    // given: un ProyectoEquipo existente con campos de auditoría de creación y
+    // una modificación en la fecha de fin
+    Long proyectoId = 1L;
+    ProyectoEquipo proyectoEquipoActualizar = generarMockProyectoEquipo(106L, Instant.parse("2020-03-01T00:00:00Z"),
+        Instant.parse("2020-03-15T23:59:59Z"), proyectoId);
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID)
+        .buildAndExpand(proyectoId).toUri();
+
+    // when: PATCH con fechaFin modificada
+    final ResponseEntity<List<ProyectoEquipo>> response = restTemplate.exchange(uri, HttpMethod.PATCH,
+        buildRequestList(null, Arrays.asList(proyectoEquipoActualizar)),
+        new ParameterizedTypeReference<List<ProyectoEquipo>>() {
+        });
+
+    // then: se aplica el cambio y se preservan los campos de auditoría de creación
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    List<ProyectoEquipo> responseData = response.getBody();
+    Assertions.assertThat(responseData).hasSize(1);
+    Assertions.assertThat(responseData.get(0).getFechaFin()).as("getFechaFin()")
+        .isEqualTo(Instant.parse("2020-03-15T23:59:59Z"));
+    Assertions.assertThat(responseData.get(0).getCreatedBy()).as("getCreatedBy()").isEqualTo("test-user");
+    Assertions.assertThat(responseData.get(0).getCreationDate()).as("getCreationDate()")
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
+    Assertions.assertThat(responseData.get(0).getLastModifiedBy()).as("getLastModifiedBy()").isEqualTo("user");
+    Assertions.assertThat(responseData.get(0).getLastModifiedDate()).as("getLastModifiedDate()")
+        .isNotNull()
+        .isNotEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_equipo.sql" })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_WithoutChanges_NoActualizaCamposAuditoria() throws Exception {
+    // given: un ProyectoEquipo existente sin cambios
+    Long proyectoId = 1L;
+    ProyectoEquipo proyectoEquipoSinCambios = generarMockProyectoEquipo(106L, Instant.parse("2020-03-01T00:00:00Z"),
+        Instant.parse("2020-03-31T23:59:59Z"), proyectoId);
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID)
+        .buildAndExpand(proyectoId).toUri();
+
+    // when: PATCH con datos idénticos a los existentes en BD
+    final ResponseEntity<List<ProyectoEquipo>> response = restTemplate.exchange(uri, HttpMethod.PATCH,
+        buildRequestList(null, Arrays.asList(proyectoEquipoSinCambios)),
+        new ParameterizedTypeReference<List<ProyectoEquipo>>() {
+        });
+
+    // then: se devuelve la entidad sin modificar
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    List<ProyectoEquipo> responseData = response.getBody();
+    Assertions.assertThat(responseData).hasSize(1);
+    Assertions.assertThat(responseData.get(0).getCreatedBy()).as("getCreatedBy()").isEqualTo("test-user");
+    Assertions.assertThat(responseData.get(0).getCreationDate()).as("getCreationDate()")
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
+    Assertions.assertThat(responseData.get(0).getLastModifiedDate()).as("getLastModifiedDate() no debe cambiar")
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
+  }
+
   /**
    * Función que devuelve un objeto ProyectoEquipo
-   * 
+   *
    * @param id         id del ProyectoEquipo
    * @param mesInicial Mes inicial
    * @param mesFinal   Mes final
@@ -169,12 +250,14 @@ class ProyectoEquipoIT extends BaseIT {
    */
   private ProyectoEquipo generarMockProyectoEquipo(Long id, Instant fechaInicio, Instant fechaFin, Long proyectoId) {
 
-    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(id).proyectoId(proyectoId)
-        .rolProyecto(RolProyecto.builder().id(1L).build()).fechaInicio(fechaInicio).fechaFin(fechaFin).personaRef("001")
+    return ProyectoEquipo.builder()
+        .id(id)
+        .proyectoId(proyectoId)
+        .rolProyecto(RolProyecto.builder().id(1L).build())
+        .fechaInicio(fechaInicio)
+        .fechaFin(fechaFin)
+        .personaRef("001")
         .build();
-
-    return proyectoEquipo;
-
   }
 
 }

@@ -29,6 +29,7 @@ import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
@@ -139,6 +140,77 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
 
     Mockito.verify(repository, Mockito.times(1)).deleteAll(ArgumentMatchers.<ProyectoEquipo>anyList());
     Mockito.verify(repository, Mockito.times(1)).saveAll(ArgumentMatchers.<ProyectoEquipo>anyList());
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void update_ExistingProyectoEquipo_PreservaCamposAuditoria() {
+    // given: un ProyectoEquipo existente con campos de auditoría de creación y
+    // unos datos de actualización (con una fecha distinta) que no los incluyen
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
+
+    ProyectoEquipo proyectoEquipoBD = generarMockProyectoEquipo(4L, Instant.parse("2020-03-16T00:00:00Z"),
+        Instant.parse("2020-04-15T23:59:59Z"), proyectoId);
+    proyectoEquipoBD.setCreatedBy("user-original");
+    proyectoEquipoBD.setCreationDate(Instant.parse("2020-01-01T00:00:00Z"));
+
+    List<ProyectoEquipo> proyectoEquipoExistentes = new ArrayList<>();
+    proyectoEquipoExistentes.add(proyectoEquipoBD);
+
+    ProyectoEquipo proyectoEquipoActualizar = generarMockProyectoEquipo(4L, Instant.parse("2020-03-16T00:00:00Z"),
+        Instant.parse("2020-04-14T23:59:59Z"), proyectoId);
+
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(repository.findAllByProyectoId(ArgumentMatchers.anyLong())).willReturn(proyectoEquipoExistentes);
+    BDDMockito.given(repository.saveAll(ArgumentMatchers.<ProyectoEquipo>anyList()))
+        .willAnswer(invocation -> invocation.getArgument(0));
+
+    // when: update ProyectoEquipo
+    List<ProyectoEquipo> result = service.update(proyectoId, Arrays.asList(proyectoEquipoActualizar));
+
+    // then: se actualiza y se conservan los campos de auditoría de la creación
+    Assertions.assertThat(result).hasSize(1);
+    Assertions.assertThat(result.get(0).getCreatedBy()).as("createdBy").isEqualTo("user-original");
+    Assertions.assertThat(result.get(0).getCreationDate()).as("creationDate")
+        .isEqualTo(Instant.parse("2020-01-01T00:00:00Z"));
+    Assertions.assertThat(result.get(0).getFechaFin()).as("fechaFin")
+        .isEqualTo(Instant.parse("2020-04-14T23:59:59Z"));
+
+    ArgumentCaptor<List<ProyectoEquipo>> captor = ArgumentCaptor.forClass(List.class);
+    Mockito.verify(repository, Mockito.times(1)).saveAll(captor.capture());
+    Assertions.assertThat(captor.getValue()).hasSize(1);
+    Assertions.assertThat(captor.getValue().get(0)).as("se persiste la entidad gestionada")
+        .isSameAs(proyectoEquipoBD);
+  }
+
+  @Test
+  void update_ExistingProyectoEquipoSinCambios_NoEjecutaSave() {
+    // given: un ProyectoEquipo existente sin cambios
+    Long proyectoId = 1L;
+    Proyecto proyecto = generarMockProyecto(proyectoId);
+
+    ProyectoEquipo proyectoEquipoBD = generarMockProyectoEquipo(4L, Instant.parse("2020-03-16T00:00:00Z"),
+        Instant.parse("2020-04-15T23:59:59Z"), proyectoId);
+    proyectoEquipoBD.setCreatedBy("user-original");
+    proyectoEquipoBD.setCreationDate(Instant.parse("2020-01-01T00:00:00Z"));
+
+    List<ProyectoEquipo> proyectoEquipoExistentes = new ArrayList<>();
+    proyectoEquipoExistentes.add(proyectoEquipoBD);
+
+    ProyectoEquipo proyectoEquipoSinCambios = generarMockProyectoEquipo(4L, Instant.parse("2020-03-16T00:00:00Z"),
+        Instant.parse("2020-04-15T23:59:59Z"), proyectoId);
+
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
+    BDDMockito.given(repository.findAllByProyectoId(ArgumentMatchers.anyLong())).willReturn(proyectoEquipoExistentes);
+
+    // when: update ProyectoEquipo
+    List<ProyectoEquipo> result = service.update(proyectoId, Arrays.asList(proyectoEquipoSinCambios));
+
+    // then: se devuelve la entidad sin modificar
+    Mockito.verify(repository, Mockito.never()).saveAll(ArgumentMatchers.<ProyectoEquipo>anyList());
+    Assertions.assertThat(result).hasSize(1);
+    Assertions.assertThat(result.get(0)).isSameAs(proyectoEquipoBD);
   }
 
   @Test
