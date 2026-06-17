@@ -86,7 +86,7 @@
   "adm.config.csp.CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION.description": "Paràmetre que permet configurar si la modificació del projecte econòmic a l'SGE es realitza de forma sincrona o de forma asíncrona",
   "adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED": "Habilitar el paràmetre de cerca per país de soci al cercador ampliat de projectes",
   "adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED.description": "Habilitar el paràmetre de cerca per país de soci al cercador ampliat de projectes",
-  "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED": "Habilitar les unitats de vinculació per als Projectes",
+  "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED": "Habilitar les unitats de vinculació per als Projectes i Sol·licituds",
   "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED.description": "Habilitar l'apartat d'unitats de vinculació en el formulari de Projectes",
   "adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_DOCX": "Plantilla informe dautorització de participació en projecte extern",
   "adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED": "Habilitar camp Sector IVA del SGE",

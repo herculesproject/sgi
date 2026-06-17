@@ -86,7 +86,7 @@
   "adm.config.csp.CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION.description": "Proiektu ekonomikoaren aldaketa KESan modu sinkronoan ala asinkronoan egiten den konfiguratzeko aukera ematen duen parametroa",
   "adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED": "Proiektuen bilatzaile zabalduan bazkidearen herrialdearen araberako bilaketa parametroa gaitzea",
   "adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED.description": "Proiektuen bilatzaile zabalduan bazkidearen herrialdearen araberako bilaketa parametroa gaitzea",
-  "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED": "Proiektuen lotura unitateak gaitzea",
+  "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED": "Proiektuen eta eskaeren lotura unitateak gaitzea",
   "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED.description": "Proiektuen lotura unitateen atala gaitzea",
   "adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_DOCX": "Kanpo proiektuetako partaidetza baimentzeko txostenaren txantiloia",
   "adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED": "KESko BEZ sektorearen eremua gaitzea",

@@ -86,7 +86,7 @@
   "adm.config.csp.CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION.description": "Parameter to configure whether the modification of the financial project in the SGE is done synchronously or asynchronously.",
   "adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED": "Allow the partner country search parameter in the extended project search engine",
   "adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED.description": "Allow the partner country search parameter in the extended project search engine",
-  "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED": "Enable linking units for Projects",
+  "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED": "Enable linking units for Projects and Applications",
   "adm.config.csp.CSP_PROYECTO_UNIDADES_VINCULACION_ENABLED.description": "Enable the linking units section of Projects",
   "adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_DOCX": "Template for external project participation authorisation report",
   "adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED": "Enable SGE VAT Sector field",

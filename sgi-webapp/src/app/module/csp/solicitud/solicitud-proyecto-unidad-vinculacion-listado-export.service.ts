@@ -19,6 +19,7 @@ import { ISolicitudReportData, ISolicitudReportOptions } from './solicitud-lista
 const UNIDAD_KEY = marker('csp.solicitud-proyecto-unidad-vinculacion');
 const TIPO_UNIDAD_KEY = marker('csp.solicitud-proyecto-unidad-vinculacion.tipo-unidad');
 const VALOR_KEY = marker('csp.solicitud-proyecto-unidad-vinculacion.valor');
+const PROYECTO_KEY = marker('menu.csp.solicitudes.datos-proyecto');
 
 const TIPO_UNIDAD_FIELD = 'tipoUnidad';
 const UNIDAD_FIELD = 'unidad';
@@ -152,6 +153,7 @@ export class SolicitudProyectoUnidadVinculacionListadoExportService
 
   private getColumnsUnidadExcel(solicitudes: ISolicitudReportData[]): ISgiColumnReport[] {
     const columns: ISgiColumnReport[] = [];
+    const titleDatosProyecto = this.translate.instant(PROYECTO_KEY);
     const titleUnidadesVinculacion = this.translate.instant(UNIDAD_KEY, MSG_PARAMS.CARDINALIRY.PLURAL);
     const titleTipo = this.translate.instant(TIPO_UNIDAD_KEY);
     const titleValor = this.translate.instant(VALOR_KEY);
@@ -161,7 +163,7 @@ export class SolicitudProyectoUnidadVinculacionListadoExportService
 
       columns.push({
         name: TIPO_UNIDAD_FIELD + indexTipo,
-        title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleTipo}`,
+        title: `${titleDatosProyecto}: ${titleUnidadesVinculacion} ${indexTipo}: ${titleTipo}`,
         type: ColumnType.STRING,
       });
 
@@ -170,7 +172,7 @@ export class SolicitudProyectoUnidadVinculacionListadoExportService
         const indexValor = String(j + 1);
         columns.push({
           name: `${UNIDAD_FIELD}${indexTipo}_${indexValor}`,
-          title: `${titleUnidadesVinculacion} ${indexTipo}: ${titleValor} ${indexValor}`,
+          title: `${titleDatosProyecto}: ${titleUnidadesVinculacion} ${indexTipo}: ${titleValor} ${indexValor}`,
           type: ColumnType.STRING,
         });
       }
