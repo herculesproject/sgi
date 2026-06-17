@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.framework.data.jpa.domain;
 
 import java.time.Instant;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
@@ -26,10 +27,12 @@ import lombok.experimental.SuperBuilder;
 public abstract class Auditable {
   /** Creator */
   @CreatedBy
+  @Column(name = "created_by", updatable = false)
   protected String createdBy;
 
   /** Creation date */
   @CreatedDate
+  @Column(name = "creation_date", updatable = false)
   protected Instant creationDate;
 
   /** Last updater */

@@ -15,8 +15,10 @@
 -->
 
 ### Fixed
-- [CSP][CON] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al modificar una convocatoria y sus entidades relacionadas ([#103](https://github.com/herculesproject/sgi/issues/103)).
-- [CSP][PRO] Corregida la pérdida de los campos de auditoría (`created_by`, `creation_date`, `last_modified_by`, `last_modified_date`) al modificar el equipo de un proyecto. Además, los miembros sin cambios reales ya no generan un UPDATE innecesario en base de datos ([#72](https://github.com/herculesproject/sgi/issues/72)).
+- Los campos `created_by` y `creation_date` de la clase base `Auditable` se marcan ahora como no actualizables (`updatable = false`), impidiendo que Hibernate los sobreescriba y garantizando la inmutabilidad de los datos de auditoría de creación en cualquier entidad ([#71](https://github.com/herculesproject/sgi/issues/71)).
+- [CSP] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al clonar una convocatoria ([#71](https://github.com/herculesproject/sgi/issues/71)).
+- [CSP] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al modificar una convocatoria y sus entidades relacionadas ([#103](https://github.com/herculesproject/sgi/issues/103)).
+- [CSP] Corregida la pérdida de los campos de auditoría (`created_by`, `creation_date`, `last_modified_by`, `last_modified_date`) al modificar el equipo de un proyecto. Además, los miembros sin cambios reales ya no generan un UPDATE innecesario en base de datos ([#72](https://github.com/herculesproject/sgi/issues/72)).
 
 ## 1.1.0 (2026-06-11)
 
