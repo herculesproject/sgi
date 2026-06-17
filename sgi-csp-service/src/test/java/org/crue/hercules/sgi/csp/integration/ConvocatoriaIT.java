@@ -1807,7 +1807,17 @@ class ConvocatoriaIT extends BaseIT {
 
     // then: se devuelve HTTP 201 con el id de la Convocatoria clonada
     Assertions.assertThat(cloneResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    Assertions.assertThat(cloneResponse.getBody()).isNotNull();
+    Long clonedId = cloneResponse.getBody();
+    Assertions.assertThat(clonedId).isNotNull();
+
+    // and: la convocatoria clonada tiene los campos de auditoría rellenos
+    final ResponseEntity<Convocatoria> getResponse = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.GET, buildRequest(null, null), Convocatoria.class, clonedId);
+    Assertions.assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Convocatoria clonada = getResponse.getBody();
+    Assertions.assertThat(clonada.getCreatedBy()).as("getCreatedBy()").isNotNull();
+    Assertions.assertThat(clonada.getCreationDate()).as("getCreationDate()").isNotNull();
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1831,13 +1841,23 @@ class ConvocatoriaIT extends BaseIT {
         .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CLONE)
         .buildAndExpand(convocatoriaId).toUri();
 
-    final ResponseEntity<Long> response = restTemplate.exchange(uri,
+    final ResponseEntity<Long> cloneResponse = restTemplate.exchange(uri,
         HttpMethod.POST,
         buildGenericRequest(null, null, "CSP-CON-C"), Long.class);
 
     // then: se devuelve HTTP 201 con el id de la Convocatoria clonada
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    Assertions.assertThat(response.getBody()).isNotNull();
+    Assertions.assertThat(cloneResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Long clonedId = cloneResponse.getBody();
+    Assertions.assertThat(clonedId).isNotNull();
+
+    // and: la convocatoria clonada tiene los campos de auditoría rellenos
+    final ResponseEntity<Convocatoria> getResponse = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.GET, buildRequest(null, null), Convocatoria.class, clonedId);
+    Assertions.assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Convocatoria clonada = getResponse.getBody();
+    Assertions.assertThat(clonada.getCreatedBy()).as("getCreatedBy()").isNotNull();
+    Assertions.assertThat(clonada.getCreationDate()).as("getCreationDate()").isNotNull();
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
