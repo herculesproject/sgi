@@ -198,4 +198,8 @@ export interface IConfiguracion {
   sgeEliminarRelacionProyectoEnabled: boolean;
   /** Habilitar visibilidad de Unidades de vinculación en Grupos de investigación */
   grupoUnidadesVinculacionEnabled: boolean;
+  /** Habilitar vista ampliada de proyectos para el perfil de investigación (IP) */
+  invProyectoVistaAmpliadaIpEnabled: boolean;
+  /** Habilitar menú de Ejecución Económica para el perfil de investigación (IP) */
+  invEjecucionEconomicaVistaIpEnabled: boolean;
 }

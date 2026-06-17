@@ -273,7 +273,17 @@ public class Configuracion extends BaseEntity {
      * Habilitar menú de Áreas de conocimiento en Proyectos y Solicitudes
      * <code>proAreasConocimiento</code>
      */
-    PROYECTO_AREAS_CONOCIMIENTO_ENABLED("proyectoAreasConocimientoEnabled");
+    PROYECTO_AREAS_CONOCIMIENTO_ENABLED("proyectoAreasConocimientoEnabled"),
+    /**
+     * Habilitar vista ampliada de proyectos para el perfil de investigación (IP)
+     * <code>invProVistaAmpliadaIp</code>
+     */
+    INV_PROYECTO_VISTA_AMPLIADA_IP_ENABLED("invProyectoVistaAmpliadaIpEnabled"),
+    /**
+     * Habilitar menú de Ejecución Económica para el perfil de investigación (IP)
+     * <code>invProVistaEecIp</code>
+     */
+    CSP_INV_EJECUCION_ECONOMICA_VISTA_IP_ENABLED("invEjecucionEconomicaVistaIpEnabled");
 
     private final String key;
 
@@ -521,6 +531,18 @@ public class Configuracion extends BaseEntity {
   @Column(name = "proyecto_areas_conocimiento_enabled", columnDefinition = "boolean default true", nullable = false, unique = true)
   private Boolean proyectoAreasConocimientoEnabled;
 
+  /**
+   * Habilitar vista ampliada de proyectos para el perfil de investigación (IP)
+   */
+  @Column(name = "inv_pro_vista_ampliada_ip", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean invProyectoVistaAmpliadaIpEnabled;
+
+  /**
+   * Habilitar menú de Ejecución Económica para el perfil de investigación (IP)
+   */
+  @Column(name = "inv_pro_vista_eec_ip", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean invEjecucionEconomicaVistaIpEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -597,6 +619,10 @@ public class Configuracion extends BaseEntity {
         return this.getProyectoUnidadesVinculacionEnabled();
       case PROYECTO_AREAS_CONOCIMIENTO_ENABLED:
         return this.getProyectoAreasConocimientoEnabled();
+      case INV_PROYECTO_VISTA_AMPLIADA_IP_ENABLED:
+        return this.getInvProyectoVistaAmpliadaIpEnabled();
+      case CSP_INV_EJECUCION_ECONOMICA_VISTA_IP_ENABLED:
+        return this.getInvEjecucionEconomicaVistaIpEnabled();
       default:
         return null;
     }
@@ -724,6 +750,12 @@ public class Configuracion extends BaseEntity {
         break;
       case PROYECTO_AREAS_CONOCIMIENTO_ENABLED:
         this.setProyectoAreasConocimientoEnabled(Boolean.valueOf(newValue));
+        break;
+      case INV_PROYECTO_VISTA_AMPLIADA_IP_ENABLED:
+        this.setInvProyectoVistaAmpliadaIpEnabled(Boolean.valueOf(newValue));
+        break;
+      case CSP_INV_EJECUCION_ECONOMICA_VISTA_IP_ENABLED:
+        this.setInvEjecucionEconomicaVistaIpEnabled(Boolean.valueOf(newValue));
         break;
     }
   }

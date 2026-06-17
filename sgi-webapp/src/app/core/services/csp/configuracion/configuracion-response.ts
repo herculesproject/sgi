@@ -16,6 +16,8 @@ export interface IConfiguracionResponse {
   grupoImagenTamanioMaximo: number;
   grupoUnidadesVinculacionEnabled: boolean;
   integracionesEccSgeEnabled: string;
+  invEjecucionEconomicaVistaIpEnabled: boolean;
+  invProyectoVistaAmpliadaIpEnabled: boolean;
   modificacionProyectoSgeEnabled: boolean;
   notificacionPresupuestoSgeEnabled: boolean;
   partidasPresupuestariasSgeEnabled: boolean;
