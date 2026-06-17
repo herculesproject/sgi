@@ -14,6 +14,10 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+### Changed
+- [CSP] Reordenadas las columnas de la exportación de solicitudes: el bloque de unidades de vinculación se muestra ahora antes de las columnas "Datos Solicitud RRHH" y sus columnas llevan el prefijo "Datos Proyecto", igual que el resto de columnas de las solicitudes de tipo proyecto ([#108](https://github.com/herculesproject/sgi/issues/108)).
+- [CSP] Renombrada la etiqueta de la variable de configuración de unidades de vinculación para proyectos a "Habilitar unidades de vinculación para Proyectos y Solicitudes" para reflejar que también aplica a las solicitudes ([#108](https://github.com/herculesproject/sgi/issues/108)).
+
 ### Fixed
 - Los campos `created_by` y `creation_date` de la clase base `Auditable` se marcan ahora como no actualizables (`updatable = false`), impidiendo que Hibernate los sobreescriba y garantizando la inmutabilidad de los datos de auditoría de creación en cualquier entidad ([#71](https://github.com/herculesproject/sgi/issues/71)).
 - [CSP] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al clonar una convocatoria ([#71](https://github.com/herculesproject/sgi/issues/71)).

@@ -162,14 +162,14 @@ export class SolicitudListadoExportService extends AbstractTableExportService<IS
         if (reportConfig.reportOptions?.showSolicitudProyectoEntidadesFinanciadoras) {
           row.elements.push(...this.solicitudProyectoEntidadFinanciadoraListadoExportService.fillRows(solicitudes, index, reportConfig));
         }
+        if (reportConfig.reportOptions?.showSolicitudProyectoUnidadesVinculacion) {
+          row.elements.push(...this.solicitudProyectoUnidadVinculacionListadoExportService.fillRows(solicitudes, index, reportConfig));
+        }
         if (reportConfig.reportOptions?.showSolicitudRrhh) {
           row.elements.push(...this.solicitudRrhhListadoExportService.fillRows(solicitudes, index, reportConfig));
         }
         if (reportConfig.reportOptions?.showGruposInvestigacionIps) {
           row.elements.push(...this.solicitudGruposInvestigacionIpListadoExportService.fillRows(solicitudes, index, reportConfig));
-        }
-        if (reportConfig.reportOptions?.showSolicitudProyectoUnidadesVinculacion) {
-          row.elements.push(...this.solicitudProyectoUnidadVinculacionListadoExportService.fillRows(solicitudes, index, reportConfig));
         }
         return row;
       })
@@ -419,14 +419,14 @@ export class SolicitudListadoExportService extends AbstractTableExportService<IS
     if (reportConfig.reportOptions?.showSolicitudProyectoEntidadesFinanciadoras) {
       columns.push(... this.solicitudProyectoEntidadFinanciadoraListadoExportService.fillColumns(resultados, reportConfig));
     }
+    if (reportConfig.reportOptions?.showSolicitudProyectoUnidadesVinculacion) {
+      columns.push(... this.solicitudProyectoUnidadVinculacionListadoExportService.fillColumns(resultados, reportConfig));
+    }
     if (reportConfig.reportOptions?.showSolicitudRrhh) {
       columns.push(... this.solicitudRrhhListadoExportService.fillColumns(resultados, reportConfig));
     }
     if (reportConfig.reportOptions?.showGruposInvestigacionIps) {
       columns.push(... this.solicitudGruposInvestigacionIpListadoExportService.fillColumns(resultados, reportConfig));
-    }
-    if (reportConfig.reportOptions?.showSolicitudProyectoUnidadesVinculacion) {
-      columns.push(... this.solicitudProyectoUnidadVinculacionListadoExportService.fillColumns(resultados, reportConfig));
     }
     return of(columns);
   }
