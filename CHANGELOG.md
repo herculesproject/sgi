@@ -16,6 +16,7 @@
 
 ### Fixed
 - [CSP][CON] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al modificar una convocatoria y sus entidades relacionadas ([#103](https://github.com/herculesproject/sgi/issues/103)).
+- [CSP][PRO] Corregida la pérdida de los campos de auditoría (`created_by`, `creation_date`, `last_modified_by`, `last_modified_date`) al modificar el equipo de un proyecto. Además, los miembros sin cambios reales ya no generan un UPDATE innecesario en base de datos ([#72](https://github.com/herculesproject/sgi/issues/72)).
 
 ## 1.1.0 (2026-06-11)
 

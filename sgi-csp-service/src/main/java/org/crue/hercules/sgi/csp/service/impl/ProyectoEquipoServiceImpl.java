@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -87,119 +86,201 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
     Proyecto proyecto = proyectoRepository.findById(proyectoId)
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoId));
 
-    List<ProyectoEquipo> proyectoEquipoesBD = repository.findAllByProyectoId(proyectoId);
+    List<ProyectoEquipo> miembrosEquipoBD = repository.findAllByProyectoId(proyectoId);
 
     // Miembros del equipo eliminados
-    List<ProyectoEquipo> proyectoEquiposEliminar = proyectoEquipoesBD.stream()
-        .filter(periodo -> proyectoEquipos.stream().map(ProyectoEquipo::getId)
-            .noneMatch(id -> Objects.equals(id, periodo.getId())))
-        .collect(Collectors.toList());
+    List<ProyectoEquipo> proyectoEquiposEliminar = miembrosEquipoBD.stream()
+        .filter(bd -> proyectoEquipos.stream()
+            .map(ProyectoEquipo::getId)
+            .noneMatch(id -> Objects.equals(id, bd.getId())))
+        .toList();
 
     if (!proyectoEquiposEliminar.isEmpty()) {
       repository.deleteAll(proyectoEquiposEliminar);
     }
 
-    // Ordena los miembros del equipo por mesInicial
-    List<ProyectoEquipo> proyectoEquipoFechaInicioNull = proyectoEquipos.stream()
-        .filter(periodo -> periodo.getFechaInicio() == null).collect(Collectors.toList());
+    List<ProyectoEquipo> miembrosEquipoSorted = sortMiembrosEquipo(proyectoEquipos);
 
-    List<ProyectoEquipo> proyectoEquipoConFechaInicio = proyectoEquipos.stream()
-        .filter(periodo -> periodo.getFechaInicio() != null).collect(Collectors.toList());
+    List<ProyectoEquipo> proyectoEquipoToSave = new ArrayList<>();
+    List<ProyectoEquipo> returnValue = new ArrayList<>();
 
-    proyectoEquipoFechaInicioNull.sort(Comparator.comparing(ProyectoEquipo::getPersonaRef));
-
-    proyectoEquipoConFechaInicio.sort(Comparator.comparing(ProyectoEquipo::getFechaInicio)
-        .thenComparing(Comparator.comparing(ProyectoEquipo::getPersonaRef)));
-
-    List<ProyectoEquipo> proyectoEquipoAll = new ArrayList<>();
-    proyectoEquipoAll.addAll(proyectoEquipoFechaInicioNull);
-    proyectoEquipoAll.addAll(proyectoEquipoConFechaInicio);
-
-    // Validaciones
     ProyectoEquipo proyectoEquipoAnterior = null;
-    for (ProyectoEquipo proyectoEquipo : proyectoEquipoAll) {
+    for (ProyectoEquipo miembroEquipo : miembrosEquipoSorted) {
 
-      // actualizando
-      if (proyectoEquipo.getId() != null) {
-        ProyectoEquipo proyectoEquipoBD = proyectoEquipoesBD.stream()
-            .filter(periodo -> periodo.getId().equals(proyectoEquipo.getId())).findFirst()
-            .orElseThrow(() -> new ProyectoEquipoNotFoundException(proyectoEquipo.getId()));
+      ProyectoEquipo miembroEquipoBD = miembroEquipo.getId() != null
+          ? miembrosEquipoBD.stream()
+              .filter(p -> p.getId().equals(miembroEquipo.getId())).findFirst()
+              .orElseThrow(() -> new ProyectoEquipoNotFoundException(miembroEquipo.getId()))
+          : null;
 
-        Assert.isTrue(proyectoEquipoBD.getProyectoId().equals(proyectoEquipo.getProyectoId()),
-            () -> ProblemMessage.builder()
-                .key(MSG_PROBLEM_ACCION_DENEGADA)
-                .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
-                    MSG_MODEL_PROYECTO))
-                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
-                    MSG_MODEL_PROYECTO_EQUIPO))
-                .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_MODIFICAR))
-                .build());
+      validateMiembroEquipo(miembroEquipo, miembroEquipoBD, proyectoEquipoAnterior, proyecto);
+
+      miembroEquipo.setProyectoId(proyectoId);
+
+      if (miembroEquipoBD != null) {
+        if (hasEditableFieldsChanged(miembroEquipoBD, miembroEquipo)) {
+          miembroEquipoBD.setPersonaRef(miembroEquipo.getPersonaRef());
+          miembroEquipoBD.setRolProyecto(miembroEquipo.getRolProyecto());
+          miembroEquipoBD.setFechaInicio(miembroEquipo.getFechaInicio());
+          miembroEquipoBD.setFechaFin(miembroEquipo.getFechaFin());
+          proyectoEquipoToSave.add(miembroEquipoBD);
+        }
+
+        returnValue.add(miembroEquipoBD);
+      } else {
+        proyectoEquipoToSave.add(miembroEquipo);
+        returnValue.add(miembroEquipo);
       }
 
-      proyectoEquipo.setProyectoId(proyectoId);
-
-      if (proyectoEquipo.getFechaInicio() != null && proyectoEquipo.getFechaFin() != null) {
-        Assert.isTrue(proyectoEquipo.getFechaInicio().isBefore(proyectoEquipo.getFechaFin()),
-            ApplicationContextSupport.getMessage(MSG_PROYECTO_EQUIPO_FECHA_FIN_ANTERIOR_A_FECHA_INICIO));
-      }
-      if (proyectoEquipo.getFechaInicio() != null && proyecto.getFechaInicio() != null) {
-        Assert.isTrue(
-            (proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaInicio())
-                || proyectoEquipo.getFechaInicio().equals(proyecto.getFechaInicio())),
-            ApplicationContextSupport.getMessage(MSG_FECHAS_PROYECTO_EQUIPO));
-      }
-
-      Instant proyectoFechaFin = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
-          : proyecto.getFechaFin();
-      if (proyectoEquipo.getFechaFin() != null && proyectoFechaFin != null) {
-        Assert.isTrue(
-            (proyectoEquipo.getFechaFin().isBefore(proyectoFechaFin)
-                || proyectoEquipo.getFechaFin().equals(proyectoFechaFin)),
-            ApplicationContextSupport.getMessage(MSG_FECHAS_PROYECTO_EQUIPO));
-      }
-
-      Specification<ProyectoEquipo> specByProyectoId = ProyectoEquipoSpecifications
-          .byProyectoId(proyectoEquipo.getProyectoId());
-
-      Specification<ProyectoEquipo> specByIdNotEqual = ProyectoEquipoSpecifications
-          .byIdNotEqual(proyectoEquipo.getId());
-
-      Specification<ProyectoEquipo> specByRangoFechaSolapados = ProyectoEquipoSpecifications
-          .byRangoFechaSolapados(proyectoEquipo.getFechaInicio(), proyectoEquipo.getFechaFin());
-
-      Specification<ProyectoEquipo> specByPersonaRef = ProyectoEquipoSpecifications
-          .byPersonaRef(proyectoEquipo.getPersonaRef());
-
-      Specification<ProyectoEquipo> specs = Specification.where(specByProyectoId).and(specByRangoFechaSolapados)
-          .and(specByRangoFechaSolapados).and(specByPersonaRef).and(specByIdNotEqual);
-
-      if (proyectoEquipoAnterior != null
-          && proyectoEquipoAnterior.getPersonaRef().equals(proyectoEquipo.getPersonaRef())) {
-        Assert.isTrue(
-            (repository.count(specs) == 0) && proyectoEquipoAnterior.getFechaFin() != null
-                && proyectoEquipoAnterior.getFechaFin().isBefore(proyectoEquipo.getFechaInicio()),
-            ApplicationContextSupport.getMessage(MSG_PROYECTO_EQUIPO_OVERLOAP));
-      }
-
-      proyectoEquipoAnterior = proyectoEquipo;
+      proyectoEquipoAnterior = miembroEquipo;
 
     }
 
-    if (proyecto.getSolicitudId() != null && proyecto.getEstado().getEstado().equals(Estado.CONCEDIDO)) {
-      Solicitud solicitud = solicitudRepository.findById(proyecto.getSolicitudId())
-          .orElseThrow(() -> new SolicitudNotFoundException(proyecto.getSolicitudId()));
+    validateInvestigadorPrincipal(proyecto, miembrosEquipoSorted);
 
-      if (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)
-          && proyectoEquipoAll.stream().map(ProyectoEquipo::getPersonaRef)
-              .noneMatch(personaRef -> personaRef.equals(solicitud.getSolicitanteRef()))) {
-        throw new MissingInvestigadorPrincipalInProyectoEquipoException();
-      }
+    if (!proyectoEquipoToSave.isEmpty()) {
+      repository.saveAll(proyectoEquipoToSave);
     }
 
-    List<ProyectoEquipo> returnValue = repository.saveAll(proyectoEquipoAll);
     log.debug("updateProyectoEquiposConvocatoria(Long proyectoId, List<ProyectoEquipo> proyectoEquipos) - end");
 
     return returnValue;
+  }
+
+  /**
+   * Ordena los {@link ProyectoEquipo} para que la validación de solapamientos
+   * pueda hacerse comparando elementos consecutivos.
+   *
+   * Los miembros sin {@code fechaInicio} se colocan primero, ordenados por
+   * {@code personaRef}. El resto se ordenan por {@code fechaInicio} y, en caso
+   * de empate, por {@code personaRef}.
+   *
+   * @param miembros lista de miembros a ordenar.
+   * @return nueva lista ordenada.
+   */
+  private List<ProyectoEquipo> sortMiembrosEquipo(List<ProyectoEquipo> miembros) {
+    List<ProyectoEquipo> sinFecha = miembros.stream()
+        .filter(m -> m.getFechaInicio() == null)
+        .sorted(Comparator.comparing(ProyectoEquipo::getPersonaRef))
+        .toList();
+
+    List<ProyectoEquipo> conFecha = miembros.stream()
+        .filter(m -> m.getFechaInicio() != null)
+        .sorted(Comparator.comparing(ProyectoEquipo::getFechaInicio)
+            .thenComparing(ProyectoEquipo::getPersonaRef))
+        .toList();
+
+    List<ProyectoEquipo> resultado = new ArrayList<>(sinFecha);
+    resultado.addAll(conFecha);
+
+    return resultado;
+  }
+
+  /**
+   * Verifica que el solicitante del proyecto figure en el equipo cuando el
+   * {@link Proyecto} ha sido concedido a partir de una {@link Solicitud} de tipo
+   * {@link FormularioSolicitud#PROYECTO}.
+   *
+   * @param proyecto proyecto a comprobar.
+   * @param miembros lista de miembros del equipo tras la actualización.
+   * @throws MissingInvestigadorPrincipalInProyectoEquipoException si el
+   *                                                               solicitante no
+   *                                                               está en el
+   *                                                               equipo.
+   */
+  private void validateInvestigadorPrincipal(Proyecto proyecto, List<ProyectoEquipo> miembros) {
+    if (proyecto.getSolicitudId() == null || !proyecto.getEstado().getEstado().equals(Estado.CONCEDIDO)) {
+      return;
+    }
+
+    Solicitud solicitud = solicitudRepository.findById(proyecto.getSolicitudId())
+        .orElseThrow(() -> new SolicitudNotFoundException(proyecto.getSolicitudId()));
+
+    if (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)
+        && miembros.stream().map(ProyectoEquipo::getPersonaRef)
+            .noneMatch(ref -> ref.equals(solicitud.getSolicitanteRef()))) {
+      throw new MissingInvestigadorPrincipalInProyectoEquipoException();
+    }
+  }
+
+  /**
+   * Valida un {@link ProyectoEquipo}.
+   *
+   * <ul>
+   * <li>Si el miembro ya existe en base de datos, verifica que el
+   * {@link Proyecto} al que pertenece no haya cambiado.</li>
+   * <li>Verifica que {@code fechaInicio} sea anterior a {@code fechaFin}.</li>
+   * <li>Verifica que las fechas del miembro estén dentro del rango del
+   * {@link Proyecto}.</li>
+   * <li>Verifica que no haya solapamiento de fechas con el miembro anterior de
+   * la misma persona (la lista de entrada debe estar ordenada por
+   * {@code personaRef} y {@code fechaInicio}).</li>
+   * </ul>
+   *
+   * @param miembroEquipo         datos de entrada del miembro a validar.
+   * @param miembroEquipoBD       entidad recuperada de base de datos,
+   *                              o {@code null} si el miembro es nuevo.
+   * @param miembroEquipoAnterior miembro procesado inmediatamente antes en la
+   *                              lista ordenada, o {@code null} si es el primero.
+   * @param proyecto              proyecto al que pertenece el equipo.
+   */
+  private void validateMiembroEquipo(ProyectoEquipo miembroEquipo, ProyectoEquipo miembroEquipoBD,
+      ProyectoEquipo miembroEquipoAnterior, Proyecto proyecto) {
+
+    if (miembroEquipoBD != null) {
+      Assert.isTrue(miembroEquipoBD.getProyectoId().equals(miembroEquipo.getProyectoId()),
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_ACCION_DENEGADA)
+              .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_MODEL_PROYECTO))
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_PROYECTO_EQUIPO))
+              .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_MODIFICAR))
+              .build());
+    }
+
+    if (miembroEquipo.getFechaInicio() != null && miembroEquipo.getFechaFin() != null) {
+      Assert.isTrue(miembroEquipo.getFechaInicio().isBefore(miembroEquipo.getFechaFin()),
+          ApplicationContextSupport.getMessage(MSG_PROYECTO_EQUIPO_FECHA_FIN_ANTERIOR_A_FECHA_INICIO));
+    }
+
+    if (miembroEquipo.getFechaInicio() != null && proyecto.getFechaInicio() != null) {
+      Assert.isTrue(
+          (miembroEquipo.getFechaInicio().isAfter(proyecto.getFechaInicio())
+              || miembroEquipo.getFechaInicio().equals(proyecto.getFechaInicio())),
+          ApplicationContextSupport.getMessage(MSG_FECHAS_PROYECTO_EQUIPO));
+    }
+
+    Instant proyectoFechaFin = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
+        : proyecto.getFechaFin();
+    if (miembroEquipo.getFechaFin() != null && proyectoFechaFin != null) {
+      Assert.isTrue(
+          (miembroEquipo.getFechaFin().isBefore(proyectoFechaFin)
+              || miembroEquipo.getFechaFin().equals(proyectoFechaFin)),
+          ApplicationContextSupport.getMessage(MSG_FECHAS_PROYECTO_EQUIPO));
+    }
+
+    if (miembroEquipoAnterior != null
+        && miembroEquipoAnterior.getPersonaRef().equals(miembroEquipo.getPersonaRef())) {
+      Assert.isTrue(miembroEquipoAnterior.getFechaFin() != null
+          && miembroEquipoAnterior.getFechaFin().isBefore(miembroEquipo.getFechaInicio()),
+          ApplicationContextSupport.getMessage(MSG_PROYECTO_EQUIPO_OVERLOAP));
+    }
+  }
+
+  /**
+   * Indica si dos {@link ProyectoEquipo} difieren en alguno de sus campos
+   * editables.
+   *
+   * @param miembroA primer miembro a comparar.
+   * @param miembroB segundo miembro a comparar.
+   * @return {@code true} si al menos un campo es distinto.
+   */
+  private boolean hasEditableFieldsChanged(ProyectoEquipo miembroA, ProyectoEquipo miembroB) {
+    Long rolMiembroA = miembroA.getRolProyecto() == null ? null : miembroA.getRolProyecto().getId();
+    Long rolMiembroB = miembroB.getRolProyecto() == null ? null : miembroB.getRolProyecto().getId();
+    return !Objects.equals(miembroA.getPersonaRef(), miembroB.getPersonaRef())
+        || !Objects.equals(rolMiembroA, rolMiembroB)
+        || !Objects.equals(miembroA.getFechaInicio(), miembroB.getFechaInicio())
+        || !Objects.equals(miembroA.getFechaFin(), miembroB.getFechaFin());
   }
 
   /**

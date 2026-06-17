@@ -1108,7 +1108,7 @@ class ProyectoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "personaRef=ke=00";
+    String filter = "personaRef=ke=ref-00";
 
     Long proyectoId = 1L;
 
@@ -3287,7 +3287,7 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     List<ProyectoEquipoDto> equipo = response.getBody();
     Integer numPersonasEquipo = equipo.size();
-    Assertions.assertThat(numPersonasEquipo).isEqualTo(5);
+    Assertions.assertThat(numPersonasEquipo).isEqualTo(6);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
