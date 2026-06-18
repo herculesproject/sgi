@@ -436,4 +436,21 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
     return hasProyectoEquipoWithDates;
   }
 
+  @Override
+  public boolean isCurrentUserInvestigadorPrincipalActual(Long proyectoId) {
+    String personaRef = proyectoHelper.getAuthenticationPersonaRef();
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+
+    log.debug("isCurrentUserInvestigadorPrincipalActual - proyectoId: {}, personaRef: {}, fechaActual: {}",
+        proyectoId,
+        personaRef,
+        fechaActual);
+
+    return repository.count(
+        ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(personaRef))
+            .and(ProyectoEquipoSpecifications.byRolPrincipal(true))
+            .and(ProyectoEquipoSpecifications.byFechaActual(fechaActual))) > 0;
+  }
+
 }

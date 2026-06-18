@@ -71,7 +71,6 @@ import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.serv
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
@@ -81,7 +80,7 @@ import { BehaviorSubject, forkJoin, merge, Observable, of, Subject, throwError }
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 import { ProyectoCopiarAparatadosModalComponent, ProyectoCopiarApartadosModalData } from './modals/proyecto-copiar-apartados-modal/proyecto-copiar-apartados-modal.component';
-import { ProyectoInfoModificarFechasModalComponent, ProyectoInfoModificarFechasModalData } from './modals/proyecto-info-modificar-fechas-modal/proyecto-info-modificar-fechas-modal.component';
+import { ProyectoInfoModificarFechasModalComponent } from './modals/proyecto-info-modificar-fechas-modal/proyecto-info-modificar-fechas-modal.component';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAgrupacionGastoFragment } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.fragment';
 import { ProyectoAmortizacionFondosFragment } from './proyecto-formulario/proyecto-amortizacion-fondos/proyecto-amortizacion-fondos.fragment';
@@ -125,6 +124,7 @@ export interface IProyectoData {
   hasAnyProyectoSocioCoordinador: boolean;
   isVisor: boolean;
   isInvestigador: boolean;
+  isInvestigadorPrincipal: boolean;
   isProyectoUnidadesVinculacionEnabled: boolean;
   isProyectoAreasConocimientoEnabled: boolean;
 }
@@ -163,34 +163,34 @@ export class ProyectoActionService extends ActionService {
     UNIDADES_VINCULACION: 'unidades-vinculacion'
   };
 
-  private fichaGeneral: ProyectoFichaGeneralFragment;
-  private entidadesFinanciadoras: ProyectoEntidadesFinanciadorasFragment;
-  private hitos: ProyectoHitosFragment;
-  private socios: ProyectoSociosFragment;
-  private entidadesConvocantes: ProyectoEntidadesConvocantesFragment;
-  private paqueteTrabajo: ProyectoPaqueteTrabajoFragment;
-  private plazos: ProyectoPlazosFragment;
-  private proyectoContexto: ProyectoContextoFragment;
-  private seguimientoCientifico: ProyectoPeriodoSeguimientosFragment;
-  private entidadGestora: ProyectoEntidadGestoraFragment;
-  private proyectoEquipo: ProyectoEquipoFragment;
-  private documentos: ProyectoDocumentosFragment;
-  private prorrogas: ProyectoProrrogasFragment;
-  private historicoEstados: ProyectoHistoricoEstadosFragment;
-  private clasificaciones: ProyectoClasificacionesFragment;
-  private areaConocimiento: ProyectoAreaConocimientoFragment;
-  private proyectosSge: ProyectoProyectosSgeFragment;
-  private partidasPresupuestarias: ProyectoPartidasPresupuestariasFragment;
-  private elegibilidad: ProyectoConceptosGastoFragment;
-  private presupuesto: ProyectoPresupuestoFragment;
-  private responsableEconomico: ProyectoResponsableEconomicoFragment;
-  private proyectoAgrupacionGasto: ProyectoAgrupacionGastoFragment;
-  private proyectoCalendarioJustificacion: ProyectoCalendarioJustificacionFragment;
-  private consultaPresupuesto: ProyectoConsultaPresupuestoFragment;
-  private amortizacionFondos: ProyectoAmortizacionFondosFragment;
-  private relaciones: ProyectoRelacionFragment;
-  private proyectoCalendarioFacturacion: ProyectoCalendarioFacturacionFragment;
-  private unidadesVinculacion: ProyectoUnidadesVinculacionFragment;
+  private readonly fichaGeneral: ProyectoFichaGeneralFragment;
+  private readonly entidadesFinanciadoras: ProyectoEntidadesFinanciadorasFragment;
+  private readonly hitos: ProyectoHitosFragment;
+  private readonly socios: ProyectoSociosFragment;
+  private readonly entidadesConvocantes: ProyectoEntidadesConvocantesFragment;
+  private readonly paqueteTrabajo: ProyectoPaqueteTrabajoFragment;
+  private readonly plazos: ProyectoPlazosFragment;
+  private readonly proyectoContexto: ProyectoContextoFragment;
+  private readonly seguimientoCientifico: ProyectoPeriodoSeguimientosFragment;
+  private readonly entidadGestora: ProyectoEntidadGestoraFragment;
+  private readonly proyectoEquipo: ProyectoEquipoFragment;
+  private readonly documentos: ProyectoDocumentosFragment;
+  private readonly prorrogas: ProyectoProrrogasFragment;
+  private readonly historicoEstados: ProyectoHistoricoEstadosFragment;
+  private readonly clasificaciones: ProyectoClasificacionesFragment;
+  private readonly areaConocimiento: ProyectoAreaConocimientoFragment;
+  private readonly proyectosSge: ProyectoProyectosSgeFragment;
+  private readonly partidasPresupuestarias: ProyectoPartidasPresupuestariasFragment;
+  private readonly elegibilidad: ProyectoConceptosGastoFragment;
+  private readonly presupuesto: ProyectoPresupuestoFragment;
+  private readonly responsableEconomico: ProyectoResponsableEconomicoFragment;
+  private readonly proyectoAgrupacionGasto: ProyectoAgrupacionGastoFragment;
+  private readonly proyectoCalendarioJustificacion: ProyectoCalendarioJustificacionFragment;
+  private readonly consultaPresupuesto: ProyectoConsultaPresupuestoFragment;
+  private readonly amortizacionFondos: ProyectoAmortizacionFondosFragment;
+  private readonly relaciones: ProyectoRelacionFragment;
+  private readonly proyectoCalendarioFacturacion: ProyectoCalendarioFacturacionFragment;
+  private readonly unidadesVinculacion: ProyectoUnidadesVinculacionFragment;
 
   private readonly data: IProyectoData;
 
@@ -263,6 +263,10 @@ export class ProyectoActionService extends ActionService {
     return this.data?.isInvestigador ?? (this.isModuleINV() && this.hasAnyAuthorityInv());
   }
 
+  get isInvestigadorPrincipal(): boolean {
+    return this.data?.isInvestigadorPrincipal ?? false;
+  }
+
   get isProyectoUnidadesVinculacionEnabled(): boolean {
     return this.data?.isProyectoUnidadesVinculacionEnabled ?? false;
   }
@@ -274,70 +278,69 @@ export class ProyectoActionService extends ActionService {
   constructor(
     fb: FormBuilder,
     logger: NGXLogger,
-    private route: ActivatedRoute,
-    private matDialog: MatDialog,
+    private readonly route: ActivatedRoute,
+    private readonly matDialog: MatDialog,
     protected proyectoService: ProyectoService,
-    private readonly areaConocimientoService: AreaConocimientoService,
-    private readonly clasificacionService: ClasificacionService,
-    private readonly configService: ConfigService,
-    private readonly contextoProyectoService: ContextoProyectoService,
-    private readonly convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    private readonly convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly datosAcademicosService: DatosAcademicosService,
-    private readonly datosContactoService: DatosContactoService,
-    private readonly datosPersonalesService: DatosPersonalesService,
+    areaConocimientoService: AreaConocimientoService,
+    clasificacionService: ClasificacionService,
+    configService: ConfigService,
+    contextoProyectoService: ContextoProyectoService,
+    convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
+    convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
+    convocatoriaService: ConvocatoriaService,
+    datosAcademicosService: DatosAcademicosService,
+    datosContactoService: DatosContactoService,
+    datosPersonalesService: DatosPersonalesService,
     private readonly dialogService: DialogService,
-    private readonly documentoService: DocumentoService,
-    private readonly empresaService: EmpresaService,
-    private readonly facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
-    private readonly facturaPrevistaService: FacturaPrevistaService,
-    private readonly invencionService: InvencionService,
-    private readonly modeloEjecucionService: ModeloEjecucionService,
-    private readonly palabraClaveService: PalabraClaveService,
-    private readonly partidaPresupuestariaGastoSgeService: PartidaPresupuestariaGastoSgeService,
-    private readonly partidaPresupuestariaIngresoSgeService: PartidaPresupuestariaIngresoSgeService,
-    private readonly periodoAmortizacionService: PeriodoAmortizacionService,
-    private readonly personaService: PersonaService,
-    private readonly proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
-    private readonly proyectoAnualidadService: ProyectoAnualidadService,
-    private readonly proyectoAreaConocimiento: ProyectoAreaConocimientoService,
-    private readonly proyectoClasificacionService: ProyectoClasificacionService,
-    private readonly proyectoConceptoGastoService: ProyectoConceptoGastoService,
-    private readonly proyectoDocumentoService: ProyectoDocumentoService,
-    private readonly proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
-    private readonly proyectoEntidadGestora: ProyectoEntidadGestoraService,
-    private readonly proyectoEquipoService: ProyectoEquipoService,
-    private readonly proyectoFacturacionService: ProyectoFacturacionService,
-    private readonly proyectoHitoService: ProyectoHitoService,
-    private readonly proyectoIvaService: ProyectoIVAService,
-    private readonly proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
-    private readonly proyectoPartidaPresupuestariaService: ProyectoPartidaPresupuestariaService,
-    private readonly proyectoPeriodoAmortizacionService: ProyectoPeriodoAmortizacionService,
-    private readonly proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
-    private readonly proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
-    private readonly proyectoPlazoService: ProyectoFaseService,
-    private readonly proyectoProrrogaService: ProyectoProrrogaService,
-    private readonly proyectoProyectoSgeService: ProyectoProyectoSgeService,
-    private readonly proyectoResponsableEconomicoService: ProyectoResponsableEconomicoService,
-    private readonly proyectoSgeService: ProyectoSgeService,
-    private readonly proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
-    private readonly proyectoSocioService: ProyectoSocioService,
-    private readonly relacionService: RelacionService,
-    private readonly rolSocioService: RolSocioService,
+    documentoService: DocumentoService,
+    empresaService: EmpresaService,
+    facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
+    facturaPrevistaService: FacturaPrevistaService,
+    invencionService: InvencionService,
+    modeloEjecucionService: ModeloEjecucionService,
+    palabraClaveService: PalabraClaveService,
+    partidaPresupuestariaGastoSgeService: PartidaPresupuestariaGastoSgeService,
+    partidaPresupuestariaIngresoSgeService: PartidaPresupuestariaIngresoSgeService,
+    periodoAmortizacionService: PeriodoAmortizacionService,
+    personaService: PersonaService,
+    proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
+    proyectoAnualidadService: ProyectoAnualidadService,
+    proyectoAreaConocimiento: ProyectoAreaConocimientoService,
+    proyectoClasificacionService: ProyectoClasificacionService,
+    proyectoConceptoGastoService: ProyectoConceptoGastoService,
+    proyectoDocumentoService: ProyectoDocumentoService,
+    proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
+    proyectoEntidadGestora: ProyectoEntidadGestoraService,
+    proyectoEquipoService: ProyectoEquipoService,
+    proyectoFacturacionService: ProyectoFacturacionService,
+    proyectoHitoService: ProyectoHitoService,
+    proyectoIvaService: ProyectoIVAService,
+    proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
+    proyectoPartidaPresupuestariaService: ProyectoPartidaPresupuestariaService,
+    proyectoPeriodoAmortizacionService: ProyectoPeriodoAmortizacionService,
+    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
+    proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
+    proyectoPlazoService: ProyectoFaseService,
+    proyectoProrrogaService: ProyectoProrrogaService,
+    proyectoProyectoSgeService: ProyectoProyectoSgeService,
+    proyectoResponsableEconomicoService: ProyectoResponsableEconomicoService,
+    proyectoSgeService: ProyectoSgeService,
+    proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
+    proyectoSocioService: ProyectoSocioService,
+    relacionService: RelacionService,
+    rolSocioService: RolSocioService,
     private readonly sgiAuthService: SgiAuthService,
-    private readonly solicitudProyectoSgeService: SolicitudProyectoSgeService,
-    private readonly solicitudService: SolicitudService,
-    private readonly tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
-    private readonly tipoRegimenConcurrenciaService: TipoRegimenConcurrenciaService,
-    private readonly tipoFinalidadService: TipoFinalidadService,
+    solicitudProyectoSgeService: SolicitudProyectoSgeService,
+    solicitudService: SolicitudService,
+    tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    tipoRegimenConcurrenciaService: TipoRegimenConcurrenciaService,
+    tipoFinalidadService: TipoFinalidadService,
     private readonly translate: TranslateService,
-    private readonly unidadGestionService: UnidadGestionService,
-    private readonly viculacionService: VinculacionService,
-    private readonly grupoService: GrupoService,
-    private readonly unidadVinculacionService: UnidadVinculacionService,
-    private readonly languageService: LanguageService,
-    private readonly snackBarService: SnackBarService,
+    unidadGestionService: UnidadGestionService,
+    viculacionService: VinculacionService,
+    grupoService: GrupoService,
+    unidadVinculacionService: UnidadVinculacionService,
+    private readonly languageService: LanguageService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -383,17 +386,21 @@ export class ProyectoActionService extends ActionService {
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
 
     if (this.data?.isInvestigador) {
-      this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(
-        this.data?.proyecto?.id,
-        this.data?.proyecto,
-        proyectoService,
-        proyectoFacturacionService,
-        facturaPrevistaService,
-        facturaPrevistaEmitidaService,
-        proyectoProrrogaService,
-        configService,
-        this.isInvestigador
-      );
+      if (this.data?.isInvestigadorPrincipal) {
+        this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(
+          this.data?.proyecto?.id,
+          this.data?.proyecto,
+          proyectoService,
+          proyectoFacturacionService,
+          facturaPrevistaService,
+          facturaPrevistaEmitidaService,
+          proyectoProrrogaService,
+          configService,
+          this.isInvestigador
+        );
+
+        this.addFragment(this.FRAGMENT.CALENDARIO_FACTURACION, this.proyectoCalendarioFacturacion);
+      }
 
       this.proyectosSge = new ProyectoProyectosSgeFragment(
         id,
@@ -406,20 +413,25 @@ export class ProyectoActionService extends ActionService {
         this.data?.isVisor
       );
 
-      this.addFragment(this.FRAGMENT.CALENDARIO_FACTURACION, this.proyectoCalendarioFacturacion);
       this.addFragment(this.FRAGMENT.PROYECTOS_SGE, this.proyectosSge);
 
       this.fichaGeneral.initialize();
 
       if (this.isEdit()) {
-        this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(() => this.proyectosSge.initialize()));
-        this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => {
-          this.fichaGeneral.proyectosSgeIds$.next(value.map(v => v.value.proyectoSge.id));
-          this.proyectoCalendarioFacturacion.proyectosSGE$.next(value.map(wraper => wraper.value.proyectoSge));
-        }));
-        this.subscriptions.push(this.fichaGeneral.proyectosSge$.subscribe(value => {
-          this.proyectoCalendarioFacturacion.proyectosSGE$.next(value);
-        }));
+        this.subscriptions.push(
+          this.fichaGeneral.initialized$.subscribe(() => this.proyectosSge.initialize()),
+          this.proyectosSge.proyectosSge$.subscribe(value => {
+            this.fichaGeneral.proyectosSgeIds$.next(value.map(v => v.value.proyectoSge.id));
+            if (this.proyectoCalendarioFacturacion) {
+              this.proyectoCalendarioFacturacion.proyectosSGE$.next(value.map(wraper => wraper.value.proyectoSge));
+            }
+          }),
+          this.fichaGeneral.proyectosSge$.subscribe(value => {
+            if (this.proyectoCalendarioFacturacion) {
+              this.proyectoCalendarioFacturacion.proyectosSGE$.next(value);
+            }
+          })
+        );
       }
 
     } else {
@@ -803,7 +815,7 @@ export class ProyectoActionService extends ActionService {
       return throwError('Errores');
     }
 
-    if (!this.isEdit() || !!!this.convocatoriaId || this.data.isInvestigador) {
+    if (!this.isEdit() || !this.convocatoriaId || this.data.isInvestigador) {
       return this.saveOrUpdateProyecto();
     }
 
@@ -875,7 +887,7 @@ export class ProyectoActionService extends ActionService {
                     data: {
                       fechaInicio: this.proyecto.fechaInicio,
                       fechaFinDefinitiva: this.proyecto.fechaFinDefinitiva
-                    } as ProyectoInfoModificarFechasModalData,
+                    },
                   };
 
                   return this.matDialog.open(ProyectoInfoModificarFechasModalComponent, config).afterClosed();
@@ -888,7 +900,7 @@ export class ProyectoActionService extends ActionService {
             data: {
               fechaInicio: this.proyecto.fechaInicio,
               fechaFinDefinitiva: this.proyecto.fechaFinDefinitiva
-            } as ProyectoInfoModificarFechasModalData,
+            }
           };
 
           cascade = cascade.pipe(

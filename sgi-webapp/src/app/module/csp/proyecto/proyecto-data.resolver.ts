@@ -27,11 +27,11 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
     logger: NGXLogger,
     router: Router,
     snackBar: SnackBarService,
-    private service: ProyectoService,
-    private rolSocioService: RolSocioService,
-    private solicitudService: SolicitudService,
-    private authService: SgiAuthService,
-    private configService: ConfigService
+    private readonly service: ProyectoService,
+    private readonly rolSocioService: RolSocioService,
+    private readonly solicitudService: SolicitudService,
+    private readonly authService: SgiAuthService,
+    private readonly configService: ConfigService
   ) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
@@ -69,17 +69,30 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
         solicitud: !data.isInvestigador && data.proyecto?.solicitudId
           ? this.solicitudService.findById(data.proyecto.solicitudId)
           : of(null),
+        isInvestigadorPrincipal: data.isInvestigador
+          ? this.service.isInvestigadorPrincipalActual(data.proyecto.id)
+          : of(false),
         isProyectoUnidadesVinculacionEnabled: this.configService.isProyectoUnidadesVinculacionEnabled(),
         isProyectoAreasConocimientoEnabled: this.configService.isProyectoAreasConocimientoEnabled(),
       }).pipe(
-        map(({ rolUniversidad, hasPeriodosPago, hasPeriodosJustificacion, modificable, hasCoordinador, solicitud,
-          isProyectoUnidadesVinculacionEnabled, isProyectoAreasConocimientoEnabled }) => {
+        map(({
+          rolUniversidad,
+          hasPeriodosPago,
+          hasPeriodosJustificacion,
+          modificable,
+          hasCoordinador,
+          solicitud,
+          isInvestigadorPrincipal,
+          isProyectoUnidadesVinculacionEnabled,
+          isProyectoAreasConocimientoEnabled
+        }) => {
 
           data.disableRolUniversidad = hasPeriodosPago || hasPeriodosJustificacion;
           data.hasAnyProyectoSocioCoordinador = hasCoordinador;
           data.isProyectoAreasConocimientoEnabled = isProyectoAreasConocimientoEnabled;
           data.isProyectoUnidadesVinculacionEnabled = isProyectoUnidadesVinculacionEnabled;
           data.readonly = !modificable;
+          data.isInvestigadorPrincipal = isInvestigadorPrincipal;
 
           if (rolUniversidad) {
             data.proyecto.rolUniversidad = rolUniversidad;

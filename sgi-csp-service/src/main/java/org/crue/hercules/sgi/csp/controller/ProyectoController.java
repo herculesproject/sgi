@@ -165,6 +165,8 @@ public class ProyectoController {
   public static final String PATH_SOLICITUD_INV = PATH_ID + PATH_SEPARATOR + "solicitud-inv";
   public static final String PATH_CONVOCATORIA = PATH_ID + PATH_SEPARATOR + "convocatoria";
   public static final String PATH_PROYECTO_UNIDADES_VINCULACION = PATH_ID + PATH_SEPARATOR + "unidades-vinculacion";
+  public static final String PATH_INVESTIGADOR_PRINCIPAL_ACTUAL = PATH_ID + PATH_SEPARATOR
+      + "investigador-principal-actual";
 
   private final ModelMapper modelMapper;
 
@@ -573,6 +575,22 @@ public class ProyectoController {
     log.debug("findAllProyectoEquipo(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
+  }
+
+  /**
+   * Comprueba si el usuario autenticado es investigador principal activo del
+   * {@link Proyecto} en el momento actual.
+   *
+   * @param id Id del {@link Proyecto}.
+   * @return {@link HttpStatus#OK} si lo es, {@link HttpStatus#NO_CONTENT} si no.
+   */
+  @RequestMapping(path = PATH_INVESTIGADOR_PRINCIPAL_ACTUAL, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-INV-VR')")
+  public ResponseEntity<Void> isCurrentUserInvestigadorPrincipalActual(@PathVariable Long id) {
+    log.debug("isCurrentUserInvestigadorPrincipalActual(Long id) - start");
+    boolean returnValue = proyectoEquipoService.isCurrentUserInvestigadorPrincipalActual(id);
+    log.debug("isCurrentUserInvestigadorPrincipalActual(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -1323,16 +1341,10 @@ public class ProyectoController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-INV-VR')")
   public ResponseEntity<Page<Proyecto>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllInvestigador(String query, Pageable paging) - start");
-
-    Page<Proyecto> page = service.findAllActivosInvestigador(query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllInvestigador(String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAllInvestigador(String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findAllInvestigador - query: {}, paging: {}", query, SgiLogUtils.pageable(paging));
+    Page<Proyecto> output = service.findAllActivosInvestigador(query, paging);
+    log.debug("findAllInvestigador - response: {}", SgiLogUtils.page(output));
+    return output.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(output, HttpStatus.OK);
   }
 
   /**

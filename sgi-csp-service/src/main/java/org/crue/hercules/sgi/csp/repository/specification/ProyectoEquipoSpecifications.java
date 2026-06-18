@@ -124,4 +124,19 @@ public class ProyectoEquipoSpecifications {
         cb.isNotNull(root.get(ProyectoEquipo_.fechaFin)));
   }
 
+  /**
+   * {@link ProyectoEquipo} cuya participación está activa en la fecha indicada
+   *
+   * @param fecha fecha de referencia
+   * @return specification para obtener los {@link ProyectoEquipo} activos en la
+   *         fecha
+   */
+  public static Specification<ProyectoEquipo> byFechaActual(Instant fecha) {
+    return (root, query, cb) -> cb.and(
+        cb.or(cb.isNull(root.get(ProyectoEquipo_.fechaInicio)),
+            cb.lessThanOrEqualTo(root.get(ProyectoEquipo_.fechaInicio), fecha)),
+        cb.or(cb.isNull(root.get(ProyectoEquipo_.fechaFin)),
+            cb.greaterThanOrEqualTo(root.get(ProyectoEquipo_.fechaFin), fecha)));
+  }
+
 }

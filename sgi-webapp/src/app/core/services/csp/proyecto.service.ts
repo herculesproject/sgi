@@ -687,6 +687,13 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
     );
   }
 
+  isInvestigadorPrincipalActual(proyectoId: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${proyectoId}/investigador-principal-actual`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
   findAllProyectoAnualidades(proyectoId: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IProyectoAnualidadResumen>> {
     return this.find<IProyectoAnualidadResumenResponse, IProyectoAnualidadResumen>(

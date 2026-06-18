@@ -41,6 +41,7 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
 
   disableCambioEstado = false;
   isInvestigador = false;
+  isInvestigadorPrincipal = false;
 
   get isModuleINV(): boolean {
     return this.route.snapshot.data.module === Module.INV;
@@ -59,10 +60,10 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     public actionService: ProyectoActionService,
-    private matDialog: MatDialog,
-    private confirmDialogService: DialogService,
+    private readonly matDialog: MatDialog,
+    confirmDialogService: DialogService,
     private readonly translate: TranslateService) {
     super(router, route, actionService, confirmDialogService, translate);
   }
@@ -71,6 +72,7 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
     super.ngOnInit();
 
     this.isInvestigador = this.actionService.isInvestigador;
+    this.isInvestigadorPrincipal = this.actionService.isInvestigadorPrincipal;
 
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
@@ -129,7 +131,7 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            if (!!!error.managed) {
+            if (!error.managed) {
               this.snackBarService.showError(error);
             }
           }
@@ -142,16 +144,7 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   }
 
   hasEstadoCambio(...estadosProyecto: Estado[]): boolean {
-    let estadoCorrecto = false;
-    estadosProyecto.forEach((estadoProyecto) => {
-      if (this.actionService.estado === estadoProyecto) {
-        estadoCorrecto = true;
-        return;
-      }
-    });
-
-    return estadoCorrecto;
-
+    return estadosProyecto.includes(this.actionService.estado);
   }
 
   /**
