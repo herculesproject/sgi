@@ -18,7 +18,9 @@ describe('ProyectoUnidadesVinculacionComponent', () => {
   let component: ProyectoUnidadesVinculacionComponent;
   let fixture: ComponentFixture<ProyectoUnidadesVinculacionComponent>;
   const routeData: Data = {
-    [PROYECTO_DATA_KEY]: {} as IProyectoData
+    [PROYECTO_DATA_KEY]: {
+      isProyectoUnidadesVinculacionEnabled: true
+    } as IProyectoData
   };
   const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);
 
