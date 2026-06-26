@@ -4,6 +4,7 @@ import { IConfiguracion, SgeEjecucionEconomicaFiltros } from '@core/models/csp/c
 import { IRelacionEjecucionEconomica, TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
+import { Module } from '@core/module';
 import { ActionService } from '@core/services/action-service';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
@@ -75,21 +76,21 @@ export class EjecucionEconomicaActionService extends ActionService {
     SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS: 'seguimiento-justificacion-requerimientos'
   };
 
-  private proyectos: ProyectosFragment;
-  private ejecucionPresupuestariaEstadoActual: EjecucionPresupuestariaEstadoActualFragment;
-  private ejecucionPresupuestariaGastos: EjecucionPresupuestariaGastosFragment;
-  private ejecucionPresupuestariaIngresos: EjecucionPresupuestariaIngresosFragment;
-  private detalleOperacionesGastos: DetalleOperacionesGastosFragment;
-  private detalleOperacionesIngresos: DetalleOperacionesIngresosFragment;
-  private detalleOperacionesModificaciones: DetalleOperacionesModificacionesFragment;
-  private facturasGastos: FacturasGastosFragment;
-  private viajesDietas: ViajesDietasFragment;
-  private personalContratado: PersonalContratadoFragment;
-  private clasificacionGastos: ClasificacionGastosFragment;
-  private validacionGastos: ValidacionGastosFragment;
-  private facturasEmitidas: FacturasEmitidasFragment;
-  private seguimientoJustificacionResumen: SeguimientoJustificacionResumenFragment;
-  private seguimientoJustificacionRequerimientos: SeguimientoJustificacionRequerimientosFragment;
+  private readonly proyectos: ProyectosFragment;
+  private readonly ejecucionPresupuestariaEstadoActual: EjecucionPresupuestariaEstadoActualFragment;
+  private readonly ejecucionPresupuestariaGastos: EjecucionPresupuestariaGastosFragment;
+  private readonly ejecucionPresupuestariaIngresos: EjecucionPresupuestariaIngresosFragment;
+  private readonly detalleOperacionesGastos: DetalleOperacionesGastosFragment;
+  private readonly detalleOperacionesIngresos: DetalleOperacionesIngresosFragment;
+  private readonly detalleOperacionesModificaciones: DetalleOperacionesModificacionesFragment;
+  private readonly facturasGastos: FacturasGastosFragment;
+  private readonly viajesDietas: ViajesDietasFragment;
+  private readonly personalContratado: PersonalContratadoFragment;
+  private readonly clasificacionGastos: ClasificacionGastosFragment;
+  private readonly validacionGastos: ValidacionGastosFragment;
+  private readonly facturasEmitidas: FacturasEmitidasFragment;
+  private readonly seguimientoJustificacionResumen: SeguimientoJustificacionResumenFragment;
+  private readonly seguimientoJustificacionRequerimientos: SeguimientoJustificacionRequerimientosFragment;
 
   private readonly data: IEjecucionEconomicaData;
 
@@ -115,21 +116,23 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     proyectoSeguimientoJustificacionService: ProyectoSeguimientoJustificacionService,
     proyectoPeriodoJustificacionSeguimientoService: ProyectoPeriodoJustificacionSeguimientoService,
-    private readonly cnfService: ConfigService,
-    private readonly languageService: LanguageService,
-    private readonly translateService: TranslateService
+    cnfService: ConfigService,
+    languageService: LanguageService,
+    translateService: TranslateService
   ) {
     super();
 
     this.data = route.snapshot.data[EJECUCION_ECONOMICA_DATA_KEY];
     const id = Number(route.snapshot.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID));
+    const isInvestigador = route.snapshot.data.module === Module.INV;
 
     this.proyectos = new ProyectosFragment(
       id,
       this.data.proyectoSge,
       this.data.relaciones,
       proyectoService,
-      this.data.configuracion
+      this.data.configuracion,
+      isInvestigador
     );
 
     this.ejecucionPresupuestariaEstadoActual = new EjecucionPresupuestariaEstadoActualFragment(
@@ -208,7 +211,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.proyectoSge,
       this.data.relaciones,
-      this.languageService,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
       gastoProyectoService,
@@ -217,14 +220,15 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
       this.data.configuracion,
-      this.translateService
+      translateService,
+      isInvestigador
     );
 
     this.viajesDietas = new ViajesDietasFragment(
       id,
       this.data.proyectoSge,
       this.data.relaciones,
-      this.languageService,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
       gastoProyectoService,
@@ -233,14 +237,15 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
       this.data.configuracion,
-      this.translateService
+      translateService,
+      isInvestigador
     );
 
     this.personalContratado = new PersonalContratadoFragment(
       id,
       this.data.proyectoSge,
       this.data.relaciones,
-      this.languageService,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
       gastoProyectoService,
@@ -249,7 +254,8 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
       this.data.configuracion,
-      this.translateService
+      translateService,
+      isInvestigador
     );
 
     this.clasificacionGastos = new ClasificacionGastosFragment(
@@ -262,7 +268,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
       this.data.configuracion,
-      this.translateService,
+      translateService,
       languageService
     );
 

@@ -6544,14 +6544,17 @@
       ],
       "optionalClientScopes": [
         "address",
-        "sgi-com",
-        "phone",
-        "offline_access",
-        "sgi-sgp",
         "microprofile-jwt",
-        "sgi-tp",
+        "offline_access",
+        "phone",
         "sgi-cnf",
-        "sgi-eti"
+        "sgi-com",
+        "sgi-eti",
+        "sgi-pii",
+        "sgi-rel",
+        "sgi-sge",
+        "sgi-sgp",
+        "sgi-tp"
       ]
     },
     {

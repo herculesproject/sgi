@@ -7,7 +7,6 @@ import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestaria-sge';
 import { Fragment } from '@core/services/action-service';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoPartidaPresupuestariaService } from '@core/services/csp/proyecto-partida-presupuestaria/proyecto-partida-presupuestaria.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
@@ -58,7 +57,6 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
     key: number,
     private proyecto: IProyecto,
     private readonly configService: ConfigService,
-    private readonly convocatoriaService: ConvocatoriaService,
     private readonly partidaPresupuestariaGastoSgeService: PartidaPresupuestariaGastoSgeService,
     private readonly partidaPresupuestariaIngresoSgeService: PartidaPresupuestariaIngresoSgeService,
     private readonly proyectoPartidaPresupuestariaService: ProyectoPartidaPresupuestariaService,
@@ -100,8 +98,8 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
             return of(partidasPresupuestariasListado);
           }
 
-          return this.convocatoriaService
-            .findPartidasPresupuestarias(this.proyecto.convocatoriaId)
+          return this.proyectoService
+            .findConvocatoriaPartidasPresupuestarias(this.getKey() as number)
             .pipe(
               map((response) => response.items),
               map(convocatoriaPartidaPresupuestarias => {

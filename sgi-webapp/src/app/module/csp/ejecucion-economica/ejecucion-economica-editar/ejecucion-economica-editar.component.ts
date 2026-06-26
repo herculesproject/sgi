@@ -5,6 +5,7 @@ import { ActionComponent } from '@core/component/action.component';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgeIntegracionesEccMenus, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
+import { Module } from '@core/module';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -38,11 +39,19 @@ export class EjecucionEconomicaEditarComponent extends ActionComponent implement
 
   private readonly data: IEjecucionEconomicaData;
 
+  get isModuleCSP(): boolean {
+    return this.route.snapshot.data.module === Module.CSP;
+  }
+
+  get isModuleINV(): boolean {
+    return this.route.snapshot.data.module === Module.INV;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
-    route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     public actionService: EjecucionEconomicaActionService,
     dialogService: DialogService,
     private readonly translate: TranslateService
@@ -100,7 +109,7 @@ export class EjecucionEconomicaEditarComponent extends ActionComponent implement
       (error) => {
         this.logger.error(error);
         if (error instanceof SgiError) {
-          if (!!!error.managed) {
+          if (!error.managed) {
             this.snackBarService.showError(error);
           }
         }
@@ -127,7 +136,7 @@ export class EjecucionEconomicaEditarComponent extends ActionComponent implement
   }
 
   isOpcionHabilitadaIntegracionesEcc(opcion: SgeIntegracionesEccMenus): boolean {
-    return this.data?.configuracion?.integracionesEccSgeEnabled?.includes(opcion) ?? false;;
+    return this.data?.configuracion?.integracionesEccSgeEnabled?.includes(opcion) ?? false;
   }
 
   private returnUrl() {

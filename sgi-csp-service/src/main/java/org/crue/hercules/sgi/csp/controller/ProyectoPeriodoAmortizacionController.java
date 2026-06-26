@@ -7,8 +7,10 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoAmortizacionInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoAmortizacionOutput;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoAmortizacion;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoAmortizacionService;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -78,6 +80,27 @@ public class ProyectoPeriodoAmortizacionController {
 
     log.debug("findAll(String query, Pageable paging) - end");
     return new ResponseEntity<>(convert(page), HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link ProyectoPeriodoAmortizacion} del
+   * {@link Proyecto} indicado, controlando el acceso a nivel de {@link Proyecto}.
+   *
+   * @param proyectoId Identificador del {@link Proyecto}.
+   * @param query      filtro de búsqueda.
+   * @param paging     pageable.
+   * @return lista paginada y filtrada {@link ProyectoPeriodoAmortizacion}.
+   */
+  @GetMapping("/proyecto/{proyectoId}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO( 'CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
+  public ResponseEntity<Page<ProyectoPeriodoAmortizacionOutput>> findAllByProyectoId(@PathVariable Long proyectoId,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllByProyectoId - proyectoId: {}, query: {}, paging: {}", proyectoId, query,
+        SgiLogUtils.pageable(paging));
+    Page<ProyectoPeriodoAmortizacion> page = service.findAllByProyectoId(proyectoId, query, paging);
+    log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(convert(page), HttpStatus.OK);
   }
 
   /**

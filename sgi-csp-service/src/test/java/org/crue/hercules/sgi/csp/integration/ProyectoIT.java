@@ -3,8 +3,6 @@ package org.crue.hercules.sgi.csp.integration;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
-import java.time.Period;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -73,7 +71,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProyectoIT extends BaseIT {
 
-  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_ID = ProyectoController.PATH_ID;
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/proyectos";
@@ -92,6 +90,7 @@ class ProyectoIT extends BaseIT {
   private static final String PATH_PROYECTO_SGE = "/proyectossge";
   private static final String PATH_PAQUETE_TRABAJO = "/proyectopaquetetrabajos";
   private static final String PATH_PROYECTO_EQUIPO = "/proyectoequipos";
+  private static final String PATH_INVESTIGADOR_PRINCIPAL_ACTUAL = "/investigador-principal-actual";
   private static final String PATH_PROYECTO_SOCIO = "/proyectosocios";
   private static final String PATH_PRORROGA = "/proyecto-prorrogas";
   private static final String PATH_RESPONSABLE_ECONOMICO = "/proyectoresponsableseconomicos";
@@ -812,58 +811,28 @@ class ProyectoIT extends BaseIT {
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/proyecto.sql", 
+    "classpath:scripts/proyecto.sql",
     "classpath:scripts/rol_socio.sql",
-    "classpath:scripts/proyecto_socio.sql",  
+    "classpath:scripts/proyecto_socio.sql",
       // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void hasAnyProyectoSocioWithRolCoordinador_Returns200() throws Exception {
+  @ParameterizedTest
+  @CsvSource({ "1, 200", "2, 204" })
+  void hasAnyProyectoSocioWithRolCoordinador(Long proyectoId, int expectedStatus) throws Exception {
+    // given: datos de proyecto socio con y sin coordinador según el proyecto
     String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
-
-    Long proyectoId = 1L;
 
     URI uri = UriComponentsBuilder
         .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_SOCIO + "/coordinador")
         .buildAndExpand(proyectoId).toUri();
 
+    // when: petición HEAD a proyecto socio coordinador
     final ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.HEAD,
         buildRequest(null, null, roles), Object.class);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-      // @formatter:off
-    "classpath:scripts/modelo_ejecucion.sql",
-    "classpath:scripts/modelo_unidad.sql",
-    "classpath:scripts/tipo_finalidad.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql",
-    "classpath:scripts/tipo_regimen_concurrencia.sql",
-    "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/proyecto.sql", 
-    "classpath:scripts/rol_socio.sql",
-    "classpath:scripts/proyecto_socio.sql",  
-      // @formatter:on
-  })
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void hasAnyProyectoSocioWithRolCoordinador_ReturnsEmptyProyectoSocioWithRolCoordinador() throws Exception {
-    String[] roles = { "CSP-PRO-E", "CSP-SOL-E", "CSP-SOL-V" };
-
-    Long proyectoId = 2L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PROYECTO_SOCIO + "/coordinador")
-        .buildAndExpand(proyectoId).toUri();
-
-    final ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.HEAD,
-        buildRequest(null, null, roles), Object.class);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
+    // then: retorna el estado esperado según si existe socio coordinador o no
+    Assertions.assertThat(response.getStatusCode().value()).isEqualTo(expectedStatus);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -1373,16 +1342,15 @@ class ProyectoIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
-    "classpath:scripts/estado_proyecto.sql",
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllEstadoProyecto_ReturnsEmptyEntidadFinanciadoraSubList()
+  void findAllEstadoProyecto_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
-    Long proyectoId = 6L;
+    Long proyectoId = 1L;
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ESTADO_PROYECTO)
         .buildAndExpand(proyectoId).toUri();
@@ -1696,7 +1664,7 @@ class ProyectoIT extends BaseIT {
   void findAllProyectoPeriodoSeguimiento_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
-    Long proyectoId = 6L;
+    Long proyectoId = 2L;
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_SEGUIMIENTO)
         .buildAndExpand(proyectoId).toUri();
@@ -2513,7 +2481,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void getProyectoPresupuestoTotales_ReturnsProyectoPresupuestoTotales() throws Exception {
-    String roles = "CSP-SOL-E";
+    String roles = "CSP-PRO-E";
     Long proyectoId = 1L;
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESUPUESTO_TOTALES)
@@ -3113,8 +3081,8 @@ class ProyectoIT extends BaseIT {
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones(observacionesProyecto);
     proyecto.setUnidadGestionRef("2");
-    proyecto.setFechaInicio(Instant.now());
-    proyecto.setFechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3))));
+    proyecto.setFechaInicio(Instant.parse("2021-01-11T00:00:00Z"));
+    proyecto.setFechaFin(Instant.parse("2022-01-11T23:59:59Z"));
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
@@ -3141,7 +3109,7 @@ class ProyectoIT extends BaseIT {
     estadoProyecto.setId(id);
     estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
-    estadoProyecto.setFechaEstado(Instant.now());
+    estadoProyecto.setFechaEstado(Instant.parse("2021-01-11T00:00:00Z"));
     estadoProyecto.setProyectoId(1L);
 
     return estadoProyecto;
@@ -3342,5 +3310,38 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getObservaciones(), Language.ES))
         .as("get(1).getObservaciones())")
         .isEqualTo("obs-001");
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+      "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/estado_proyecto.sql",
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_equipo.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @ParameterizedTest
+  @CsvSource({ "1, 200", "2, 204" })
+  void isCurrentUserInvestigadorPrincipalActual(Long proyectoId, int expectedStatus) throws Exception {
+    // given: datos de equipo con y sin IP activo para el usuario autenticado
+    String[] roles = { "CSP-PRO-INV-VR" };
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_INVESTIGADOR_PRINCIPAL_ACTUAL)
+        .buildAndExpand(proyectoId).toUri();
+
+    // when: petición HEAD a investigador-principal-actual
+    final ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.HEAD,
+        buildRequest(null, null, roles), Void.class);
+
+    // then: retorna el estado esperado según si el usuario es IP activo o no
+    Assertions.assertThat(response.getStatusCode().value()).isEqualTo(expectedStatus);
   }
 }

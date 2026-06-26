@@ -1,9 +1,9 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { FormFragment } from '@core/services/action-service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
@@ -20,16 +20,19 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto> {
   proyectoContexto: IProyectoContexto;
   areasTematicas$ = new BehaviorSubject<AreaTematicaProyectoData[]>([]);
   areaTematica: IAreaTematica;
-  ocultarTable: boolean;
+
+  get isReadonly(): boolean {
+    return this.isVisor || this.readonly;
+  }
 
   constructor(
     key: number,
     private readonly logger: NGXLogger,
-    private contextoProyectoService: ContextoProyectoService,
-    private convocatoriaService: ConvocatoriaService,
-    private convocatoriaId: number,
-    private readonly: boolean,
-    public isVisor: boolean,
+    private readonly contextoProyectoService: ContextoProyectoService,
+    private readonly proyectoService: ProyectoService,
+    private readonly convocatoriaId: number,
+    private readonly readonly: boolean,
+    private readonly isVisor: boolean,
   ) {
     super(key, true);
     this.setComplete(true);
@@ -44,10 +47,7 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto> {
       propiedadResultados: new FormControl(''),
     });
 
-    if (this.readonly) {
-      form.disable();
-    }
-    if (this.isVisor) {
+    if (this.isVisor || this.readonly) {
       form.disable();
     }
 
@@ -73,7 +73,7 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto> {
       }),
       switchMap(proyectoContexto => {
         if (this.convocatoriaId) {
-          return this.convocatoriaService.findAreaTematicas(this.convocatoriaId).pipe(
+          return this.proyectoService.findConvocatoriaAreasTematicas(this.getKey() as number).pipe(
             map((results) => {
               let nodes;
               if (results.total > 0) {
@@ -160,7 +160,7 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto> {
         root: result.padre,
         areaTematicaProyecto: result.areaTematicaProyecto,
         areasTematicasConvocatoria: result.areasTematicasConvocatoria
-      } as AreaTematicaProyectoData]);
+      }]);
     }
     this.setChanges(true);
   }

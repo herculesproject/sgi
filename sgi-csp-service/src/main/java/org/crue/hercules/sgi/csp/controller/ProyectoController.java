@@ -34,6 +34,11 @@ import org.crue.hercules.sgi.csp.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.AnualidadIngreso;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.GastoProyecto;
 import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
@@ -66,6 +71,11 @@ import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
 import org.crue.hercules.sgi.csp.service.AnualidadIngresoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.GastoProyectoService;
@@ -164,13 +174,31 @@ public class ProyectoController {
   public static final String PATH_SOLICITUD = PATH_ID + PATH_SEPARATOR + "solicitud";
   public static final String PATH_SOLICITUD_INV = PATH_ID + PATH_SEPARATOR + "solicitud-inv";
   public static final String PATH_CONVOCATORIA = PATH_ID + PATH_SEPARATOR + "convocatoria";
+  public static final String PATH_CONVOCATORIA_DOCUMENTOS = PATH_ID + PATH_SEPARATOR + "convocatoria-documentos";
+  public static final String PATH_CONVOCATORIA_GASTOS_PERMITIDOS = PATH_ID + PATH_SEPARATOR
+      + "convocatoria-conceptos-gasto/permitidos";
+  public static final String PATH_CONVOCATORIA_GASTOS_NO_PERMITIDOS = PATH_ID + PATH_SEPARATOR
+      + "convocatoria-conceptos-gasto/nopermitidos";
+  public static final String PATH_CONVOCATORIA_PARTIDAS = PATH_ID + PATH_SEPARATOR
+      + "convocatoria-partidas-presupuestarias";
+  public static final String PATH_CONVOCATORIA_PERIODOS_JUSTIFICACION = PATH_ID + PATH_SEPARATOR
+      + "convocatoria-periodos-justificacion";
+  public static final String PATH_CONVOCATORIA_AREAS_TEMATICAS = PATH_ID + PATH_SEPARATOR
+      + "convocatoria-areas-tematicas";
   public static final String PATH_PROYECTO_UNIDADES_VINCULACION = PATH_ID + PATH_SEPARATOR + "unidades-vinculacion";
+  public static final String PATH_INVESTIGADOR_PRINCIPAL_ACTUAL = PATH_ID + PATH_SEPARATOR
+      + "investigador-principal-actual";
 
   private final ModelMapper modelMapper;
 
   private final AnualidadGastoService anualidadGastoService;
   private final AnualidadIngresoService anualidadIngresoService;
   private final ConvocatoriaService convocatoriaService;
+  private final ConvocatoriaDocumentoService convocatoriaDocumentoService;
+  private final ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
+  private final ConvocatoriaPartidaService convocatoriaPartidaService;
+  private final ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
+  private final ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
   private final EstadoProyectoService estadoProyectoService;
   private final GastoProyectoService gastoProyectoService;
   private final NotificacionProyectoExternoCVNService notificacionProyectoExternoCVNService;
@@ -349,7 +377,7 @@ public class ProyectoController {
    *         y filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectohitos")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoHito>> findAllProyectoHito(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoHito(Long id, String query, Pageable paging) - start");
@@ -375,7 +403,7 @@ public class ProyectoController {
    *         y filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectofases")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoFaseOutput>> findAllProyectoFase(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoFase(Long id, String query, Pageable paging) - start");
@@ -401,7 +429,7 @@ public class ProyectoController {
    *         y filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectopaquetetrabajos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-C', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoPaqueteTrabajo>> findAllProyectoPaqueteTrabajo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoPaqueteTrabajo(Long id, String query, Pageable paging) - start");
@@ -427,7 +455,7 @@ public class ProyectoController {
    *         y filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectosocios")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoSocio>> findAllProyectoSocio(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocio(Long id, String query, Pageable paging) - start");
@@ -453,7 +481,7 @@ public class ProyectoController {
    *         y filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectoentidadfinanciadoras")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-MOD-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-MOD-V', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoEntidadFinanciadora>> findAllProyectoEntidadFinanciadora(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEntidadFinanciadora(Long id, String query, Pageable paging) - start");
@@ -480,7 +508,7 @@ public class ProyectoController {
    *         y filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/documentos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoDocumento>> findAllDocumentos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllDocumentos(Long id String query, Pageable paging) - start");
@@ -507,7 +535,7 @@ public class ProyectoController {
    *         y filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectoperiodoseguimientos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoPeriodoSeguimiento>> findAllProyectoPeriodoSeguimiento(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoPeriodoSeguimiento(Long id, String query, Pageable paging) - start");
@@ -533,7 +561,7 @@ public class ProyectoController {
    *         filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectoentidadgestoras")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoEntidadGestora>> findAllProyectoEntidadGestora(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoEntidadGestora(Long id, String query, Pageable paging) - start");
@@ -573,6 +601,21 @@ public class ProyectoController {
     log.debug("findAllProyectoEquipo(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
 
+  }
+
+  /**
+   * Comprueba si el usuario autenticado es investigador principal activo del
+   * {@link Proyecto} en el momento actual.
+   *
+   * @param id Id del {@link Proyecto}.
+   * @return {@link HttpStatus#OK} si lo es, {@link HttpStatus#NO_CONTENT} si no.
+   */
+  @RequestMapping(path = PATH_INVESTIGADOR_PRINCIPAL_ACTUAL, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-INV-VR')")
+  public ResponseEntity<Void> isCurrentUserInvestigadorPrincipalActual(@PathVariable Long id) {
+    log.debug("isCurrentUserInvestigadorPrincipalActual - id: {}", id);
+    return proyectoEquipoService.isCurrentUserInvestigadorPrincipalActual(id) ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -630,7 +673,7 @@ public class ProyectoController {
    */
 
   @GetMapping("/{id}/estadoproyectos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<EstadoProyecto>> findAllEstadoProyecto(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllEstadoProyecto(Long id, Pageable paging) - start");
@@ -726,7 +769,7 @@ public class ProyectoController {
    *         filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyecto-clasificaciones")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoClasificacion>> findAllProyectoClasificaciones(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoClasificaciones(Long id, String query, Pageable paging) - start");
@@ -752,7 +795,7 @@ public class ProyectoController {
    *         filtradas del {@link Proyecto}.
    */
   @GetMapping("/{id}/proyecto-areas-conocimiento")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoAreaConocimiento>> findAllByProyectoId(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllByProyectoId(Long id, String query, Pageable paging) - start");
@@ -801,7 +844,7 @@ public class ProyectoController {
    *         {@link Proyecto}.
    */
   @GetMapping(PATH_ANUALIDADES)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E','CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoAnualidadResumen>> findAllProyectoAnualidadResumen(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoAnualidadResumen(Long id, String query, Pageable paging) - start");
@@ -849,7 +892,7 @@ public class ProyectoController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/proyecto-partidas")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E','CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoPartida>> findAllProyectoPartida(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoPartida(Long id, String query, Pageable paging) - start");
@@ -873,7 +916,7 @@ public class ProyectoController {
    * @return el listado de {@link ProyectoConceptoGasto} permitidos.
    */
   @GetMapping("/{id}/proyectoconceptosgasto/permitidos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoConceptoGasto>> findAllProyectoGastosPermitidos(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoGastosPermitidos(Long id, Pageable paging) - start");
@@ -896,7 +939,7 @@ public class ProyectoController {
    * @return el listado de {@link ProyectoConceptoGasto} no permitidos.
    */
   @GetMapping("/{id}/proyectoconceptosgasto/nopermitidos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoConceptoGasto>> findAllProyectoGastosNoPermitidos(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoGastosNoPermitidos(Long id, Pageable paging) - start");
@@ -936,12 +979,10 @@ public class ProyectoController {
    * @return {@link ProyectoPresupuestoTotales}
    */
   @GetMapping("/{id}/presupuesto-totales")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-E','CSP-SOL-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ProyectoPresupuestoTotales getProyectoPresupuestoTotales(@PathVariable Long id) {
-    log.debug("getProyectoPresupuestoTotales(Long id) - start");
-    ProyectoPresupuestoTotales returnValue = service.getTotales(id);
-    log.debug("getProyectoPresupuestoTotales(Long id) - end");
-    return returnValue;
+    log.debug("getProyectoPresupuestoTotales - id: {}", id);
+    return service.getTotales(id);
   }
 
   /**
@@ -954,7 +995,7 @@ public class ProyectoController {
    * @return Lista de {@link ProyectoResponsableEconomico} correspondiente al id
    */
   @GetMapping("/{id}/proyectoresponsableseconomicos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoResponsableEconomicoOutput>> findAllResponsablesEconomicosByProyecto(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -1008,7 +1049,7 @@ public class ProyectoController {
    *         {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectoperiodojustificacion")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoPeriodoJustificacion>> findAllPeriodoJustificacionByProyectoId(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -1180,9 +1221,9 @@ public class ProyectoController {
    *         {@link Proyecto}.
    */
   @GetMapping("/{id}/proyectoanualidades")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<List<ProyectoAnualidad>> findAllProyectoAnualidad(@PathVariable Long id) {
-
+    log.debug("findAllProyectoAnualidad - proyectoId: {}", id);
     List<ProyectoAnualidad> anualidades = proyectoAnualidadService.findByProyectoId(id);
 
     return anualidades.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(anualidades);
@@ -1323,16 +1364,10 @@ public class ProyectoController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-INV-VR')")
   public ResponseEntity<Page<Proyecto>> findAllInvestigador(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllInvestigador(String query, Pageable paging) - start");
-
-    Page<Proyecto> page = service.findAllActivosInvestigador(query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllInvestigador(String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAllInvestigador(String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findAllInvestigador - query: {}, paging: {}", query, SgiLogUtils.pageable(paging));
+    Page<Proyecto> output = service.findAllActivosInvestigador(query, paging);
+    log.debug("findAllInvestigador - response: {}", SgiLogUtils.page(output));
+    return output.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(output, HttpStatus.OK);
   }
 
   /**
@@ -1358,6 +1393,133 @@ public class ProyectoController {
 
     log.debug("findConvocatoriaByProyectoIdAndUserIsInvestigador(Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve los {@link ConvocatoriaDocumento} públicos de la
+   * {@link Convocatoria} asociada al {@link Proyecto}. El acceso se controla a
+   * nivel de {@link Proyecto}.
+   *
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de {@link ConvocatoriaDocumento} públicos de la
+   *         {@link Convocatoria} del {@link Proyecto}.
+   */
+  @GetMapping(PATH_CONVOCATORIA_DOCUMENTOS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
+  public ResponseEntity<Page<ConvocatoriaDocumento>> findConvocatoriaDocumentos(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findConvocatoriaDocumentos - id: {}, query: {}, paging: {}", id, query, SgiLogUtils.pageable(paging));
+    Page<ConvocatoriaDocumento> page = convocatoriaDocumentoService.findAllByProyectoId(id, query, paging);
+    log.debug("findConvocatoriaDocumentos - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve los {@link ConvocatoriaConceptoGasto} permitidos de la
+   * {@link Convocatoria} asociada al {@link Proyecto}, controlando el acceso a
+   * nivel de {@link Proyecto}.
+   *
+   * @param id     Identificador de {@link Proyecto}.
+   * @param paging pageable.
+   * @return el listado de {@link ConvocatoriaConceptoGasto} permitidos.
+   */
+  @GetMapping(PATH_CONVOCATORIA_GASTOS_PERMITIDOS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
+  public ResponseEntity<Page<ConvocatoriaConceptoGasto>> findConvocatoriaConceptosGastoPermitidos(
+      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findConvocatoriaConceptosGastoPermitidos - proyectoId: {}, paging: {}", id,
+        SgiLogUtils.pageable(paging));
+    Page<ConvocatoriaConceptoGasto> page = convocatoriaConceptoGastoService.findAllByProyectoIdAndPermitido(id, true,
+        paging);
+    log.debug("findConvocatoriaConceptosGastoPermitidos - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve los {@link ConvocatoriaConceptoGasto} NO permitidos de la
+   * {@link Convocatoria} asociada al {@link Proyecto}, controlando el acceso a
+   * nivel de {@link Proyecto}.
+   *
+   * @param id     Identificador de {@link Proyecto}.
+   * @param paging pageable.
+   * @return el listado de {@link ConvocatoriaConceptoGasto} no permitidos.
+   */
+  @GetMapping(PATH_CONVOCATORIA_GASTOS_NO_PERMITIDOS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
+  public ResponseEntity<Page<ConvocatoriaConceptoGasto>> findConvocatoriaConceptosGastoNoPermitidos(
+      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findConvocatoriaConceptosGastoNoPermitidos - proyectoId: {}, paging: {}", id,
+        SgiLogUtils.pageable(paging));
+    Page<ConvocatoriaConceptoGasto> page = convocatoriaConceptoGastoService.findAllByProyectoIdAndPermitido(id, false,
+        paging);
+    log.debug("findConvocatoriaConceptosGastoNoPermitidos - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve las {@link ConvocatoriaPartida} de la {@link Convocatoria} asociada
+   * al {@link Proyecto}, controlando el acceso a nivel de {@link Proyecto}.
+   *
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de {@link ConvocatoriaPartida}.
+   */
+  @GetMapping(PATH_CONVOCATORIA_PARTIDAS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
+  public ResponseEntity<Page<ConvocatoriaPartida>> findConvocatoriaPartidas(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findConvocatoriaPartidas - proyectoId: {}, query: {}, paging: {}", id, query,
+        SgiLogUtils.pageable(paging));
+    Page<ConvocatoriaPartida> page = convocatoriaPartidaService.findAllByProyectoId(id, query, paging);
+    log.debug("findConvocatoriaPartidas - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve los {@link ConvocatoriaPeriodoJustificacion} de la
+   * {@link Convocatoria} asociada al {@link Proyecto}, controlando el acceso a
+   * nivel de {@link Proyecto}.
+   *
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de {@link ConvocatoriaPeriodoJustificacion}.
+   */
+  @GetMapping(PATH_CONVOCATORIA_PERIODOS_JUSTIFICACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
+  public ResponseEntity<Page<ConvocatoriaPeriodoJustificacion>> findConvocatoriaPeriodosJustificacion(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findConvocatoriaPeriodosJustificacion - proyectoId: {}, query: {}, paging: {}", id, query,
+        SgiLogUtils.pageable(paging));
+    Page<ConvocatoriaPeriodoJustificacion> page = convocatoriaPeriodoJustificacionService.findAllByProyectoId(id, query,
+        paging);
+    log.debug("findConvocatoriaPeriodosJustificacion - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve las {@link ConvocatoriaAreaTematica} de la {@link Convocatoria}
+   * asociada al {@link Proyecto}, controlando el acceso a nivel de
+   * {@link Proyecto}.
+   *
+   * @param id     Identificador de {@link Proyecto}.
+   * @param query  filtro de búsqueda.
+   * @param paging pageable.
+   * @return el listado de {@link ConvocatoriaAreaTematica}.
+   */
+  @GetMapping(PATH_CONVOCATORIA_AREAS_TEMATICAS)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
+  public ResponseEntity<Page<ConvocatoriaAreaTematica>> findConvocatoriaAreasTematicas(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findConvocatoriaAreasTematicas - proyectoId: {}, query: {}, paging: {}", id, query,
+        SgiLogUtils.pageable(paging));
+    Page<ConvocatoriaAreaTematica> page = convocatoriaAreaTematicaService.findAllByProyectoId(id, query, paging);
+    log.debug("findConvocatoriaAreasTematicas - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
@@ -1678,7 +1840,7 @@ public class ProyectoController {
    *         paginadas y filtradas de la {@link Proyecto}.
    */
   @GetMapping(PATH_CODIGOS_ECONOMICOS_PERMITIDOS)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoConceptoGastoCodigoEc>> findAllProyectoGastosCodigoEcPermitidos(
       @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoGastosCodigoEcPermitidos(Long id, Pageable paging) - start");
@@ -1704,7 +1866,7 @@ public class ProyectoController {
    *         paginadas y filtradas de la {@link Proyecto}.
    */
   @GetMapping(PATH_CODIGOS_ECONOMICOS_NO_PERMITIDOS)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E','CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoConceptoGastoCodigoEc>> findAllProyectoGastosCodigoEcNoPermitidos(
       @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoGastosCodigoEcNoPermitidos(Long id, Pageable paging) - start");

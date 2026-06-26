@@ -8,7 +8,7 @@
     "build-prod": "ng build --prod sgi-framework-angular && node ./generate-config.js && ng build sgi-webapp --prod",
     "build-framework": "ng build sgi-framework-angular",
     "test-framework": "ng test sgi-framework-angular --browsers=ChromeHeadlessCI",
-    "test": "ng build sgi-framework-angular && node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=4096 ng test sgi-webapp -- --include='src/app/module/csp'",
+    "test": "ng build sgi-framework-angular && node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=4096 ng test sgi-webapp",
     "test-wayland": "ng build sgi-framework-angular && node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=4096 ng test sgi-webapp --browsers=ChromeWayland",
     "test-ci": "ng build sgi-framework-angular && node ./generate-config.js && ng test sgi-webapp --watch=false --browsers=ChromeHeadlessCI",
     "lint": "node ./generate-config.js && ng lint",

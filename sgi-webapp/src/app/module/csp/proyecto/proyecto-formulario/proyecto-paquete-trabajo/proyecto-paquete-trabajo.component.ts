@@ -114,7 +114,7 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
       paqueteTrabajo: wrapper ? wrapper.value : {} as IProyectoPaqueteTrabajo,
       fechaInicioMin: this.actionService.proyecto.fechaInicio,
       fechaFinMax: this.actionService.proyecto.fechaFinDefinitiva ?? this.actionService.proyecto.fechaFin,
-      readonly: this.actionService.readonly
+      readonly: this.formPart.isReadonly
     };
 
     if (wrapper) {

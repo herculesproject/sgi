@@ -40,7 +40,9 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   textoCambioEstado = MSG_BUTTON_CAMBIO_ESTADO;
 
   disableCambioEstado = false;
-  isInvestigador = false;
+  private isAccessingAsInvestigador = false;
+  private investigadorPrincipal = false;
+  private vistaAmpliadaInvestigadorEnabled = false;
 
   get isModuleINV(): boolean {
     return this.route.snapshot.data.module === Module.INV;
@@ -50,6 +52,17 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
     return this.route.snapshot.data.module === Module.CSP;
   }
 
+  get isInvestigadorPrincipal(): boolean {
+    return this.investigadorPrincipal;
+  }
+
+  get isVistaAmpliadaInvestigadorEnabled(): boolean {
+    return this.vistaAmpliadaInvestigadorEnabled;
+  }
+
+  get hasAccessAsInvestigador(): boolean {
+    return this.isAccessingAsInvestigador;
+  }
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -59,10 +72,10 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
     private readonly logger: NGXLogger,
     protected snackBarService: SnackBarService,
     router: Router,
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     public actionService: ProyectoActionService,
-    private matDialog: MatDialog,
-    private confirmDialogService: DialogService,
+    private readonly matDialog: MatDialog,
+    confirmDialogService: DialogService,
     private readonly translate: TranslateService) {
     super(router, route, actionService, confirmDialogService, translate);
   }
@@ -70,11 +83,13 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.isInvestigador = this.actionService.isInvestigador;
+    this.isAccessingAsInvestigador = this.actionService.isAccessingAsInvestigador;
+    this.investigadorPrincipal = this.actionService.isInvestigadorPrincipal;
+    this.vistaAmpliadaInvestigadorEnabled = this.actionService.isVistaAmpliadaInvestigadorEnabled;
 
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
-        this.disableCambioEstado = status.changes || status.errors || this.isInvestigador;
+        this.disableCambioEstado = status.changes || status.errors || this.isModuleINV;
       }
     ));
   }
@@ -129,7 +144,7 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            if (!!!error.managed) {
+            if (!error.managed) {
               this.snackBarService.showError(error);
             }
           }
@@ -142,16 +157,7 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   }
 
   hasEstadoCambio(...estadosProyecto: Estado[]): boolean {
-    let estadoCorrecto = false;
-    estadosProyecto.forEach((estadoProyecto) => {
-      if (this.actionService.estado === estadoProyecto) {
-        estadoCorrecto = true;
-        return;
-      }
-    });
-
-    return estadoCorrecto;
-
+    return estadosProyecto.includes(this.actionService.estado);
   }
 
   /**

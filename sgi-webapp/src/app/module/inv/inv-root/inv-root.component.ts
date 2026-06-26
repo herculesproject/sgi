@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MSG_PARAMS } from '@core/i18n';
 import { ConfigService } from '@core/services/cnf/config.service';
+import { ConfigService as ConfigServiceCSP } from '@core/services/csp/configuracion/config.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { LanguageService } from '@core/services/language.service';
 import { forkJoin, Subscription } from 'rxjs';
@@ -36,26 +37,40 @@ export class InvRootComponent implements OnDestroy {
   showEvaluaciones = false;
   showSeguimientos = false;
   showActas = false;
+  showEjecucionEconomica = false;
 
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private evaluadorService: EvaluadorService,
-    private configService: ConfigService,
-    private languageService: LanguageService
+    private readonly evaluadorService: EvaluadorService,
+    private readonly configService: ConfigService,
+    private readonly configServiceCSP: ConfigServiceCSP,
+    private readonly languageService: LanguageService
   ) {
-    this.subscriptions.push(this.evaluadorService.hasAssignedEvaluaciones().subscribe((res) => this.showEvaluaciones = res));
-    this.subscriptions.push(this.evaluadorService.hasAssignedEvaluacionesSeguimiento().subscribe((res) => this.showSeguimientos = res));
-    this.subscriptions.push(this.evaluadorService.hasAssignedActas().subscribe((res) => this.showActas = res));
     this.subscriptions.push(
       forkJoin(
         {
+          hasAssignedActas: this.evaluadorService.hasAssignedActas(),
+          hasAssignedEvaluaciones: this.evaluadorService.hasAssignedEvaluaciones(),
+          hasAssignedEvaluacionesSeguimiento: this.evaluadorService.hasAssignedEvaluacionesSeguimiento(),
+          isInvEjecucionEconomicaVistaIpEnabled: this.configServiceCSP.isInvEjecucionEconomicaVistaIpEnabled(),
           nombre: this.configService.getNombreSistemaGestionExterno(),
           url: this.configService.getUrlSistemaGestionExterno()
         }
-      ).subscribe(({ nombre, url }) => {
+      ).subscribe(({
+        hasAssignedActas,
+        hasAssignedEvaluaciones,
+        hasAssignedEvaluacionesSeguimiento,
+        isInvEjecucionEconomicaVistaIpEnabled,
+        nombre,
+        url
+      }) => {
         this._nombreSistemaGestionExterno = nombre;
         this._urlSistemaGestionExterno = url;
+        this.showActas = hasAssignedActas;
+        this.showEjecucionEconomica = isInvEjecucionEconomicaVistaIpEnabled;
+        this.showEvaluaciones = hasAssignedEvaluaciones;
+        this.showSeguimientos = hasAssignedEvaluacionesSeguimiento;
       })
     );
   }

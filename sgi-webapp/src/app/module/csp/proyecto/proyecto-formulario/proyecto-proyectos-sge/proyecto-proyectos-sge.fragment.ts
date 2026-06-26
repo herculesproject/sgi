@@ -11,7 +11,7 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { SolicitudProyectoSgeService } from '@core/services/sge/solicitud-proyecto-sge/solicitud-proyecto-sge.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, Observable, concat, forkJoin, from, merge, of } from 'rxjs';
+import { BehaviorSubject, concat, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 
 export interface IProyectoProyectoSgeListadoData extends IProyectoProyectoSge {
@@ -66,11 +66,11 @@ export class ProyectoProyectosSgeFragment extends Fragment {
 
   constructor(
     key: number,
-    private service: ProyectoProyectoSgeService,
-    private proyectoService: ProyectoService,
-    private proyectoSgeService: ProyectoSgeService,
-    private solicitudProyectoSgeService: SolicitudProyectoSgeService,
-    private configService: ConfigService,
+    private readonly service: ProyectoProyectoSgeService,
+    private readonly proyectoService: ProyectoService,
+    private readonly proyectoSgeService: ProyectoSgeService,
+    private readonly solicitudProyectoSgeService: SolicitudProyectoSgeService,
+    private readonly configService: ConfigService,
     public readonly readonly: boolean,
     public readonly isVisor: boolean
   ) {
@@ -89,15 +89,24 @@ export class ProyectoProyectosSgeFragment extends Fragment {
           switchMap(() =>
             forkJoin({
               proyectosSge: this.proyectoService.findAllProyectosSgeProyecto(this.getKey() as number).pipe(
-                map(response => response.items.map(proyectoProyectoSge => new StatusWrapper<IProyectoProyectoSgeListadoData>(proyectoProyectoSge as IProyectoProyectoSgeListadoData))),
+                map(response => response.items.map(proyectoProyectoSge =>
+                  new StatusWrapper<IProyectoProyectoSgeListadoData>(proyectoProyectoSge as IProyectoProyectoSgeListadoData)
+                )),
                 switchMap(response =>
                   from(response).pipe(
-                    mergeMap(wrapperProyectoProyectoSge => this.service.isEliminable(wrapperProyectoProyectoSge.value.id).pipe(
-                      map(isEliminable => {
-                        wrapperProyectoProyectoSge.value.isEliminable = isEliminable;
-                        return wrapperProyectoProyectoSge;
-                      })
-                    )),
+                    mergeMap(wrapperProyectoProyectoSge => {
+                      if (this.readonly) {
+                        wrapperProyectoProyectoSge.value.isEliminable = false;
+                        return of(wrapperProyectoProyectoSge);
+                      }
+
+                      return this.service.isEliminable(wrapperProyectoProyectoSge.value.id).pipe(
+                        map(isEliminable => {
+                          wrapperProyectoProyectoSge.value.isEliminable = isEliminable;
+                          return wrapperProyectoProyectoSge;
+                        })
+                      );
+                    }),
                     toArray(),
                     map(() => {
                       return response;
@@ -129,7 +138,13 @@ export class ProyectoProyectosSgeFragment extends Fragment {
               _isSgeEliminarRelacionProyectoEnabled: this.configService.isSgeEliminarRelacionProyectoEnabled(),
             })
           )
-        ).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge, solicitudesPendientes, _isSgeEliminarRelacionProyectoEnabled }) => {
+        ).subscribe(({
+          cardinalidadRelacionSgiSge,
+          isModificacionProyectoSgeEnabled,
+          proyectosSge,
+          solicitudesPendientes,
+          _isSgeEliminarRelacionProyectoEnabled
+        }) => {
           this._cardinalidadRelacionSgiSge = cardinalidadRelacionSgiSge;
           this._isModificacionProyectoSgeEnabled = isModificacionProyectoSgeEnabled;
           this._solicitudesProyectoPendientes$.next(solicitudesPendientes);

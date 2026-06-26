@@ -6,11 +6,14 @@ sgi:
       cnf-url: "http://sgi-cnf-service:4288"
       com-url: "http://sgi-com-service:4286"
       eti-url: "http://sgi-eti-service:4280"
+      pii-url: "http://sgi-pii-service:4283"
+      rel-url: "http://sgi-rel-service:4284"
       rep-url: "http://sgi-rep-service:4287"
       sgdoc-url: "http://sgi-esb:8080/sgdoc" 
       sgp-url: "http://sgi-esb:8080/sgp"
       tp-url: "http://sgi-tp-service:4285"
       sgemp-url: "http://sgi-esb:8080/sgemp"
+      sge-url: "http://sgi-esb:8080/sge"
 spring:
   datasource:
     # We use a H2 in file database with PostgreSQL compatibility mode
@@ -75,7 +78,7 @@ spring:
             client-name: SGI (service login)
             client-secret: cf693c2b-bdaf-4f98-87db-e7996b917b0a
             provider: keycloak
-            scope: sgi-cnf,sgi-com,sgi-eti,sgi-sgp,sgi-tp
+            scope: sgi-cnf,sgi-com,sgi-eti,sgi-pii,sgi-rel,sgi-sge,sgi-sgp,sgi-tp
         provider:
           keycloak:
             issuer-uri: http://sgi-auth:8080/auth/realms/sgi

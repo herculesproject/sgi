@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -33,13 +34,15 @@ class ProyectoResponsableEconomicoServiceTest extends BaseServiceTest {
   private ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
   @Mock
   private ProyectoRepository proyectoRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   ProyectoResponsableEconomicoService proyectoResponsableEconomicoService;
 
   @BeforeEach
   void setup() {
     this.proyectoResponsableEconomicoService = new ProyectoResponsableEconomicoService(validator,
-        proyectoResponsableEconomicoRepository, proyectoRepository);
+        proyectoResponsableEconomicoRepository, proyectoRepository, proyectoHelper);
   }
 
   @Test

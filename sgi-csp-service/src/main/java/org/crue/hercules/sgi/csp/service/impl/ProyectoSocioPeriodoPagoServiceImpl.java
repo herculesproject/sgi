@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoPagoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -48,17 +49,20 @@ public class ProyectoSocioPeriodoPagoServiceImpl implements ProyectoSocioPeriodo
   /** Repository {@link ProyectoSocioRepository} */
   private final ProyectoSocioRepository proyectoSocioRepository;
 
+  private final ProyectoHelper proyectoHelper;
+
   /**
    * {@link ProyectoSocioPeriodoPagoServiceImpl}
-   * 
+   *
    * @param repository              {@link ProyectoSocioPeriodoPagoRepository}
    * @param proyectoSocioRepository {@link ProyectoSocioRepository}
+   * @param proyectoHelper          {@link ProyectoHelper}
    */
   public ProyectoSocioPeriodoPagoServiceImpl(ProyectoSocioPeriodoPagoRepository repository,
-      ProyectoSocioRepository proyectoSocioRepository) {
+      ProyectoSocioRepository proyectoSocioRepository, ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.proyectoSocioRepository = proyectoSocioRepository;
-
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -160,6 +164,10 @@ public class ProyectoSocioPeriodoPagoServiceImpl implements ProyectoSocioPeriodo
   @Override
   public Page<ProyectoSocioPeriodoPago> findAllByProyectoSocio(Long idProyectoSocio, String query, Pageable paging) {
     log.debug("findAllByProyectoSocio(Long idProyectoSocioPeriodoPago, String query, Pageable paging) - start");
+
+    proyectoSocioRepository.findById(idProyectoSocio)
+        .ifPresent(socio -> proyectoHelper.checkCanAccessProyecto(socio.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
 
     Specification<ProyectoSocioPeriodoPago> specs = ProyectoSocioPeriodoPagoSpecifications
         .byProyectoSocioId(idProyectoSocio).and(SgiRSQLJPASupport.toSpecification(query));

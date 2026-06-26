@@ -62,7 +62,7 @@ export class ProyectoAnualidadDataResolver extends SgiResolverResolver<IProyecto
         return {
           proyecto: proyectoData.proyecto,
           proyectoAnualidadResumen: anualidades.items,
-          readonly: proyectoAnualidad?.enviadoSge ?? proyectoData.readonly
+          readonly: proyectoData.isAccessingAsInvestigador || (proyectoAnualidad?.enviadoSge ?? proyectoData.readonly)
         } as IProyectoAnualidadData;
       }),
       switchMap(data => this.configService.getCardinalidadRelacionSgiSge().pipe(

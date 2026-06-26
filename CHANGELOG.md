@@ -14,6 +14,10 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+### Added
+- [CSP] Añadido el acceso a los proyectos desde el perfil de investigación: el investigador puede consultar en modo lectura los proyectos en los que participa, con un buscador con filtro de participación actual. La ficha general está siempre disponible y, para quien tiene rol principal en el proyecto, los apartados ampliados se muestran según la nueva variable de configuración `inv_pro_vista_ampliada_ip` ([#61](https://github.com/herculesproject/sgi/issues/61)).
+- [CSP] Añadido el apartado de ejecución económica en el perfil de investigación, con un buscador de datos económicos y el acceso a los identificadores SGE del proyecto, disponible para quien tiene rol principal en el proyecto o grupo según la nueva variable de configuración `inv_pro_vista_eec_ip` ([#61](https://github.com/herculesproject/sgi/issues/61)).
+
 ### Changed
 - [CSP] Reordenadas las columnas de la exportación de solicitudes: el bloque de unidades de vinculación se muestra ahora antes de las columnas "Datos Solicitud RRHH" y sus columnas llevan el prefijo "Datos Proyecto", igual que el resto de columnas de las solicitudes de tipo proyecto ([#108](https://github.com/herculesproject/sgi/issues/108)).
 - [CSP] Renombrada la etiqueta de la variable de configuración de unidades de vinculación para proyectos a "Habilitar unidades de vinculación para Proyectos y Solicitudes" para reflejar que también aplica a las solicitudes ([#108](https://github.com/herculesproject/sgi/issues/108)).
@@ -23,6 +27,7 @@
 - [CSP] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al clonar una convocatoria ([#71](https://github.com/herculesproject/sgi/issues/71)).
 - [CSP] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al modificar una convocatoria y sus entidades relacionadas ([#103](https://github.com/herculesproject/sgi/issues/103)).
 - [CSP] Corregida la pérdida de los campos de auditoría (`created_by`, `creation_date`, `last_modified_by`, `last_modified_date`) al modificar el equipo de un proyecto. Además, los miembros sin cambios reales ya no generan un UPDATE innecesario en base de datos ([#72](https://github.com/herculesproject/sgi/issues/72)).
+- [CSP] Restringido el acceso al calendario de facturación a los investigadores del proyecto con rol principal activo en la fecha actual ([#61](https://github.com/herculesproject/sgi/issues/61)).
 
 ## 1.1.0 (2026-06-11)
 

@@ -64,7 +64,7 @@ public class ProyectoConceptoGastoController {
    * @return {@link ProyectoConceptoGasto} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ProyectoConceptoGasto findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoConceptoGasto returnValue = service.findById(id);
@@ -79,7 +79,7 @@ public class ProyectoConceptoGastoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("exists(Long id) - start");
     if (service.existsById(id)) {
@@ -179,7 +179,7 @@ public class ProyectoConceptoGastoController {
    *         paginadas y filtradas del {@link ProyectoConceptoGasto}.
    */
   @GetMapping("/{id}/proyectoconceptogastocodigosec")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoConceptoGastoCodigoEc>> findAllProyectoGastosCodigoEc(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoGastosCodigoEcPermitidos(Long id, Pageable paging) - start");

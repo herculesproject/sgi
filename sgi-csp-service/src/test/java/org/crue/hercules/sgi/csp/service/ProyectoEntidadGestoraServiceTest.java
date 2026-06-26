@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.repository.ProyectoEntidadGestoraRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoEntidadGestoraServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -31,15 +32,16 @@ class ProyectoEntidadGestoraServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoEntidadGestoraRepository repository;
-
   @Mock
   private ProyectoRepository proyectoRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoEntidadGestoraService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new ProyectoEntidadGestoraServiceImpl(repository, proyectoRepository);
+    service = new ProyectoEntidadGestoraServiceImpl(repository, proyectoRepository, proyectoHelper);
   }
 
   @Test

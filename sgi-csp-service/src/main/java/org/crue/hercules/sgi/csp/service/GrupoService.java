@@ -41,6 +41,7 @@ import org.crue.hercules.sgi.csp.repository.specification.GrupoSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -470,6 +471,51 @@ public class GrupoService {
 
     log.debug("findRelacionesEjecucionEconomicaGrupos(String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica} de
+   * los {@link Grupo} en los que el usuario logueado figura como responsable.
+   *
+   * @param query                       filtro de búsqueda.
+   * @param onlyWithParticipacionActual si es {@code true} solo se incluyen los
+   *                                    grupos en los que el usuario es
+   *                                    responsable en la fecha actual
+   * @param pageable                    {@link Pageable}.
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} paginadas
+   *         y filtradas.
+   */
+  public Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaGruposInvestigador(String query,
+      boolean onlyWithParticipacionActual, Pageable pageable) {
+    log.debug("findRelacionesEjecucionEconomicaGruposInvestigador - query: {}, onlyWithParticipacionActual: {}, "
+        + "pageable: {}", query, onlyWithParticipacionActual, SgiLogUtils.pageable(pageable));
+
+    String personaRef = authorityHelper.getAuthenticationPersonaRef();
+    Specification<Grupo> specs = GrupoSpecifications.activos()
+        .and(GrupoSpecifications.byProyectoSgeRefNotNull())
+        .and(onlyWithParticipacionActual
+            ? GrupoSpecifications.byResponsable(personaRef, Instant.now())
+            : GrupoSpecifications.byResponsable(personaRef));
+    if (StringUtils.hasText(query)) {
+      specs = specs
+          .and(SgiRSQLJPASupport.toSpecification(query,
+              GrupoPredicateResolver.getInstance(sgiConfigProperties, authorityHelper)));
+    }
+
+    Page<RelacionEjecucionEconomica> page = repository.findAllDistinct(specs, pageable)
+        .map(grupo -> RelacionEjecucionEconomica.builder()
+            .id(grupo.getId())
+            .nombre(grupo.getNombre().stream()
+                .map(titulo -> new I18nFieldValueDto(titulo.getLang(), titulo.getValue()))
+                .collect(Collectors.toSet()))
+            .fechaInicio(grupo.getFechaInicio())
+            .fechaFin(grupo.getFechaFin())
+            .proyectoSgeRef(grupo.getProyectoSgeRef())
+            .tipoEntidad(RelacionEjecucionEconomica.TipoEntidad.GRUPO)
+            .build());
+
+    log.debug("findRelacionesEjecucionEconomicaGruposInvestigador - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
   /**

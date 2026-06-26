@@ -10,6 +10,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoEquipo } from '@core/models/csp/proyecto-equipo';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -18,7 +19,6 @@ import { getPersonaEmailListConcatenated } from 'src/app/esb/sgp/shared/pipes/pe
 import { MiembroEquipoProyectoModalComponent, MiembroEquipoProyectoModalData } from '../../../shared/miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { IProyectoEquipoListado, ProyectoEquipoFragment } from './proyecto-equipo.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_EQUIPO_MIEMBRO_KEY = marker('csp.proyecto-equipo.miembro');
@@ -45,7 +45,7 @@ const TOOLTIP_REQUISITOS_CONVOCATORIA_EDAD_MAX_KEY = marker('csp.proyecto-equipo
 })
 export class ProyectoEquipoComponent extends FragmentComponent implements OnInit, OnDestroy {
 
-  private subscriptions: Subscription[] = [];
+  private readonly subscriptions: Subscription[] = [];
   formPart: ProyectoEquipoFragment;
 
   elementosPagina = [5, 10, 25, 100];
@@ -66,8 +66,8 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
   constructor(
     protected proyectoService: ProyectoService,
     public actionService: ProyectoActionService,
-    private matDialog: MatDialog,
-    private dialogService: DialogService,
+    private readonly matDialog: MatDialog,
+    private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
     private readonly languageService: LanguageService
   ) {
@@ -216,7 +216,7 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
       fechaInicioMin: this.actionService.proyecto.fechaInicio,
       fechaFinMax: this.actionService.proyecto.fechaFinDefinitiva ?? this.actionService.proyecto.fechaFin,
       isEdit: Boolean(wrapper),
-      readonly: this.actionService.readonly
+      readonly: this.formPart.isReadonly
     };
 
     if (wrapper) {

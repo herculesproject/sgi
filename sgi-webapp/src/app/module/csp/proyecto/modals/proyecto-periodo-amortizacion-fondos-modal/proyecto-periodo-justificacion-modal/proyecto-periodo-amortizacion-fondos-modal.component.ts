@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { SelectValue } from '@core/component/select-common/select-common.component';
@@ -37,6 +37,7 @@ export interface IProyectoPeriodoAmortizacionModalData {
   entidadesFinanciadoras: IEntidadFinanciadora[];
   proyectosSGE: IProyectoProyectoSge[];
   anualidadGenerica: boolean;
+  readonly: boolean;
 }
 
 @Component({
@@ -85,7 +86,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
   readonly displayerIdentificadorSge = (proyectoProyectoSGE: IProyectoProyectoSge): string => proyectoProyectoSGE.proyectoSge?.id ?? '';
 
   readonly sorterIdentificadorSge = (o1: SelectValue<IProyectoProyectoSge>, o2: SelectValue<IProyectoProyectoSge>): number =>
-    o1?.displayText.localeCompare(o2?.displayText);
+    o1?.displayText.localeCompare(o2?.displayText)
 
   readonly displayerAnualidad = (proyectoAnualidad: IProyectoAnualidad): string => proyectoAnualidad?.anio?.toString() ?? '';
 
@@ -149,7 +150,7 @@ export class ProyectoPeriodoAmortizacionModalComponent
     const fechaLimiteAmortizacion = this.data.periodoAmortizacion?.fechaLimiteAmortizacion ?? null;
     const importe = this.data.periodoAmortizacion?.importe ?? null;
 
-    return new FormGroup(
+    const formGroup = new FormGroup(
       {
         identificadorSge: new FormControl(identificadorSge, Validators.required),
         entidadFinanciadora: new FormControl(entidadFinanciadora, Validators.required),
@@ -166,6 +167,12 @@ export class ProyectoPeriodoAmortizacionModalComponent
           ]),
       }
     );
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+
+    return formGroup;
   }
 
   protected getValue(): IProyectoPeriodoAmortizacionModalData {

@@ -3,17 +3,22 @@ import { Fragment } from '@core/services/action-service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 
 export class ProyectoEntidadesConvocantesFragment extends Fragment {
   proyectoEntidadConvocantes$ = new BehaviorSubject<IProyectoEntidadConvocante[]>([]);
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private proyectoService: ProyectoService,
-    private empresaService: EmpresaService,
+    private readonly proyectoService: ProyectoService,
+    private readonly empresaService: EmpresaService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -90,7 +95,7 @@ export class ProyectoEntidadesConvocantesFragment extends Fragment {
         map(updatedEntidadesConvocante => {
           this.proyectoEntidadConvocantes$.next(
             this.proyectoEntidadConvocantes$.value.map(entidadConvocante => {
-              if (!!!entidadConvocante.id) {
+              if (!entidadConvocante.id) {
                 entidadConvocante.id = updatedEntidadesConvocante.find(e =>
                   e.entidad?.id === entidadConvocante.entidad?.id
                   && e.programa?.id === entidadConvocante.programa?.id

@@ -87,7 +87,8 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private configuracion: IConfiguracion,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    protected readonly isInvestigador: boolean = false
   ) {
     super(key, proyectoSge, relaciones, languageService, proyectoService, proyectoAnualidadService, configuracion);
     this.setComplete(true);

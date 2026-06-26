@@ -3,8 +3,8 @@ package org.crue.hercules.sgi.csp.controller;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
-import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoSeguimientoPresentacionDocumentacionInput;
+import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
@@ -163,7 +163,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return {@link ProyectoPeriodoSeguimiento} correspondiente al id.
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ProyectoPeriodoSeguimiento findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoPeriodoSeguimiento returnValue = service.findById(id);
@@ -183,7 +183,7 @@ public class ProyectoPeriodoSeguimientoController {
    *         paginadas y filtradas.
    */
   @GetMapping(PATH_DOCUMENTOS)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E','CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoPeriodoSeguimientoDocumento>> findAllProyectoPeriodoSeguimientoDocumentos(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {

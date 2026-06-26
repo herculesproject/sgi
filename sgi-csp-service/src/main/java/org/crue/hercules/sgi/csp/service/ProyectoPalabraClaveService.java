@@ -51,7 +51,7 @@ public class ProyectoPalabraClaveService {
   public Page<ProyectoPalabraClave> findByProyectoId(Long proyectoId, String query, Pageable pageable) {
     log.debug("findByProyectoId(Long proyectoId, String query, Pageable pageable) - start");
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
     Specification<ProyectoPalabraClave> specs = ProyectoPalabraClaveSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

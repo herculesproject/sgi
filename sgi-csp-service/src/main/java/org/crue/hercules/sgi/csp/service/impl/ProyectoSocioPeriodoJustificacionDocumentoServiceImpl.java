@@ -11,8 +11,10 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoJustificacionDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -44,18 +46,26 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceImpl
 
   private final ProyectoSocioPeriodoJustificacionDocumentoRepository repository;
   private final ProyectoSocioPeriodoJustificacionRepository proyectoSocioRepository;
+  private final ProyectoSocioRepository proyectoSocioPeriodoJustificacionProyectoSocioRepository;
+  private final ProyectoHelper proyectoHelper;
 
   /**
    * {@link ProyectoSocioPeriodoJustificacionDocumentoServiceImpl}.
-   * 
+   *
    * @param proyectoSocioPeriodoJustificacionRepository {@link ProyectoSocioPeriodoJustificacionDocumentoRepository}.
    * @param proyectoSocioRepository                     {@link ProyectoSocioPeriodoJustificacionRepository}.
+   * @param proyectoSocioPeriodoJustificacionProyectoSocioRepository {@link ProyectoSocioRepository}.
+   * @param proyectoHelper                              {@link ProyectoHelper}.
    */
   public ProyectoSocioPeriodoJustificacionDocumentoServiceImpl(
       ProyectoSocioPeriodoJustificacionDocumentoRepository proyectoSocioPeriodoJustificacionRepository,
-      ProyectoSocioPeriodoJustificacionRepository proyectoSocioRepository) {
+      ProyectoSocioPeriodoJustificacionRepository proyectoSocioRepository,
+      ProyectoSocioRepository proyectoSocioPeriodoJustificacionProyectoSocioRepository,
+      ProyectoHelper proyectoHelper) {
     this.repository = proyectoSocioPeriodoJustificacionRepository;
     this.proyectoSocioRepository = proyectoSocioRepository;
+    this.proyectoSocioPeriodoJustificacionProyectoSocioRepository = proyectoSocioPeriodoJustificacionProyectoSocioRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -163,6 +173,11 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceImpl
       Long proyectoSocioId, String query, Pageable pageable) {
     log.debug(
         "findAllByProyectoSocioPeriodoJustificacion(Long proyectoSocioId, String query, Pageable pageable) - start");
+    proyectoSocioRepository.findById(proyectoSocioId)
+        .flatMap(periodo -> proyectoSocioPeriodoJustificacionProyectoSocioRepository
+            .findById(periodo.getProyectoSocioId()))
+        .ifPresent(socio -> proyectoHelper.checkCanAccessProyecto(socio.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
     Specification<ProyectoSocioPeriodoJustificacionDocumento> specs = ProyectoSocioPeriodoJustificacionDocumentoSpecifications
         .byProyectoSocioPeriodoJustificacionId(proyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));
 

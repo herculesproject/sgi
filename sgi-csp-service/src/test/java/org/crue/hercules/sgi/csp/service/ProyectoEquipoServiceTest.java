@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
@@ -29,6 +30,8 @@ import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -446,6 +449,23 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
         .fechaFin(fechaFin)
         .personaRef("001")
         .build();
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "1, true", "0, false" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-INV-VR" })
+  void isCurrentUserInvestigadorPrincipalActual(long count, boolean expectedResult) {
+    // given: si hay registros de IP activos el usuario es IP del proyecto; si no
+    // hay, no lo es
+    BDDMockito.given(proyectoHelper.getAuthenticationPersonaRef()).willReturn("user-ref");
+    BDDMockito.given(sgiConfigProperties.getTimeZone()).willReturn(TimeZone.getTimeZone("UTC"));
+    BDDMockito.given(repository.count(ArgumentMatchers.<Specification<ProyectoEquipo>>any())).willReturn(count);
+
+    // when: se comprueba si el usuario actual es IP
+    boolean result = service.isCurrentUserInvestigadorPrincipalActual(1L);
+
+    // then: devuelve true si es IP del proyecto, false en caso contrario
+    Assertions.assertThat(result).isEqualTo(expectedResult);
   }
 
 }

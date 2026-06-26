@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoFaseSpecificat
 import org.crue.hercules.sgi.csp.service.ProyectoFaseAvisoService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -64,19 +65,22 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
   private final TipoFaseRepository tipoFaseRepository;
   private final ProyectoFaseAvisoService proyectoFaseAvisoService;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoFaseServiceImpl(
       ProyectoFaseRepository proyectoFaseRepository,
       ProyectoRepository proyectoRepository,
       ModeloTipoFaseRepository modeloTipoFaseRepository,
       TipoFaseRepository tipoFaseRepository,
-      ProyectoFaseAvisoService proyectoFaseAvisoService) {
+      ProyectoFaseAvisoService proyectoFaseAvisoService,
+      ProyectoHelper proyectoHelper) {
 
     this.repository = proyectoFaseRepository;
     this.proyectoRepository = proyectoRepository;
     this.modeloTipoFaseRepository = modeloTipoFaseRepository;
     this.tipoFaseRepository = tipoFaseRepository;
     this.proyectoFaseAvisoService = proyectoFaseAvisoService;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -235,6 +239,8 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
   @Override
   public Page<ProyectoFase> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoFase> specs = ProyectoFaseSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

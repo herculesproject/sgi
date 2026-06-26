@@ -21,6 +21,7 @@ class RelacionEjecucionEconomicaResponseConverter
       proyectoSge: value.proyectoSgeRef ? { id: value.proyectoSgeRef } as IProyectoSge : null,
       tipoEntidad: value.tipoEntidad,
       fechaFinDefinitiva: LuxonUtils.fromBackend(value.fechaFinDefinitiva),
+      accesibleByInvestigador: value.accesibleByInvestigador,
     };
   }
 

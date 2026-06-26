@@ -10,10 +10,15 @@ export class ProyectoHitosFragment extends Fragment {
   hitos$ = new BehaviorSubject<StatusWrapper<IProyectoHito>[]>([]);
   private hitosEliminados: StatusWrapper<IProyectoHito>[] = [];
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     key: number,
     private proyectoService: ProyectoService,
-    private proyectoHitoService: ProyectoHitoService
+    private proyectoHitoService: ProyectoHitoService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);

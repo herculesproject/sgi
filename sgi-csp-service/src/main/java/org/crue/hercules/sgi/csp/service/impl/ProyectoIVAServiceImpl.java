@@ -49,7 +49,7 @@ public class ProyectoIVAServiceImpl implements ProyectoIVAService {
   public Page<ProyectoIVA> findAllByProyectoIdOrderByIdDesc(Long proyectoId, Pageable pageable) {
     log.debug("findAllByProyectoId(Long proyectoId, String query, Pageable pageable) - start");
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
 
     Page<ProyectoIVA> returnValue = repository.findAllByProyectoIdAndIvaIsNotNullOrderByIdDesc(proyectoId, pageable);
 

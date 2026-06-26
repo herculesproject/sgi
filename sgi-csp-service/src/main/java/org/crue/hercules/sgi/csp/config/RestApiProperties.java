@@ -20,6 +20,16 @@ public class RestApiProperties {
   @NotNull
   private String etiUrl;
   /**
+   * URL base de los end-points del módulo de PII
+   */
+  @NotNull
+  private String piiUrl;
+  /**
+   * URL base de los end-points del módulo de REL.
+   */
+  @NotNull
+  private String relUrl;
+  /**
    * URL base de los end-points del módulo de INFORMES.
    */
   @NotNull
@@ -50,8 +60,13 @@ public class RestApiProperties {
   @NotNull
   private String cnfUrl;
   /**
-   * URL base de los end-points del módule de SGEMP
+   * URL base de los end-points del módulo de SGEMP.
    */
   @NotNull
   private String sgempUrl;
+  /**
+   * URL base de los end-points del módulo de SGE.
+   */
+  @NotNull
+  private String sgeUrl;
 }

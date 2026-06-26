@@ -6,10 +6,8 @@ import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { Fragment } from '@core/services/action-service';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
@@ -47,14 +45,16 @@ export interface IPeriodoJustificacionListado {
 export class ProyectoCalendarioJustificacionFragment extends Fragment {
   periodoJustificaciones$: BehaviorSubject<IPeriodoJustificacionListado[]>;
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     key: number,
     public proyecto: IProyecto,
-    public readonly: boolean,
+    private readonly readonly: boolean,
     private proyectoService: ProyectoService,
-    private proyectoPeriodoJustifiacionService: ProyectoPeriodoJustificacionService,
-    private convocatoriaService: ConvocatoriaService,
-    private readonly languageService: LanguageService
+    private proyectoPeriodoJustifiacionService: ProyectoPeriodoJustificacionService
   ) {
     super(key);
     this.setComplete(true);
@@ -96,8 +96,8 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
             let requestConvocatoriaPeriodosJustificacion: Observable<IPeriodoJustificacionListado[]>;
 
             if (this.proyecto.convocatoriaId) {
-              requestConvocatoriaPeriodosJustificacion = this.convocatoriaService
-                .getPeriodosJustificacion(this.proyecto.convocatoriaId)
+              requestConvocatoriaPeriodosJustificacion = this.proyectoService
+                .findConvocatoriaPeriodosJustificacion(this.getKey() as number)
                 .pipe(
                   map((response) => response.items),
                   map(periodoJustificacionConvocatoria => {

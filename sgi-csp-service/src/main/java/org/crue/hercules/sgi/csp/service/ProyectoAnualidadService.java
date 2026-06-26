@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.repository.specification.AnualidadGastoSpecific
 import org.crue.hercules.sgi.csp.repository.specification.AnualidadIngresoSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoAnualidadSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -56,16 +57,18 @@ public class ProyectoAnualidadService {
   private final ProyectoRepository proyectoRepository;
   private final AnualidadGastoRepository anualidadGastoRepository;
   private final AnualidadIngresoRepository anualidadIngresoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoAnualidadService(Validator validator, ProyectoAnualidadRepository proyectoAnualidadepository,
       ProyectoRepository proyectoRepository, AnualidadGastoRepository anualidadGastoRepository,
-      AnualidadIngresoRepository anualidadIngresoRepository) {
+      AnualidadIngresoRepository anualidadIngresoRepository, ProyectoHelper proyectoHelper) {
 
     this.validator = validator;
     this.repository = proyectoAnualidadepository;
     this.proyectoRepository = proyectoRepository;
     this.anualidadGastoRepository = anualidadGastoRepository;
     this.anualidadIngresoRepository = anualidadIngresoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -180,6 +183,8 @@ public class ProyectoAnualidadService {
 
   public Page<ProyectoAnualidadResumen> findAllResumenByProyecto(Long proyectoId, Pageable pageable) {
     log.debug("create(ProyectoAnualidad proyectoAnualidad) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Page<ProyectoAnualidadResumen> returnValue = repository.findAllResumenByProyectoId(proyectoId, pageable);
 
     log.debug("create(ProyectoAnualidad proyectoAnualidad) - end");
@@ -235,7 +240,16 @@ public class ProyectoAnualidadService {
     return returnValue;
   }
 
+  /**
+   * Obtienes las {@link ProyectoAnualidad} del {@link Proyecto}
+   * 
+   * @param proyectoId Identificador del {@link Proyecto}
+   * @return las {@link ProyectoAnualidad} del {@link Proyecto}
+   */
   public List<ProyectoAnualidad> findByProyectoId(Long proyectoId) {
+    log.debug("findByProyectoId - proyectoId: {}", proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     return this.repository.findByProyectoId(proyectoId);
   }
 

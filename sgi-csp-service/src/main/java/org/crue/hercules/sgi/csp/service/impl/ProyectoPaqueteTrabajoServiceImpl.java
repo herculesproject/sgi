@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPaqueteTrabajoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoPaqueteTrabajoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -41,11 +42,13 @@ public class ProyectoPaqueteTrabajoServiceImpl implements ProyectoPaqueteTrabajo
 
   private final ProyectoPaqueteTrabajoRepository repository;
   private final ProyectoRepository proyectoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoPaqueteTrabajoServiceImpl(ProyectoPaqueteTrabajoRepository proyectoPaqueteTrabajoRepository,
-      ProyectoRepository proyectoRepository) {
+      ProyectoRepository proyectoRepository, ProyectoHelper proyectoHelper) {
     this.repository = proyectoPaqueteTrabajoRepository;
     this.proyectoRepository = proyectoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -164,6 +167,8 @@ public class ProyectoPaqueteTrabajoServiceImpl implements ProyectoPaqueteTrabajo
   @Override
   public Page<ProyectoPaqueteTrabajo> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoPaqueteTrabajo> specs = ProyectoPaqueteTrabajoSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

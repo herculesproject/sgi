@@ -5,7 +5,6 @@ import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concep
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { Fragment } from '@core/services/action-service';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -55,7 +54,6 @@ export class ProyectoConceptosGastoFragment extends Fragment {
     private proyecto: IProyecto,
     private proyectoService: ProyectoService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
-    private convocatoriaService: ConvocatoriaService,
     public readonly: boolean,
     public isVisor: boolean
   ) {
@@ -107,8 +105,8 @@ export class ProyectoConceptosGastoFragment extends Fragment {
             let requestConvocatoriaConceptosGasto: Observable<ConceptoGastoListado[]>;
 
             if (this.proyecto.convocatoriaId) {
-              requestConvocatoriaConceptosGasto = this.convocatoriaService
-                .findAllConvocatoriaConceptoGastosNoPermitidos(this.proyecto.convocatoriaId)
+              requestConvocatoriaConceptosGasto = this.proyectoService
+                .findConvocatoriaConceptosGastoNoPermitidos(key as number)
                 .pipe(
                   map((response) => response.items),
                   map(convocatoriaConceptosGasto => {
@@ -160,8 +158,8 @@ export class ProyectoConceptosGastoFragment extends Fragment {
             let requestConvocatoriaConceptosGasto: Observable<ConceptoGastoListado[]>;
 
             if (this.proyecto.convocatoriaId) {
-              requestConvocatoriaConceptosGasto = this.convocatoriaService
-                .findAllConvocatoriaConceptoGastosPermitidos(this.proyecto.convocatoriaId)
+              requestConvocatoriaConceptosGasto = this.proyectoService
+                .findConvocatoriaConceptosGastoPermitidos(key as number)
                 .pipe(
                   map((response) => response.items),
                   map(convocatoriaConceptosGasto => {

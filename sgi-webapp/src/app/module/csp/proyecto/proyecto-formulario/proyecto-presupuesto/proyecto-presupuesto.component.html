@@ -87,18 +87,24 @@
                     *ngIf="!formPart.readonly" (click)="deleteAnualidad(data)">
                     <mat-icon>highlight_off</mat-icon>
                   </button>
-                  <button *ngIf="showEnviarSgeButton(data) | async" color="primary" mat-raised-button
-                    matTooltip="{{'btn.enviar-sge' | translate}}" (click)="sendSGE(data)"
+                  <button *ngIf="!formPart.readonly && (showEnviarSgeButton(data) | async)" color="primary"
+                    mat-raised-button matTooltip="{{'btn.enviar-sge' | translate}}" (click)="sendSGE(data)"
                     [disabled]="this.formPart.hasChanges()">
                     {{'btn.enviar-sge' | translate}}
                   </button>
                 </ng-container>
                 <ng-template #enviadoSge>
-                  <button mat-icon-button color="primary" matTooltip="{{'btn.view' | translate}}"
-                    *ngIf="!formPart.readonly" [routerLink]="[data.value.id]">
+                  <button *ngIf="!formPart.readonly" mat-icon-button color="primary"
+                    matTooltip="{{'btn.view' | translate}}" [routerLink]="[data.value.id]">
                     <mat-icon>visibility</mat-icon>
                   </button>
                 </ng-template>
+              </ng-container>
+              <ng-container *ngIf="formPart.readonly">
+                <button mat-icon-button color="primary" matTooltip="{{'btn.view' | translate}}"
+                  [routerLink]="[data.value.id]">
+                  <mat-icon>visibility</mat-icon>
+                </button>
               </ng-container>
             </td>
           </ng-container>
@@ -110,7 +116,7 @@
 
     <div class="separation-button">
       <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-        <button color="three" mat-button mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]"
+        <button color="three" mat-button mat-raised-button *ngIf="!formPart.readonly" [routerLink]="[ROUTE_NAMES.NEW]"
           [disabled]="formPart.disableAddAnualidad$ | async">
           <mat-icon color="accent">add_circle</mat-icon>
           {{ 'btn.add.entity' | translate:msgParaAnualidad }}

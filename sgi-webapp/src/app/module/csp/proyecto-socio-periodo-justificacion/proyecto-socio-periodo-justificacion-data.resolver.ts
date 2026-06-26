@@ -62,7 +62,7 @@ export class ProyectoSocioPeriodoJustificacionDataResolver extends SgiResolverRe
           proyecto: proyectoData.proyecto,
           proyectoSocio: socio,
           proyectoSocioPeriodosJustificacion: [],
-          readonly: proyectoData.readonly
+          readonly: proyectoData.readonly || proyectoData.isAccessingAsInvestigador
         };
       }),
       switchMap(data => {

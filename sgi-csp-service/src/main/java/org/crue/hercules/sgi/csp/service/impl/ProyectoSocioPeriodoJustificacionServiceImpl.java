@@ -15,13 +15,14 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoJustificacionSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.SgdocService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -62,17 +63,19 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
   private final ProyectoSocioPeriodoJustificacionDocumentoRepository proyectoSocioPeriodoJustificacionDocumentoRepository;
   /** SGDOC service */
   private final SgdocService sgdocService;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoSocioPeriodoJustificacionServiceImpl(
       ProyectoSocioPeriodoJustificacionRepository proyectoSocioPeriodoJustificacionRepository,
       ProyectoSocioRepository proyectoSocioRepository,
       ProyectoSocioPeriodoJustificacionDocumentoRepository proyectoSocioPeriodoJustificacionDocumentoRepository,
-      ProyectoRepository proyectoRepository, SgdocService sgdocService) {
+      ProyectoRepository proyectoRepository, SgdocService sgdocService, ProyectoHelper proyectoHelper) {
     this.repository = proyectoSocioPeriodoJustificacionRepository;
     this.proyectoSocioRepository = proyectoSocioRepository;
     this.proyectoSocioPeriodoJustificacionDocumentoRepository = proyectoSocioPeriodoJustificacionDocumentoRepository;
     this.proyectoRepository = proyectoRepository;
     this.sgdocService = sgdocService;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -239,11 +242,15 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
    */
   @Override
   public ProyectoSocioPeriodoJustificacion findById(Long id) {
-    log.debug("findById(Long id)  - start");
-    final ProyectoSocioPeriodoJustificacion returnValue = repository.findById(id)
+    log.debug("findById - id: {}", id);
+    final ProyectoSocioPeriodoJustificacion periodoJustificacion = repository.findById(id)
         .orElseThrow(() -> new ProyectoSocioPeriodoJustificacionNotFoundException(id));
-    log.debug("findById(Long id)  - end");
-    return returnValue;
+
+    proyectoSocioRepository.findById(periodoJustificacion.getProyectoSocioId())
+        .ifPresent(socio -> proyectoHelper.checkCanAccessProyecto(socio.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
+
+    return periodoJustificacion;
   }
 
   /**
@@ -254,10 +261,8 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
    */
   @Override
   public boolean existsById(final Long id) {
-    log.debug("existsById(final Long id)  - start", id);
-    final boolean existe = repository.existsById(id);
-    log.debug("existsById(final Long id)  - end", id);
-    return existe;
+    log.debug("existsById - id: {}", id);
+    return repository.existsById(id);
   }
 
   /**
@@ -273,6 +278,9 @@ public class ProyectoSocioPeriodoJustificacionServiceImpl implements ProyectoSoc
   public Page<ProyectoSocioPeriodoJustificacion> findAllByProyectoSocio(Long proyectoSocioId, String query,
       Pageable pageable) {
     log.debug("findAllByProyectoSocio(Long proyectoSocioId, String query, Pageable pageable) - start");
+    proyectoSocioRepository.findById(proyectoSocioId)
+        .ifPresent(socio -> proyectoHelper.checkCanAccessProyecto(socio.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
     Specification<ProyectoSocioPeriodoJustificacion> specs = ProyectoSocioPeriodoJustificacionSpecifications
         .byProyectoSocioId(proyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));
 

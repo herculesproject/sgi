@@ -59,13 +59,12 @@ class ProyectoSocioServiceTest extends BaseServiceTest {
   @Mock
   private RolSocioRepository rolSocioRepository;
 
+  @Mock
   private ProyectoHelper proyectoHelper;
   private ProyectoSocioService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    proyectoHelper = new ProyectoHelper(proyectoRepository, proyectoEquipoRepository,
-        proyectoResponsableEconomicoRepository);
     service = new ProyectoSocioServiceImpl(repository, equipoRepository, periodoPagoRepository, documentoRepository,
         periodoJustificacionRepository, proyectoRepository, rolSocioRepository, this.proyectoHelper);
   }

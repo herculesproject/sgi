@@ -32,7 +32,8 @@ export class ViajesDietasFragment extends FacturasJustificantesFragment {
     proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
     configuracion: IConfiguracion,
-    private readonly translateService: TranslateService
+    translateService: TranslateService,
+    isInvestigador: boolean = false
   ) {
     super(
       key,
@@ -45,7 +46,8 @@ export class ViajesDietasFragment extends FacturasJustificantesFragment {
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
       configuracion,
-      translateService
+      translateService,
+      isInvestigador
     );
   }
 
@@ -62,7 +64,7 @@ export class ViajesDietasFragment extends FacturasJustificantesFragment {
 
   protected getRowConfig(): IRowConfig {
     return {
-      actionsShow: true,
+      actionsShow: !this.isInvestigador,
       anualidadGroupBy: true,
       anualidadShow: true,
       aplicacionPresupuestariaGroupBy: this.config.viajesDietasColumnasFijasVisibles?.some(c => c === FacturasJustificantesColumnasFijasConfigurables.APLICACION_PRESUPUESTARIA),
@@ -143,7 +145,10 @@ export class ViajesDietasFragment extends FacturasJustificantesFragment {
     displayColumns.push('codigoEconomico');
     displayColumns.push('fechaDevengo');
     displayColumns.push(...columns.map(column => column.id));
-    displayColumns.push('acciones');
+
+    if (rowConfig?.actionsShow) {
+      displayColumns.push('acciones');
+    }
 
     return displayColumns;
   }

@@ -37,6 +37,11 @@ const _RelacionServiceMixinBase:
     RELACION_RESPONSE_CONVERTER
   );
 
+/**
+ * @deprecated Accede directamente al módulo REL.
+ * Se reemplaza por el acceso a través del servicio de dominio propietario de la entidad,
+ * que permite resolver las relaciones aplicando las comprobaciones necesarias de la entidad.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -53,7 +58,7 @@ export class RelacionService extends _RelacionServiceMixinBase {
 
   /**
    * Busca las relaciones con el Proyecto indicado
-   * 
+   *
    * @param id del Proyecto.
    * @returns relaciones con el Proyecto indicado.
    */
@@ -66,7 +71,7 @@ export class RelacionService extends _RelacionServiceMixinBase {
 
   /**
    * Busca las relaciones con la Invencion indicada
-   * 
+   *
    * @param id de la Invencion.
    * @returns relaciones con la Invencion indicada.
    */

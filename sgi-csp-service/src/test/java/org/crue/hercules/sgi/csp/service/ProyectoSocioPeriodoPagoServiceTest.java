@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioPeriodoPagoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -39,12 +40,14 @@ class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoSocioRepository proyectoSocioRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoSocioPeriodoPagoService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new ProyectoSocioPeriodoPagoServiceImpl(repository, proyectoSocioRepository);
+    service = new ProyectoSocioPeriodoPagoServiceImpl(repository, proyectoSocioRepository, proyectoHelper);
   }
 
   @Test

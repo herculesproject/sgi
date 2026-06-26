@@ -91,7 +91,7 @@
       </div>
       <div class="separation-button" *ngIf="group.status$ | async as status">
         <button *ngIf="viewMode === VIEW_MODE.VIEW" mat-button mat-raised-button color="primary" class="rounded"
-          [disabled]="!viewingNode?.fichero || this.readonly" (click)="downloadFile(viewingNode)">
+          [disabled]="!viewingNode?.fichero" (click)="downloadFile(viewingNode)">
           <mat-icon>arrow_downward</mat-icon>
           {{'btn.download.file' | translate}}
         </button>

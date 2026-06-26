@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.exceptions.UnknownServiceTypeException;
 import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -37,6 +38,12 @@ public abstract class SgiApiBaseService {
       case ETI:
         serviceURL = restApiProperties.getEtiUrl();
         break;
+      case PII:
+        serviceURL = restApiProperties.getPiiUrl();
+        break;
+      case REL:
+        serviceURL = restApiProperties.getRelUrl();
+        break;
       case REP:
         serviceURL = restApiProperties.getRepUrl();
         break;
@@ -52,10 +59,13 @@ public abstract class SgiApiBaseService {
       case SGEMP:
         serviceURL = restApiProperties.getSgempUrl();
         break;
+      case SGE:
+        serviceURL = restApiProperties.getSgeUrl();
+        break;
       default:
         throw new UnknownServiceTypeException(serviceType.name());
     }
-    // TODO revisit implementation
+
     String mergedURL = new StringBuilder(serviceURL).append(relativeUrl).toString();
     log.debug("buildUrl(ServiceType serviceType, String relativeUrl) - end");
     return mergedURL;
@@ -63,19 +73,38 @@ public abstract class SgiApiBaseService {
 
   protected <T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod,
       ParameterizedTypeReference<T> returnType, Object... uriVariables) {
-    return this.<Void, T>callEndpoint(endPoint, httpMethod, null, returnType, uriVariables);
+    return this.<Void, T>callEndpoint(endPoint, httpMethod, null, null, returnType, uriVariables);
   }
 
   protected <E, T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod, E entity,
       ParameterizedTypeReference<T> returnType, Object... uriVariables) {
+    return this.<E, T>callEndpoint(endPoint, httpMethod, entity, null, returnType, uriVariables);
+  }
+
+  /**
+   * Llama a un endpoint con autorización de cliente (servicio a servicio).
+   *
+   * @param <E>          tipo de la entidad enviada
+   * @param <T>          tipo de retorno esperado
+   * @param endPoint     URL del endpoint
+   * @param httpMethod   método HTTP
+   * @param entity       datos a enviar
+   * @param headers      cabeceras adicionales a incluir en la petición
+   * @param returnType   tipo parametrizado de retorno
+   * @param uriVariables variables a sustituir en la URI
+   * @return la respuesta del endpoint (incluye cabeceras de respuesta)
+   */
+  protected <E, T> ResponseEntity<T> callEndpoint(String endPoint, HttpMethod httpMethod, E entity, HttpHeaders headers,
+      ParameterizedTypeReference<T> returnType, Object... uriVariables) {
     log.info("Calling SGI API endpoint: {}", endPoint);
     log.debug("Endpoint uri variables: {} \\nRequest data: {}", (Object[]) uriVariables, entity);
-    HttpEntity<E> request = new HttpEntityBuilder<E>().withEntity(entity)
-        .withClientAuthorization(CLIENT_REGISTRATION_ID).build();
+    HttpEntity<E> request = new HttpEntityBuilder<E>()
+        .withEntity(entity)
+        .withClientAuthorization(CLIENT_REGISTRATION_ID)
+        .withHeaders(headers)
+        .build();
 
-    ResponseEntity<T> response = restTemplate.exchange(endPoint, httpMethod, request,
-        returnType, uriVariables);
-
+    ResponseEntity<T> response = restTemplate.exchange(endPoint, httpMethod, request, returnType, uriVariables);
     log.debug("Endpoint response: {}", response);
     return response;
   }

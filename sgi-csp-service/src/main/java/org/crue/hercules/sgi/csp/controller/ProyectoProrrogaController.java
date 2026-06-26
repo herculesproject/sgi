@@ -110,7 +110,7 @@ public class ProyectoProrrogaController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("ProyectoProrroga exists(Long id) - start");
     if (service.existsById(id)) {
@@ -153,7 +153,7 @@ public class ProyectoProrrogaController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/prorrogadocumentos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProrrogaDocumento>> findAllProrrogaDocumento(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProrrogaDocumento(Long id, String query, Pageable paging) - start");

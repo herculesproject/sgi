@@ -223,6 +223,22 @@ public interface ProyectoService {
   Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable);
 
   /**
+   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica} de
+   * los {@link Proyecto} en los que el usuario logueado figura como investigador
+   * principal.
+   *
+   * @param query                       filtro de búsqueda.
+   * @param onlyWithParticipacionActual si es {@code true} solo se incluyen los
+   *                                    proyectos en los que el usuario es
+   *                                    investigador principal en la fecha actual
+   * @param pageable                    {@link Pageable}.
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} paginadas
+   *         y filtradas.
+   */
+  Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaProyectosInvestigador(String query,
+      boolean onlyWithParticipacionActual, Pageable pageable);
+
+  /**
    * Obtiene los datos de proyectos competitivos de las personas.
    *
    * @param personasRef        Lista de id de las personas.

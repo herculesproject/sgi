@@ -58,12 +58,14 @@ export class ProyectoProrrogaDatosGeneralesFragment extends FormFragment<IProyec
       }
     );
 
-    this.subscriptions.push(form.controls.tipo.valueChanges.subscribe((value: Tipo) => {
-      this.addValidations(value);
-    }));
-
     if (this.readonly) {
       form.disable();
+    } else {
+      this.subscriptions.push(
+        form.controls.tipo.valueChanges.subscribe((value: Tipo) => {
+          this.addValidations(value);
+        })
+      );
     }
 
     return form;

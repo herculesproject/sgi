@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPartidaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPartidaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -48,14 +49,16 @@ public class ProyectoPartidaServiceImpl implements ProyectoPartidaService {
   private final ConfiguracionRepository configuracionRepository;
   private final AnualidadGastoRepository anualidadGastoRepository;
   private final AnualidadIngresoRepository anualidadIngresoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoPartidaServiceImpl(ProyectoPartidaRepository proyectoPartidaRepository,
       ConfiguracionRepository configuracionRepository, AnualidadGastoRepository anualidadGastoRepository,
-      AnualidadIngresoRepository anualidadIngresoRepository) {
+      AnualidadIngresoRepository anualidadIngresoRepository, ProyectoHelper proyectoHelper) {
     this.repository = proyectoPartidaRepository;
     this.configuracionRepository = configuracionRepository;
     this.anualidadGastoRepository = anualidadGastoRepository;
     this.anualidadIngresoRepository = anualidadIngresoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -173,6 +176,8 @@ public class ProyectoPartidaServiceImpl implements ProyectoPartidaService {
   @Override
   public Page<ProyectoPartida> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoPartida> specs = ProyectoPartidaSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

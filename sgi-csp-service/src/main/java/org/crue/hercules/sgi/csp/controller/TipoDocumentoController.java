@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,18 +54,16 @@ public class TipoDocumentoController {
    *         paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-C', 'CSP-ME-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ME-C', 'CSP-ME-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<TipoDocumento>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(String query, Pageable paging) - start");
+    log.debug("findAll - query: {}, paging: {}", query, SgiLogUtils.pageable(paging));
     Page<TipoDocumento> page = tipoDocumentoService.findAll(query, paging);
-
     if (page.isEmpty()) {
-      log.debug("findAll(String query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAll(String query, Pageable paging) - end");
+    log.debug("findAll - response: {}", SgiLogUtils.page(page));
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

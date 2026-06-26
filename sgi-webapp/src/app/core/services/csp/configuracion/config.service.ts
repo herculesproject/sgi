@@ -168,6 +168,14 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_PROYECTO_AREAS_CONOCIMIENTO_ENABLED);
   }
 
+  isInvProyectoVistaAmpliadaIpEnabled(): Observable<boolean> {
+    return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_INV_PROYECTO_VISTA_AMPLIADA_IP_ENABLED);
+  }
+
+  isInvEjecucionEconomicaVistaIpEnabled(): Observable<boolean> {
+    return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_INV_EJECUCION_ECONOMICA_VISTA_IP_ENABLED);
+  }
+
   private getValueByConfigKey<T>(configKey: ConfigCsp): Observable<T> {
     return this.findById(configKey).pipe(
       map(configValue => configValue?.value)

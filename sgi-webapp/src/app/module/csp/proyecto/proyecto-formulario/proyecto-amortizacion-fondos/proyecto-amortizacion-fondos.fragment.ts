@@ -29,6 +29,10 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
 
   private _amortizacionFondosSgeEnabled: boolean;
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     key: number,
@@ -39,7 +43,8 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
     private empresaService: EmpresaService,
     private proyectoAnualidadService: ProyectoAnualidadService,
     private periodoAmortizacionService: PeriodoAmortizacionService,
-    private readonly cspConfigService: ConfigService
+    private readonly cspConfigService: ConfigService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);

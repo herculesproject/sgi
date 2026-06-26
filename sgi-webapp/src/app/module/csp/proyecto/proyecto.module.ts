@@ -29,6 +29,7 @@ import { ProyectoRelacionModalComponent } from './modals/proyecto-relacion-modal
 import { ProyectoResponsableEconomicoModalComponent } from './modals/proyecto-responsable-economico-modal/proyecto-responsable-economico-modal.component';
 import { ProyectoUnidadVinculacionModalComponent } from './modals/proyecto-unidad-vinculacion-modal/proyecto-unidad-vinculacion-modal.component';
 import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-convocante-plan.pipe';
+import { ProyectoAccessGuard } from './proyecto-acccess.guard';
 import { ProyectoAreaConocimientoListadoExportService } from './proyecto-area-conocimiento-listado-export.service';
 import { ProyectoCalendarioFacturacionListadoExportService } from './proyecto-calendario-facturacion-listado-export.service';
 import { ProyectoCalendarioJustificacionListadoExportService } from './proyecto-calendario-justificacion-listado-export.service';
@@ -161,6 +162,7 @@ import { ProyectoUnidadVinculacionListadoExportService } from './proyecto-unidad
     DecimalPipe,
     LuxonDatePipe,
     PercentPipe,
+    ProyectoAccessGuard,
     ProyectoAreaConocimientoListadoExportService,
     ProyectoCalendarioFacturacionListadoExportService,
     ProyectoCalendarioJustificacionListadoExportService,

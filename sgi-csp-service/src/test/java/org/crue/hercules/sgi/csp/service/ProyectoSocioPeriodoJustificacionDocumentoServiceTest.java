@@ -19,7 +19,9 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioPeriodoJustificacionDocumentoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,12 +46,20 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
   private ProyectoSocioPeriodoJustificacionDocumentoRepository repository;
   @Mock
   private ProyectoSocioPeriodoJustificacionRepository proyectoSocioRepository;
+  @Mock
+  private ProyectoSocioRepository proyectoSocioPeriodoJustificacionProyectoSocioRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoSocioPeriodoJustificacionDocumentoService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new ProyectoSocioPeriodoJustificacionDocumentoServiceImpl(repository, proyectoSocioRepository);
+    service = new ProyectoSocioPeriodoJustificacionDocumentoServiceImpl(
+        repository,
+        proyectoSocioRepository,
+        proyectoSocioPeriodoJustificacionProyectoSocioRepository,
+        proyectoHelper);
   }
 
   @Test

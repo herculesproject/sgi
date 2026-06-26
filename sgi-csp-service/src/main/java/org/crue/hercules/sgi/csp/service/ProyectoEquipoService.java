@@ -104,10 +104,19 @@ public interface ProyectoEquipoService {
   /**
    * Comprueba si alguno de los {@link ProyectoEquipo} del {@link Proyecto}
    * tienen fechas
-   * 
+   *
    * @param proyectoId el id del {@link Proyecto}.
    * @return true si existen y false en caso contrario.
    */
   boolean proyectoHasProyectoEquipoWithDates(Long proyectoId);
+
+  /**
+   * Comprueba si el usuario autenticado actualmente es investigador principal
+   * activo del {@link Proyecto} en el momento actual.
+   *
+   * @param proyectoId Identificador del {@link Proyecto}.
+   * @return {@code true} si el usuario tiene rol principal activo hoy.
+   */
+  boolean isCurrentUserInvestigadorPrincipalActual(Long proyectoId);
 
 }

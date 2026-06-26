@@ -74,7 +74,7 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
         default:
           return wrapper[property];
       }
-    }
+    };
     this.dataSource.sort = this.sort;
 
     this.subscriptions.push(this.formPart.plazos$.subscribe(elements => {
@@ -110,7 +110,7 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
       plazos: this.dataSource.data.filter(existing => existing !== plazo).map(wrapper => wrapper.value),
       plazo: plazo ? plazo.value : {} as IProyectoFase,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      readonly: this.actionService.readonly,
+      readonly: this.formPart.isReadonly,
       tituloProyecto: this.actionService.titulo,
       unidadGestionId: this.actionService.unidadGestionId,
       convocatoriaId: this.actionService.convocatoriaId

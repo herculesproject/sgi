@@ -51,6 +51,11 @@ import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRequerimiento;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
 import org.crue.hercules.sgi.csp.service.AnualidadIngresoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.GastoProyectoService;
@@ -88,6 +93,8 @@ import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -99,6 +106,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -188,6 +196,21 @@ class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConvocatoriaService convocatoriaService;
+
+  @MockBean
+  private ConvocatoriaDocumentoService convocatoriaDocumentoService;
+
+  @MockBean
+  private ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
+
+  @MockBean
+  private ConvocatoriaPartidaService convocatoriaPartidaService;
+
+  @MockBean
+  private ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
+
+  @MockBean
+  private ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
 
   @MockBean
   private AnualidadIngresoService anualidadIngresoService;
@@ -1035,10 +1058,30 @@ class ProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  @ParameterizedTest
+  @CsvSource({ "true", "false" })
+  @WithMockUser(username = "user", authorities = { "CSP-PRO-INV-VR" })
+  void isCurrentUserInvestigadorPrincipalActual(boolean isInvestigadorPrincipal) throws Exception {
+    // given: el servicio indica si el usuario es investigador principal o no
+    BDDMockito.given(proyectoEquipoService.isCurrentUserInvestigadorPrincipalActual(ArgumentMatchers.<Long>any()))
+        .willReturn(isInvestigadorPrincipal);
+
+    // when: petición HEAD a investigador-principal-actual
+    mockMvc
+        .perform(MockMvcRequestBuilders.request(HttpMethod.HEAD,
+            CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/investigador-principal-actual", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: retorna 200 si es IP, 204 si no lo es
+        .andExpect(isInvestigadorPrincipal
+            ? MockMvcResultMatchers.status().isOk()
+            : MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
-   * 
+   *
    * PROYECTO PERIODO SEGUIMIENTO
-   * 
+   *
    */
 
   @Test
@@ -1222,12 +1265,6 @@ class ProyectoControllerTest extends BaseControllerTest {
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
-
-  /**
-   * 
-   * PROYECTO PRÓRROGA
-   * 
-   */
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
@@ -1462,8 +1499,8 @@ class ProyectoControllerTest extends BaseControllerTest {
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones(observacionesProyecto);
     proyecto.setUnidadGestionRef("2");
-    proyecto.setFechaInicio(Instant.now());
-    proyecto.setFechaFin(Instant.now());
+    proyecto.setFechaInicio(Instant.parse("2021-01-11T00:00:00Z"));
+    proyecto.setFechaFin(Instant.parse("2022-01-11T23:59:59Z"));
     proyecto.setModeloEjecucion(modeloEjecucion);
     proyecto.setFinalidad(tipoFinalidad);
     proyecto.setAmbitoGeografico(tipoAmbitoGeografico);
@@ -1491,7 +1528,7 @@ class ProyectoControllerTest extends BaseControllerTest {
     estadoProyecto.setId(id);
     estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
-    estadoProyecto.setFechaEstado(Instant.now());
+    estadoProyecto.setFechaEstado(Instant.parse("2021-01-11T00:00:00Z"));
     estadoProyecto.setProyectoId(1L);
 
     return estadoProyecto;
@@ -1634,8 +1671,8 @@ class ProyectoControllerTest extends BaseControllerTest {
         .id(proyectoEquipoId)
         .proyectoId(1L)
         .rolProyecto(RolProyecto.builder().id(1L).build())
-        .fechaInicio(Instant.now())
-        .fechaFin(Instant.now())
+        .fechaInicio(Instant.parse("2021-01-11T00:00:00Z"))
+        .fechaFin(Instant.parse("2022-01-11T23:59:59Z"))
         .personaRef("001")
         .build();
   }

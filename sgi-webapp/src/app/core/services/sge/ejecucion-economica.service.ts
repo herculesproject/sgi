@@ -93,7 +93,7 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
     return this.getColumnas(proyectoEconomicoId, TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO, reducida);
   }
 
-  private getDatosEconomicos(
+  protected getDatosEconomicos(
     sort: SgiRestSort,
     proyectoEconomicoId: string,
     tipoOperacion: TipoOperacion,
@@ -229,7 +229,7 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
     );
   }
 
-  private getDatoEconomicoDetalle(id: string, tipoOperacion: TipoOperacion): Observable<IDatoEconomicoDetalle> {
+  protected getDatoEconomicoDetalle(id: string, tipoOperacion: TipoOperacion): Observable<IDatoEconomicoDetalle> {
     return this.http.get<IDatoEconomicoDetalleBackend>(`${this.endpointUrl}/${id}`, { params: { tipoOperacion } }).pipe(
       map(response => DATO_ECONOMICO_DETALLE_CONVERTER.toTarget(response))
     );

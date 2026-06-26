@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioEquipoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,11 +50,14 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoSocioRepository proyectoSocioRepository;
 
+  @Mock
+  private ProyectoHelper proyectoHelper;
+
   private ProyectoSocioEquipoService service;
 
   @BeforeEach
   void setUp() {
-    service = new ProyectoSocioEquipoServiceImpl(repository, proyectoSocioRepository);
+    service = new ProyectoSocioEquipoServiceImpl(repository, proyectoSocioRepository, proyectoHelper);
   }
 
   @Test

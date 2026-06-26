@@ -117,10 +117,12 @@
   </form>
 </sgi-dialog-content>
 <mat-dialog-actions>
-  <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit"
-    *sgiHasAnyAuthorityForAnyUO="['CSP-CON-C', 'CSP-CON-E']">
-    <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
-  </button>
+  <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E']">
+    <button color="accent" (click)="doAction()" [disabled]="this.actionDisabled" mat-raised-button type="submit"
+      *ngIf="!data.readonly">
+      <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
+    </button>
+  </ng-container>
   <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
     translate}}</button>
 </mat-dialog-actions>

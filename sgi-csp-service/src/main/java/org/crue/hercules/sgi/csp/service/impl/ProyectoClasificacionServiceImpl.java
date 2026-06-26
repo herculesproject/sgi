@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoClasificacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoClasificacionSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +27,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProyectoClasificacionServiceImpl implements ProyectoClasificacionService {
 
   private final ProyectoClasificacionRepository repository;
+  private final ProyectoHelper proyectoHelper;
 
-  public ProyectoClasificacionServiceImpl(ProyectoClasificacionRepository proyectoClasificacionRepository) {
+  public ProyectoClasificacionServiceImpl(ProyectoClasificacionRepository proyectoClasificacionRepository,
+      ProyectoHelper proyectoHelper) {
     this.repository = proyectoClasificacionRepository;
-
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -84,6 +87,7 @@ public class ProyectoClasificacionServiceImpl implements ProyectoClasificacionSe
    */
   public Page<ProyectoClasificacion> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
     Specification<ProyectoClasificacion> specs = ProyectoClasificacionSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

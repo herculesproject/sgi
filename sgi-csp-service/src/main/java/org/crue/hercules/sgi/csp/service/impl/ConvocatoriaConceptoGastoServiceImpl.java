@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
@@ -15,9 +16,12 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaConceptoGastoCodigoEcSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaConceptoGastoSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -55,16 +59,18 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
   private final ConceptoGastoRepository conceptoGastoRepository;
   private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ProyectoHelper proyectoHelper;
 
   public ConvocatoriaConceptoGastoServiceImpl(ConvocatoriaConceptoGastoRepository repository,
       ConvocatoriaRepository convocatoriaRepository, ConceptoGastoRepository conceptoGastoRepository,
       ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository,
-      ConvocatoriaAuthorityHelper authorityHelper) {
+      ConvocatoriaAuthorityHelper authorityHelper, ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.conceptoGastoRepository = conceptoGastoRepository;
     this.convocatoriaConceptoGastoCodigoEcRepository = convocatoriaConceptoGastoCodigoEcRepository;
     this.authorityHelper = authorityHelper;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -323,6 +329,31 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
         .findAllByConvocatoriaIdAndConceptoGastoActivoTrueAndPermitidoFalse(convocatoriaId, pageable);
     log.debug("findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Pageable pageable) - end");
     return returnValue;
+  }
+
+  @Override
+  public Page<ConvocatoriaConceptoGasto> findAllByProyectoIdAndPermitido(Long proyectoId, boolean permitido,
+      Pageable pageable) {
+    log.debug("findAllByProyectoIdAndPermitido - proyectoId: {}, permitido: {}, paging: {}", proyectoId, permitido,
+        SgiLogUtils.pageable(pageable));
+
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
+    Optional<Convocatoria> convocatoria = convocatoriaRepository
+        .findOne(ConvocatoriaSpecifications.byProyectoId(proyectoId));
+    if (!convocatoria.isPresent()) {
+      Page<ConvocatoriaConceptoGasto> page = Page.empty(pageable);
+      log.debug("findAllByProyectoIdAndPermitido - response: {}", SgiLogUtils.page(page));
+      return page;
+    }
+
+    Long convocatoriaId = convocatoria.get().getId();
+    Page<ConvocatoriaConceptoGasto> page = permitido
+        ? repository.findAllByConvocatoriaIdAndConceptoGastoActivoTrueAndPermitidoTrue(convocatoriaId, pageable)
+        : repository.findAllByConvocatoriaIdAndConceptoGastoActivoTrueAndPermitidoFalse(convocatoriaId, pageable);
+    log.debug("findAllByProyectoIdAndPermitido - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
   /**

@@ -238,7 +238,7 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
         .and(ProyectoProyectoSgeSpecifications.byProyectoId(proyectoId));
 
     Page<ProyectoProyectoSge> returnValue = repository.findAll(specs, pageable);
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
   }

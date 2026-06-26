@@ -228,10 +228,14 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
    */
   @Override
   public ProyectoSocio findById(Long id) {
-    log.debug("findById(Long id) - start");
-    final ProyectoSocio returnValue = repository.findById(id).orElseThrow(() -> new ProyectoSocioNotFoundException(id));
-    log.debug("findById(Long id) - end");
-    return returnValue;
+    log.debug("findById - id: {}", id);
+    final ProyectoSocio socio = repository.findById(id).orElseThrow(() -> new ProyectoSocioNotFoundException(id));
+
+    proyectoHelper.checkCanAccessProyecto(
+        socio.getProyectoId(),
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
+    return socio;
   }
 
   /**
@@ -247,6 +251,8 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   @Override
   public Page<ProyectoSocio> findAllByProyecto(Long proyectoId, String query, Pageable paging) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable paging) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoSocio> specs = ProyectoSocioSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -360,19 +366,19 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   @Override
   public boolean hasAnyProyectoSocioWithRolCoordinador(Long proyectoId) {
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
     return repository.existsByProyectoIdAndRolSocioCoordinador(proyectoId, true);
   }
 
   @Override
   public boolean hasAnyProyectoSocioWithProyectoId(Long proyectoId) {
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
     return repository.existsByProyectoId(proyectoId);
   }
 
   @Override
   public boolean existsProyectoSocioPeriodoPagoByProyectoSocioId(Long proyectoId) {
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
     return !this.repository.findByProyectoId(proyectoId).stream()
         .filter(proyectoSocio -> this.periodoPagoRepository.existsByProyectoSocioId(proyectoSocio.getId()))
         .collect(Collectors.toList()).isEmpty();
@@ -380,7 +386,7 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
 
   @Override
   public boolean existsProyectoSocioPeriodoJustificacionByProyectoSocioId(Long proyectoId) {
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
     return !this.repository.findByProyectoId(proyectoId).stream()
         .filter(proyectoSocio -> this.periodoJustificacionRepository.existsByProyectoSocioId(proyectoSocio.getId()))
         .collect(Collectors.toList()).isEmpty();

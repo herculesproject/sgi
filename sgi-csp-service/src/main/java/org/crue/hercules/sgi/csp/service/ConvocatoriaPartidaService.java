@@ -1,13 +1,13 @@
 package org.crue.hercules.sgi.csp.service;
 
-import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
-
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.data.domain.Page;
 
 /**
  * Service Interface para gestionar {@link ConvocatoriaPartida}.
@@ -57,6 +57,17 @@ public interface ConvocatoriaPartidaService {
    *         {@link Convocatoria} paginadas.
    */
   Page<ConvocatoriaPartida> findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable);
+
+  /**
+   * Obtiene las {@link ConvocatoriaPartida} de la {@link Convocatoria} asociada
+   * al {@link Proyecto}, controlando el acceso a nivel de {@link Proyecto}.
+   *
+   * @param proyectoId el id del {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ConvocatoriaPartida} paginadas.
+   */
+  Page<ConvocatoriaPartida> findAllByProyectoId(Long proyectoId, String query, Pageable pageable);
 
   /**
    * Hace las comprobaciones necesarias para determinar si la

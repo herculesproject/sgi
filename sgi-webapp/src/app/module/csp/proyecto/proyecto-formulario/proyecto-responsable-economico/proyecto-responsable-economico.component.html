@@ -59,10 +59,11 @@
         <td mat-cell *matCellDef="let equipo; let i = index">
           <sgi-icon-view-persona-detail [personaId]="equipo.value?.persona?.id">
           </sgi-icon-view-persona-detail>
-          <button color="primary" *ngIf="this.formPart.readonly" mat-icon-button matTooltip="{{'btn.view' | translate}}"
-            (click)="openModal(equipo)">
-            <mat-icon>visibility</mat-icon>
-          </button>
+          <ng-container *ngIf="this.formPart.readonly">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.view' | translate}}" (click)="openModal(equipo)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
             <button color="primary" *ngIf="!this.formPart.readonly" mat-icon-button
               matTooltip="{{'btn.edit' | translate}}" (click)="openModal(equipo)">

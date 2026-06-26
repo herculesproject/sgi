@@ -155,6 +155,7 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
       entidadesFinanciadoras: this.formPart.entidadesFinanciadoras$.value.map(entidad => entidad.value),
       proyectosSGE: this.formPart.proyectosSGE$.value,
       anualidadGenerica: !this.formPart.anualidades,
+      readonly: this.formPart.isReadonly
     };
     const config = {
       data

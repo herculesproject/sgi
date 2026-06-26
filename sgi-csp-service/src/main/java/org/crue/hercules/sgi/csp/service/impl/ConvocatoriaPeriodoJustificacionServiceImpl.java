@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,8 +24,11 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaPeriodoJustificacionSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,15 +51,17 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
   private final ConvocatoriaPeriodoJustificacionRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ProyectoHelper proyectoHelper;
 
   public ConvocatoriaPeriodoJustificacionServiceImpl(Validator validator,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
       ConvocatoriaRepository convocatoriaRepository,
-      ConvocatoriaAuthorityHelper authorityHelper) {
+      ConvocatoriaAuthorityHelper authorityHelper, ProyectoHelper proyectoHelper) {
     this.validator = validator;
     this.repository = convocatoriaPeriodoJustificacionRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.authorityHelper = authorityHelper;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -164,6 +170,31 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
     Page<ConvocatoriaPeriodoJustificacion> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  @Override
+  public Page<ConvocatoriaPeriodoJustificacion> findAllByProyectoId(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyectoId - proyectoId: {}, query: {}, paging: {}", proyectoId, query,
+        SgiLogUtils.pageable(pageable));
+
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
+    Optional<Convocatoria> convocatoria = convocatoriaRepository
+        .findOne(ConvocatoriaSpecifications.byProyectoId(proyectoId));
+    if (!convocatoria.isPresent()) {
+      Page<ConvocatoriaPeriodoJustificacion> page = Page.empty(pageable);
+      log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+      return page;
+    }
+
+    Specification<ConvocatoriaPeriodoJustificacion> specs = ConvocatoriaPeriodoJustificacionSpecifications
+        .byConvocatoriaId(convocatoria.get().getId())
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<ConvocatoriaPeriodoJustificacion> page = repository.findAll(specs, pageable);
+    log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
   /**

@@ -110,7 +110,7 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
       hitos: this.dataSource.data.filter(existing => existing !== wrapper).map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as IProyectoHito,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      readonly: this.actionService.readonly,
+      readonly: this.formPart.isReadonly,
       unidadGestionId: this.actionService.unidadGestionId,
       tituloProyecto: this.actionService.titulo,
       convocatoriaId: this.actionService.convocatoriaId

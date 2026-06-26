@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.repository.AnualidadGastoRepository;
 import org.crue.hercules.sgi.csp.repository.AnualidadIngresoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAnualidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,9 @@ public class ProyectoAnualidadServiceTest extends BaseServiceTest {
 
   @MockBean
   private PersistenceUnitUtil persistenceUnitUtil;
+
+  @MockBean
+  private ProyectoHelper proyectoHelper;
 
   @Autowired
   private ProyectoAnualidadService proyectoAnualidadService;

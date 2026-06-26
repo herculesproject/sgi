@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProrrogaDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -50,13 +51,15 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
   private final ProrrogaDocumentoRepository repository;
   private final ProyectoProrrogaRepository proyectoProrrogaRepository;
   private final ModeloTipoDocumentoRepository modeloTipoDocumentoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProrrogaDocumentoServiceImpl(ProrrogaDocumentoRepository prorrogaDocumentoRepository,
       ProyectoProrrogaRepository proyectoProrrogaRepository,
-      ModeloTipoDocumentoRepository modeloTipoDocumentoRepository) {
+      ModeloTipoDocumentoRepository modeloTipoDocumentoRepository, ProyectoHelper proyectoHelper) {
     this.repository = prorrogaDocumentoRepository;
     this.proyectoProrrogaRepository = proyectoProrrogaRepository;
     this.modeloTipoDocumentoRepository = modeloTipoDocumentoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -160,6 +163,9 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
   @Override
   public Page<ProrrogaDocumento> findAllByProyectoProrroga(Long idProrroga, String query, Pageable paging) {
     log.debug("findAllByProyectoProrroga(Long idProrroga, String query, Pageable pageable) - start");
+    proyectoProrrogaRepository.findById(idProrroga)
+        .ifPresent(prorroga -> proyectoHelper.checkCanAccessProyecto(prorroga.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
     Specification<ProrrogaDocumento> specs = ProrrogaDocumentoSpecifications.byProyectoProrrogaId(idProrroga)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

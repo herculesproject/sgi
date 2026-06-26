@@ -52,7 +52,7 @@ export class ProyectoSocioDataResolver extends SgiResolverResolver<IProyectoSoci
         return {
           proyecto: proyectoData.proyecto,
           proyectoSocios: socios.items,
-          readonly: proyectoData.readonly
+          readonly: proyectoData.readonly || proyectoData.isAccessingAsInvestigador
         };
       })
     );

@@ -32,5 +32,6 @@ public class RelacionEjecucionEconomica {
   private String proyectoSgeRef;
   private TipoEntidad tipoEntidad;
   private Instant fechaFinDefinitiva;
+  private Boolean accesibleByInvestigador;
 
 }

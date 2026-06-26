@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoAmortizacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoAmortizacionRepository;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -11,13 +12,15 @@ class ProyectoPeriodoAmortizacionServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoPeriodoAmortizacionRepository proyectoPeriodoAmortizacionRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoPeriodoAmortizacionService proyectoPeriodoAmortizacionService;
 
   @BeforeEach
   void setup() {
     this.proyectoPeriodoAmortizacionService = new ProyectoPeriodoAmortizacionService(
-        this.proyectoPeriodoAmortizacionRepository);
+        this.proyectoPeriodoAmortizacionRepository, this.proyectoHelper);
   }
 
   @Test

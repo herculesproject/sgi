@@ -114,7 +114,7 @@ public class TipoConfidencialidadController {
    * @return página de {@link TipoConfidencialidadOutput} activos.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-C', 'CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<TipoConfidencialidadOutput>> findAll(
       @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {

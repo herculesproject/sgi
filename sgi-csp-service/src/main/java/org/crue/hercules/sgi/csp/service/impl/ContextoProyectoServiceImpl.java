@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.repository.ContextoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +26,13 @@ public class ContextoProyectoServiceImpl implements ContextoProyectoService {
 
   private final ContextoProyectoRepository repository;
   private final ProyectoRepository proyectoRepository;
+  private final ProyectoHelper proyectoHelper;
 
-  public ContextoProyectoServiceImpl(ContextoProyectoRepository repository, ProyectoRepository proyectoRepository) {
+  public ContextoProyectoServiceImpl(ContextoProyectoRepository repository, ProyectoRepository proyectoRepository,
+      ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.proyectoRepository = proyectoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -94,7 +98,7 @@ public class ContextoProyectoServiceImpl implements ContextoProyectoService {
   @Override
   public ContextoProyecto findByProyecto(Long id) {
     log.debug("findByProyecto(Long id) - start");
-
+    proyectoHelper.checkCanAccessProyecto(id, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
     if (proyectoRepository.existsById(id)) {
       final Optional<ContextoProyecto> returnValue = repository.findByProyectoId(id);
       log.debug("findByProyectoId(Long id) - end");

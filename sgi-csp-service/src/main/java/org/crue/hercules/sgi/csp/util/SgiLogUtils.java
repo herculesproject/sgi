@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.util;
 
+import java.util.Collection;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -44,6 +46,21 @@ public final class SgiLogUtils {
         page.getNumberOfElements(),
         page.getNumber() + 1,
         page.getTotalPages());
+  }
+
+  /**
+   * Formatea una {@link Collection} de respuesta para su inclusión en mensajes
+   * de log.
+   *
+   * @param collection la colección de resultados.
+   * @return {@code "empty"} o {@code "elements=N"}.
+   */
+  public static String collection(Collection<?> collection) {
+    if (collection == null || collection.isEmpty()) {
+      return "empty";
+    }
+
+    return "elements=%d".formatted(collection.size());
   }
 
 }

@@ -28,11 +28,11 @@ const PROYECTO_ENTIDAD_FINANCIADORA_AJENA_KEY = marker('csp.proyecto-entidad-fin
 })
 export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent implements OnInit, OnDestroy {
   formPart: ProyectoEntidadesFinanciadorasFragment;
-  private subscriptions: Subscription[] = [];
+  private readonly subscriptions: Subscription[] = [];
 
-  private columns = ['nombre', 'cif', 'fuenteFinanciacion', 'ambito', 'tipoFinanciacion',
+  private readonly columns = ['nombre', 'cif', 'fuenteFinanciacion', 'ambito', 'tipoFinanciacion',
     'porcentajeFinanciacion', 'importeFinanciacion', 'acciones'];
-  private elementsPage = [5, 10, 25, 100];
+  private readonly elementsPage = [5, 10, 25, 100];
 
   msgParamEntity = {};
   msgParamEntityAjena = {};
@@ -57,8 +57,8 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
 
   constructor(
     protected actionService: ProyectoActionService,
-    private matDialog: MatDialog,
-    private dialogService: DialogService,
+    private readonly matDialog: MatDialog,
+    private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService, translate);
@@ -73,9 +73,7 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
     this.dataSourceAjenas.paginator = this.paginatorAjenas;
     this.dataSourceAjenas.sort = this.sortAjenas;
     this.subscriptions.push(
-      this.formPart.entidadesPropias$.subscribe((elements) => this.dataSourcePropias.data = elements)
-    );
-    this.subscriptions.push(
+      this.formPart.entidadesPropias$.subscribe((elements) => this.dataSourcePropias.data = elements),
       this.formPart.entidadesAjenas$.subscribe((elements) => this.dataSourceAjenas.data = elements)
     );
   }
@@ -160,7 +158,7 @@ export class ProyectoEntidadesFinanciadorasComponent extends FragmentComponent i
         ? (wrapper == null ? this.msgCrear : this.modalTitle)
         : (wrapper == null ? this.msgCrearAjena : this.modalTitleAjena),
       entidad: wrapper ? wrapper.value : {} as IEntidadFinanciadora,
-      readonly: this.formPart.readonly
+      readonly: this.formPart.isReadonly
     };
     const config = {
       data

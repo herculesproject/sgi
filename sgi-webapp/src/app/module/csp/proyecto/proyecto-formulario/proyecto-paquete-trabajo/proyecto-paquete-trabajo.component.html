@@ -48,13 +48,19 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let wrapper">
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button color="primary" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
-              *ngIf="!actionService.readonly" (click)="openModal(wrapper)">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.isReadonly"
+              (click)="openModal(wrapper)">
               <mat-icon>border_color</mat-icon>
             </button>
           </ng-container>
+          <ng-container *ngIf="formPart.isReadonly">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.view' | translate}}"
+              (click)="openModal(wrapper)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
+            <button color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.isReadonly"
               (click)="deletePaqueteTrabajo(wrapper)">
               <mat-icon>highlight_off</mat-icon>
             </button>
@@ -73,7 +79,7 @@
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
       <!-- Botón añadir paquetes trabajo -->
-      <button color="three" mat-button mat-raised-button (click)="openModal()">
+      <button color="three" mat-button mat-raised-button *ngIf="!formPart.isReadonly" (click)="openModal()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

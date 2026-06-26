@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEntidadFinanciadoraSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -53,15 +54,17 @@ public class ProyectoEntidadFinanciadoraServiceImpl implements ProyectoEntidadFi
   private final ProyectoRepository proyectoRepository;
   private final FuenteFinanciacionRepository fuenteFinanciacionRepository;
   private final TipoFinanciacionRepository tipoFinanciacionRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoEntidadFinanciadoraServiceImpl(
       ProyectoEntidadFinanciadoraRepository proyectoEntidadFinanciadoraRepository,
       ProyectoRepository proyectoRepository, FuenteFinanciacionRepository fuenteFinanciacionRepository,
-      TipoFinanciacionRepository tipoFinanciacionRepository) {
+      TipoFinanciacionRepository tipoFinanciacionRepository, ProyectoHelper proyectoHelper) {
     this.repository = proyectoEntidadFinanciadoraRepository;
     this.proyectoRepository = proyectoRepository;
     this.fuenteFinanciacionRepository = fuenteFinanciacionRepository;
     this.tipoFinanciacionRepository = tipoFinanciacionRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -173,6 +176,7 @@ public class ProyectoEntidadFinanciadoraServiceImpl implements ProyectoEntidadFi
   public Page<ProyectoEntidadFinanciadora> findAllByProyecto(Long idProyecto, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long idProyecto, String query, Pageable pageable) - start");
     AssertHelper.idNotNull(idProyecto, ProyectoEntidadFinanciadora.class);
+    proyectoHelper.checkCanAccessProyecto(idProyecto, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
 
     Specification<ProyectoEntidadFinanciadora> specs = ProyectoEntidadFinanciadoraSpecifications
         .byProyectoId(idProyecto).and(SgiRSQLJPASupport.toSpecification(query));

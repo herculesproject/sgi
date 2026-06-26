@@ -9,7 +9,10 @@ import { SharedModule } from '@shared/shared.module';
 import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
+import { ProyectoEntidadConvocantePlanPipe } from './pipes/proyecto-entidad-convocante-plan.pipe';
+import { ProyectoAccessGuard } from './proyecto-acccess.guard';
 import { ProyectoDataResolver } from './proyecto-data.resolver';
+import { ProyectoConsultaPresupuestoExportService } from './proyecto-formulario/proyecto-consulta-presupuesto/export/proyecto-consulta-presupuesto-export.service';
 import { ProyectoListadoInvComponent } from './proyecto-listado-inv/proyecto-listado-inv.component';
 import { ProyectoRoutingInvModule } from './proyecto-routing-inv.module';
 
@@ -32,7 +35,10 @@ import { ProyectoRoutingInvModule } from './proyecto-routing-inv.module';
   ],
   providers: [
     LuxonDatePipe,
-    ProyectoDataResolver
+    ProyectoAccessGuard,
+    ProyectoConsultaPresupuestoExportService,
+    ProyectoDataResolver,
+    ProyectoEntidadConvocantePlanPipe
   ]
 })
 export class ProyectoInvModule { }

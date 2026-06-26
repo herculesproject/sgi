@@ -56,7 +56,7 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   columns = ['nombreRaizArbol', 'areaTematicaConvocatoria', 'areaTematicaProyecto', 'acciones'];
 
-  private subscriptions = [] as Subscription[];
+  private readonly subscriptions = [] as Subscription[];
 
   msgParamEntity = {};
   msgParamAreaEntities = {};
@@ -65,7 +65,7 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
 
   constructor(
     protected actionService: ProyectoActionService,
-    private matDialog: MatDialog,
+    private readonly matDialog: MatDialog,
     private readonly translate: TranslateService,
     private readonly languageService: LanguageService
   ) {
@@ -86,8 +86,6 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
 
   ngOnInit(): void {
     super.ngOnInit();
-
-
 
     this.loadAreaTematicas();
   }
@@ -144,6 +142,7 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
     this.listadoAreaTematicas.paginator = this.paginator;
     this.listadoAreaTematicas.sort = this.sort;
   }
+
   deleteAreaTematicaListado() {
     this.formPart.deleteAreaTematicaListado();
   }
@@ -154,7 +153,7 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
         padre: data?.padre ?? this.formGroup.controls.padre?.value,
         areasTematicasConvocatoria: this.areasConvocatoria,
         areaTematicaProyecto: data?.areaTematicaProyecto,
-      } as ProyectoContextoModalData,
+      },
     };
     const dialogRef = this.matDialog.open(ProyectoContextoModalComponent, config);
     dialogRef.afterClosed().subscribe(
@@ -166,15 +165,14 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
     );
   }
 
-
   get PROPIEDAD_RESULTADOS_MAP() {
     return PROPIEDAD_RESULTADOS_MAP;
   }
 
-  private sortAreasTematicasByNombre: (a1: I18nFieldValue[], a2: I18nFieldValue[]) => number = (a1, a2) => {
+  private readonly sortAreasTematicasByNombre: (a1: I18nFieldValue[], a2: I18nFieldValue[]) => number = (a1, a2) => {
     const nombreA = this.languageService.getFieldValue(a1);
     const nombreB = this.languageService.getFieldValue(a2);
     return nombreA.localeCompare(nombreB);
-  };
+  }
 
 }

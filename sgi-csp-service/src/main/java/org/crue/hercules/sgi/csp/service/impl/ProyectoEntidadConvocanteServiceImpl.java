@@ -98,7 +98,7 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
 
     Proyecto proyecto = proyectoRepository.findById(proyectoId)
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoId));
-    proyectoHelper.checkCanAccessProyecto(proyecto);
+    proyectoHelper.checkCanAccessProyecto(proyecto, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
 
     Specification<ProyectoEntidadConvocante> specs = ProyectoEntidadConvocanteSpecifications.byProyectoId(proyectoId);
     List<ProyectoEntidadConvocante> entidadesConvocantesBD = repository.findAll(specs);
@@ -153,7 +153,7 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
     AssertHelper.idNotNull(proyectoEntidadConvocante.getProyectoId(), Proyecto.class);
     Proyecto proyecto = proyectoRepository.findById(proyectoEntidadConvocante.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoEntidadConvocante.getProyectoId()));
-    proyectoHelper.checkCanAccessProyecto(proyecto);
+    proyectoHelper.checkCanAccessProyecto(proyecto, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
 
     Specification<ProyectoEntidadConvocante> specs = ProyectoEntidadConvocanteSpecifications
         .byProyectoId(proyectoEntidadConvocante.getId());
@@ -193,9 +193,7 @@ public class ProyectoEntidadConvocanteServiceImpl implements ProyectoEntidadConv
   public Page<ProyectoEntidadConvocante> findAllByProyecto(Long idProyecto, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long idProyecto, String query, Pageable pageable) - start");
     AssertHelper.idNotNull(idProyecto, Proyecto.class);
-    Proyecto proyecto = proyectoRepository.findById(idProyecto)
-        .orElseThrow(() -> new ProyectoNotFoundException(idProyecto));
-    proyectoHelper.checkCanAccessProyecto(proyecto);
+    proyectoHelper.checkCanAccessProyecto(idProyecto, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
 
     Specification<ProyectoEntidadConvocante> specs = ProyectoEntidadConvocanteSpecifications.byProyectoId(idProyecto)
         .and(SgiRSQLJPASupport.toSpecification(query));

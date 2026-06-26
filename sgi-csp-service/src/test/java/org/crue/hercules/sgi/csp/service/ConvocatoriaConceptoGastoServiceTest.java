@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaConceptoGastoServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,11 +52,13 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   private ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
   @Mock
   private ConvocatoriaAuthorityHelper authorityHelper;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   @BeforeEach
   void setUp() throws Exception {
     service = new ConvocatoriaConceptoGastoServiceImpl(repository, convocatoriaRepository, conceptoGastoRepository,
-        convocatoriaConceptoGastoCodigoEcRepository, authorityHelper);
+        convocatoriaConceptoGastoCodigoEcRepository, authorityHelper, proyectoHelper);
   }
 
   @Test

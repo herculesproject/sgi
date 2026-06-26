@@ -39,6 +39,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoFaseServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -75,12 +76,15 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoFaseAvisoService proyectoFaseAvisoService;
 
+  @Mock
+  private ProyectoHelper proyectoHelper;
+
   private ProyectoFaseService service;
 
   @BeforeEach
   void setUp() {
     service = new ProyectoFaseServiceImpl(repository, proyectoRepository, modeloTipoFaseRepository, tipoFaseRepository,
-        proyectoFaseAvisoService);
+        proyectoFaseAvisoService, proyectoHelper);
   }
 
   @Test

@@ -27,11 +27,11 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
     logger: NGXLogger,
     router: Router,
     snackBar: SnackBarService,
-    private service: ProyectoService,
-    private rolSocioService: RolSocioService,
-    private solicitudService: SolicitudService,
-    private authService: SgiAuthService,
-    private configService: ConfigService
+    private readonly service: ProyectoService,
+    private readonly rolSocioService: RolSocioService,
+    private readonly solicitudService: SolicitudService,
+    private readonly authService: SgiAuthService,
+    private readonly configService: ConfigService
   ) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
@@ -46,11 +46,11 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
           disableRolUniversidad: false,
           hasAnyProyectoSocioCoordinador: false,
           isVisor: this.hasVisorAuthority(proyecto) && route.data.module === Module.CSP,
-          isInvestigador: this.hasViewAuthorityInv() && route.data.module === Module.INV
+          isAccessingAsInvestigador: this.hasViewAuthorityInv() && route.data.module === Module.INV
         } as IProyectoData;
       }),
       switchMap(data => {
-        if (!data.isInvestigador && !data.isVisor && !this.hasViewAuthorityUO(data.proyecto)) {
+        if (!data.isAccessingAsInvestigador && !data.isVisor && !this.hasViewAuthorityUO(data.proyecto)) {
           return throwError('NOT_FOUND');
         }
 
@@ -66,20 +66,38 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
         hasCoordinador: data?.proyecto?.id
           ? this.service.hasAnyProyectoSocioWithRolCoordinador(data.proyecto.id)
           : of(false),
-        solicitud: !data.isInvestigador && data.proyecto?.solicitudId
+        solicitud: !data.isAccessingAsInvestigador && data.proyecto?.solicitudId
           ? this.solicitudService.findById(data.proyecto.solicitudId)
           : of(null),
+        isInvestigadorPrincipal: data.isAccessingAsInvestigador
+          ? this.service.isInvestigadorPrincipalActual(data.proyecto.id)
+          : of(false),
         isProyectoUnidadesVinculacionEnabled: this.configService.isProyectoUnidadesVinculacionEnabled(),
         isProyectoAreasConocimientoEnabled: this.configService.isProyectoAreasConocimientoEnabled(),
+        isVistaAmpliadaInvestigadorEnabled: data.isAccessingAsInvestigador
+          ? this.configService.isInvProyectoVistaAmpliadaIpEnabled()
+          : of(false),
       }).pipe(
-        map(({ rolUniversidad, hasPeriodosPago, hasPeriodosJustificacion, modificable, hasCoordinador, solicitud,
-          isProyectoUnidadesVinculacionEnabled, isProyectoAreasConocimientoEnabled }) => {
+        map(({
+          rolUniversidad,
+          hasPeriodosPago,
+          hasPeriodosJustificacion,
+          modificable,
+          hasCoordinador,
+          solicitud,
+          isInvestigadorPrincipal,
+          isProyectoUnidadesVinculacionEnabled,
+          isProyectoAreasConocimientoEnabled,
+          isVistaAmpliadaInvestigadorEnabled
+        }) => {
 
           data.disableRolUniversidad = hasPeriodosPago || hasPeriodosJustificacion;
           data.hasAnyProyectoSocioCoordinador = hasCoordinador;
           data.isProyectoAreasConocimientoEnabled = isProyectoAreasConocimientoEnabled;
           data.isProyectoUnidadesVinculacionEnabled = isProyectoUnidadesVinculacionEnabled;
           data.readonly = !modificable;
+          data.isInvestigadorPrincipal = isInvestigadorPrincipal;
+          data.isVistaAmpliadaInvestigadorEnabled = isVistaAmpliadaInvestigadorEnabled;
 
           if (rolUniversidad) {
             data.proyecto.rolUniversidad = rolUniversidad;

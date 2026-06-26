@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoEntidadFinanciadoraRepositor
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoEntidadFinanciadoraServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,13 +54,15 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
   private TipoFinanciacionRepository tipoFinanciacionRepository;
   @Mock
   private ConvocatoriaService convocatoriaService;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoEntidadFinanciadoraService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoEntidadFinanciadoraServiceImpl(repository, proyectoRepository, fuenteFinanciacionRepository,
-        tipoFinanciacionRepository);
+        tipoFinanciacionRepository, proyectoHelper);
   }
 
   @Test

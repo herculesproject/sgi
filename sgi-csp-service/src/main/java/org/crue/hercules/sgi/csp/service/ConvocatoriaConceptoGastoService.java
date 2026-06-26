@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -87,4 +88,18 @@ public interface ConvocatoriaConceptoGastoService {
    *         {@link Convocatoria} paginadas.
    */
   Page<ConvocatoriaConceptoGasto> findAllByConvocatoriaAndPermitidoFalse(Long convocatoriaId, Pageable pageable);
+
+  /**
+   * Obtiene los {@link ConvocatoriaConceptoGasto} (permitidos o no) de la
+   * {@link Convocatoria} asociada al {@link Proyecto}, controlando el acceso a
+   * nivel de {@link Proyecto}.
+   *
+   * @param proyectoId el id del {@link Proyecto}.
+   * @param permitido  {@code true} permitidos, {@code false} no permitidos.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ConvocatoriaConceptoGasto} paginadas.
+   */
+  Page<ConvocatoriaConceptoGasto> findAllByProyectoIdAndPermitido(Long proyectoId, boolean permitido,
+      Pageable pageable);
+
 }

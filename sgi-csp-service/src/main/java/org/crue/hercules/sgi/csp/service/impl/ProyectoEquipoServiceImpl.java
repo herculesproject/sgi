@@ -315,7 +315,7 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
     Page<ProyectoEquipo> returnValue = repository.findAll(specs, pageable);
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
 
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;
@@ -434,6 +434,23 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
     boolean hasProyectoEquipoWithDates = repository.count(specs) > 0;
     log.debug("proyectoHasProyectoEquipoWithDates({})  - end", proyectoId);
     return hasProyectoEquipoWithDates;
+  }
+
+  @Override
+  public boolean isCurrentUserInvestigadorPrincipalActual(Long proyectoId) {
+    String personaRef = proyectoHelper.getAuthenticationPersonaRef();
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+
+    log.debug("isCurrentUserInvestigadorPrincipalActual - proyectoId: {}, personaRef: {}, fechaActual: {}",
+        proyectoId,
+        personaRef,
+        fechaActual);
+
+    return repository.count(
+        ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(personaRef))
+            .and(ProyectoEquipoSpecifications.byRolPrincipal(true))
+            .and(ProyectoEquipoSpecifications.byFechaActual(fechaActual))) > 0;
   }
 
 }

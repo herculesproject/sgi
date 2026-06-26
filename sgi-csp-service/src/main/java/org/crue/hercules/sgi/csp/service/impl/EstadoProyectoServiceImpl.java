@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 public class EstadoProyectoServiceImpl implements EstadoProyectoService {
 
   private final EstadoProyectoRepository repository;
+  private final ProyectoHelper proyectoHelper;
 
-  public EstadoProyectoServiceImpl(EstadoProyectoRepository repository) {
+  public EstadoProyectoServiceImpl(EstadoProyectoRepository repository, ProyectoHelper proyectoHelper) {
     this.repository = repository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -57,6 +60,7 @@ public class EstadoProyectoServiceImpl implements EstadoProyectoService {
   @Override
   public Page<EstadoProyecto> findAllByProyecto(Long idProyecto, Pageable paging) {
     log.debug("findAllByProyecto(Long idProyecto, Pageable paging) - start");
+    proyectoHelper.checkCanAccessProyecto(idProyecto, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
     Page<EstadoProyecto> returnValue = repository.findAllByProyectoId(idProyecto, paging);
     log.debug("findAllByProyecto(Long idProyecto, Pageable paging) - end");
     return returnValue;

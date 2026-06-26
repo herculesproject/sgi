@@ -51,19 +51,21 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}}
         </th>
         <td mat-cell *matCellDef="let wrapper, let i = index">
-          <ng-container>
-            <sgi-icon-view-persona-detail [personaId]="wrapper.value.persona?.id">
-            </sgi-icon-view-persona-detail>
+          <sgi-icon-view-persona-detail [personaId]="wrapper.value.persona?.id">
+          </sgi-icon-view-persona-detail>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
             <button color="primary" *ngIf="!this.readonly" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
               (click)="openModal(wrapper, i)">
               <mat-icon>border_color</mat-icon>
             </button>
-            <button color="primary" *ngIf="this.readonly" mat-icon-button matTooltip="{{'btn.view' | translate}}"
+          </ng-container>
+          <ng-container *ngIf="this.readonly">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.view' | translate}}"
               (click)="openModal(wrapper, i)">
               <mat-icon>visibility</mat-icon>
             </button>
           </ng-container>
-          <ng-container>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
             <button color="warn" *ngIf="!this.readonly" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deleteProyectoSocioEquipo(wrapper)">
               <mat-icon>highlight_off</mat-icon>
@@ -77,8 +79,8 @@
     <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
     </mat-paginator>
   </div>
-  <div class="separation-button" *ngIf="!this.readonly">
-    <button color="three" mat-button mat-raised-button (click)="openModal()">
+  <div class="separation-button" *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+    <button *ngIf="!this.readonly" color="three" mat-button mat-raised-button (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

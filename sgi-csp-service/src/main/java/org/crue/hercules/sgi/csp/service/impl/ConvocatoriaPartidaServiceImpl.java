@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPartidaNotFoundException;
@@ -8,10 +10,14 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPartidaRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaPartidaSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -44,12 +50,17 @@ public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaServic
   private final ConvocatoriaPartidaRepository repository;
   private final ConfiguracionRepository configuracionRepository;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ConvocatoriaRepository convocatoriaRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ConvocatoriaPartidaServiceImpl(ConvocatoriaPartidaRepository repository,
-      ConfiguracionRepository configuracionRepository, ConvocatoriaAuthorityHelper authorityHelper) {
+      ConfiguracionRepository configuracionRepository, ConvocatoriaAuthorityHelper authorityHelper,
+      ConvocatoriaRepository convocatoriaRepository, ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.configuracionRepository = configuracionRepository;
     this.authorityHelper = authorityHelper;
+    this.convocatoriaRepository = convocatoriaRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -160,6 +171,30 @@ public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaServic
     Page<ConvocatoriaPartida> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  @Override
+  public Page<ConvocatoriaPartida> findAllByProyectoId(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyectoId - proyectoId: {}, query: {}, paging: {}", proyectoId, query,
+        SgiLogUtils.pageable(pageable));
+
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
+    Optional<Convocatoria> convocatoria = convocatoriaRepository
+        .findOne(ConvocatoriaSpecifications.byProyectoId(proyectoId));
+    if (!convocatoria.isPresent()) {
+      Page<ConvocatoriaPartida> page = Page.empty(pageable);
+      log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+      return page;
+    }
+
+    Specification<ConvocatoriaPartida> specs = ConvocatoriaPartidaSpecifications
+        .byConvocatoriaId(convocatoria.get().getId()).and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<ConvocatoriaPartida> page = repository.findAll(specs, pageable);
+    log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
   /**

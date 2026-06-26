@@ -18,7 +18,9 @@ describe('ProyectoAreaConocimientoComponent', () => {
   let component: ProyectoAreaConocimientoComponent;
   let fixture: ComponentFixture<ProyectoAreaConocimientoComponent>;
   const routeData: Data = {
-    [PROYECTO_DATA_KEY]: {} as IProyectoData
+    [PROYECTO_DATA_KEY]: {
+      isProyectoAreasConocimientoEnabled: true
+    } as IProyectoData
   };
   const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);
 

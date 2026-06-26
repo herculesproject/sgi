@@ -147,15 +147,183 @@
         </sgi-action-fragment-menu-item>
       </sgi-action-fragment-menu-group>
     </ng-container>
-    <ng-container *ngIf="isModuleINV">
-      <sgi-action-fragment-menu-item *ngIf="isInvestigador" [route]="[PROYECTO_ROUTE_NAMES.FICHA_GENERAL]"
-        [title]="'label.ficha-general' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.FICHA_GENERAL)">
-      </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item *ngIf="isInvestigador" [route]="[PROYECTO_ROUTE_NAMES.CALENDARIO_FACTURACION]"
-        [title]="'csp.proyectos.configuracion-economica.calendario_facturacion' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_FACTURACION)">
-      </sgi-action-fragment-menu-item>
+    <ng-container
+      *ngIf="isModuleINV && hasAccessAsInvestigador && isVistaAmpliadaInvestigadorEnabled && isInvestigadorPrincipal">
+      <ng-container *sgiHasAuthority="'CSP-PRO-INV-VR'">
+        <!-- INV: Datos generales -->
+        <sgi-action-fragment-menu-group [title]="'label.datos-generales' | translate">
+          <!-- INV: Datos generales - Ficha general -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.FICHA_GENERAL]"
+            [title]="'label.ficha-general' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.FICHA_GENERAL)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Datos generales - Contexto proyecto -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.CONTEXTO_PROYECTO]"
+            [title]="'csp.proyecto-contexto' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.CONTEXTO_PROYECTO)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Datos generales - Unidades vinculacion -->
+          <ng-container *ngIf="actionService.isProyectoUnidadesVinculacionEnabled">
+            <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.UNIDADES_VINCULACION]"
+              [title]="'csp.proyecto-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+              [fragment]="actionService.getFragment(actionService.FRAGMENT.UNIDADES_VINCULACION)">
+            </sgi-action-fragment-menu-item>
+          </ng-container>
+          <!-- INV: Datos generales - Areas conocimiento -->
+          <sgi-action-fragment-menu-item *ngIf="actionService.isProyectoAreasConocimientoEnabled"
+            [route]="[PROYECTO_ROUTE_NAMES.AREA_CONOCIMIENTO]"
+            [title]="'label.areas-conocimiento' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.AREA_CONOCIMIENTO)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Datos generales - Clasificaciones -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.CLASIFICACIONES]"
+            [title]="'csp.proyecto-clasificacion'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.CLASIFICACIONES)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Datos generales - Historico estados -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.HISTORICO_ESTADOS]"
+            [title]="'menu.csp.proyectos.datos-generales.historicos-estados' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.HISTORICO_ESTADOS)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Datos generales - Relaciones -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.RELACIONES]"
+            [title]="'menu.csp.proyectos.datos-generales.relaciones' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.RELACIONES)">
+          </sgi-action-fragment-menu-item>
+        </sgi-action-fragment-menu-group>
+        <!-- INV: Entidades -->
+        <sgi-action-fragment-menu-group [title]="'menu.csp.proyectos.entidades' | translate">
+          <!-- INV: Entidades - Gestora -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.ENTIDAD_GESTORA]"
+            [title]="'menu.csp.proyectos.entidades-gestoras' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDAD_GESTORA)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Entidades - Convocantes -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.ENTIDADES_CONVOCANTES]"
+            [title]="'menu.csp.proyectos.entidades-convocantes' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_CONVOCANTES)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Entidades - Financiadoras -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.ENTIDADES_FINANCIADORAS]"
+            [title]="'menu.csp.proyectos.entidades-financiadoras' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS)">
+          </sgi-action-fragment-menu-item>
+        </sgi-action-fragment-menu-group>
+        <!-- INV: Equipo y responsable economico -->
+        <sgi-action-fragment-menu-group [title]="'menu.csp.proyectos.equipo-responsable-economico' | translate">
+          <!-- INV: Equipo y responsable economico - Equipo -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.EQUIPO_PROYECTO]"
+            [title]="'menu.csp.proyectos.equipo' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.EQUIPO_PROYECTO)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Equipo y responsable economico - Responsable economico -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.RESPONSABLE_ECONOMICO]"
+            [title]="'csp.proyecto-responsable-economico' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.REPONSABLE_ECONOMICO)">
+          </sgi-action-fragment-menu-item>
+        </sgi-action-fragment-menu-group>
+        <!-- INV: Socios -->
+        <ng-container *ngIf="(actionService.showSocios$ | async)">
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.SOCIOS]"
+            [title]="'menu.csp.proyectos.socios' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.SOCIOS)">
+          </sgi-action-fragment-menu-item>
+        </ng-container>
+        <!-- INV: Fases e hitos -->
+        <sgi-action-fragment-menu-group [title]="'menu.csp.proyectos.fases-hitos' | translate">
+          <!-- INV: Fases e hitos - Fases -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.FASES]"
+            [title]="'csp.proyecto-fase' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.FASES)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Fases e hitos - Hitos -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.HITOS]"
+            [title]="'menu.csp.proyectos.hitos' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
+          </sgi-action-fragment-menu-item>
+        </sgi-action-fragment-menu-group>
+        <!-- INV: Seguimiento cientifico -->
+        <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO]"
+          [title]="'menu.csp.proyectos.seguimientos-cientificos' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO)">
+        </sgi-action-fragment-menu-item>
+        <!-- INV: Prorrogas -->
+        <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.PRORROGAS]"
+          [title]="'menu.csp.proyectos.prorrogas' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.PRORROGAS)">
+        </sgi-action-fragment-menu-item>
+        <!-- INV: Paquete trabajo -->
+        <ng-container *ngIf="actionService.showPaquetesTrabajo$ | async">
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.PAQUETE_TRABAJO]"
+            [title]="'menu.csp.proyectos.paquetes-trabajo' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.PAQUETE_TRABAJO)">
+          </sgi-action-fragment-menu-item>
+        </ng-container>
+        <!-- INV: Documentos -->
+        <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.DOCUMENTOS]"
+          [title]="'csp.documentos' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">
+        </sgi-action-fragment-menu-item>
+        <!-- INV: Configuracion economica -->
+        <sgi-action-fragment-menu-group [title]="'menu.csp.proyectos.configuracion-economica' | translate">
+          <!-- INV: Configuracion economica - Identificacion -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.IDENTIFICACION]"
+            [title]="'menu.csp.proyectos.configuracion-economica.identificacion' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTOS_SGE)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Configuracion economica - Elegilibilidad -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.ELEGIBILIDAD]"
+            [title]="'menu.csp.proyectos.configuracion-economica.elegibilidad' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Configuracion economica - Partidas presupuestarias -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.PARTIDAS_PRESUPUESTARIAS]"
+            [title]="'csp.proyecto-partida-presupuestaria'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Configuracion economica - Presupuesto -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.PRESUPUESTO]"
+            [title]="'menu.csp.proyectos.configuracion-economica.presupuesto'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.PRESUPUESTO)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Configuracion economica - Consulta presupuesto -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.CONSULTA_PRESUPUESTO]"
+            [title]="'csp.proyectos.configuracion-economica.consulta-presupuesto' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.CONSULTA_PRESUPUESTO)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Configuracion economica - Amortizacion de fondos -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.AMORTIZACION_FONDOS]"
+            [title]="'csp.proyectos.configuracion-economica.amortizacion-fondos' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.AMORTIZACION_FONDOS)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Configuracion economica - Calendario facturacion -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.CALENDARIO_FACTURACION]"
+            [title]="'csp.proyectos.configuracion-economica.calendario_facturacion' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_FACTURACION)">
+          </sgi-action-fragment-menu-item>
+          <!-- INV: Configuracion economica - Calendario justificacion -->
+          <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.CALENDARIO_JUSTIFICACION]"
+            [title]="'csp.proyectos.configuracion-economica.calendario_justificacion' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_JUSTIFICACION)">
+          </sgi-action-fragment-menu-item>
+        </sgi-action-fragment-menu-group>
+      </ng-container>
+    </ng-container>
+    <ng-container
+      *ngIf="isModuleINV && hasAccessAsInvestigador && (!isVistaAmpliadaInvestigadorEnabled || !isInvestigadorPrincipal)">
+      <ng-container *sgiHasAuthority="'CSP-PRO-INV-VR'">
+        <!-- INV: Ficha general -->
+        <sgi-action-fragment-menu-item [route]="[PROYECTO_ROUTE_NAMES.FICHA_GENERAL]"
+          [title]="'label.ficha-general' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.FICHA_GENERAL)">
+        </sgi-action-fragment-menu-item>
+        <!-- INV: Calendario facturacion -->
+        <sgi-action-fragment-menu-item *ngIf="isInvestigadorPrincipal"
+          [route]="[PROYECTO_ROUTE_NAMES.CALENDARIO_FACTURACION]"
+          [title]="'csp.proyectos.configuracion-economica.calendario_facturacion' | translate"
+          [fragment]="actionService.getFragment(actionService.FRAGMENT.CALENDARIO_FACTURACION)">
+        </sgi-action-fragment-menu-item>
+      </ng-container>
     </ng-container>
   </ng-container>
   <ng-container footer>
