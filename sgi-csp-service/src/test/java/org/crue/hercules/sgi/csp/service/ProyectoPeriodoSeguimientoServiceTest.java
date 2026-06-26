@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoR
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoPeriodoSeguimientoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,13 +53,15 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   private ProyectoRepository proyectoRepository;
   @Mock
   private ProyectoPeriodoSeguimientoDocumentoRepository proyectoPeriodoSeguimientoDocumentoRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoPeriodoSeguimientoService service;
 
   @BeforeEach
   void setUp() {
     service = new ProyectoPeriodoSeguimientoServiceImpl(repository, proyectoRepository,
-        proyectoPeriodoSeguimientoDocumentoRepository);
+        proyectoPeriodoSeguimientoDocumentoRepository, proyectoHelper);
   }
 
   @Test

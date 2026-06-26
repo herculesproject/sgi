@@ -109,9 +109,6 @@ class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ProyectoEntidadConvocante>>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(proyectoEntidadConvocantes));
-    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
-            .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     // when: find unlimited
     Page<ProyectoEntidadConvocante> page = service.findAllByProyecto(1L, null, Pageable.unpaged());
@@ -149,9 +146,6 @@ class ProyectoEntidadConvocanteServiceTest extends BaseServiceTest {
             return page;
           }
         });
-    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(Proyecto.builder().id(proyectoId).activo(Boolean.TRUE).unidadGestionRef("2")
-            .estado(EstadoProyecto.builder().estado(EstadoProyecto.Estado.BORRADOR).build()).build()));
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);

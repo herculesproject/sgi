@@ -43,6 +43,7 @@ export class ProyectoConceptoGastoDataResolver extends SgiResolverResolver<IProy
     const proyectoId = Number(route.paramMap.get(PROYECTO_ROUTE_PARAMS.ID));
     const proyectoConceptoGastoId = Number(route.paramMap.get(PROYECTO_CONCEPTO_GASTO_ROUTE_PARAMS.ID));
     const permitido = Boolean(route.data.permitido);
+    const readonly = proyectoData.readonly || proyectoData.isAccessingAsInvestigador;
 
     this.setTitle(route, !Boolean(proyectoConceptoGastoId), permitido);
 
@@ -58,14 +59,20 @@ export class ProyectoConceptoGastoDataResolver extends SgiResolverResolver<IProy
               if (proyectoConceptoGasto.permitido !== permitido) {
                 return throwError('NOT_FOUND');
               }
-              return this.loadProyectoConceptoGastoData(proyectoId, proyectoConceptoGastoId,
-                proyectoConceptoGasto.convocatoriaConceptoGastoId, permitido, proyectoData.readonly);
+              return this.loadProyectoConceptoGastoData(
+                proyectoId,
+                proyectoConceptoGastoId,
+                proyectoConceptoGasto.convocatoriaConceptoGastoId,
+                permitido,
+                readonly
+              );
             })
           );
         })
       );
     }
-    return this.loadProyectoConceptoGastoData(proyectoId, proyectoConceptoGastoId, null, permitido, proyectoData.readonly);
+
+    return this.loadProyectoConceptoGastoData(proyectoId, proyectoConceptoGastoId, null, permitido, readonly);
   }
 
   private loadProyectoConceptoGastoData(

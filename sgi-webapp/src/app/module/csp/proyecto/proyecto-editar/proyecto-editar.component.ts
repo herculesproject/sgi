@@ -40,8 +40,9 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   textoCambioEstado = MSG_BUTTON_CAMBIO_ESTADO;
 
   disableCambioEstado = false;
-  isInvestigador = false;
-  isInvestigadorPrincipal = false;
+  private isAccessingAsInvestigador = false;
+  private investigadorPrincipal = false;
+  private vistaAmpliadaInvestigadorEnabled = false;
 
   get isModuleINV(): boolean {
     return this.route.snapshot.data.module === Module.INV;
@@ -51,6 +52,17 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
     return this.route.snapshot.data.module === Module.CSP;
   }
 
+  get isInvestigadorPrincipal(): boolean {
+    return this.investigadorPrincipal;
+  }
+
+  get isVistaAmpliadaInvestigadorEnabled(): boolean {
+    return this.vistaAmpliadaInvestigadorEnabled;
+  }
+
+  get hasAccessAsInvestigador(): boolean {
+    return this.isAccessingAsInvestigador;
+  }
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -71,12 +83,13 @@ export class ProyectoEditarComponent extends ActionComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.isInvestigador = this.actionService.isInvestigador;
-    this.isInvestigadorPrincipal = this.actionService.isInvestigadorPrincipal;
+    this.isAccessingAsInvestigador = this.actionService.isAccessingAsInvestigador;
+    this.investigadorPrincipal = this.actionService.isInvestigadorPrincipal;
+    this.vistaAmpliadaInvestigadorEnabled = this.actionService.isVistaAmpliadaInvestigadorEnabled;
 
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
-        this.disableCambioEstado = status.changes || status.errors || this.isInvestigador;
+        this.disableCambioEstado = status.changes || status.errors || this.isModuleINV;
       }
     ));
   }

@@ -167,12 +167,18 @@
           <td mat-cell *matCellDef="let wrapper">
             <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
               <button mat-icon-button color="primary" matTooltip="{{'btn.edit' | translate}}"
-                (click)="openModal(wrapper)">
+                *ngIf="!formPart.isReadonly" (click)="openModal(wrapper)">
                 <mat-icon>border_color</mat-icon>
               </button>
               <button mat-icon-button color="warn" matTooltip="{{'btn.delete' | translate}}"
-                (click)="deletePeriodoAmortizacion(wrapper)">
+                *ngIf="!formPart.isReadonly" (click)="deletePeriodoAmortizacion(wrapper)">
                 <mat-icon>highlight_off</mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="formPart.isReadonly">
+              <button mat-icon-button color="primary" matTooltip="{{'btn.view' | translate}}"
+                (click)="openModal(wrapper)">
+                <mat-icon>visibility</mat-icon>
               </button>
             </ng-container>
           </td>
@@ -185,7 +191,7 @@
       </mat-paginator>
     </div>
     <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-      <div *ngIf="formPart.hasProyectoSGE" class="separation-button">
+      <div *ngIf="formPart.hasProyectoSGE && !formPart.isReadonly" class="separation-button">
         <button color="three" mat-button mat-raised-button (click)="openModal()">
           <mat-icon color="accent">add_circle</mat-icon>
           {{ 'btn.add.entity' | translate:msgParamEntityPeriodoAmortizacion }}

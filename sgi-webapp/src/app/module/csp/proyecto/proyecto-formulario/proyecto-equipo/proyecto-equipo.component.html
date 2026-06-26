@@ -66,21 +66,24 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let equipo; let i = index">
-          <sgi-icon-view-persona-detail [personaId]="equipo.value?.proyectoEquipo?.persona?.id">
+          <sgi-icon-view-persona-detail [personaId]="equipo.value?.proyectoEquipo?.persona?.id"
+            [readonly]="formPart.isReadonly">
           </sgi-icon-view-persona-detail>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button color="primary" *ngIf="!actionService.readonly" mat-icon-button
-              matTooltip="{{'btn.edit' | translate}}" (click)="openModal(equipo, i)">
+            <button color="primary" *ngIf="!formPart.isReadonly" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
+              (click)="openModal(equipo, i)">
               <mat-icon>border_color</mat-icon>
             </button>
-            <button color="primary" *ngIf="actionService.readonly" mat-icon-button
-              matTooltip="{{'btn.view' | translate}}" (click)="openModal(equipo, i)">
+          </ng-container>
+          <ng-container *ngIf="formPart.isReadonly">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.view' | translate}}"
+              (click)="openModal(equipo, i)">
               <mat-icon>visibility</mat-icon>
             </button>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button color="warn" *ngIf="!actionService.readonly" mat-icon-button
-              matTooltip="{{'btn.delete' | translate}}" (click)="deleteEquipo(equipo)">
+            <button color="warn" *ngIf="!formPart.isReadonly" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
+              (click)="deleteEquipo(equipo)">
               <mat-icon>highlight_off</mat-icon>
             </button>
           </ng-container>
@@ -97,7 +100,7 @@
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
       <!-- Botón añadir equipos -->
-      <button *ngIf="!actionService.readonly" color="three" mat-button mat-raised-button (click)="openModal()">
+      <button *ngIf="!formPart.isReadonly" color="three" mat-button mat-raised-button (click)="openModal()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

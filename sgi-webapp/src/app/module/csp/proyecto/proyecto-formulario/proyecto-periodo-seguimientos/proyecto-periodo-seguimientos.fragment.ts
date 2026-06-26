@@ -47,13 +47,18 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
   periodoSeguimientos$ = new BehaviorSubject<IPeriodoSeguimientoListado[]>([]);
   private periodoSeguimientosEliminados: StatusWrapper<IProyectoPeriodoSeguimiento>[] = [];
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     key: number,
     private proyecto: IProyecto,
     private proyectoService: ProyectoService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     private convocatoriaService: ConvocatoriaService,
-    private documentoService: DocumentoService
+    private documentoService: DocumentoService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -73,7 +78,7 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
           switchMap(periodosSeguimientoListado => {
             let requestConvocatoriaPeriodoSeguimiento: Observable<IPeriodoSeguimientoListado[]>;
 
-            if (this.proyecto.convocatoriaId) {
+            if (!this.isReadonly && this.proyecto.convocatoriaId) {
               requestConvocatoriaPeriodoSeguimiento = this.convocatoriaService
                 .findSeguimientosCientificos(this.proyecto.convocatoriaId)
                 .pipe(
@@ -214,22 +219,24 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
       periodoSeguimientoListado.fechaFinPresentacion = periodoSeguimientoListado.proyectoPeriodoSeguimiento.value.fechaFinPresentacion;
       periodoSeguimientoListado.observaciones = periodoSeguimientoListado.proyectoPeriodoSeguimiento.value.observaciones;
 
-      if (periodoSeguimientoListado.convocatoriaPeriodoSeguimiento) {
-        if (comparePeriodoSeguimiento(periodoSeguimientoListado.convocatoriaPeriodoSeguimiento,
-          periodoSeguimientoListado.proyectoPeriodoSeguimiento.value,
-          this.proyecto.fechaInicio, this.proyecto.fechaFin)) {
+      if (!this.isReadonly) {
+        if (periodoSeguimientoListado.convocatoriaPeriodoSeguimiento) {
+          if (comparePeriodoSeguimiento(periodoSeguimientoListado.convocatoriaPeriodoSeguimiento,
+            periodoSeguimientoListado.proyectoPeriodoSeguimiento.value,
+            this.proyecto.fechaInicio, this.proyecto.fechaFin)) {
 
+            periodoSeguimientoListado.help = {
+              class: HelpIconClass.WARNING,
+              tooltip: PROYECTO_PERIODO_SEGUIMIENTO_NO_COINCIDE_KEY
+            };
+          }
+
+        } else if (this.proyecto.convocatoriaId) {
           periodoSeguimientoListado.help = {
             class: HelpIconClass.WARNING,
-            tooltip: PROYECTO_PERIODO_SEGUIMIENTO_NO_COINCIDE_KEY
+            tooltip: PROYECTO_PERIODO_SEGUIMIENTO_NO_CONVOCATORIA_KEY
           };
         }
-
-      } else if (this.proyecto.convocatoriaId) {
-        periodoSeguimientoListado.help = {
-          class: HelpIconClass.WARNING,
-          tooltip: PROYECTO_PERIODO_SEGUIMIENTO_NO_CONVOCATORIA_KEY
-        };
       }
     } else {
       periodoSeguimientoListado.numPeriodo = periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.numPeriodo;
@@ -249,11 +256,13 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
           periodoSeguimientoListado.convocatoriaPeriodoSeguimiento.mesFinal);
       }
 
-      periodoSeguimientoListado.
-        help = {
-        class: HelpIconClass.DANGER,
-        tooltip: PROYECTO_PERIODO_SEGUIMIENTO_GASTO_NO_PROYECTO_KEY
-      };
+      if (!this.isReadonly) {
+        periodoSeguimientoListado.
+          help = {
+          class: HelpIconClass.DANGER,
+          tooltip: PROYECTO_PERIODO_SEGUIMIENTO_GASTO_NO_PROYECTO_KEY
+        };
+      }
     }
   }
 

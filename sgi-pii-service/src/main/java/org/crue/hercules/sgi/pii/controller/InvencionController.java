@@ -188,12 +188,10 @@ public class InvencionController {
    * @return {@link Invencion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R', 'PII-INV-MOD-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-pii')) or hasAnyAuthority('PII-INV-V', 'PII-INV-C', 'PII-INV-E', 'PII-INV-B', 'PII-INV-R', 'PII-INV-MOD-V')")
   public InvencionOutput findById(@PathVariable Long id) {
-    log.debug("findById(Long id) - start");
-    Invencion returnValue = service.findById(id);
-    log.debug("findById(Long id) - end");
-    return convert(returnValue);
+    log.debug("findById - id: {}", id);
+    return convert(service.findById(id));
   }
 
   /**

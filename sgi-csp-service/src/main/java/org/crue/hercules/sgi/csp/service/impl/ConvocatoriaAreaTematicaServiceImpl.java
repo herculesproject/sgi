@@ -9,11 +9,15 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaAreaTematicaSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -44,14 +48,43 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
   private final AreaTematicaRepository areaTematicaRepository;
   private final ConvocatoriaService convocatoriaService;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ConvocatoriaRepository convocatoriaRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ConvocatoriaAreaTematicaServiceImpl(ConvocatoriaAreaTematicaRepository repository,
       AreaTematicaRepository areaTematicaRepository, ConvocatoriaService convocatoriaService,
-      ConvocatoriaAuthorityHelper authorityHelper) {
+      ConvocatoriaAuthorityHelper authorityHelper, ConvocatoriaRepository convocatoriaRepository,
+      ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.areaTematicaRepository = areaTematicaRepository;
     this.convocatoriaService = convocatoriaService;
     this.authorityHelper = authorityHelper;
+    this.convocatoriaRepository = convocatoriaRepository;
+    this.proyectoHelper = proyectoHelper;
+  }
+
+  @Override
+  public Page<ConvocatoriaAreaTematica> findAllByProyectoId(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyectoId - proyectoId: {}, query: {}, paging: {}", proyectoId, query,
+        SgiLogUtils.pageable(pageable));
+
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
+    Optional<Convocatoria> convocatoria = convocatoriaRepository
+        .findOne(ConvocatoriaSpecifications.byProyectoId(proyectoId));
+    if (!convocatoria.isPresent()) {
+      Page<ConvocatoriaAreaTematica> page = Page.empty(pageable);
+      log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+      return page;
+    }
+
+    Specification<ConvocatoriaAreaTematica> specs = ConvocatoriaAreaTematicaSpecifications
+        .byConvocatoriaId(convocatoria.get().getId()).and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<ConvocatoriaAreaTematica> page = repository.findAll(specs, pageable);
+    log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
   /**

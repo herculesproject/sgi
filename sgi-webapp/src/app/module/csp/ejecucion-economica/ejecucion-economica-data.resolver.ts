@@ -7,6 +7,7 @@ import { sortProyectoEquipoByPersonaNombre, sortProyectoEquipoByRolProyectoOrden
 import { TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
+import { Module } from '@core/module';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
@@ -16,7 +17,7 @@ import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, forkJoin, from, throwError } from 'rxjs';
+import { EMPTY, forkJoin, from, Observable, of, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { EJECUCION_ECONOMICA_ROUTE_PARAMS } from './ejecucion-economica-route-params';
 import { IEjecucionEconomicaData } from './ejecucion-economica.action.service';
@@ -33,27 +34,32 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
     logger: NGXLogger,
     router: Router,
     snackBar: SnackBarService,
-    private relacionEjecucionEconomicaService: RelacionEjecucionEconomicaService,
-    private grupoService: GrupoService,
-    private personaService: PersonaService,
-    private proyectoService: ProyectoService,
-    private proyectoSgeService: ProyectoSgeService,
-    private configuracionService: ConfigService
+    private readonly relacionEjecucionEconomicaService: RelacionEjecucionEconomicaService,
+    private readonly grupoService: GrupoService,
+    private readonly personaService: PersonaService,
+    private readonly proyectoService: ProyectoService,
+    private readonly proyectoSgeService: ProyectoSgeService,
+    private readonly configuracionService: ConfigService
   ) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }
 
   protected resolveEntity(route: ActivatedRouteSnapshot): Observable<IEjecucionEconomicaData> {
 
+    const proyectoSgeRef = route.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID);
+    const isInvestigador = route.data.module === Module.INV;
+
     return forkJoin({
       configuracion: this.configuracionService.getConfiguracion(),
-      relaciones: this.relacionEjecucionEconomicaService.findRelacionesProyectoSgeRef(route.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID))
+      relaciones: isInvestigador
+        ? this.relacionEjecucionEconomicaService.findRelacionesProyectoSgeRefInvestigador(proyectoSgeRef)
+        : this.relacionEjecucionEconomicaService.findRelacionesProyectoSgeRef(proyectoSgeRef)
     }).pipe(
       map(({ configuracion, relaciones }) => {
         return {
           configuracion,
-          proyectoSge: { id: route.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID) } as IProyectoSge,
-          readonly: false,
+          proyectoSge: { id: proyectoSgeRef } as IProyectoSge,
+          readonly: isInvestigador,
           relaciones
         } as IEjecucionEconomicaData;
       }),
@@ -78,6 +84,10 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
       switchMap(response =>
         from(response.relaciones).pipe(
           mergeMap(relacion => {
+            if (isInvestigador && !relacion.accesibleByInvestigador) {
+              return of(relacion);
+            }
+
             let responsables$: Observable<IPersona[]>;
 
             switch (relacion.tipoEntidad) {
@@ -88,14 +98,14 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
                     map(personas => {
                       responsables.forEach(responsable => {
                         responsable.persona = personas.items.find(persona => persona.id === responsable.persona.id);
-                      })
+                      });
 
                       responsables.sort((a, b) => {
                         return sortGrupoEquipoByRolProyectoOrden(a, b)
                           || sortGrupoEquipoByPersonaNombre(a, b);
                       });
 
-                      return responsables.map(responsable => responsable.persona)
+                      return responsables.map(responsable => responsable.persona);
                     }),
                     catchError((error) => {
                       this.logger.error(error);
@@ -112,14 +122,14 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
                     map(personas => {
                       responsables.forEach(responsable => {
                         responsable.persona = personas.items.find(persona => persona.id === responsable.persona.id);
-                      })
+                      });
 
                       responsables.sort((a, b) => {
                         return sortProyectoEquipoByRolProyectoOrden(a, b)
                           || sortProyectoEquipoByPersonaNombre(a, b);
                       });
 
-                      return responsables.map(responsable => responsable.persona)
+                      return responsables.map(responsable => responsable.persona);
                     }),
                     catchError((error) => {
                       this.logger.error(error);
@@ -137,6 +147,10 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
               map(responsables => {
                 relacion.responsables = responsables;
                 return relacion;
+              }),
+              catchError(error => {
+                this.logger.error(error);
+                return EMPTY;
               })
             );
           }),

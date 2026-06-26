@@ -1,3 +1,4 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -24,6 +25,18 @@ export class IconViewPersonaDetailComponent implements OnInit, OnDestroy {
   @Input()
   personaId: string;
 
+  @Input()
+  get readonly(): boolean {
+    return this._readonly;
+  }
+
+  set readonly(value: boolean) {
+    this._readonly = coerceBooleanProperty(value);
+  }
+
+  // tslint:disable-next-line: variable-name
+  private _readonly = false;
+
   @Output()
   readonly personaUpdated = new EventEmitter<IPersona>();
 
@@ -35,7 +48,7 @@ export class IconViewPersonaDetailComponent implements OnInit, OnDestroy {
     private readonly snackBarService: SnackBarService,
     private readonly translate: TranslateService,
     private readonly authService: SgiAuthService,
-    private matDialog: MatDialog
+    private readonly matDialog: MatDialog
   ) {
   }
 
@@ -65,7 +78,7 @@ export class IconViewPersonaDetailComponent implements OnInit, OnDestroy {
   public openPersonaFormlyModal(): void {
     const personaData: IPersonaFormlyData = {
       personaId: this.personaId,
-      action: this.hasEditAuthority() ? ACTION_MODAL_MODE.EDIT : ACTION_MODAL_MODE.VIEW
+      action: this.resolveActionMode()
     };
 
     const config = {
@@ -86,8 +99,28 @@ export class IconViewPersonaDetailComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Resuelve el modo de apertura del detalle de la persona.
+   *
+   * Si no se fuerza el modo solo lectura y el usuario tiene permiso de edición se
+   * abre en modo edición. En caso contrario se abre en modo vista, salvo que el
+   * usuario no tenga permiso de vista: entonces la única forma de abrir el detalle
+   * es el modo edición.
+   */
+  private resolveActionMode(): ACTION_MODAL_MODE {
+    if (!this.readonly && this.hasEditAuthority()) {
+      return ACTION_MODAL_MODE.EDIT;
+    }
+
+    return this.hasViewAuthority() ? ACTION_MODAL_MODE.VIEW : ACTION_MODAL_MODE.EDIT;
+  }
+
   private hasEditAuthority(): boolean {
     return this.authService.hasAuthority('ESB-PER-E');
+  }
+
+  private hasViewAuthority(): boolean {
+    return this.authService.hasAuthority('ESB-PER-V');
   }
 
 }

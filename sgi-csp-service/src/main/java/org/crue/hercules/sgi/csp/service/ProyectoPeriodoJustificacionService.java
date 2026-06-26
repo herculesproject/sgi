@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionReposito
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoJustificacionSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,17 +55,20 @@ public class ProyectoPeriodoJustificacionService {
   private final RequerimientoJustificacionService requerimientoJustificacionService;
 
   private final EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoPeriodoJustificacionService(Validator validator,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
       ProyectoRepository proyectoRepository,
       RequerimientoJustificacionService requerimientoJustificacionService,
-      EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository) {
+      EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository,
+      ProyectoHelper proyectoHelper) {
     this.validator = validator;
     this.repository = proyectoPeriodoJustificacionRepository;
     this.proyectoRepository = proyectoRepository;
     this.requerimientoJustificacionService = requerimientoJustificacionService;
     this.estadoProyectoPeriodoJustificacionRepository = estadoProyectoPeriodoJustificacionRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   @Transactional
@@ -249,6 +253,8 @@ public class ProyectoPeriodoJustificacionService {
 
   public Page<ProyectoPeriodoJustificacion> findAllByProyectoId(Long proyectoId, String query, Pageable paging) {
     log.debug("findAllByProyectoPeriodoSeguimiento(Long solicitudId, String query, Pageable paging) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
 
     Specification<ProyectoPeriodoJustificacion> specs = ProyectoPeriodoJustificacionSpecifications
         .byProyectoId(proyectoId).and(SgiRSQLJPASupport.toSpecification(query));

@@ -64,17 +64,19 @@
         <th mat-header-cell *matHeaderCellDef>{{ 'label.actions' | translate }}</th>
         <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button *ngIf="!actionService.readonly" mat-icon-button color="primary"
-              matTooltip="{{'btn.edit' | translate}}" (click)="openModal(proyectoEntidadConvocanteData)">
+            <button *ngIf="!formPart.isReadonly" mat-icon-button color="primary" matTooltip="{{'btn.edit' | translate}}"
+              (click)="openModal(proyectoEntidadConvocanteData)">
               <mat-icon>border_color</mat-icon>
             </button>
-            <button *ngIf="actionService.readonly" mat-icon-button color="primary"
-              matTooltip="{{'btn.view' | translate}}" (click)="openModal(proyectoEntidadConvocanteData)">
+          </ng-container>
+          <ng-container *ngIf="formPart.isReadonly">
+            <button mat-icon-button color="primary" matTooltip="{{'btn.view' | translate}}"
+              (click)="openModal(proyectoEntidadConvocanteData)">
               <mat-icon>visibility</mat-icon>
             </button>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button *ngIf="!actionService.readonly" mat-icon-button color="warn"
+            <button *ngIf="!formPart.isReadonly" mat-icon-button color="warn"
               matTooltip="{{ 'btn.delete' | translate }}"
               (click)="deleteProyectoEntidadConvocante(proyectoEntidadConvocanteData)">
               <mat-icon>highlight_off</mat-icon>
@@ -89,7 +91,7 @@
   </div>
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
-      <button *ngIf="!actionService.readonly" color="three" mat-raised-button (click)="openModal()">
+      <button *ngIf="!formPart.isReadonly" color="three" mat-raised-button (click)="openModal()">
         <mat-icon color="accent">add_circle</mat-icon> {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>
     </div>

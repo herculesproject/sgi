@@ -172,6 +172,7 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -393,7 +394,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("update(Proyecto proyecto) - start");
 
     return repository.findById(proyectoActualizar.getId()).map(data -> {
-      proyectoHelper.checkCanAccessProyecto(data);
+      proyectoHelper.checkCanAccessProyecto(data, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
       Assert.isTrue(
           proyectoActualizar.getEstado().getId().equals(data.getEstado().getId())
               && ((proyectoActualizar.getConvocatoriaId() == null && data.getConvocatoriaId() == null)
@@ -602,7 +603,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Proyecto findById(Long id) {
     log.debug("findById(Long id) - start");
     final Proyecto returnValue = repository.findById(id).orElseThrow(() -> new ProyectoNotFoundException(id));
-    proyectoHelper.checkCanAccessProyecto(returnValue);
+    proyectoHelper.checkCanAccessProyecto(returnValue, ProyectoHelper.InvestigadorAccessConstraint.NONE);
     log.debug("findById(Long id) - end");
     return returnValue;
   }
@@ -2625,6 +2626,56 @@ public class ProyectoServiceImpl implements ProyectoService {
         pageable);
     log.debug("findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica} de
+   * los {@link Proyecto} en los que el usuario logueado figura como investigador
+   * principal (rol principal).
+   *
+   * @param query                       filtro de búsqueda.
+   * @param onlyWithParticipacionActual si solo se incluyen los proyectos con
+   *                                    participación como investigador principal
+   *                                    en
+   *                                    la fecha actual.
+   * @param pageable                    {@link Pageable}.
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} activas
+   *         paginadas y filtradas.
+   */
+  @Override
+  public Page<RelacionEjecucionEconomica> findRelacionesEjecucionEconomicaProyectosInvestigador(String query,
+      boolean onlyWithParticipacionActual, Pageable pageable) {
+    log.debug(
+        "findRelacionesEjecucionEconomicaProyectosInvestigador - query: {}, onlyWithParticipacionActual: {}, pageable: {}",
+        query, onlyWithParticipacionActual, SgiLogUtils.pageable(pageable));
+
+    Instant fecha = onlyWithParticipacionActual ? Instant.now() : null;
+
+    List<Long> proyectoIds = proyectoProyectoSGERepository
+        .findAll(ProyectoProyectoSgeSpecifications
+            .byPersonaInProyectoEquipoRolPrincipal(proyectoHelper.getAuthenticationPersonaRef(), fecha))
+        .stream()
+        .map(ProyectoProyectoSge::getProyectoId)
+        .distinct()
+        .collect(Collectors.toList());
+
+    if (proyectoIds.isEmpty()) {
+      Page<RelacionEjecucionEconomica> page = Page.empty(pageable);
+      log.debug("findRelacionesEjecucionEconomicaProyectosInvestigador - response: {}", SgiLogUtils.page(page));
+      return page;
+    }
+
+    Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.activos()
+        .and(ProyectoProyectoSgeSpecifications.byProyectoIdIn(proyectoIds));
+    if (query != null) {
+      specs = specs.and(SgiRSQLJPASupport.toSpecification(query,
+          ProyectoProyectoSgePredicateResolver.getInstance(sgiConfigProperties)));
+    }
+
+    Page<RelacionEjecucionEconomica> page = proyectoProyectoSGERepository.findRelacionesEjecucionEconomica(specs,
+        pageable);
+    log.debug("findRelacionesEjecucionEconomicaProyectosInvestigador - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
   /**

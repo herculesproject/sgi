@@ -60,6 +60,35 @@ public class GrupoSpecifications {
   }
 
   /**
+   * {@link Grupo} cuyo proyectoSgeRef sea el indicado.
+   *
+   * @param proyectoSgeRef identificador del proyecto en el SGE.
+   * @return specification para obtener los {@link Grupo} con el proyectoSgeRef
+   *         indicado.
+   */
+  public static Specification<Grupo> byProyectoSgeRef(String proyectoSgeRef) {
+    return (root, query, cb) -> cb.equal(root.get(Grupo_.proyectoSgeRef), proyectoSgeRef);
+  }
+
+  /**
+   * {@link Grupo} para los que la persona esta entre las {@link GrupoEquipo} con
+   * un rol principal.
+   *
+   * @param personaRef Identificador de la persona
+   * @return specification para obtener los {@link Grupo} para los que la persona
+   *         esta entre las {@link GrupoEquipo} con un rol principal.
+   */
+  public static Specification<Grupo> byResponsable(String personaRef) {
+    return (root, query, cb) -> {
+      Join<Grupo, GrupoEquipo> joinEquipos = root.join(Grupo_.miembrosEquipo, JoinType.LEFT);
+
+      return cb.and(
+          cb.equal(joinEquipos.get(GrupoEquipo_.personaRef), personaRef),
+          cb.equal(joinEquipos.get(GrupoEquipo_.rol).get(RolProyecto_.rolPrincipal), true));
+    };
+  }
+
+  /**
    * {@link Grupo} con el codigo indicado.
    * 
    * @param codigo un codigo

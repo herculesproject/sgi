@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
 import { PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-area-conocimiento.converter';
 import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-clasificacion.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
@@ -9,6 +10,7 @@ import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyect
 import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
 import { TipoPartida } from '@core/enums/tipo-partida';
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
+import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
 import { IProyectoAreaConocimientoBackend } from '@core/models/csp/backend/proyecto-area-conocimiento-backend';
 import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
@@ -17,6 +19,11 @@ import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backe
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
 import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-proyecto-sge-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
+import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
+import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAgrupacionGasto } from '@core/models/csp/proyecto-agrupacion-gasto';
@@ -46,6 +53,7 @@ import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-s
 import { IProyectoPresupuestoTotales } from '@core/models/csp/proyecto-presupuesto-totales';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
+import { IProyectoRelacion } from '@core/models/csp/proyecto-relacion';
 import { IProyectoResponsableEconomico } from '@core/models/csp/proyecto-responsable-economico';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoUnidadVinculacion } from '@core/models/csp/proyecto-unidad-vinculacion';
@@ -62,6 +70,8 @@ import { IProyectoDocumentoResponse } from '@core/services/csp/proyecto-document
 import { PROYECTO_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-documento/proyecto-documento-response.converter';
 import { IProyectoEntidadConvocanteResponse } from '@core/services/csp/proyecto-entidad-convocante/proyecto-entidad-convocante-response';
 import { PROYECTO_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-entidad-convocante/proyecto-entidad-convocante-response.converter';
+import { IProyectoRelacionResponse } from '@core/services/csp/proyecto-relacion/proyecto-relacion-response';
+import { PROYECTO_RELACION_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-relacion/proyecto-relacion-response.converter';
 import { IProyectoResponse } from '@core/services/csp/proyecto/proyecto-response';
 import { PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto/proyecto-response.converter';
 import { environment } from '@env';
@@ -86,6 +96,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IAnualidadGastoResponse } from './anualidad-gasto/anualidad-gasto-response';
 import { ANUALIDAD_GASTO_RESPONSE_CONVERTER } from './anualidad-gasto/anualidad-gasto-response.converter';
+import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
+import { CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response.converter';
+import { IConvocatoriaDocumentoResponse } from './convocatoria-documento/convocatoria-documento-response';
+import { CONVOCATORIA_DOCUMENTO_RESPONSE_CONVERTER } from './convocatoria-documento/convocatoria-documento-response.converter';
+import { IConvocatoriaPartidaPresupuestariaResponse } from './convocatoria-partida-presupuestaria/convocatoria-partida-presupuestaria-response';
+import { CONVOCATORIA_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER } from './convocatoria-partida-presupuestaria/convocatoria-partida-presupuestaria-response.converter';
+import { IConvocatoriaPeriodoJustificacionResponse } from './convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response';
+import { CONVOCATORIA_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response.converter';
 import { IConvocatoriaOnlyTituloResponse } from './convocatoria/convocatoria-only-titulo-response';
 import { CONVOCATORIA_ONLY_TITULO_RESPONSE_CONVERTER } from './convocatoria/convocatoria-only-titulo-response.converter';
 import { IProyectoAgrupacionGastoResponse } from './proyecto-agrupacion-gasto/proyecto-agrupacion-gasto-response';
@@ -1082,6 +1100,112 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
       PROYECTO_UNIDAD_VINCULACION_REQUEST_CONVERTER.fromTargetArray(unidadesVinculacion)
     ).pipe(
       map((response => PROYECTO_UNIDAD_VINCULACION_RESPONSE_CONVERTER.toTargetArray(response)))
+    );
+  }
+
+  /**
+   * Recupera las relaciones del proyecto a través de CSP.
+   * El acceso se controla a nivel de proyecto.
+   *
+   * @param idProyecto Identificador del proyecto.
+   * @returns Listado de relaciones del proyecto.
+   */
+  findRelaciones(idProyecto: number): Observable<IProyectoRelacion[]> {
+    return this.http.get<IProyectoRelacionResponse[]>(
+      `${this.endpointUrl}/${idProyecto}/relaciones`
+    ).pipe(
+      map(response => response ? PROYECTO_RELACION_RESPONSE_CONVERTER.toTargetArray(response) : [])
+    );
+  }
+
+  /**
+   * Recupera los documentos públicos de la convocatoria asociada al proyecto.
+   * El acceso se controla a nivel de proyecto.
+   *
+   * @param idProyecto Identificador del proyecto.
+   * @param options opciones de búsqueda
+   */
+  findConvocatoriaDocumentos(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaDocumento>> {
+    return this.find<IConvocatoriaDocumentoResponse, IConvocatoriaDocumento>(
+      `${this.endpointUrl}/${idProyecto}/convocatoria-documentos`,
+      options,
+      CONVOCATORIA_DOCUMENTO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera los conceptos de gasto permitidos de la convocatoria asociada al
+   * proyecto. El acceso se controla a nivel de proyecto.
+   *
+   * @param idProyecto Identificador del proyecto.
+   */
+  findConvocatoriaConceptosGastoPermitidos(idProyecto: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+    return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
+      `${this.endpointUrl}/${idProyecto}/convocatoria-conceptos-gasto/permitidos`,
+      undefined,
+      CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera los conceptos de gasto NO permitidos de la convocatoria asociada al
+   * proyecto. El acceso se controla a nivel de proyecto.
+   *
+   * @param idProyecto Identificador del proyecto.
+   */
+  findConvocatoriaConceptosGastoNoPermitidos(idProyecto: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+    return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
+      `${this.endpointUrl}/${idProyecto}/convocatoria-conceptos-gasto/nopermitidos`,
+      undefined,
+      CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera las partidas presupuestarias de la convocatoria asociada al
+   * proyecto. El acceso se controla a nivel de proyecto.
+   *
+   * @param idProyecto Identificador del proyecto.
+   * @param options opciones de búsqueda
+   */
+  findConvocatoriaPartidasPresupuestarias(idProyecto: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IConvocatoriaPartidaPresupuestaria>> {
+    return this.find<IConvocatoriaPartidaPresupuestariaResponse, IConvocatoriaPartidaPresupuestaria>(
+      `${this.endpointUrl}/${idProyecto}/convocatoria-partidas-presupuestarias`,
+      options,
+      CONVOCATORIA_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera los periodos de justificación de la convocatoria asociada al
+   * proyecto. El acceso se controla a nivel de proyecto.
+   *
+   * @param idProyecto Identificador del proyecto.
+   * @param options opciones de búsqueda
+   */
+  findConvocatoriaPeriodosJustificacion(idProyecto: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IConvocatoriaPeriodoJustificacion>> {
+    return this.find<IConvocatoriaPeriodoJustificacionResponse, IConvocatoriaPeriodoJustificacion>(
+      `${this.endpointUrl}/${idProyecto}/convocatoria-periodos-justificacion`,
+      options,
+      CONVOCATORIA_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Recupera las áreas temáticas de la convocatoria asociada al proyecto. El
+   * acceso se controla a nivel de proyecto.
+   *
+   * @param idProyecto Identificador del proyecto.
+   * @param options opciones de búsqueda
+   */
+  findConvocatoriaAreasTematicas(idProyecto: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IConvocatoriaAreaTematica>> {
+    return this.find<IConvocatoriaAreaTematicaBackend, IConvocatoriaAreaTematica>(
+      `${this.endpointUrl}/${idProyecto}/convocatoria-areas-tematicas`,
+      options,
+      CONVOCATORIA_AREA_TEMATICA_CONVERTER
     );
   }
 

@@ -46,11 +46,11 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
           disableRolUniversidad: false,
           hasAnyProyectoSocioCoordinador: false,
           isVisor: this.hasVisorAuthority(proyecto) && route.data.module === Module.CSP,
-          isInvestigador: this.hasViewAuthorityInv() && route.data.module === Module.INV
+          isAccessingAsInvestigador: this.hasViewAuthorityInv() && route.data.module === Module.INV
         } as IProyectoData;
       }),
       switchMap(data => {
-        if (!data.isInvestigador && !data.isVisor && !this.hasViewAuthorityUO(data.proyecto)) {
+        if (!data.isAccessingAsInvestigador && !data.isVisor && !this.hasViewAuthorityUO(data.proyecto)) {
           return throwError('NOT_FOUND');
         }
 
@@ -66,14 +66,17 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
         hasCoordinador: data?.proyecto?.id
           ? this.service.hasAnyProyectoSocioWithRolCoordinador(data.proyecto.id)
           : of(false),
-        solicitud: !data.isInvestigador && data.proyecto?.solicitudId
+        solicitud: !data.isAccessingAsInvestigador && data.proyecto?.solicitudId
           ? this.solicitudService.findById(data.proyecto.solicitudId)
           : of(null),
-        isInvestigadorPrincipal: data.isInvestigador
+        isInvestigadorPrincipal: data.isAccessingAsInvestigador
           ? this.service.isInvestigadorPrincipalActual(data.proyecto.id)
           : of(false),
         isProyectoUnidadesVinculacionEnabled: this.configService.isProyectoUnidadesVinculacionEnabled(),
         isProyectoAreasConocimientoEnabled: this.configService.isProyectoAreasConocimientoEnabled(),
+        isVistaAmpliadaInvestigadorEnabled: data.isAccessingAsInvestigador
+          ? this.configService.isInvProyectoVistaAmpliadaIpEnabled()
+          : of(false),
       }).pipe(
         map(({
           rolUniversidad,
@@ -84,7 +87,8 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
           solicitud,
           isInvestigadorPrincipal,
           isProyectoUnidadesVinculacionEnabled,
-          isProyectoAreasConocimientoEnabled
+          isProyectoAreasConocimientoEnabled,
+          isVistaAmpliadaInvestigadorEnabled
         }) => {
 
           data.disableRolUniversidad = hasPeriodosPago || hasPeriodosJustificacion;
@@ -93,6 +97,7 @@ export class ProyectoDataResolver extends SgiResolverResolver<IProyectoData> {
           data.isProyectoUnidadesVinculacionEnabled = isProyectoUnidadesVinculacionEnabled;
           data.readonly = !modificable;
           data.isInvestigadorPrincipal = isInvestigadorPrincipal;
+          data.isVistaAmpliadaInvestigadorEnabled = isVistaAmpliadaInvestigadorEnabled;
 
           if (rolUniversidad) {
             data.proyecto.rolUniversidad = rolUniversidad;

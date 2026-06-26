@@ -1322,7 +1322,7 @@ public class SolicitudService {
   public Solicitud findSolicitudByProyectoIdAndUserIsInvestigador(Long proyectoId) {
     log.debug("findBySolicitudIdAndUserIsInvestigador(proyectoId = {}) - start", proyectoId);
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
 
     final Solicitud returnValue = repository.findOne(SolicitudSpecifications.byProyectoId(proyectoId))
         .orElseThrow(() -> new ConvocatoriaNotFoundException(proyectoId));

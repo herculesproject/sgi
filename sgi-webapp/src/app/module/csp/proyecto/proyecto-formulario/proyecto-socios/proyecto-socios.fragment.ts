@@ -11,13 +11,18 @@ export class ProyectoSociosFragment extends Fragment {
   proyectoSocios$ = new BehaviorSubject<StatusWrapper<IProyectoSocio>[]>([]);
   private proyectoSocioEliminados: StatusWrapper<IProyectoSocio>[] = [];
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     key: number,
     private empresaService: EmpresaService,
     private proyectoService: ProyectoService,
     private proyectoSocioService: ProyectoSocioService,
     public hasAnyProyectoSocioWithRolCoordinador$: BehaviorSubject<boolean>,
-    public hasProyectoCoordinadoAndCoordinadorExterno$: BehaviorSubject<boolean>
+    public hasProyectoCoordinadoAndCoordinadorExterno$: BehaviorSubject<boolean>,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);

@@ -1,10 +1,10 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { Fragment } from '@core/services/action-service';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoDocumentoService } from '@core/services/csp/proyecto-documento.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
@@ -16,7 +16,6 @@ import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { ITranslateParams } from '@core/utils/translate-params';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
@@ -164,9 +163,12 @@ export class ProyectoDocumentosFragment extends Fragment {
 
   private nodeLookup = new Map<string, NodeDocumento>();
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     proyectoId: number,
-    private convocatoriaService: ConvocatoriaService,
     private solicitudService: SolicitudService,
     private proyectoService: ProyectoService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
@@ -176,8 +178,8 @@ export class ProyectoDocumentosFragment extends Fragment {
     private proyectoDocumentoService: ProyectoDocumentoService,
     private empresaService: EmpresaService,
     private documentoService: DocumentoService,
-    private readonly translate: TranslateService,
-    public isVisor: boolean
+    public isVisor: boolean,
+    private readonly readonly: boolean
   ) {
     super(proyectoId);
     this.setComplete(true);
@@ -230,23 +232,14 @@ export class ProyectoDocumentosFragment extends Fragment {
   }
 
   private loadConvocatoriaDocumentos(): Observable<NodeDocumento[]> {
-    return this.proyectoService.findById(this.getKey() as number).pipe(
-      switchMap((proyecto) => {
-        if (proyecto.convocatoriaId) {
-          return this.convocatoriaService.findDocumentos(proyecto.convocatoriaId).pipe(
-            map(response => response.items)
-          );
-        }
-        return of([]);
-      }),
+    return this.proyectoService.findConvocatoriaDocumentos(this.getKey() as number).pipe(
+      map(response => response.items.map(documento => this.toDocumentoData(documento))),
       map((response => {
         if (response) {
           response = response.filter(documento => documento.publico);
           const keyTipo = TIPO_DOCUMENTO.CONVOCATORIA;
           const nodes: NodeDocumento[] = [];
           response.forEach((documento) => {
-            documento.comentario = documento.observaciones;
-            documento.visible = documento.publico;
             let tipoNode = this.nodeLookup.get(keyTipo);
             if (!tipoNode) {
               tipoNode = new NodeDocumento(keyTipo, DOCUMENTO_CONVOCATORIA_TITLE, 0);
@@ -278,6 +271,20 @@ export class ProyectoDocumentosFragment extends Fragment {
         }
       })
       ));
+  }
+
+  private toDocumentoData(documento: IConvocatoriaDocumento): IDocumentoData {
+    return {
+      id: documento.id,
+      nombre: documento.nombre,
+      tipoFase: documento.tipoFase,
+      tipoDocumento: documento.tipoDocumento,
+      documentoRef: documento.documentoRef,
+      convocatoriaId: documento.convocatoriaId,
+      publico: documento.publico,
+      comentario: documento.observaciones,
+      visible: documento.publico
+    };
   }
 
   private loadSolicitudDocumentos(): Observable<NodeDocumento[]> {
@@ -409,7 +416,12 @@ export class ProyectoDocumentosFragment extends Fragment {
                           const keyPeriodo = `${keySocio}-${periodo.numPeriodo}`;
                           let periodoNode = this.nodeLookup.get(keyPeriodo);
                           if (!periodoNode) {
-                            periodoNode = new NodeDocumento(keyPeriodo, PERIODO_JUSTIFICACION_PERIODO_TITLE, 2, { numPeriodo: periodo.numPeriodo });
+                            periodoNode = new NodeDocumento(
+                              keyPeriodo,
+                              PERIODO_JUSTIFICACION_PERIODO_TITLE,
+                              2,
+                              { numPeriodo: periodo.numPeriodo }
+                            );
                             this.nodeLookup.set(keyPeriodo, periodoNode);
                             socioNode.addChild(periodoNode);
                           }

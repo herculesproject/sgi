@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoAreaConocimientoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoAreaConocimientoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProyectoAreaConocimientoServiceImpl implements ProyectoAreaConocimientoService {
 
   private final ProyectoAreaConocimientoRepository repository;
+  private final ProyectoHelper proyectoHelper;
 
-  public ProyectoAreaConocimientoServiceImpl(ProyectoAreaConocimientoRepository repository) {
+  public ProyectoAreaConocimientoServiceImpl(ProyectoAreaConocimientoRepository repository,
+      ProyectoHelper proyectoHelper) {
     this.repository = repository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   @Override
@@ -62,6 +66,7 @@ public class ProyectoAreaConocimientoServiceImpl implements ProyectoAreaConocimi
   @Override
   public Page<ProyectoAreaConocimiento> findAllByProyectoId(Long proyectoId, String query, Pageable paging) {
     log.debug("findAllByProyectoId(Long proyectoId, String query, Pageable pageable) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
     Specification<ProyectoAreaConocimiento> specs = ProyectoAreaConocimientoSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
     Page<ProyectoAreaConocimiento> returnValue = repository.findAll(specs, paging);

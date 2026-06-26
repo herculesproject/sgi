@@ -157,6 +157,7 @@ export class ProyectoCalendarioJustificacionComponent extends FragmentComponent 
           periodoJustificacion => periodoJustificacion?.proyectoPeriodoJustificacion?.value),
       convocatoriaPeriodoJustificacion: periodoJustificacionActualizar?.convocatoriaPeriodoJustificacion,
       proyecto: this.formPart.proyecto,
+      readonly: this.formPart.isReadonly
     };
 
     const config = {

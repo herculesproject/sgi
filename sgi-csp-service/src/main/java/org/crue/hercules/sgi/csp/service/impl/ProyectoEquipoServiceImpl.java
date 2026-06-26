@@ -315,7 +315,7 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
     Page<ProyectoEquipo> returnValue = repository.findAll(specs, pageable);
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
 
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
     return returnValue;

@@ -241,7 +241,8 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   public Page<ProyectoProrroga> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.NONE);
 
     Specification<ProyectoProrroga> specs = ProyectoProrrogaSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
@@ -455,7 +456,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     log.debug("existsByProyecto(Long proyectoId) - start");
     boolean returnValue = repository.existsByProyectoId(proyectoId);
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
 
     log.debug("existsByProyecto(Long proyectoId) - end");
     return returnValue;

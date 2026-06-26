@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.BaseServiceTest;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,18 +45,20 @@ class ProyectoConceptoGastoServiceImplTest extends BaseServiceTest {
   private ProyectoConceptoGastoCodigoEcRepository proyectoConceptoGastoCodigoEcRepository;
   @Mock
   private ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoConceptoGastoService service;
 
   @BeforeEach
   void setup() {
-    // @formatter=off
+
     this.service = new ProyectoConceptoGastoServiceImpl(repository,
         proyectoRepository,
         conceptoGastoRepository,
         proyectoConceptoGastoCodigoEcRepository,
-        convocatoriaConceptoGastoCodigoEcRepository);
-    // @formatter=on
+        convocatoriaConceptoGastoCodigoEcRepository,
+        proyectoHelper);
   }
 
   @Test

@@ -18,7 +18,8 @@ import { ProyectoSocioPeriodoJustificacionRouting } from './proyecto-socio-perio
     ProyectoSocioPeriodoJustificacionCrearComponent,
     ProyectoSocioPeriodoJustificacionEditarComponent,
     ProyectoSocioPeriodoJustificacionDatosGeneralesComponent,
-    ProyectoSocioPeriodoJustificacionDocumentosComponent],
+    ProyectoSocioPeriodoJustificacionDocumentosComponent
+  ],
   imports: [
     CspSharedModule,
     SharedModule,

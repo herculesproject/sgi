@@ -10,10 +10,15 @@ export class ProyectoPaqueteTrabajoFragment extends Fragment {
   paquetesTrabajo$ = new BehaviorSubject<StatusWrapper<IProyectoPaqueteTrabajo>[]>([]);
   private paquetesTrabajoEliminados: StatusWrapper<IProyectoPaqueteTrabajo>[] = [];
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     key: number,
     private proyectoService: ProyectoService,
-    private proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService
+    private proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);

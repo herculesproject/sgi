@@ -240,7 +240,7 @@ const routes: SgiAuthRoutes = [
         },
       },
       {
-        path: PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO,
+        path: PROYECTO_ROUTE_NAMES.CONCEPTO_GASTO_PERMITIDO,
         redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD,
         canActivate: [SgiAuthGuard],
         data: {
@@ -248,7 +248,7 @@ const routes: SgiAuthRoutes = [
         },
       },
       {
-        path: PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO,
+        path: PROYECTO_ROUTE_NAMES.CONCEPTO_GASTO_NO_PERMITIDO,
         redirectTo: PROYECTO_ROUTE_NAMES.ELEGIBILIDAD,
         canActivate: [SgiAuthGuard],
         data: {
@@ -364,7 +364,7 @@ const routes: SgiAuthRoutes = [
         }
       },
       {
-        path: `${PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_PERMITIDO}`,
+        path: `${PROYECTO_ROUTE_NAMES.CONCEPTO_GASTO_PERMITIDO}`,
         loadChildren: () =>
           import('../proyecto-concepto-gasto/proyecto-concepto-gasto.module').then(
             (m) => m.ProyectoConceptoGastoModule
@@ -377,7 +377,7 @@ const routes: SgiAuthRoutes = [
         }
       },
       {
-        path: `${PROYECTO_ROUTE_NAMES.CONCEPTO_GATO_NO_PERMITIDO}`,
+        path: `${PROYECTO_ROUTE_NAMES.CONCEPTO_GASTO_NO_PERMITIDO}`,
         loadChildren: () =>
           import('../proyecto-concepto-gasto/proyecto-concepto-gasto.module').then(
             (m) => m.ProyectoConceptoGastoModule

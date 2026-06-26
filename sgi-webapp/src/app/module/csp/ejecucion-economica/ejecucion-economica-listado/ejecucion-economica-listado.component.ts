@@ -5,7 +5,7 @@ import { AbstractTablePaginationComponent } from '@core/component/abstract-table
 import { SgeIntegracionesEccMenus } from '@core/models/csp/configuracion';
 import { sortGrupoEquipoByPersonaNombre, sortGrupoEquipoByRolProyectoOrden } from '@core/models/csp/grupo-equipo';
 import { sortProyectoEquipoByPersonaNombre, sortProyectoEquipoByRolProyectoOrden } from '@core/models/csp/proyecto-equipo';
-import { IRelacionEjecucionEconomica, TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
+import { IRelacionEjecucionEconomica, TipoEntidad, TIPO_ENTIDAD_MAP } from '@core/models/csp/relacion-ejecucion-economica';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -19,7 +19,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, Subscription, from, of } from 'rxjs';
+import { EMPTY, from, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { EJECUCION_ECONOMICA_ROUTE_NAMES } from '../ejecucion-economica-route-names';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
@@ -86,7 +86,7 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
         return 'nombre.value';
       }
       return column;
-    }
+    };
     this.configCspService.getIntegracionesEccSgeEnabled().subscribe(integracionesEccSgeEnabled => {
       this.integracionesEccSgeEnabled = integracionesEccSgeEnabled;
     });
@@ -138,20 +138,20 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
                       map(personas => {
                         responsables.forEach(responsable => {
                           responsable.persona = personas.items.find(persona => persona.id === responsable.persona.id);
-                        })
+                        });
 
                         responsables.sort((a, b) => {
                           return sortGrupoEquipoByRolProyectoOrden(a, b)
                             || sortGrupoEquipoByPersonaNombre(a, b);
                         });
 
-                        return responsables.map(responsable => responsable.persona)
+                        return responsables.map(responsable => responsable.persona);
                       }),
                       catchError((error) => {
                         this.logger.error(error);
                         return EMPTY;
                       })
-                    )
+                    );
                   })
                 );
 
@@ -167,20 +167,20 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
                       map(personas => {
                         responsables.forEach(responsable => {
                           responsable.persona = personas.items.find(persona => persona.id === responsable.persona.id);
-                        })
+                        });
 
                         responsables.sort((a, b) => {
                           return sortProyectoEquipoByRolProyectoOrden(a, b)
                             || sortProyectoEquipoByPersonaNombre(a, b);
                         });
 
-                        return responsables.map(responsable => responsable.persona)
+                        return responsables.map(responsable => responsable.persona);
                       }),
                       catchError((error) => {
                         this.logger.error(error);
                         return EMPTY;
                       })
-                    )
+                    );
                   })
                 );
 

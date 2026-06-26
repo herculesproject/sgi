@@ -14,9 +14,12 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaDocumentoSpecifications;
+import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaDocumentoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -58,16 +61,18 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
   private final ModeloTipoDocumentoRepository modeloTipoDocumentoRepository;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ProyectoHelper proyectoHelper;
 
   public ConvocatoriaDocumentoServiceImpl(ConvocatoriaDocumentoRepository convocatoriaDocumentoRepository,
       ConvocatoriaRepository convocatoriaRepository, ModeloTipoFaseRepository modeloTipoFaseRepository,
       ModeloTipoDocumentoRepository modeloTipoDocumentoRepository,
-      ConvocatoriaAuthorityHelper authorityHelper) {
+      ConvocatoriaAuthorityHelper authorityHelper, ProyectoHelper proyectoHelper) {
     this.repository = convocatoriaDocumentoRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.modeloTipoFaseRepository = modeloTipoFaseRepository;
     this.modeloTipoDocumentoRepository = modeloTipoDocumentoRepository;
     this.authorityHelper = authorityHelper;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -194,6 +199,33 @@ public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoSe
     log.debug("findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable) - end");
     return returnValue;
 
+  }
+
+  @Override
+  public Page<ConvocatoriaDocumento> findAllByProyectoId(Long proyectoId, String query, Pageable paging) {
+    log.debug("findAllByProyectoId - proyectoId: {}, query: {}, paging: {}", proyectoId, query,
+        SgiLogUtils.pageable(paging));
+
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
+    Optional<Convocatoria> convocatoria = convocatoriaRepository
+        .findOne(ConvocatoriaSpecifications.byProyectoId(proyectoId));
+    if (!convocatoria.isPresent()) {
+      Page<ConvocatoriaDocumento> page = Page.empty(paging);
+      log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+      return page;
+    }
+
+    Specification<ConvocatoriaDocumento> specs = ConvocatoriaDocumentoSpecifications
+        .byConvocatoriaId(convocatoria.get().getId())
+        .and(ConvocatoriaDocumentoSpecifications.onlyPublicos())
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<ConvocatoriaDocumento> page = repository.findAll(specs, paging);
+    log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+
+    return page;
   }
 
   /**

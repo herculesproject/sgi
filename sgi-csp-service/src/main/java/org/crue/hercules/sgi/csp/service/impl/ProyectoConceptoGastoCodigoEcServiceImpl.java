@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.repository.predicate.ProyectoConceptoGastoCodig
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoCodigoEcSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -51,11 +52,13 @@ public class ProyectoConceptoGastoCodigoEcServiceImpl implements ProyectoConcept
 
   private final ProyectoConceptoGastoCodigoEcRepository repository;
   private final ProyectoConceptoGastoRepository proyectoConceptoGastoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoConceptoGastoCodigoEcServiceImpl(ProyectoConceptoGastoCodigoEcRepository repository,
-      ProyectoConceptoGastoRepository proyectoConceptoGastoRepository) {
+      ProyectoConceptoGastoRepository proyectoConceptoGastoRepository, ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.proyectoConceptoGastoRepository = proyectoConceptoGastoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -89,6 +92,8 @@ public class ProyectoConceptoGastoCodigoEcServiceImpl implements ProyectoConcept
   @Override
   public Page<ProyectoConceptoGastoCodigoEc> findAllByProyectoAndPermitidoTrue(Long proyectoId, Pageable pageable) {
     log.debug("findAllByProyectoAndPermitidoTrue(Long proyectoId, Boolean permitido, Pageable pageable)) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoConceptoGastoCodigoEc> specByProyecto = ProyectoConceptoGastoCodigoEcSpecifications
         .byProyecto(proyectoId);
     Specification<ProyectoConceptoGastoCodigoEc> specByConceptoGastoActivo = ProyectoConceptoGastoCodigoEcSpecifications
@@ -115,6 +120,8 @@ public class ProyectoConceptoGastoCodigoEcServiceImpl implements ProyectoConcept
   @Override
   public Page<ProyectoConceptoGastoCodigoEc> findAllByProyectoAndPermitidoFalse(Long proyectoId, Pageable pageable) {
     log.debug("findAllByProyectoAndPermitidoFalse(Long proyectoId, Boolean permitido, Pageable pageable)) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoConceptoGastoCodigoEc> specByProyecto = ProyectoConceptoGastoCodigoEcSpecifications
         .byProyecto(proyectoId);
     Specification<ProyectoConceptoGastoCodigoEc> specByConceptoGastoActivo = ProyectoConceptoGastoCodigoEcSpecifications
@@ -142,6 +149,9 @@ public class ProyectoConceptoGastoCodigoEcServiceImpl implements ProyectoConcept
   public Page<ProyectoConceptoGastoCodigoEc> findAllByProyectoConceptoGasto(Long proyectoConceptoGastoId,
       Pageable pageable) {
     log.debug("findAllByProyectoAndPermitidoFalse(Long proyectoId, Boolean permitido, Pageable pageable)) - start");
+    proyectoConceptoGastoRepository.findById(proyectoConceptoGastoId)
+        .ifPresent(proyectoConceptoGasto -> proyectoHelper.checkCanAccessProyecto(proyectoConceptoGasto.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
     Specification<ProyectoConceptoGastoCodigoEc> specByProyectoConceptoGasto = ProyectoConceptoGastoCodigoEcSpecifications
         .byProyectoConceptoGasto(proyectoConceptoGastoId);
     Specification<ProyectoConceptoGastoCodigoEc> specByConceptoGastoActivo = ProyectoConceptoGastoCodigoEcSpecifications

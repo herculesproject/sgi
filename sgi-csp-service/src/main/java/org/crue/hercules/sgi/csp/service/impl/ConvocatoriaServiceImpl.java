@@ -613,7 +613,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   public Convocatoria findConvocatoriaByProyectoIdAndUserIsInvestigador(Long proyectoId) {
     log.debug("findByConvocatoriaIdAndUserIsInvestigador(Long convocatoriaId) - start");
 
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.NONE);
 
     final Convocatoria returnValue = repository.findOne(ConvocatoriaSpecifications.byProyectoId(proyectoId))
         .orElseThrow(() -> new ConvocatoriaNotFoundException(proyectoId));

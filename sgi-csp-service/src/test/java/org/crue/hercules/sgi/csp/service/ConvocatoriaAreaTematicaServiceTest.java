@@ -12,8 +12,10 @@ import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaAreaTematicaServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -39,13 +41,17 @@ class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
   private ConvocatoriaService convocatoriaService;
   @Mock
   private ConvocatoriaAuthorityHelper authorityHelper;
+  @Mock
+  private ConvocatoriaRepository convocatoriaRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ConvocatoriaAreaTematicaService service;
 
   @BeforeEach
   void setUp() {
     service = new ConvocatoriaAreaTematicaServiceImpl(convocatoriaAreaTematicaRepository, areaTematicaRepository,
-        convocatoriaService, authorityHelper);
+        convocatoriaService, authorityHelper, convocatoriaRepository, proyectoHelper);
   }
 
   @Test

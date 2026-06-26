@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -45,5 +46,18 @@ public interface ConvocatoriaPeriodoJustificacionService {
    *         {@link Convocatoria} paginadas.
    */
   Page<ConvocatoriaPeriodoJustificacion> findAllByConvocatoria(Long idConvocatoria, String query, Pageable pageable);
+
+  /**
+   * Obtiene los {@link ConvocatoriaPeriodoJustificacion} de la
+   * {@link Convocatoria} asociada al {@link Proyecto}, controlando el acceso a
+   * nivel de {@link Proyecto}.
+   *
+   * @param proyectoId el id del {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ConvocatoriaPeriodoJustificacion}
+   *         paginadas.
+   */
+  Page<ConvocatoriaPeriodoJustificacion> findAllByProyectoId(Long proyectoId, String query, Pageable pageable);
 
 }

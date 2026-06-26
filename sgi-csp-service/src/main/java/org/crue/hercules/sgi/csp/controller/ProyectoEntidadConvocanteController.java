@@ -65,7 +65,7 @@ public class ProyectoEntidadConvocanteController {
    *         paginados y filtrados.
    */
   @GetMapping
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoEntidadConvocanteDto>> findAllEntidadConvocantes(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllEntidadConvocantes(Long id, String query, Pageable paging) - start");

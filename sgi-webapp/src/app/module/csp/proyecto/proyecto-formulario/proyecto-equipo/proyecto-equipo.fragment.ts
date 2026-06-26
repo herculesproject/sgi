@@ -39,8 +39,8 @@ export interface IProyectoEquipoListado {
 }
 
 export interface IFechaFinMaxUpdate {
-  fechaFinMaxCurrent: DateTime,
-  fechaFinMaxNew: DateTime
+  fechaFinMaxCurrent: DateTime;
+  fechaFinMaxNew: DateTime;
 }
 
 interface RequisitosConvocatoria {
@@ -75,6 +75,10 @@ export class ProyectoEquipoFragment extends Fragment {
 
   requisitosConvocatoria: RequisitosConvocatoria;
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     key: number,
@@ -82,15 +86,16 @@ export class ProyectoEquipoFragment extends Fragment {
     private readonly solicitanteRefSolicitud: string,
     private readonly estadoProyecto: Estado,
     private readonly solicitudFormularioSolicitud: FormularioSolicitud,
-    private proyectoService: ProyectoService,
-    private proyectoEquipoService: ProyectoEquipoService,
-    private personaService: PersonaService,
-    private convocatoriaService: ConvocatoriaService,
-    private datosAcademicosService: DatosAcademicosService,
-    private convocatoriaRequisitoIpService: ConvocatoriaRequisitoIPService,
-    private vinculacionService: VinculacionService,
-    private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    private datosPersonalesService: DatosPersonalesService,
+    private readonly proyectoService: ProyectoService,
+    private readonly proyectoEquipoService: ProyectoEquipoService,
+    private readonly personaService: PersonaService,
+    private readonly convocatoriaService: ConvocatoriaService,
+    private readonly datosAcademicosService: DatosAcademicosService,
+    private readonly convocatoriaRequisitoIpService: ConvocatoriaRequisitoIPService,
+    private readonly vinculacionService: VinculacionService,
+    private readonly convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
+    private readonly datosPersonalesService: DatosPersonalesService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -110,7 +115,8 @@ export class ProyectoEquipoFragment extends Fragment {
       this.subscriptions.push(
         this.proyectoService.findAllProyectoEquipo(id).pipe(
           switchMap(result => {
-            if (!this.convocatoriaId) {
+            // En modo solo lectura no se validan requisitos de convocatoria
+            if (this.readonly || !this.convocatoriaId) {
               return of(result);
             }
 
@@ -141,6 +147,10 @@ export class ProyectoEquipoFragment extends Fragment {
               } as IProyectoEquipoListado));
           }),
           switchMap(result => {
+            if (this.readonly) {
+              return of(result);
+            }
+
             return from(result).pipe(
               mergeMap(element => {
                 return this.validateRequisitosConvocatoria(element.value.proyectoEquipo, this.convocatoriaId).pipe(
@@ -180,7 +190,7 @@ export class ProyectoEquipoFragment extends Fragment {
                 miembro.value.proyectoEquipo.fechaFin = fechaFinMaxUpdate.fechaFinMaxNew;
                 this.setChanges(true);
               }
-            })
+            });
           })
         );
       }

@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPaqueteTrabajoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoPaqueteTrabajoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,11 +44,14 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoRepository proyectoRepository;
 
+  @Mock
+  private ProyectoHelper proyectoHelper;
+
   private ProyectoPaqueteTrabajoService service;
 
   @BeforeEach
   void setUp() {
-    service = new ProyectoPaqueteTrabajoServiceImpl(repository, proyectoRepository);
+    service = new ProyectoPaqueteTrabajoServiceImpl(repository, proyectoRepository, proyectoHelper);
   }
 
   @Test

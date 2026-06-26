@@ -64,7 +64,7 @@ export class ProyectoProrrogaDataResolver extends SgiResolverResolver<IProyectoP
   }
 
   private isReadonly(proyectoProrrogaId: number, proyectoData: IProyectoData, proyectoProrrogas: IProyectoProrroga[]): boolean {
-    if (proyectoData.readonly) {
+    if (proyectoData.readonly || proyectoData.isAccessingAsInvestigador) {
       return true;
     }
     if (!proyectoProrrogaId || !proyectoProrrogas.length) {

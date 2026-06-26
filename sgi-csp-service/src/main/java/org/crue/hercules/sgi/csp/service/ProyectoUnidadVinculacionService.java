@@ -52,7 +52,7 @@ public class ProyectoUnidadVinculacionService {
         proyectoId, query, SgiLogUtils.pageable(pageable));
 
     AssertHelper.idNotNull(proyectoId, Proyecto.class);
-    proyectoHelper.checkCanAccessProyecto(proyectoId);
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
 
     Specification<ProyectoUnidadVinculacion> specs = ProyectoUnidadVinculacionSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));

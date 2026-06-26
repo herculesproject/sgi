@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -21,6 +20,9 @@ import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoResponsableEconomicoSpecifications;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,20 +44,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 @Validated
+@RequiredArgsConstructor
 public class ProyectoResponsableEconomicoService {
 
   private final Validator validator;
 
   private final ProyectoResponsableEconomicoRepository repository;
   private final ProyectoRepository proyectoRepository;
-
-  public ProyectoResponsableEconomicoService(Validator validator,
-      ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository,
-      ProyectoRepository proyectoRepository) {
-    this.validator = validator;
-    this.repository = proyectoResponsableEconomicoRepository;
-    this.proyectoRepository = proyectoRepository;
-  }
+  private final ProyectoHelper proyectoHelper;
 
   /**
    * Actualiza la lista de {@link ProyectoEquipo} del {@link Proyecto}, elimina
@@ -77,7 +74,7 @@ public class ProyectoResponsableEconomicoService {
     List<ProyectoResponsableEconomico> responsablesEconomicosBD = repository.findByProyectoId(proyectoId);
 
     // ProyectoResponsableEconomico NO encontrados
-    responsablesEconomicos.stream().forEach(responsableEconomico -> {
+    responsablesEconomicos.forEach(responsableEconomico -> {
       if (responsableEconomico.getId() != null && responsablesEconomicosBD.stream()
           .map(ProyectoResponsableEconomico::getId).noneMatch(id -> id.equals(responsableEconomico.getId()))) {
         throw new ProyectoResponsableEconomicoNotFoundException(responsableEconomico.getId());
@@ -88,7 +85,7 @@ public class ProyectoResponsableEconomicoService {
     List<ProyectoResponsableEconomico> responsablesEconomicosEliminar = responsablesEconomicosBD
         .stream().filter(responsableEconomico -> responsablesEconomicos.stream()
             .map(ProyectoResponsableEconomico::getId).noneMatch(id -> id.equals(responsableEconomico.getId())))
-        .collect(Collectors.toList());
+        .toList();
 
     if (!responsablesEconomicosEliminar.isEmpty()) {
       repository.deleteAll(responsablesEconomicosEliminar);
@@ -174,13 +171,18 @@ public class ProyectoResponsableEconomicoService {
    *         {@link Proyecto} paginadas.
    */
   public Page<ProyectoResponsableEconomico> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
-    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    log.debug("findAllByProyecto - proyectoId: {}, query: {}, paging: {}", proyectoId, query,
+        SgiLogUtils.pageable(pageable));
+    AssertHelper.idNotNull(proyectoId, Proyecto.class);
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
     Specification<ProyectoResponsableEconomico> specs = ProyectoResponsableEconomicoSpecifications
         .byProyectoId(proyectoId).and(SgiRSQLJPASupport.toSpecification(query));
 
-    Page<ProyectoResponsableEconomico> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
-    return returnValue;
+    Page<ProyectoResponsableEconomico> page = repository.findAll(specs, pageable);
+    log.debug("findAllByProyecto - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
   /**

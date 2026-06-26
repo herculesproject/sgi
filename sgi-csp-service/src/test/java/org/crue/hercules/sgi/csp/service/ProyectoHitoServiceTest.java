@@ -42,6 +42,7 @@ import org.crue.hercules.sgi.csp.service.impl.ProyectoHitoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -81,6 +82,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   private ProyectoEquipoRepository proyectoEquipoReposiotry;
   @Mock
   private TipoHitoRepository tipoHitoRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoHitoService service;
 
@@ -94,7 +97,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         proyectoHitoAvisoRepository,
         personaService,
         proyectoEquipoReposiotry,
-        tipoHitoRepository);
+        tipoHitoRepository,
+        proyectoHelper);
   }
 
   @Test
@@ -860,7 +864,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
    */
   private EstadoProyecto generarMockEstadoProyecto(Long id) {
     Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
-    estadoProyectoComentario.add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", id)));
+    estadoProyectoComentario
+        .add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", id)));
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);

@@ -7,9 +7,11 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoSeguimientoDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +32,14 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
   private static final String MSG_KEY_DOCUMENTO_REF = "documentoRef";
 
   private final ProyectoPeriodoSeguimientoDocumentoRepository repository;
+  private final ProyectoPeriodoSeguimientoRepository proyectoPeriodoSeguimientoRepository;
+  private final ProyectoHelper proyectoHelper;
 
-  public ProyectoPeriodoSeguimientoDocumentoServiceImpl(ProyectoPeriodoSeguimientoDocumentoRepository repository) {
+  public ProyectoPeriodoSeguimientoDocumentoServiceImpl(ProyectoPeriodoSeguimientoDocumentoRepository repository,
+      ProyectoPeriodoSeguimientoRepository proyectoPeriodoSeguimientoRepository, ProyectoHelper proyectoHelper) {
     this.repository = repository;
+    this.proyectoPeriodoSeguimientoRepository = proyectoPeriodoSeguimientoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -158,6 +165,10 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
   public Page<ProyectoPeriodoSeguimientoDocumento> findAllByProyectoPeriodoSeguimiento(
       Long proyectoPeriodoSeguimientoId, String query, Pageable paging) {
     log.debug("findAllByProyectoPeriodoSeguimiento(Long solicitudId, String query, Pageable paging) - start");
+
+    proyectoPeriodoSeguimientoRepository.findById(proyectoPeriodoSeguimientoId)
+        .ifPresent(periodo -> proyectoHelper.checkCanAccessProyecto(periodo.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
 
     Specification<ProyectoPeriodoSeguimientoDocumento> specs = ProyectoPeriodoSeguimientoDocumentoSpecifications
         .byProyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoId).and(SgiRSQLJPASupport.toSpecification(query));

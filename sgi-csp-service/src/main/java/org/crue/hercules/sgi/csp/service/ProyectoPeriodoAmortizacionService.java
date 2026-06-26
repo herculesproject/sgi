@@ -3,9 +3,13 @@ package org.crue.hercules.sgi.csp.service;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoAmortizacionNotFoundException;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoAmortizacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoAmortizacionRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoAmortizacionSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -26,9 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProyectoPeriodoAmortizacionService {
 
   private final ProyectoPeriodoAmortizacionRepository repository;
+  private final ProyectoHelper proyectoHelper;
 
-  public ProyectoPeriodoAmortizacionService(ProyectoPeriodoAmortizacionRepository repository) {
+  public ProyectoPeriodoAmortizacionService(ProyectoPeriodoAmortizacionRepository repository,
+      ProyectoHelper proyectoHelper) {
     this.repository = repository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -153,6 +160,31 @@ public class ProyectoPeriodoAmortizacionService {
     Page<ProyectoPeriodoAmortizacion> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(String query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link ProyectoPeriodoAmortizacion} del {@link Proyecto},
+   * controlando el acceso a nivel de {@link Proyecto} (gestor o investigador).
+   *
+   * @param proyectoId el id del {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ProyectoPeriodoAmortizacion} paginadas.
+   */
+  public Page<ProyectoPeriodoAmortizacion> findAllByProyectoId(Long proyectoId, String query, Pageable pageable) {
+    log.debug("findAllByProyectoId - proyectoId: {}, query: {}, paging: {}", proyectoId, query,
+        SgiLogUtils.pageable(pageable));
+
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
+    Specification<ProyectoPeriodoAmortizacion> specs = ProyectoPeriodoAmortizacionSpecifications
+        .byProyectoId(proyectoId)
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    Page<ProyectoPeriodoAmortizacion> page = repository.findAll(specs, pageable);
+    log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
 }

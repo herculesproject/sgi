@@ -8,10 +8,7 @@ import {
   mixinCreate,
   mixinFindAll,
   mixinUpdate,
-  RSQLSgiRestFilter,
   SgiRestBaseService,
-  SgiRestFilterOperator,
-  SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
 } from '@herculesproject/framework/http';
@@ -65,11 +62,11 @@ export class ProyectoPeriodoAmortizacionService
   }
 
   findByproyectoId(proyectoId: number): Observable<SgiRestListResult<IProyectoPeriodoAmortizacion>> {
-    const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('proyectoAnualidad.proyecto.id', SgiRestFilterOperator.EQUALS, proyectoId.toString())
-    };
-
-    return this.findAll(options);
+    return this.find<IProyectoPeriodoAmortizacionResponse, IProyectoPeriodoAmortizacion>(
+      `${this.endpointUrl}/proyecto/${proyectoId}`,
+      undefined,
+      PROYECTO_PERIODO_AMORTIZACION_RESPONSE_CONVERTER
+    );
   }
 
   /**

@@ -70,14 +70,20 @@
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
             <button color="primary" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
               [routerLink]="[wrapper.value.id]"
-              *ngIf="lastProyectoProrroga.id === wrapper.value.id && !actionService.readonly">
+              *ngIf="lastProyectoProrroga.id === wrapper.value.id && !formPart.isReadonly">
               <mat-icon>border_color</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="formPart.isReadonly">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
+              [routerLink]="[wrapper.value.id]">
+              <mat-icon>visibility</mat-icon>
             </button>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
             <button color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
               (click)="deleteProyectoProrroga(wrapper)"
-              *ngIf="lastProyectoProrroga.id === wrapper.value.id && !actionService.readonly">
+              *ngIf="lastProyectoProrroga.id === wrapper.value.id && !formPart.isReadonly">
               <mat-icon>highlight_off</mat-icon>
             </button>
           </ng-container>
@@ -89,8 +95,8 @@
   </div>
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
-      <button color="three" [disabled]="!isProyectoEstadoConcedido()" mat-button mat-raised-button
-        [routerLink]="[ROUTE_NAMES.NEW]">
+      <button color="three" *ngIf="!formPart.isReadonly" [disabled]="!isProyectoEstadoConcedido()" mat-button
+        mat-raised-button [routerLink]="[ROUTE_NAMES.NEW]">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

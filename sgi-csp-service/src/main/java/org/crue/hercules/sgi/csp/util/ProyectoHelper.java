@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.util;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
@@ -35,18 +36,56 @@ public class ProyectoHelper extends AuthorityHelper {
   private final ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
 
   /**
-   * Comprueba que el proyecto pertenece a una unidad de gestión que el usuario
-   * actual pueda gestionar.
-   * 
-   * @param proyecto el {@link Proyecto} sobre el que realizar las comprobaciones
+   * Restricción de acceso aplicada a los investigadores sobre un
+   * {@link Proyecto}.
    */
-  public void checkCanAccessProyecto(Proyecto proyecto) {
+  public enum InvestigadorAccessConstraint {
+    /** Sin restricción adicional: cualquier investigador con autoridad de vista. */
+    NONE,
+    /** Investigador con rol principal y participación vigente en el equipo. */
+    ROL_PRINCIPAL_ACTUAL,
+    /**
+     * Investigador con rol principal y participación vigente en el equipo, para la
+     * vista ampliada.
+     */
+    ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA
+  }
+
+  /**
+   * Comprueba que el usuario actual puede acceder al {@link Proyecto} como
+   * usuario de gestión o como investigador.
+   *
+   * @param proyecto         el {@link Proyecto} sobre el que realizar las
+   *                         comprobaciones
+   * @param accessConstraint restricción de acceso aplicada a los investigadores
+   */
+  public void checkCanAccessProyecto(Proyecto proyecto, InvestigadorAccessConstraint accessConstraint) {
     if (!hasUserAuthorityViewMod()
         && !hasUserAuthorityViewUO(proyecto)
-        && !(hasUserAuthorityViewInvestigador()
-            && !checkUserPresentInEquipos(proyecto.getId())
-            && !checkUserIsResponsableEconomico(proyecto.getId()))) {
+        && !hasUserAccessAsInvestigador(proyecto.getId(), accessConstraint)) {
       throw new UserNotAuthorizedToAccessProyectoException();
+    }
+  }
+
+  /**
+   * Comprueba si el usuario actual tiene acceso al {@link Proyecto} como
+   * investigador, según la restricción de acceso indicada.
+   *
+   * @param proyectoId       identificador del {@link Proyecto}
+   * @param accessConstraint restricción de acceso aplicada a los investigadores
+   * @return {@code true} si el investigador tiene acceso con esa restricción
+   */
+  private boolean hasUserAccessAsInvestigador(Long proyectoId, InvestigadorAccessConstraint accessConstraint) {
+    switch (accessConstraint) {
+      case NONE:
+        return hasUserAuthorityViewInvestigador();
+      case ROL_PRINCIPAL_ACTUAL:
+        return isInvestigadorPrincipalActual(proyectoId);
+      case ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA:
+        return hasUserAuthorityViewInvestigador()
+            && (checkUserPresentInEquipos(proyectoId) || checkUserIsResponsableEconomico(proyectoId));
+      default:
+        return false;
     }
   }
 
@@ -59,15 +98,22 @@ public class ProyectoHelper extends AuthorityHelper {
         new String[] {
             CSP_PRO_V,
             CSP_PRO_E,
-            CSP_PRO_MOD_V,
-            CSP_PRO_INV_VR
+            CSP_PRO_MOD_V
         },
         proyecto.getUnidadGestionRef());
   }
 
-  public void checkCanAccessProyecto(Long proyectoId) {
+  /**
+   * Variante de
+   * {@link #checkCanAccessProyecto(Proyecto, InvestigadorAccessConstraint)}
+   * que recupera el {@link Proyecto} a partir de su identificador.
+   *
+   * @param proyectoId       identificador del {@link Proyecto}
+   * @param accessConstraint restricción de acceso aplicada a los investigadores
+   */
+  public void checkCanAccessProyecto(Long proyectoId, InvestigadorAccessConstraint accessConstraint) {
     checkCanAccessProyecto(
-        repository.findById(proyectoId).orElseThrow(() -> new ProyectoNotFoundException(proyectoId)));
+        repository.findById(proyectoId).orElseThrow(() -> new ProyectoNotFoundException(proyectoId)), accessConstraint);
   }
 
   public void checkCanCreateProyecto(Proyecto proyecto) {
@@ -93,23 +139,32 @@ public class ProyectoHelper extends AuthorityHelper {
   }
 
   public boolean checkUserIsResponsableEconomico(Long proyectoId) {
-    Long numeroResponsableEconomico = this.proyectoResponsableEconomicoRepository
+    return this.proyectoResponsableEconomicoRepository
         .count(ProyectoResponsableEconomicoSpecifications.byProyectoId(proyectoId)
-            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(getAuthenticationPersonaRef())));
-    return numeroResponsableEconomico > 0;
+            .and(ProyectoResponsableEconomicoSpecifications.byPersonaRef(getAuthenticationPersonaRef()))) > 0;
   }
 
-  public boolean checkUserPresentInEquipos(Long proyectoId) {
-    Long numeroProyectoEquipo = this.proyectoEquipoRepository
+  protected boolean checkUserPresentInEquipos(Long proyectoId) {
+    return this.proyectoEquipoRepository
         .count(ProyectoEquipoSpecifications.byProyectoId(proyectoId)
             .and(ProyectoEquipoSpecifications.byPersonaRef(getAuthenticationPersonaRef())
-                .and(ProyectoEquipoSpecifications.byRolPrincipal(true))));
-    return numeroProyectoEquipo > 0;
+                .and(ProyectoEquipoSpecifications.byRolPrincipal(true)))) > 0;
   }
 
   public boolean checkIfUserIsInvestigadorPrincipal(Long proyectoId) {
     return this.proyectoEquipoRepository.existsByProyectoIdAndPersonaRefAndRolProyectoRolPrincipalTrue(proyectoId,
         getAuthenticationPersonaRef());
+  }
+
+  private boolean isInvestigadorPrincipalActual(Long proyectoId) {
+    if (!hasUserAuthorityViewInvestigador()) {
+      return false;
+    }
+    return proyectoEquipoRepository.count(
+        ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+            .and(ProyectoEquipoSpecifications.byPersonaRef(getAuthenticationPersonaRef()))
+            .and(ProyectoEquipoSpecifications.byRolPrincipal(true))
+            .and(ProyectoEquipoSpecifications.byFechaActual(Instant.now()))) > 0;
   }
 
   /**

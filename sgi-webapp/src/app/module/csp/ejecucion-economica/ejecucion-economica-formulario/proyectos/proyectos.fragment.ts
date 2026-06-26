@@ -5,7 +5,7 @@ import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { map, mergeMap, toArray } from 'rxjs/operators';
+import { catchError, map, mergeMap, toArray } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 
 export interface IRelacionEjecucionEconomicaWithIva extends IRelacionEjecucionEconomicaWithResponsables {
@@ -26,12 +26,17 @@ export class ProyectosFragment extends Fragment {
     return this.config.sectorIvaSgeEnabled ?? false;
   }
 
+  get isInvestigador(): boolean {
+    return this.investigador;
+  }
+
   constructor(
     key: number,
     private proyectoSge: IProyectoSge,
     private relaciones: IRelacionEjecucionEconomicaWithResponsables[],
     private proyectoService: ProyectoService,
-    private readonly config: IConfiguracion
+    private readonly config: IConfiguracion,
+    private readonly investigador: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -40,7 +45,8 @@ export class ProyectosFragment extends Fragment {
   protected onInitialize(): void {
     from(this.relaciones as IRelacionEjecucionEconomicaWithIva[]).pipe(
       mergeMap(relacion => {
-        if (relacion.tipoEntidad === TipoEntidad.PROYECTO) {
+        if (relacion.tipoEntidad === TipoEntidad.PROYECTO
+          && (!this.investigador || relacion.accesibleByInvestigador)) {
           return this.proyectoService.findById(relacion.id).pipe(
             map(proyecto => {
               relacion.iva = proyecto.iva?.iva;
@@ -48,8 +54,9 @@ export class ProyectosFragment extends Fragment {
               relacion.causaExencion = proyecto.causaExencion;
               relacion.sectorIva = this.proyectoSge.sectorIva;
               return relacion;
-            })
-          )
+            }),
+            catchError(() => of(relacion))
+          );
         }
 
         return of(relacion);

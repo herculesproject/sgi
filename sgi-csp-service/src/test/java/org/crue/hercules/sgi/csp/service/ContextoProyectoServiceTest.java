@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.ContextoProyectoIntereses;
 import org.crue.hercules.sgi.csp.repository.ContextoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ContextoProyectoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,12 +31,14 @@ class ContextoProyectoServiceTest extends BaseServiceTest {
   private ContextoProyectoRepository repository;
   @Mock
   private ProyectoRepository proyectoRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ContextoProyectoService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new ContextoProyectoServiceImpl(repository, proyectoRepository);
+    service = new ContextoProyectoServiceImpl(repository, proyectoRepository, proyectoHelper);
   }
 
   @Test

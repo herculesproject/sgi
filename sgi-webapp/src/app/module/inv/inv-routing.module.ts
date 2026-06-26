@@ -21,6 +21,7 @@ const MSG_PROYECTOS_TITLE = marker('menu.principal.inv.proyectos');
 const MSG_SOLICITUDES_TITLE = marker('menu.principal.inv.solicitudes');
 const MSG_AUTORIZACIONES_TITLE = marker('menu.principal.inv.autorizaciones');
 const MSG_GRUPO_TITLE = marker('csp.grupo');
+const MSG_EJECUCION_ECONOMICA_TITLE = marker('inv.ejecucion-economica.listado.titulo');
 const MSG_PUBLICACION_TITLE = marker('prc.publicacion');
 const MSG_CONGRESO_TITLE = marker('prc.congreso.title');
 const MSG_COMITE_EDITORIAL_TITLE = marker('prc.comite-editorial');
@@ -188,6 +189,19 @@ const routes: SgiRoutes = [
           title: MSG_GRUPO_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAuthorityForAnyUO: 'CSP-GIN-INV-VR',
+          module: Module.INV
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.EJECUCION_ECONOMICA,
+        loadChildren: () =>
+          import('../csp/ejecucion-economica/ejecucion-economica-inv.module').then(
+            (m) => m.EjecucionEconomicaInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_EJECUCION_ECONOMICA_TITLE,
+          hasAuthorityForAnyUO: 'CSP-EJEC-INV-VR',
           module: Module.INV
         }
       },

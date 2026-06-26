@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -49,11 +50,13 @@ public class ProyectoSocioEquipoServiceImpl implements ProyectoSocioEquipoServic
   private final ProyectoSocioEquipoRepository repository;
 
   private final ProyectoSocioRepository proyectoSocioRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoSocioEquipoServiceImpl(ProyectoSocioEquipoRepository repository,
-      ProyectoSocioRepository proyectoSocioRepository) {
+      ProyectoSocioRepository proyectoSocioRepository, ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.proyectoSocioRepository = proyectoSocioRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -186,6 +189,10 @@ public class ProyectoSocioEquipoServiceImpl implements ProyectoSocioEquipoServic
   @Override
   public Page<ProyectoSocioEquipo> findAllByProyectoSocio(Long proyectoSocioId, String query, Pageable paging) {
     log.debug("findAllByProyectoSocio(Long proyectoSocioId, String query, Pageable paging) - start");
+
+    proyectoSocioRepository.findById(proyectoSocioId)
+        .ifPresent(socio -> proyectoHelper.checkCanAccessProyecto(socio.getProyectoId(),
+            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
 
     Specification<ProyectoSocioEquipo> specs = ProyectoSocioEquipoSpecifications.byProyectoSocioId(proyectoSocioId)
         .and(SgiRSQLJPASupport.toSpecification(query));

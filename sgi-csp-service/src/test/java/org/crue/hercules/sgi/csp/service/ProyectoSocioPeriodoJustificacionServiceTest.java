@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDoc
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioPeriodoJustificacionServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,13 +52,15 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
   private ProyectoSocioPeriodoJustificacionDocumentoRepository proyectoSocioPeriodoJustificacionDocumentoRepository;
   @Mock
   private SgdocService sgdocService;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoSocioPeriodoJustificacionService service;
 
   @BeforeEach
   void setUp() throws Exception {
     service = new ProyectoSocioPeriodoJustificacionServiceImpl(repository, proyectoSocioRepository,
-        proyectoSocioPeriodoJustificacionDocumentoRepository, proyectoRepository, sgdocService);
+        proyectoSocioPeriodoJustificacionDocumentoRepository, proyectoRepository, sgdocService, proyectoHelper);
   }
 
   @Test

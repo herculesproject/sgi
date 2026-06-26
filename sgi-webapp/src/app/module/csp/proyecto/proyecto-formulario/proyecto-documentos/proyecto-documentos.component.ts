@@ -142,7 +142,7 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
       visible: new FormControl('')
     }));
 
-    if (this.actionService.readonly) {
+    if (this.formPart.isReadonly) {
       this.group.form.disable();
     }
 

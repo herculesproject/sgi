@@ -20,15 +20,19 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment {
   entidadesFinanciadorasSincronizadas$ = new BehaviorSubject<StatusWrapper<IEntidadFinanciadora>[]>([]);
   private entidadesEliminadas: StatusWrapper<IEntidadFinanciadora>[] = [];
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     public readonly solicitudId: number,
-    private proyectoService: ProyectoService,
-    private proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
-    private empresaService: EmpresaService,
-    private solicitudServie: SolicitudService,
-    public readonly: boolean
+    private readonly proyectoService: ProyectoService,
+    private readonly proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
+    private readonly empresaService: EmpresaService,
+    private readonly solicitudServie: SolicitudService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -88,10 +92,12 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment {
     );
   }
 
-  private existsSolicitudProyectoPresupuesto(entidades: StatusWrapper<IEntidadFinanciadora>[]): Observable<StatusWrapper<IEntidadFinanciadora>[]> {
+  private existsSolicitudProyectoPresupuesto(
+    entidades: StatusWrapper<IEntidadFinanciadora>[]
+  ): Observable<StatusWrapper<IEntidadFinanciadora>[]> {
     return from(entidades).pipe(
       concatMap(entidad => {
-        if (!!!this.solicitudId) {
+        if (!this.solicitudId) {
           entidad.value.hasPresupuesto = false;
           return of(entidad);
         }
@@ -104,7 +110,7 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment {
             entidad.value.hasPresupuesto = exists;
             return entidad;
           })
-        )
+        );
       }),
       toArray()
     );

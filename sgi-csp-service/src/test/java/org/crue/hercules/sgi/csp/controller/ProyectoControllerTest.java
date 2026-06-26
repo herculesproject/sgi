@@ -51,6 +51,11 @@ import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRequerimiento;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
 import org.crue.hercules.sgi.csp.service.AnualidadIngresoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaDocumentoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoProyectoService;
 import org.crue.hercules.sgi.csp.service.GastoProyectoService;
@@ -191,6 +196,21 @@ class ProyectoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConvocatoriaService convocatoriaService;
+
+  @MockBean
+  private ConvocatoriaDocumentoService convocatoriaDocumentoService;
+
+  @MockBean
+  private ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
+
+  @MockBean
+  private ConvocatoriaPartidaService convocatoriaPartidaService;
+
+  @MockBean
+  private ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
+
+  @MockBean
+  private ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
 
   @MockBean
   private AnualidadIngresoService anualidadIngresoService;
@@ -1245,12 +1265,6 @@ class ProyectoControllerTest extends BaseControllerTest {
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
-
-  /**
-   * 
-   * PROYECTO PRÓRROGA
-   * 
-   */
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })

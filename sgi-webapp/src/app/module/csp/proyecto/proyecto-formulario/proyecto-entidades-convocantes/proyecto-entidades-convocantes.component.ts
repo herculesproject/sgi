@@ -26,8 +26,8 @@ const PROYECTO_ENTIDAD_CONVOCANTE_KEY = marker('csp.proyecto-entidad-convocante'
   styleUrls: ['./proyecto-entidades-convocantes.component.scss']
 })
 export class ProyectoEntidadesConvocantesComponent extends FragmentComponent implements OnInit, OnDestroy {
-  proyectoEntidadesConvocantesFragment: ProyectoEntidadesConvocantesFragment;
-  private subscriptions: Subscription[] = [];
+  formPart: ProyectoEntidadesConvocantesFragment;
+  private readonly subscriptions: Subscription[] = [];
 
   columns = ['nombre', 'cif', 'plan', 'programaConvocatoria', 'programa', 'acciones'];
   elementsPage = [5, 10, 25, 100];
@@ -42,14 +42,14 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
 
   constructor(
     public actionService: ProyectoActionService,
-    private matDialog: MatDialog,
-    private dialogService: DialogService,
+    private readonly matDialog: MatDialog,
+    private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
     private readonly languageService: LanguageService,
-    private proyectoEntidadConvocantePlanPipe: ProyectoEntidadConvocantePlanPipe
+    private readonly proyectoEntidadConvocantePlanPipe: ProyectoEntidadConvocantePlanPipe
   ) {
     super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService, translate);
-    this.proyectoEntidadesConvocantesFragment = this.fragment as ProyectoEntidadesConvocantesFragment;
+    this.formPart = this.fragment as ProyectoEntidadesConvocantesFragment;
   }
 
   ngOnInit(): void {
@@ -72,7 +72,7 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
       }
     };
     this.dataSource.sort = this.sort;
-    this.subscriptions.push(this.proyectoEntidadesConvocantesFragment.proyectoEntidadConvocantes$.subscribe(
+    this.subscriptions.push(this.formPart.proyectoEntidadConvocantes$.subscribe(
       (data) => {
         this.dataSource.data = data;
       })
@@ -109,7 +109,7 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
         .filter(convocanteData =>
           !(convocanteData?.entidad?.id === value?.entidad?.id
             && convocanteData?.programa?.id === value?.programa?.id)),
-      readonly: this.actionService.readonly
+      readonly: this.formPart.isReadonly
     };
     const config = {
       data
@@ -118,9 +118,9 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
     dialogRef.afterClosed().subscribe((entidadConvocante: ProyectoEntidadConvocanteModalData) => {
       if (entidadConvocante) {
         if (value) {
-          this.proyectoEntidadesConvocantesFragment.updateProyectoEntidadConvocante(entidadConvocante.proyectoEntidadConvocante);
+          this.formPart.updateProyectoEntidadConvocante(entidadConvocante.proyectoEntidadConvocante);
         } else {
-          this.proyectoEntidadesConvocantesFragment.addProyectoEntidadConvocante(entidadConvocante.proyectoEntidadConvocante);
+          this.formPart.addProyectoEntidadConvocante(entidadConvocante.proyectoEntidadConvocante);
         }
       }
     });
@@ -131,7 +131,7 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
       this.dialogService.showConfirmation(this.textoDelete, this.msgParamEntity).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
-            this.proyectoEntidadesConvocantesFragment.deleteProyectoEntidadConvocante(data);
+            this.formPart.deleteProyectoEntidadConvocante(data);
           }
         }
       )

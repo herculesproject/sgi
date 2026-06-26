@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.EstadoProyectoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -14,12 +15,14 @@ class EstadoProyectoServiceTest extends BaseServiceTest {
 
   @Mock
   private EstadoProyectoRepository repository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private EstadoProyectoService service;
 
   @BeforeEach
   void setup() {
-    this.service = new EstadoProyectoServiceImpl(repository);
+    this.service = new EstadoProyectoServiceImpl(repository, proyectoHelper);
   }
 
   @Test

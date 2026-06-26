@@ -6,8 +6,8 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
@@ -124,15 +124,10 @@ public class ProyectoSocioController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
-    log.debug("exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    log.debug("exists - id: {}", id);
+    return service.existsById(id) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -142,12 +137,10 @@ public class ProyectoSocioController {
    * @return {@link ProyectoSocio} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ProyectoSocio findById(@PathVariable Long id) {
-    log.debug("findById(Long id) - start");
-    ProyectoSocio returnValue = service.findById(id);
-    log.debug("findById(Long id) - end");
-    return returnValue;
+    log.debug("findById - id: {}", id);
+    return service.findById(id);
   }
 
   /**
@@ -160,7 +153,7 @@ public class ProyectoSocioController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/proyectosocioequipos")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoSocioEquipo>> findAllProyectoSocioEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocioEquipo(Long id, String query, Pageable paging) - start");
@@ -185,7 +178,7 @@ public class ProyectoSocioController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/proyectosocioperiodopagos")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoSocioPeriodoPago>> findAllProyectoSocioPeriodoPago(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocioPeriodoPago(Long id, String query, Pageable paging) - start");
@@ -211,7 +204,7 @@ public class ProyectoSocioController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/proyectosocioperiodojustificaciones")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E','CSP-PRO-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E','CSP-PRO-V','CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoSocioPeriodoJustificacion>> findAllProyectoSocioPeriodoJustificaciones(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {

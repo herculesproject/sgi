@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,6 +57,19 @@ public interface ConvocatoriaDocumentoService {
    */
 
   Page<ConvocatoriaDocumento> findAllByConvocatoria(Long id, String query, Pageable paging);
+
+  /**
+   * Obtiene los {@link ConvocatoriaDocumento} públicos de la {@link Convocatoria}
+   * asociada al {@link Proyecto} indicado, comprobando que el usuario tiene
+   * acceso al {@link Proyecto}.
+   *
+   * @param proyectoId id del {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param paging     la información de la paginación.
+   * @return la lista de entidades {@link ConvocatoriaDocumento} públicas
+   *         paginadas y/o filtradas.
+   */
+  Page<ConvocatoriaDocumento> findAllByProyectoId(Long proyectoId, String query, Pageable paging);
 
   /**
    * Comprueba si existe algún {@link ConvocatoriaDocumento} relacionado con el Id

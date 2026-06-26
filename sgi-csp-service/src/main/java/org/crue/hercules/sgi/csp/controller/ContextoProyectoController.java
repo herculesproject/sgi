@@ -5,7 +5,7 @@ import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +60,7 @@ public class ContextoProyectoController {
    * Actualiza el {@link ContextoProyecto} con el id indicado.
    * 
    * @param contextoProyecto {@link ContextoProyecto} a actualizar.
-   * @param id               identificador de la {@link Convocatoria} a
+   * @param id               identificador del {@link Proyecto} a
    *                         actualizar.
    * @return {@link ContextoProyecto} actualizado.
    */
@@ -76,24 +76,19 @@ public class ContextoProyectoController {
   }
 
   /**
-   * Devuelve el {@link ContextoProyecto} de la {@link Convocatoria}.
+   * Devuelve el {@link ContextoProyecto} del {@link Proyecto}.
    * 
-   * @param id Identificador de la {@link Convocatoria}.
+   * @param id Identificador de la {@link Proyecto}.
    * @return el {@link ContextoProyecto}
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<ContextoProyecto> findByProyecto(@PathVariable Long id) {
-    log.debug("ContextoProyecto findByProyecto(Long id) - start");
+    log.debug("findByProyecto - id: {}", id);
     ContextoProyecto returnValue = service.findByProyecto(id);
 
-    if (returnValue == null) {
-      log.debug("ContextoProyecto findByProyecto(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("ContextoProyecto findByProyecto(Long id) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+    return returnValue == null ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
 }

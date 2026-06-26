@@ -6,8 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/rel/relacion';
+import { TipoEntidad, TIPO_ENTIDAD_MAP } from '@core/models/rel/relacion';
 import { DialogService } from '@core/services/dialog.service';
 import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -27,7 +26,7 @@ const PROYECTO_RELACION_KEY = marker('csp.proyecto-relacion');
   styleUrls: ['./proyecto-relaciones.component.scss']
 })
 export class ProyectoRelacionesComponent extends FragmentComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
+  private readonly subscriptions: Subscription[] = [];
   formPart: ProyectoRelacionFragment;
 
   displayedColumns = ['tipoEntidadRelacionada', 'entidadRelacionada', 'refEntidadConvocante', 'codigoSGE', 'observaciones', 'acciones'];
@@ -81,7 +80,7 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
           case 'tipoEntidadRelacionada':
             return wrapper.value.tipoEntidadRelacionada;
           case 'entidadRelacionada':
-            return this.languageService.getFieldValue(wrapper.value.entidadRelacionada.titulo as I18nFieldValue[]);
+            return this.languageService.getFieldValue(wrapper.value.entidadRelacionada.titulo);
           case 'refEntidadConvocante':
             return wrapper.value.entidadConvocanteRef;
           case 'codigoSGE':
@@ -147,7 +146,7 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
       .filter(element =>
         element.value.tipoEntidadRelacionada !== wrapper?.value.tipoEntidadRelacionada
         || element.value.entidadRelacionada.id !== wrapper?.value.entidadRelacionada?.id)
-      .map(element => element.value)
+      .map(element => element.value);
   }
 
   isRelatedEntityReady(wrapper: StatusWrapper<IProyectoRelacionTableData>): boolean {

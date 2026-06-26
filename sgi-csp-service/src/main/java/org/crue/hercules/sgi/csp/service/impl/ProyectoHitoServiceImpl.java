@@ -36,8 +36,8 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -83,6 +83,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
   private final SgiApiSgpService personaService;
   private final ProyectoEquipoRepository proyectoEquipoReposiotry;
   private final TipoHitoRepository tipoHitoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   /**
    * Guarda la entidad {@link ProyectoHito}.
@@ -216,6 +217,8 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
   @Override
   public Page<ProyectoHito> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoHito> specs = ProyectoHitoSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

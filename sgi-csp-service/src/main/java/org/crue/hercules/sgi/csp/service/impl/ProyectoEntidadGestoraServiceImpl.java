@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoEntidadGestoraSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadGestoraService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +30,13 @@ public class ProyectoEntidadGestoraServiceImpl implements ProyectoEntidadGestora
 
   private final ProyectoEntidadGestoraRepository repository;
   private final ProyectoRepository proyectoRepository;
+  private final ProyectoHelper proyectoHelper;
 
   public ProyectoEntidadGestoraServiceImpl(ProyectoEntidadGestoraRepository repository,
-      ProyectoRepository proyectoRepository) {
+      ProyectoRepository proyectoRepository, ProyectoHelper proyectoHelper) {
     this.repository = repository;
     this.proyectoRepository = proyectoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -118,6 +121,7 @@ public class ProyectoEntidadGestoraServiceImpl implements ProyectoEntidadGestora
    */
   public Page<ProyectoEntidadGestora> findAllByProyecto(Long proyectoId, String query, Pageable pageable) {
     log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
+    proyectoHelper.checkCanAccessProyecto(proyectoId, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
     Specification<ProyectoEntidadGestora> specs = ProyectoEntidadGestoraSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 

@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacionObservaciones
 import org.crue.hercules.sgi.csp.repository.EstadoProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -60,6 +61,8 @@ class ProyectoPeriodoJustificacionServiceTest extends BaseServiceTest {
   private PersistenceUnitUtil persistenceUnitUtil;
   @MockBean
   private EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
+  @MockBean
+  private ProyectoHelper proyectoHelper;
 
   // This bean must be created by Spring so validations can be applied
   @Autowired

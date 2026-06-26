@@ -43,14 +43,20 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let plazo">
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button color="primary" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
-              *ngIf="!actionService.readonly" (click)="openModalPlazos(plazo)">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.edit' | translate}}" *ngIf="!formPart.isReadonly"
+              (click)="openModalPlazos(plazo)">
               <mat-icon>border_color</mat-icon>
             </button>
           </ng-container>
+          <ng-container *ngIf="formPart.isReadonly">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.view' | translate}}"
+              (click)="openModalPlazos(plazo)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-            <button color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
-              *ngIf="!actionService.readonly" (click)="deleteFase(plazo)">
+            <button color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!formPart.isReadonly"
+              (click)="deleteFase(plazo)">
               <mat-icon>highlight_off</mat-icon>
             </button>
           </ng-container>
@@ -68,8 +74,7 @@
 
   <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <div class="separation-button">
-      <button color="three" aria-label="Center Align" mat-raised-button *ngIf="!actionService.readonly"
-        (click)="openModalPlazos()">
+      <button color="three" mat-raised-button *ngIf="!formPart.isReadonly" (click)="openModalPlazos()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

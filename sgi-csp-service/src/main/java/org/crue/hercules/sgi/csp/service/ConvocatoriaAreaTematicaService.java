@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -57,5 +58,17 @@ public interface ConvocatoriaAreaTematicaService {
    *         {@link Convocatoria} paginadas.
    */
   Page<ConvocatoriaAreaTematica> findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable);
+
+  /**
+   * Obtiene las {@link ConvocatoriaAreaTematica} de la {@link Convocatoria}
+   * asociada al {@link Proyecto}, controlando el acceso a nivel de
+   * {@link Proyecto}.
+   *
+   * @param proyectoId el id del {@link Proyecto}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link ConvocatoriaAreaTematica} paginadas.
+   */
+  Page<ConvocatoriaAreaTematica> findAllByProyectoId(Long proyectoId, String query, Pageable pageable);
 
 }

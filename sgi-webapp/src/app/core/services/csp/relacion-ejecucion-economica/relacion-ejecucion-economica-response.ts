@@ -1,5 +1,5 @@
-import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
-import { TipoEntidad } from "@core/models/csp/relacion-ejecucion-economica";
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
+import { TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 
 export interface IRelacionEjecucionEconomicaResponse {
   id: number;
@@ -11,4 +11,5 @@ export interface IRelacionEjecucionEconomicaResponse {
   proyectoSgeRef: string;
   tipoEntidad: TipoEntidad;
   fechaFinDefinitiva: string;
+  accesibleByInvestigador?: boolean;
 }

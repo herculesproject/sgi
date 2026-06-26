@@ -18,7 +18,7 @@ import { IRelacionEjecucionEconomicaWithIva, ProyectosFragment } from './proyect
   styleUrls: ['./proyectos.component.scss']
 })
 export class ProyectosComponent extends FragmentComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
+  private readonly subscriptions: Subscription[] = [];
   formPart: ProyectosFragment;
 
   elementosPagina = [5, 10, 25, 100];
@@ -41,8 +41,8 @@ export class ProyectosComponent extends FragmentComponent implements OnInit, OnD
   }
 
   constructor(
-    private actionService: EjecucionEconomicaActionService,
-    private readonly translate: TranslateService,
+    actionService: EjecucionEconomicaActionService,
+    translate: TranslateService,
     private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.PROYECTOS, actionService, translate);
@@ -89,12 +89,15 @@ export class ProyectosComponent extends FragmentComponent implements OnInit, OnD
       'fechaFinDefinitiva',
       'ivaDeducible',
       'iva',
-      'causaExencion',
-      'acciones'
+      'causaExencion'
     ];
 
     if (this.formPart.isSectorIvaSgeEnabled) {
-      this.displayedColumns.splice(12, 0, 'sectorIva');
+      this.displayedColumns.push('sectorIva');
+    }
+
+    if (!this.formPart.isInvestigador) {
+      this.displayedColumns.push('acciones');
     }
   }
 

@@ -71,12 +71,10 @@ public class ProyectoSocioPeriodoJustificacionController {
    * @return {@link ProyectoSocioPeriodoJustificacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ProyectoSocioPeriodoJustificacion findById(@PathVariable Long id) {
-    log.debug("findById(Long id) - start");
-    ProyectoSocioPeriodoJustificacion returnValue = service.findById(id);
-    log.debug("findById(Long id) - end");
-    return returnValue;
+    log.debug("findById - id: {}", id);
+    return service.findById(id);
   }
 
   /**
@@ -87,15 +85,10 @@ public class ProyectoSocioPeriodoJustificacionController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
-    log.debug("exists(Long id) - start");
-    if (service.existsById(id)) {
-      log.debug("exists(Long id) - end");
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    log.debug("exists(Long id) - end");
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    log.debug("exists - id: {}", id);
+    return service.existsById(id) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -174,7 +167,7 @@ public class ProyectoSocioPeriodoJustificacionController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/proyectosocioperiodojustificaciondocumentos")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoSocioPeriodoJustificacionDocumento>> findAllProyectoSocioPeriodoJustificacion(
       @PathVariable Long id, @RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {

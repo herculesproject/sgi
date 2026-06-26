@@ -1,7 +1,6 @@
 <sgi-fragment title="{{'label.datos-generales' | translate}} - {{'csp.proyecto-contexto' | translate}}">
   <form [formGroup]="formGroup">
 
-
     <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
@@ -95,14 +94,14 @@
             <td mat-cell *matCellDef="let data">
               <!-- Botón Editar-->
               <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E', 'CSP-PRO-C']">
-                <button color="primary" mat-icon-button matTooltip="{{'csp.proyecto.select-area-tematica' | translate}}"
-                  (click)="openModal(data)">
+                <button *ngIf="!formPart.isReadonly" mat-icon-button
+                  matTooltip="{{'csp.proyecto.select-area-tematica' | translate}}" (click)="openModal(data)">
                   <mat-icon>border_color</mat-icon>
                 </button>
               </ng-container>
               <!--Botón Borrar-->
               <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E', 'CSP-PRO-C']">
-                <button color="warn" *ngIf="data.areaTematicaProyecto" mat-icon-button
+                <button color="warn" *ngIf="data.areaTematicaProyecto && !formPart.isReadonly" mat-icon-button
                   matTooltip="{{'btn.delete' | translate}}" (click)="deleteAreaTematicaListado()">
                   <mat-icon>highlight_off</mat-icon>
                 </button>
@@ -115,7 +114,7 @@
       </div>
     </div>
 
-    <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
+    <ng-container *ngIf="!formPart.isReadonly">
       <div class="separation-button" *ngIf="listadoAreaTematicas.data.length === 0">
         <!-- Botón añadir areas tematicas -->
         <button color="three" mat-raised-button (click)="openModal()">

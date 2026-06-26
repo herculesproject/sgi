@@ -34,7 +34,7 @@
 
   <!-- CSP -->
   <sgi-menu-group
-    *sgiHasAnyAuthority="['CSP-CON-INV-V', 'CSP-SOL-INV-ER', 'CSP-SOL-INV-BR', 'CSP-PRO-INV-VR', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR', 'CSP-GIN-INV-VR' ]"
+    *sgiHasAnyAuthority="['CSP-CON-INV-V', 'CSP-SOL-INV-ER', 'CSP-SOL-INV-BR', 'CSP-PRO-INV-VR', 'CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR', 'CSP-GIN-INV-VR', 'CSP-EJEC-INV-VR' ]"
     title="{{'menu.principal.inv.csp' | translate}}" icon="business_center">
     <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'CSP-CON-INV-V'" [route]="[INV_ROUTE_NAMES.CONVOCATORIAS]"
       title="{{'menu.principal.inv.convocatoria' | translate}}">
@@ -55,6 +55,11 @@
     <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-INV-VR'] "
       title="{{'csp.grupo' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}" [route]="[INV_ROUTE_NAMES.GRUPOS]">
     </sgi-menu-subitem>
+    <ng-container *ngIf="showEjecucionEconomica">
+      <sgi-menu-subitem *sgiHasAuthorityForAnyUO="'CSP-EJEC-INV-VR'" [route]="[INV_ROUTE_NAMES.EJECUCION_ECONOMICA]"
+        title="{{'menu.principal.inv.ejecucion-economica' | translate}}">
+      </sgi-menu-subitem>
+    </ng-container>
     <sgi-menu-subitem-external *ngIf="!!nombreSistemaGestionExterno && !!urlSistemaGestionExterno"
       [title]="nombreSistemaGestionExterno" [route]="urlSistemaGestionExterno">
     </sgi-menu-subitem-external>

@@ -15,11 +15,16 @@ export class ProyectoProrrogasFragment extends Fragment {
   readonly ultimaProrroga$: Subject<IProyectoProrroga> = new BehaviorSubject<IProyectoProrroga>(null);
   readonly ultimaFechaFinProrrogas$: Subject<DateTime> = new Subject<DateTime>();
 
+  get isReadonly(): boolean {
+    return this.readonly;
+  }
+
   constructor(
     key: number,
     private proyectoService: ProyectoService,
     private proyectoProrrogaService: ProyectoProrrogaService,
-    private documentoService: DocumentoService
+    private documentoService: DocumentoService,
+    private readonly readonly: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -87,7 +92,7 @@ export class ProyectoProrrogasFragment extends Fragment {
                       return this.documentoService.eliminarFichero(documento.documentoRef);
                     }),
                     takeLast(1)
-                  )
+                  );
                 }),
                 takeLast(1)
               );

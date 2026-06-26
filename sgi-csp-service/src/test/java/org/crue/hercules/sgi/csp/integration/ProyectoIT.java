@@ -1342,16 +1342,15 @@ class ProyectoIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/convocatoria.sql",
     "classpath:scripts/proyecto.sql",
-    "classpath:scripts/estado_proyecto.sql",
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  void findAllEstadoProyecto_ReturnsEmptyEntidadFinanciadoraSubList()
+  void findAllEstadoProyecto_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
 
-    Long proyectoId = 6L;
+    Long proyectoId = 1L;
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ESTADO_PROYECTO)
         .buildAndExpand(proyectoId).toUri();
@@ -1665,7 +1664,7 @@ class ProyectoIT extends BaseIT {
   void findAllProyectoPeriodoSeguimiento_ReturnsEmptySubList()
       throws Exception {
     String[] roles = { "CSP-PRO-V", "CSP-PRO-E" };
-    Long proyectoId = 6L;
+    Long proyectoId = 2L;
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_SEGUIMIENTO)
         .buildAndExpand(proyectoId).toUri();
@@ -2482,7 +2481,7 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void getProyectoPresupuestoTotales_ReturnsProyectoPresupuestoTotales() throws Exception {
-    String roles = "CSP-SOL-E";
+    String roles = "CSP-PRO-E";
     Long proyectoId = 1L;
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PRESUPUESTO_TOTALES)

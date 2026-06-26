@@ -26,7 +26,7 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let area">
-          <ng-container>
+          <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
             <button color="warn" *ngIf="!this.formPart.readonly && !this.formPart.isVisor" mat-icon-button
               matTooltip="{{'btn.delete' | translate}}" (click)="deleteArea(area)">
               <mat-icon>highlight_off</mat-icon>
@@ -42,9 +42,10 @@
     <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
     </mat-paginator>
   </div>
-  <div class="separation-button" *ngIf="!formPart.readonly">
+  <div class="separation-button" *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
     <!-- Botón añadir Areas -->
-    <button *ngIf="!this.formPart.isVisor" color="three" mat-button mat-raised-button (click)="openModal()">
+    <button *ngIf="!this.formPart.readonly && !this.formPart.isVisor" color="three" mat-button mat-raised-button
+      (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

@@ -21,6 +21,7 @@ export interface IProyectoPeriodoJustificacionModalData {
   proyectoPeriodoJustificacionList: IProyectoPeriodoJustificacion[];
   convocatoriaPeriodoJustificacion: IConvocatoriaPeriodoJustificacion;
   proyecto: IProyecto;
+  readonly: boolean;
 }
 
 const MSG_ANADIR = marker('btn.add');
@@ -235,6 +236,10 @@ export class ProyectoPeriodoJustificacionModalComponent
         formGroup.controls.fechaFinPresentacion.disable();
         formGroup.controls.observaciones.disable();
       }
+    }
+
+    if (this.data.readonly) {
+      formGroup.disable();
     }
 
     return formGroup;

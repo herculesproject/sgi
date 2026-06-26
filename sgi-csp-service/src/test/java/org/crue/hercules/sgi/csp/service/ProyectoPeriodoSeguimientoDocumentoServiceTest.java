@@ -15,7 +15,9 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoPeriodoSeguimientoDocumentoServiceImpl;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,12 +41,19 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoPeriodoSeguimientoDocumentoRepository proyectoPeriodoSeguimientoDocumentoRepository;
+  @Mock
+  private ProyectoPeriodoSeguimientoRepository proyectoPeriodoSeguimientoRepository;
+  @Mock
+  private ProyectoHelper proyectoHelper;
 
   private ProyectoPeriodoSeguimientoDocumentoService service;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new ProyectoPeriodoSeguimientoDocumentoServiceImpl(proyectoPeriodoSeguimientoDocumentoRepository);
+    service = new ProyectoPeriodoSeguimientoDocumentoServiceImpl(
+        proyectoPeriodoSeguimientoDocumentoRepository,
+        proyectoPeriodoSeguimientoRepository,
+        proyectoHelper);
   }
 
   @Test

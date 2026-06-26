@@ -1,7 +1,7 @@
-import { marker } from "@biesbjerg/ngx-translate-extract-marker";
-import { I18nFieldValue } from "@core/i18n/i18n-field";
-import { DateTime } from "luxon";
-import { IProyectoSge } from "../sge/proyecto-sge";
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { DateTime } from 'luxon';
+import { IProyectoSge } from '../sge/proyecto-sge';
 
 export interface IRelacionEjecucionEconomica {
   id: number;
@@ -13,6 +13,7 @@ export interface IRelacionEjecucionEconomica {
   proyectoSge: IProyectoSge;
   tipoEntidad: TipoEntidad;
   fechaFinDefinitiva: DateTime;
+  accesibleByInvestigador?: boolean;
 }
 
 export enum TipoEntidad {
