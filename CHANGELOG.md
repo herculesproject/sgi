@@ -19,6 +19,7 @@
 - [CSP] Añadido el apartado de ejecución económica en el perfil de investigación, con un buscador de datos económicos y el acceso a los identificadores SGE del proyecto, disponible para quien tiene rol principal en el proyecto o grupo según la nueva variable de configuración `inv_pro_vista_eec_ip` ([#61](https://github.com/herculesproject/sgi/issues/61)).
 
 ### Changed
+- Homogeneizados los ficheros de traducción de todos los servicios del back (catalán, inglés y euskera) para que sigan el mismo orden, comentarios y formato que el fichero español de referencia, y completadas automáticamente las traducciones de los textos nuevos de la versión. Ver la sección [Revisión de traducciones](/docs/upgrade/1.2.0-SNAPSHOT.md#revisión-de-traducciones) en las notas de actualización ([#92](https://github.com/herculesproject/sgi/issues/92)).
 - [CSP] Reordenadas las columnas de la exportación de solicitudes: el bloque de unidades de vinculación se muestra ahora antes de las columnas "Datos Solicitud RRHH" y sus columnas llevan el prefijo "Datos Proyecto", igual que el resto de columnas de las solicitudes de tipo proyecto ([#108](https://github.com/herculesproject/sgi/issues/108)).
 - [CSP] Renombrada la etiqueta de la variable de configuración de unidades de vinculación para proyectos a "Habilitar unidades de vinculación para Proyectos y Solicitudes" para reflejar que también aplica a las solicitudes ([#108](https://github.com/herculesproject/sgi/issues/108)).
 
