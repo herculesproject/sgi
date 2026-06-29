@@ -56,6 +56,9 @@ export class AreaTematicaListadoComponent extends AbstractTablePaginationCompone
     private readonly translate: TranslateService
   ) {
     super(translate);
+
+    this.resolveSortProperty = (column: string) => ['nombre', 'descripcion'].includes(column) ? `${column}.value` : column;
+
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -190,7 +193,7 @@ export class AreaTematicaListadoComponent extends AbstractTablePaginationCompone
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
+    const filter = new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
 
     if (controls.activo.value !== 'todos') {
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);

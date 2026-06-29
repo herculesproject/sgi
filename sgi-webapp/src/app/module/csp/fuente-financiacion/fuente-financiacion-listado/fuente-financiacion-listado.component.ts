@@ -59,12 +59,21 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly fuenteFinanciacionService: FuenteFinanciacionService,
-    private matDialog: MatDialog,
+    private readonly matDialog: MatDialog,
     public authService: SgiAuthService,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
     super(translate);
+
+    this.resolveSortProperty = (column: string) =>
+      [
+        'nombre',
+        'descripcion',
+        'tipoAmbitoGeografico.nombre',
+        'tipoOrigenFuenteFinanciacion.nombre'
+      ].includes(column) ? `${column}.value` : column;
+
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -238,13 +247,13 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
+    const filter = new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
     if (controls.activo.value !== 'todos') {
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
     filter
-      .and('tipoAmbitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id)
-      .and('tipoOrigenFuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.origen.value?.id);
+      .and('tipoAmbitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id?.toString())
+      .and('tipoOrigenFuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.origen.value?.id?.toString());
 
     return filter;
   }

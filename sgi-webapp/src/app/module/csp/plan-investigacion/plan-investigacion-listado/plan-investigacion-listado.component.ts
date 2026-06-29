@@ -68,12 +68,7 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-    this.resolveSortProperty = (column: string) => {
-      if (column === 'nombre') {
-        return 'nombre.value';
-      }
-      return column;
-    }
+    this.resolveSortProperty = (column: string) => ['nombre', 'descripcion'].includes(column) ? `${column}.value` : column;
   }
 
   ngOnInit(): void {

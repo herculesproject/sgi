@@ -294,7 +294,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public Page<AreaTematica> findAllGrupo(String query, Pageable pageable) {
     log.debug("findAllGrupo(String query, Pageable pageable) - start");
     Specification<AreaTematica> specs = AreaTematicaSpecifications.grupos().and(AreaTematicaSpecifications.activos())
-        .and(SgiRSQLJPASupport.toSpecification(query));
+        .and(SgiRSQLJPASupport.toSpecification(query, AreaTematicaPredicateResolver.getInstance()));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllGrupo(String query, Pageable pageable) - end");
@@ -312,7 +312,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public Page<AreaTematica> findAllTodosGrupo(String query, Pageable pageable) {
     log.debug("findAllTodosGrupo(String query, Pageable pageable) - start");
     Specification<AreaTematica> specs = AreaTematicaSpecifications.grupos()
-        .and(SgiRSQLJPASupport.toSpecification(query));
+        .and(SgiRSQLJPASupport.toSpecification(query, AreaTematicaPredicateResolver.getInstance()));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllTodosGrupo(String query, Pageable pageable) - end");
@@ -332,7 +332,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public Page<AreaTematica> findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable) {
     log.debug("findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable) - start");
     Specification<AreaTematica> specs = AreaTematicaSpecifications.hijos(areaTematicaId)
-        .and(SgiRSQLJPASupport.toSpecification(query));
+        .and(SgiRSQLJPASupport.toSpecification(query, AreaTematicaPredicateResolver.getInstance()));
 
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable) - end");
