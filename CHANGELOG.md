@@ -28,6 +28,7 @@
 - [CSP] Corregida la pérdida de los campos de auditoría de creación (`created_by`, `creation_date`) al modificar una convocatoria y sus entidades relacionadas ([#103](https://github.com/herculesproject/sgi/issues/103)).
 - [CSP] Corregida la pérdida de los campos de auditoría (`created_by`, `creation_date`, `last_modified_by`, `last_modified_date`) al modificar el equipo de un proyecto. Además, los miembros sin cambios reales ya no generan un UPDATE innecesario en base de datos ([#72](https://github.com/herculesproject/sgi/issues/72)).
 - [CSP] Restringido el acceso al calendario de facturación a los investigadores del proyecto con rol principal activo en la fecha actual ([#61](https://github.com/herculesproject/sgi/issues/61)).
+- [CSP] Corregidos los buscadores y la ordenación de las pantallas de configuración de áreas temáticas, fuentes de financiación, planes de investigación, tipos de documento, tipos de enlace, tipos de financiación, tipos de hito, tipos de origen de fuente de financiación y tipos de régimen de concurrencia, que habían dejado de funcionar tras la migración de los campos `nombre` y `descripcion` a campos multiidioma ([#110](https://github.com/herculesproject/sgi/issues/110)).
 
 ## 1.1.0 (2026-06-11)
 

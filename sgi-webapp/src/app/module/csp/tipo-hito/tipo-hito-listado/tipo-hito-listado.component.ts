@@ -55,10 +55,10 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly tipoHitoService: TipoHitoService,
-    private matDialog: MatDialog,
+    private readonly matDialog: MatDialog,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
-    private authService: SgiAuthService
+    private readonly authService: SgiAuthService
   ) {
     super(translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -72,12 +72,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-    this.resolveSortProperty = (column: string) => {
-      if (column === 'nombre') {
-        return 'nombre.value';
-      }
-      return column;
-    }
+    this.resolveSortProperty = (column: string) => ['nombre', 'descripcion'].includes(column) ? `${column}.value` : column;
 
   }
 

@@ -54,12 +54,15 @@ export class TipoRegimenConcurrenciaListadoComponent extends AbstractTablePagina
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly tipoRegimenConcurrenciaService: TipoRegimenConcurrenciaService,
-    private matDialog: MatDialog,
+    private readonly matDialog: MatDialog,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
     private readonly authService: SgiAuthService
   ) {
     super(translate);
+
+    this.resolveSortProperty = (column: string) => column === 'nombre' ? 'nombre.value' : column;
+
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
