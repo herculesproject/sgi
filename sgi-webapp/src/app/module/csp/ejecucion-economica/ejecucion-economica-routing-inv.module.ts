@@ -22,10 +22,9 @@ import { EjecucionEconomicaListadoInvComponent } from './ejecucion-economica-lis
 import { EJECUCION_ECONOMICA_ROUTE_NAMES } from './ejecucion-economica-route-names';
 import { EJECUCION_ECONOMICA_ROUTE_PARAMS } from './ejecucion-economica-route-params';
 
-const MSG_EJECUCION_ECONOMICA_TITLE = marker('inv.ejecucion-economica.listado.titulo');
 const EJECUCION_ECONOMICA_KEY = marker('menu.principal.inv.ejecucion-economica');
 
-const DATA_INV = {
+const routeDataInv = {
   title: EJECUCION_ECONOMICA_KEY,
   hasAuthorityForAnyUO: 'CSP-EJEC-INV-VR',
   module: Module.INV
@@ -36,11 +35,7 @@ const routes: SgiRoutes = [
     path: '',
     component: EjecucionEconomicaListadoInvComponent,
     canActivate: [SgiAuthGuard],
-    data: {
-      title: MSG_EJECUCION_ECONOMICA_TITLE,
-      hasAuthorityForAnyUO: 'CSP-EJEC-INV-VR',
-      module: Module.INV
-    }
+    data: routeDataInv
   },
   {
     path: `:${EJECUCION_ECONOMICA_ROUTE_PARAMS.ID}`,
@@ -50,7 +45,7 @@ const routes: SgiRoutes = [
     resolve: {
       [EJECUCION_ECONOMICA_DATA_KEY]: EjecucionEconomicaDataResolver
     },
-    data: DATA_INV,
+    data: routeDataInv,
     children: [
       {
         path: '',

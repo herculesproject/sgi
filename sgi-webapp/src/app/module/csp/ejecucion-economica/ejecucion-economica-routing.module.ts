@@ -3,10 +3,10 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
-import { MSG_PARAMS } from '@core/i18n';
+import { Module } from '@core/module';
 import { SgiRoutes } from '@core/route';
 import { SgiAuthGuard } from '@herculesproject/framework/auth';
-import { EJECUCION_ECONOMICA_DATA_KEY, EjecucionEconomicaDataResolver } from './ejecucion-economica-data.resolver';
+import { EjecucionEconomicaDataResolver, EJECUCION_ECONOMICA_DATA_KEY } from './ejecucion-economica-data.resolver';
 import { EjecucionEconomicaEditarComponent } from './ejecucion-economica-editar/ejecucion-economica-editar.component';
 import { ClasificacionGastosComponent } from './ejecucion-economica-formulario/clasificacion-gastos/clasificacion-gastos.component';
 import { DetalleOperacionesGastosComponent } from './ejecucion-economica-formulario/detalle-operaciones-gastos/detalle-operaciones-gastos.component';
@@ -30,26 +30,25 @@ import { EJECUCION_ECONOMICA_ROUTE_PARAMS } from './ejecucion-economica-route-pa
 const EJECUCION_ECONOMICA_KEY = marker('menu.csp.ejecucion-economica');
 const REQUERIMIENTO_JUSTIFICACION_KEY = marker('csp.requerimiento-justificacion');
 
+const routeDataCSP = {
+  title: EJECUCION_ECONOMICA_KEY,
+  hasAnyAuthorityForAnyUO: ['CSP-EJEC-E', 'CSP-EJEC-V'],
+  module: Module.CSP
+};
+
 const routes: SgiRoutes = [
   {
     path: '',
     component: EjecucionEconomicaListadoComponent,
     canActivate: [SgiAuthGuard],
-    data: {
-      title: EJECUCION_ECONOMICA_KEY,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
-      hasAnyAuthorityForAnyUO: ['CSP-EJEC-V', 'CSP-EJEC-E']
-    }
+    data: routeDataCSP
   },
   {
     path: `:${EJECUCION_ECONOMICA_ROUTE_PARAMS.ID}`,
     component: EjecucionEconomicaEditarComponent,
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
-    data: {
-      title: EJECUCION_ECONOMICA_KEY,
-      hasAnyAuthorityForAnyUO: ['CSP-EJEC-V', 'CSP-EJEC-E']
-    },
+    data: routeDataCSP,
     resolve: {
       [EJECUCION_ECONOMICA_DATA_KEY]: EjecucionEconomicaDataResolver
     },
@@ -147,10 +146,7 @@ const routes: SgiRoutes = [
   {
     path: `:${EJECUCION_ECONOMICA_ROUTE_PARAMS.ID}`,
     canActivate: [SgiAuthGuard],
-    data: {
-      title: EJECUCION_ECONOMICA_KEY,
-      hasAnyAuthorityForAnyUO: ['CSP-EJEC-V', 'CSP-EJEC-E']
-    },
+    data: routeDataCSP,
     resolve: {
       [EJECUCION_ECONOMICA_DATA_KEY]: EjecucionEconomicaDataResolver
     },
@@ -160,12 +156,7 @@ const routes: SgiRoutes = [
         loadChildren: () =>
           import('../seguimiento-justificacion-requerimiento/seguimiento-justificacion-requerimiento.module').then(
             (m) => m.SeguimientoJustificacionRequerimientoModule
-          ),
-        canActivate: [SgiAuthGuard],
-        data: {
-          title: REQUERIMIENTO_JUSTIFICACION_KEY,
-          hasAnyAuthorityForAnyUO: ['CSP-EJEC-V', 'CSP-EJEC-E']
-        }
+          )
       }
     ]
   }
