@@ -14,6 +14,10 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+## 1.2.0 (2026-06-30)
+
+**Notas de actualización:** [1.2.0](/docs/upgrade/1.2.0.md)
+
 ### Added
 - [CSP] Añadido el acceso a los proyectos desde el perfil de investigación: el investigador puede consultar en modo lectura los proyectos en los que participa, con un buscador con filtro de participación actual. La ficha general está siempre disponible y, para quien tiene rol principal en el proyecto, los apartados ampliados se muestran según la nueva variable de configuración `inv_pro_vista_ampliada_ip` ([#61](https://github.com/herculesproject/sgi/issues/61)).
 - [CSP] Añadido el apartado de ejecución económica en el perfil de investigación, con un buscador de datos económicos y el acceso a los identificadores SGE del proyecto, disponible para quien tiene rol principal en el proyecto o grupo según la nueva variable de configuración `inv_pro_vista_eec_ip` ([#61](https://github.com/herculesproject/sgi/issues/61)).
