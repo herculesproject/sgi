@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAnualidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPartidaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.AnualidadGastoSpecifications;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,13 +44,16 @@ public class AnualidadGastoService {
 
   private final ConceptoGastoRepository conceptoGastoRepository;
 
+  private final ProyectoHelper proyectoHelper;
+
   public AnualidadGastoService(AnualidadGastoRepository anualidadGastoRepository,
       ProyectoAnualidadRepository proyectoAnualidadRepository, ProyectoPartidaRepository proyectoPartidaRepository,
-      ConceptoGastoRepository conceptoGastoRepository) {
+      ConceptoGastoRepository conceptoGastoRepository, ProyectoHelper proyectoHelper) {
     this.repository = anualidadGastoRepository;
     this.proyectoAnualidadRepository = proyectoAnualidadRepository;
     this.proyectoPartidaRepository = proyectoPartidaRepository;
     this.conceptoGastoRepository = conceptoGastoRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -63,6 +67,10 @@ public class AnualidadGastoService {
    */
   public Page<AnualidadGasto> findAllByProyectoAnualidad(Long proyectoAnualidadId, String query, Pageable pageable) {
     log.debug("findAllByProyectoAnualiadad(Long proyectoAnualidadId, String query, Pageable pageable) - start");
+    ProyectoAnualidad proyectoAnualidad = proyectoAnualidadRepository.findById(proyectoAnualidadId)
+        .orElseThrow(() -> new ProyectoAnualidadNotFoundException(proyectoAnualidadId));
+    proyectoHelper.checkCanAccessProyecto(proyectoAnualidad.getProyectoId(),
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<AnualidadGasto> specs = AnualidadGastoSpecifications.byProyectoAnualidadId(proyectoAnualidadId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
@@ -125,7 +133,8 @@ public class AnualidadGastoService {
   }
 
   public List<AnualidadGasto> findAnualidadesGastosByProyectoId(Long proyectoId) {
-
+    proyectoHelper.checkCanAccessProyecto(proyectoId,
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     return this.repository.findAnualidadGastoByProyectoPartidaProyectoId(proyectoId);
   }
 

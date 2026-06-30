@@ -14,6 +14,8 @@ import org.crue.hercules.sgi.csp.repository.AnualidadIngresoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoAnualidadRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPartidaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.AnualidadIngresoSpecifications;
+import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,11 +41,15 @@ public class AnualidadIngresoService {
 
   private final ProyectoPartidaRepository proyectoPartidaRepository;
 
+  private final ProyectoHelper proyectoHelper;
+
   public AnualidadIngresoService(AnualidadIngresoRepository anualidadIngresoRepository,
-      ProyectoAnualidadRepository proyectoAnualidadRepository, ProyectoPartidaRepository proyectoPartidaRepository) {
+      ProyectoAnualidadRepository proyectoAnualidadRepository, ProyectoPartidaRepository proyectoPartidaRepository,
+      ProyectoHelper proyectoHelper) {
     this.repository = anualidadIngresoRepository;
     this.proyectoAnualidadRepository = proyectoAnualidadRepository;
     this.proyectoPartidaRepository = proyectoPartidaRepository;
+    this.proyectoHelper = proyectoHelper;
   }
 
   /**
@@ -105,13 +111,20 @@ public class AnualidadIngresoService {
    * @return la lista de entidades {@link AnualidadIngreso} del
    *         {@link ProyectoAnualidad} paginadas.
    */
-  public Page<AnualidadIngreso> findAllByProyectoAnualiadad(Long proyectoAnualidadId, String query, Pageable pageable) {
-    log.debug("findAllByProyectoAnualiadad(Long proyectoAnualidadId, String query, Pageable pageable) - start");
+  public Page<AnualidadIngreso> findAllByProyectoAnualidad(Long proyectoAnualidadId, String query, Pageable pageable) {
+    log.debug("findAllByProyectoAnualidad - proyectoAnualidadId: {}, query: {}, paging: {}",
+        proyectoAnualidadId, query, SgiLogUtils.pageable(pageable));
+    ProyectoAnualidad proyectoAnualidad = proyectoAnualidadRepository.findById(proyectoAnualidadId)
+        .orElseThrow(() -> new ProyectoAnualidadNotFoundException(proyectoAnualidadId));
+
+    proyectoHelper.checkCanAccessProyecto(proyectoAnualidad.getProyectoId(),
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+
     Specification<AnualidadIngreso> specs = AnualidadIngresoSpecifications.byProyectoAnualidadId(proyectoAnualidadId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<AnualidadIngreso> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyectoAnualiadad(Long proyectoAnualidadId, String query, Pageable pageable) - end");
+    log.debug("findAllByProyectoAnualidad - response: {}", SgiLogUtils.page(returnValue));
     return returnValue;
   }
 

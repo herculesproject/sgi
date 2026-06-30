@@ -156,11 +156,12 @@ public class ProyectoEntidadFinanciadoraServiceImpl implements ProyectoEntidadFi
    */
   @Override
   public ProyectoEntidadFinanciadora findById(Long id) {
-    log.debug("findById(Long id)  - start");
+    log.debug("findById - id: {}", id);
     AssertHelper.idNotNull(id, ProyectoEntidadFinanciadora.class);
     ProyectoEntidadFinanciadora returnValue = repository.findById(id)
         .orElseThrow(() -> new ProyectoEntidadFinanciadoraNotFoundException(id));
-    log.debug("findById(Long id)  - end");
+    proyectoHelper.checkCanAccessProyecto(returnValue.getProyectoId(),
+        ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
     return returnValue;
   }
 

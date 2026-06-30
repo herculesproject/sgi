@@ -1223,9 +1223,9 @@ public class ProyectoController {
   @GetMapping("/{id}/proyectoanualidades")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<List<ProyectoAnualidad>> findAllProyectoAnualidad(@PathVariable Long id) {
-    log.debug("findAllProyectoAnualidad - proyectoId: {}", id);
+    log.debug("findAllProyectoAnualidad - id: {}", id);
     List<ProyectoAnualidad> anualidades = proyectoAnualidadService.findByProyectoId(id);
-
+    log.debug("findAllProyectoAnualidad - response: {}", SgiLogUtils.collection(anualidades));
     return anualidades.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(anualidades);
   }
 
@@ -1237,12 +1237,12 @@ public class ProyectoController {
    * @return el listado de entidades {@link AnualidadGastoOutput}.
    */
   @GetMapping("/{id}/anualidadesgastos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<List<AnualidadGastoOutput>> findProyectoAnualidadesGasto(@PathVariable Long id) {
-
+    log.debug("findProyectoAnualidadesGasto - id: {}", id);
     List<AnualidadGastoOutput> anualidades = this
         .convertListAnualidadGastoOutput(this.anualidadGastoService.findAnualidadesGastosByProyectoId(id));
-
+    log.debug("findProyectoAnualidadesGasto - response: {}", SgiLogUtils.collection(anualidades));
     return anualidades.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(anualidades);
   }
 
