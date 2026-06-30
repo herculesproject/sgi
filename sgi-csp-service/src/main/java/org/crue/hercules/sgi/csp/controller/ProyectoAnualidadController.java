@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
 import org.crue.hercules.sgi.csp.service.AnualidadGastoService;
 import org.crue.hercules.sgi.csp.service.AnualidadIngresoService;
 import org.crue.hercules.sgi.csp.service.ProyectoAnualidadService;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -145,19 +146,14 @@ public class ProyectoAnualidadController {
    *         paginadas y filtradas del {@link ProyectoAnualidad}.
    */
   @GetMapping(PATH_ANUALIDAD_GASTOS)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<AnualidadGastoOutput>> findAllAnualidadGasto(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllAnualidadGasto(Long id, String query, Pageable paging) - start");
+    log.debug("findAllAnualidadGasto - id: {}, query: {}, paging: {}", id, query, SgiLogUtils.pageable(paging));
     Page<AnualidadGasto> page = anualidadGastoService.findAllByProyectoAnualidad(id, query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllAnualidadGasto(Long id, String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("findAllAnualiadadGfindAllAnualidadGastoasto(Long id, String query, Pageable paging) - end");
-    return new ResponseEntity<>(convertPageAnualidadGasto(page), HttpStatus.OK);
+    log.debug("findAllAnualidadGasto - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(convertPageAnualidadGasto(page), HttpStatus.OK);
   }
 
   /**
@@ -171,19 +167,14 @@ public class ProyectoAnualidadController {
    *         paginadas y filtradas del {@link ProyectoAnualidad}.
    */
   @GetMapping(PATH_ANUALIDAD_INGRESOS)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<AnualidadIngresoOutput>> findAllAnualidadIngreso(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllAnualidadIngreso(Long id, String query, Pageable paging) - start");
-    Page<AnualidadIngreso> page = anualidadIngresoService.findAllByProyectoAnualiadad(id, query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllAnualidadIngreso(Long id, String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("findAllAnualidadIngreso(Long id, String query, Pageable paging) - end");
-    return new ResponseEntity<>(convertPageAnualidadIngreso(page), HttpStatus.OK);
+    log.debug("findAllAnualidadIngreso - id: {}, query: {}, paging: {}", id, query, SgiLogUtils.pageable(paging));
+    Page<AnualidadIngreso> page = anualidadIngresoService.findAllByProyectoAnualidad(id, query, paging);
+    log.debug("findAllAnualidadIngreso - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(convertPageAnualidadIngreso(page), HttpStatus.OK);
   }
 
   /**
@@ -217,13 +208,11 @@ public class ProyectoAnualidadController {
    * @return Proyecto {@link ProyectoAnualidad} correspondiente al id
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ProyectoAnualidad findById(@PathVariable Long id) {
-    log.debug("ProyectoAnualidad findById(Long id) - start");
+    log.debug("findById - id: {}", id);
 
-    ProyectoAnualidad returnValue = service.findById(id);
-    log.debug("ProyectoAnualidad findById(Long id) - end");
-    return returnValue;
+    return service.findById(id);
   }
 
   /**
@@ -234,12 +223,12 @@ public class ProyectoAnualidadController {
    * @return Listado del resumen de {@link AnualidadResumen}.
    */
   @GetMapping(PATH_PARTIDAS_RESUMEN)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public List<AnualidadResumen> getPartidasResumen(@PathVariable Long id) {
-    log.debug(" Page<AnualidadResumen> getPartidasResumen(Long id) - start");
+    log.debug("getPartidasResumen - id: {}", id);
 
     List<AnualidadResumen> returnValue = service.getPartidasResumen(id);
-    log.debug(" Page<AnualidadResumen> getPartidasResumen(Long id) - end");
+    log.debug("getPartidasResumen - response: {}", SgiLogUtils.collection(returnValue));
     return returnValue;
   }
 

@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -99,18 +100,14 @@ public class ProyectoConceptoGastoController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<Page<ProyectoConceptoGasto>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(String query,Pageable paging) - start");
+    log.debug("findAll - query: {}, paging: {}", query, SgiLogUtils.pageable(paging));
     Page<ProyectoConceptoGasto> page = service.findAll(query, paging);
 
-    if (page.isEmpty()) {
-      log.debug("findAll(String query,Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAll(String query,Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findAll - response: {}", SgiLogUtils.page(page));
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
