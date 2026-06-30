@@ -1941,11 +1941,11 @@ public class ProyectoController {
    * @return la lista de anualidades del proyecto
    */
   @GetMapping(PATH_ANUALIDADES_FECHAS_PROYECTO)
-  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
   public ResponseEntity<List<String>> getAnualidadesFechasProyecto(@PathVariable Long id) {
-    log.debug("getAnualidadesFechasProyecto(Long id) - start");
+    log.debug("getAnualidadesFechasProyecto - id: {}", id);
     List<String> returnValue = service.getAnualidadesFechasProyecto(id);
-    log.debug("getAnualidadesFechasProyecto(Long id) - end");
+    log.debug("getAnualidadesFechasProyecto - response: {}", SgiLogUtils.collection(returnValue));
     return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
         : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }

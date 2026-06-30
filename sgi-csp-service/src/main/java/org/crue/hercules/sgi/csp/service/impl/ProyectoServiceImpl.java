@@ -2800,7 +2800,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   @Override
   public List<String> getAnualidadesFechasProyecto(Long id) {
+
     Proyecto proyecto = findById(id);
+
+    proyectoHelper.checkCanAccessProyecto(proyecto, ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL);
 
     Instant fechaInicioProyecto = proyecto.getFechaInicio();
     Instant fechaFinProyecto = Optional.ofNullable(proyecto.getFechaFinDefinitiva())

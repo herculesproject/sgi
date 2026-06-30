@@ -1499,6 +1499,63 @@ class ProyectoServiceTest extends BaseServiceTest {
         .save(ArgumentMatchers.<ProyectoUnidadVinculacion>any());
   }
 
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E" })
+  void getAnualidadesFechasProyecto_ReturnsListOfYears() {
+    // given: Un Proyecto con fecha de inicio y fin en años distintos
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setFechaInicio(Instant.parse("2020-06-15T10:00:00Z"));
+    proyecto.setFechaFin(Instant.parse("2023-06-15T10:00:00Z"));
+    proyecto.setFechaFinDefinitiva(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+
+    // when: Obtenemos las anualidades del Proyecto
+    List<String> anualidades = service.getAnualidadesFechasProyecto(1L);
+
+    // then: Se devuelve un año por cada anualidad del rango (ambos inclusive)
+    Assertions.assertThat(anualidades).as("anualidades")
+        .containsExactly("2020", "2021", "2022", "2023");
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-INV-VR" })
+  void getAnualidadesFechasProyecto_WithFechaFinDefinitiva_UsesFechaFinDefinitiva() {
+    // given: Un Proyecto con fecha fin definitiva distinta de la fecha fin
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setFechaInicio(Instant.parse("2020-06-15T10:00:00Z"));
+    proyecto.setFechaFin(Instant.parse("2023-06-15T10:00:00Z"));
+    proyecto.setFechaFinDefinitiva(Instant.parse("2021-06-15T10:00:00Z"));
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+    // El usuario accede como investigador principal actual del proyecto
+    BDDMockito.given(proyectoEquipoRepository.count(ArgumentMatchers.<Specification<ProyectoEquipo>>any()))
+        .willReturn(1L);
+
+    // when: Obtenemos las anualidades del Proyecto
+    List<String> anualidades = service.getAnualidadesFechasProyecto(1L);
+
+    // then: El rango usa la fecha fin definitiva en lugar de la fecha fin
+    Assertions.assertThat(anualidades).as("anualidades")
+        .containsExactly("2020", "2021");
+  }
+
+  @Test
+  @WithMockUser(authorities = { "CSP-PRO-E_2" })
+  void getAnualidadesFechasProyecto_WithFechaInicioNull_ReturnsEmptyList() {
+    // given: Un Proyecto sin fecha de inicio
+    Proyecto proyecto = generarMockProyecto(1L);
+    proyecto.setFechaInicio(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyecto));
+
+    // when: Obtenemos las anualidades del Proyecto
+    List<String> anualidades = service.getAnualidadesFechasProyecto(1L);
+
+    // then: Se devuelve una lista vacía
+    Assertions.assertThat(anualidades).as("anualidades").isEmpty();
+  }
+
   /**
    * Función que devuelve un objeto Proyecto
    *
