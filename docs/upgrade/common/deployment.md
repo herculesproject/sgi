@@ -4,6 +4,23 @@
 
 ### Actualizar repositorio de Helm
 
+Comprobar que el repositorio de charts del SGI está añadido localmente:
+
+```bash
+helm repo list
+# NAME       URL
+# sgi-helm   https://herculesproject.github.io/sgi-helm
+```
+
+Si el repositorio `sgi-helm` no aparece en la lista, añadirlo:
+
+```bash
+helm repo add sgi-helm https://herculesproject.github.io/sgi-helm
+```
+
+> [!NOTE]
+> Si el repositorio apunta a la URL antigua (`https://hercules-sgi.github.io/sgi-helm/`), consultar la [migración del repositorio Helm](../1.0.0.md#migración-del-repositorio-helm) descrita en las notas de la versión 1.0.0.
+
 Sincronizar el repositorio local con el remoto para obtener la última versión de los charts del SGI:
 
 ```bash
