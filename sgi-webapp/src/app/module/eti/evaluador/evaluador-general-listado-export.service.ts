@@ -11,7 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { IEmail } from '../../../core/models/sgp/email';
 import { IEvaluadorReportData, IEvaluadorReportOptions } from './evaluador-listado-export.service';
 import { EstadoEvaluadorPipe } from './pipes/estado-evaluador.pipe';
 
@@ -110,7 +109,7 @@ export class EvaluadorGeneralListadoExportService extends
     return [
       evaluadorData.persona?.nombre ?? '',
       evaluadorData.persona?.apellidos ?? '',
-      this.getEmailPrincipal(evaluadorData),
+      this.getEmailPrincipal(evaluadorData.persona),
       evaluadorData.comite?.codigo ?? '',
       evaluadorData.cargoComite?.id ? this.translate.instant(CARGO_COMITE_MAP.get(evaluadorData.cargoComite?.id)) : '',
       LuxonUtils.toBackend(evaluadorData.fechaAlta) ?? '',
@@ -119,9 +118,11 @@ export class EvaluadorGeneralListadoExportService extends
     ];
   }
 
-  private getEmailPrincipal(evaluadorData: IEvaluadorReportData): any {
-    const emails = evaluadorData.persona?.emails.filter((email: IEmail) => email.principal);
-
-    return emails && emails.length > 0 ? emails[0].email : '';
+  private getEmailPrincipal(persona: IPersona): string {
+    if (!persona?.emails) {
+      return '';
+    }
+    const emailDataPrincipal = persona.emails.find(emailData => emailData.principal);
+    return emailDataPrincipal?.email ?? '';
   }
 }

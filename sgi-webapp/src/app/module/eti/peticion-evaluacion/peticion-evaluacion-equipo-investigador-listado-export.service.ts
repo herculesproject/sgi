@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
+import { IPersona } from '@core/models/sgp/persona';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
@@ -26,7 +27,7 @@ const EQUIPO_INVESTIGADOR_VINCULACION_KEY = marker('eti.peticion-evaluacion.equi
 
 @Injectable()
 export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
-  AbstractTableExportFillService<IPeticionEvaluacionReportData, IPeticionEvaluacionReportOptions>{
+  AbstractTableExportFillService<IPeticionEvaluacionReportData, IPeticionEvaluacionReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -149,7 +150,7 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
 
   private async fillRowsExcel(elementsRow: any[], investigador: IPeticionEvaluacionMiembroReportData) {
     if (investigador) {
-      elementsRow.push(investigador.persona?.emails?.find(email => email.principal)?.email ?? '');
+      elementsRow.push(this.getEmailPrincipal(investigador.persona));
       elementsRow.push(investigador.persona?.nombre ?? '');
       elementsRow.push(investigador.persona?.apellidos ?? '');
       elementsRow.push(investigador.vinculacion?.categoriaProfesional?.nombre ?? '');
@@ -159,5 +160,13 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
       elementsRow.push('');
       elementsRow.push('');
     }
+  }
+
+  private getEmailPrincipal(persona: IPersona): string {
+    if (!persona?.emails) {
+      return '';
+    }
+    const emailDataPrincipal = persona.emails.find(emailData => emailData.principal);
+    return emailDataPrincipal?.email ?? '';
   }
 }
