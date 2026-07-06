@@ -14,6 +14,10 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+### Fixed
+
+- [CSP] Corregido error en la exportación a excel de los listados que se producía cuando alguna de las personas no tenían informados los emails. ([#118] ([BUG] [CSP][GIN] Error al exportar personas sin datos de mail)).
+
 ## 1.2.0 (2026-06-30)
 
 **Notas de actualización:** [1.2.0](/docs/upgrade/1.2.0.md)

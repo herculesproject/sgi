@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
-import { IEmail } from '@core/models/sgp/email';
 import { IPersona } from '@core/models/sgp/persona';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { MemoriaService } from '@core/services/eti/memoria.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { IEvaluadorReportData, IEvaluadorReportOptions } from './evaluador-listado-export.service';
 
 
@@ -25,7 +22,7 @@ const EVALUADOR_CONFLICTO_EMAIL_KEY = marker('eti.evaluador.report.conflicto.ema
 
 @Injectable()
 export class EvaluadorConflictosInteresListadoExportService extends
-  AbstractTableExportFillService<IEvaluadorReportData, IEvaluadorReportOptions>{
+  AbstractTableExportFillService<IEvaluadorReportData, IEvaluadorReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -152,8 +149,10 @@ export class EvaluadorConflictosInteresListadoExportService extends
   }
 
   private getEmailPrincipal(persona: IPersona): string {
-    const emails = persona.emails.filter((email: IEmail) => email.principal);
-
-    return emails && emails.length > 0 ? emails[0].email : '';
+    if (!persona?.emails) {
+      return '';
+    }
+    const emailDataPrincipal = persona.emails.find(emailData => emailData.principal);
+    return emailDataPrincipal?.email ?? '';
   }
 }
