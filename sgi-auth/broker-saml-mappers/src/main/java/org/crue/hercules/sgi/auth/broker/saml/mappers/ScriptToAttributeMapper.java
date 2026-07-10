@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.keycloak.Config;
 import org.keycloak.broker.provider.AbstractIdentityProviderMapper;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.saml.SAMLEndpoint;
@@ -20,11 +21,24 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.ScriptModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.provider.EnvironmentDependentProviderFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.scripting.EvaluatableScriptAdapter;
 import org.keycloak.scripting.ScriptingProvider;
 
-public class ScriptToAttributeMapper extends AbstractIdentityProviderMapper {
+/**
+ * Legacy SAML IdP mapper: guarda en un atributo de usuario el resultado de
+ * evaluar un script JavaScript.
+ * <p>
+ * Se conserva por compatibilidad. Para nuevas configuraciones se recomienda
+ * {@link PrefixMatchStripAttributeMapper} o {@link AttributeTemplateMapper}.
+ * <p>
+ * Está <strong>desactivado por defecto</strong>: sólo se registra si la
+ * implantación lo habilita explícitamente con
+ * {@code KC_SPI_IDENTITY_PROVIDER_MAPPER__SAML_SCRIPT_ATTRIBUTE_IDP_MAPPER__ENABLED=true}.
+ */
+public class ScriptToAttributeMapper extends AbstractIdentityProviderMapper
+    implements EnvironmentDependentProviderFactory {
 
   public static final String PROVIDER_ID = "saml-script-attribute-idp-mapper";
   public static final String SOURCE_ATTRIBUTE = "source.attribute";
@@ -91,13 +105,18 @@ public class ScriptToAttributeMapper extends AbstractIdentityProviderMapper {
   }
 
   @Override
+  public boolean isSupported(Config.Scope config) {
+    return config.getBoolean("enabled", false);
+  }
+
+  @Override
   public String getDisplayCategory() {
     return "Attribute Importer";
   }
 
   @Override
   public String getDisplayType() {
-    return "Script to Attribute";
+    return "Script to Attribute (legacy)";
   }
 
   @Override

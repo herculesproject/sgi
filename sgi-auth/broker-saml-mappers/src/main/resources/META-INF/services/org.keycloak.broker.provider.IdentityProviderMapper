@@ -15,6 +15,10 @@
 # limitations under the License.
 #
 
+# Mappers declarativos (recomendados)
+org.crue.hercules.sgi.auth.broker.saml.mappers.AttributeTemplateMapper
+org.crue.hercules.sgi.auth.broker.saml.mappers.JsonRuleGroupMapper
+org.crue.hercules.sgi.auth.broker.saml.mappers.PrefixMatchStripAttributeMapper
+# Mappers JavaScript legacy (desactivados por defecto, se activan con las env vars KC_SPI_..._ENABLED)
 org.crue.hercules.sgi.auth.broker.saml.mappers.ScriptToAttributeMapper
 org.crue.hercules.sgi.auth.broker.saml.mappers.ScriptToGroupMapper
-org.crue.hercules.sgi.auth.broker.saml.mappers.AttributeTemplateMapper

@@ -14,9 +14,13 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+### Changed
+
+- Actualizado el servicio de autenticación de Keycloak 13 a Keycloak 26.6.4 y se añaden dos mappers SAML declarativos (`JSON Rules Group Importer` y `Prefix Match & Strip Attribute Importer`) que sustituyen a los mappers basados en JavaScript, desactivados por defecto. ([#115](https://github.com/herculesproject/sgi/issues/115)).
+
 ### Fixed
 
-- [CSP] Corregido error en la exportación a excel de los listados que se producía cuando alguna de las personas no tenían informados los emails. ([#118] ([BUG] [CSP][GIN] Error al exportar personas sin datos de mail)).
+- [CSP] Corregido error en la exportación a excel de los listados que se producía cuando alguna de las personas no tenían informados los emails. ([#118](https://github.com/herculesproject/sgi/issues/118)).
 
 ## 1.2.0 (2026-06-30)
 

@@ -1,0 +1,110 @@
+{
+  "splitters": {
+    "memberOf": ","
+  },
+  "rules": [
+    // 1) Coincidencia exacta (anyOf) que concede VARIOS grupos a la vez.
+    {
+      "name": "Administrators",
+      "grant": [
+        "SYSADM-CSP",
+        "ADMINISTRADOR-SGI"
+      ],
+      "when": {
+        "attribute": "memberOf",
+        "anyOf": [
+          "sgi-admin"
+        ]
+      }
+    },
+    // 2) Coincidencia por prefijo (startsWithAny) sobre un atributo multivaluado.
+    {
+      "name": "Researchers by affiliation",
+      "grant": [
+        "INVESTIGADOR"
+      ],
+      "when": {
+        "attribute": "eduPersonAffiliation",
+        "startsWithAny": [
+          "staff:research"
+        ]
+      }
+    },
+    // 3) Coincidencia de todas las condiciones 'all': requiere TANTO una unidad como un rol.
+    {
+      "name": "Unit managers",
+      "grant": [
+        "GESTOR-CSP-UGI",
+        "GESTOR-PRC"
+      ],
+      "when": {
+        "all": [
+          {
+            "attribute": "unitCode",
+            "anyOf": [
+              "U-RESEARCH"
+            ]
+          },
+          {
+            "attribute": "role",
+            "anyOf": [
+              "manager"
+            ]
+          }
+        ]
+      }
+    },
+    // 4) Coincidencia por expresión regular.
+    {
+      "name": "Viewers by employee id",
+      "grant": [
+        "VISOR-CSP"
+      ],
+      "when": {
+        "attribute": "employeeId",
+        "regex": "^EMP-[0-9]{4}$"
+      }
+    },
+    // 5) Condiciones anidadas 'any' + 'not': manager o director, salvo read-only.
+    {
+      "name": "Ethics managers",
+      "grant": [
+        "GESTOR-ETICA"
+      ],
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "attribute": "role",
+                "anyOf": [
+                  "manager"
+                ]
+              },
+              {
+                "attribute": "role",
+                "anyOf": [
+                  "director"
+                ]
+              }
+            ]
+          },
+          {
+            "not": {
+              "attribute": "memberOf",
+              "anyOf": [
+                "sgi-readonly"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  // Se concede solo cuando NINGUNA regla se cumple.
+  "fallback": {
+    "whenNoRulesMatched": [
+      "VISITANTE"
+    ]
+  }
+}
