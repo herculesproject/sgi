@@ -21,6 +21,7 @@
 ### Fixed
 
 - [CSP] Corregido error en la exportación a excel de los listados que se producía cuando alguna de las personas no tenían informados los emails. ([#118](https://github.com/herculesproject/sgi/issues/118)).
+- [CSP] Corregido texto mal traducido en la plantilla del comunicado de los hitos del proyecto. ([#121](https://github.com/herculesproject/sgi/issues/121)).
 
 ## 1.2.0 (2026-06-30)
 
