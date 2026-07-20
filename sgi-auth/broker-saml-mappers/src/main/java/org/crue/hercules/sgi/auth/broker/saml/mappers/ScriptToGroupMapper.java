@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.keycloak.Config;
 import org.keycloak.broker.provider.AbstractIdentityProviderMapper;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.provider.IdentityBrokerException;
@@ -24,11 +25,23 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.ScriptModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
+import org.keycloak.provider.EnvironmentDependentProviderFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.scripting.EvaluatableScriptAdapter;
 import org.keycloak.scripting.ScriptingProvider;
 
-public class ScriptToGroupMapper extends AbstractIdentityProviderMapper {
+/**
+ * Legacy SAML IdP mapper: calcula grupos de Keycloak evaluando un script
+ * JavaScript sobre los atributos SAML.
+ * <p>
+ * Se conserva por compatibilidad con implantaciones existentes.
+ * Para nuevas configuraciones se recomienda {@link JsonRuleGroupMapper}
+ * <p>
+ * Está <strong>desactivado por defecto</strong>: sólo
+ * se registra si la implantación lo habilita explícitamente con
+ * {@code KC_SPI_IDENTITY_PROVIDER_MAPPER__SAML_SCRIPT_GROUP_IDP_MAPPER__ENABLED=true}.
+ */
+public class ScriptToGroupMapper extends AbstractIdentityProviderMapper implements EnvironmentDependentProviderFactory {
 
   public static final String PROVIDER_ID = "saml-script-group-idp-mapper";
   public static final String SCRIPT = "script";
@@ -91,13 +104,18 @@ public class ScriptToGroupMapper extends AbstractIdentityProviderMapper {
   }
 
   @Override
+  public boolean isSupported(Config.Scope config) {
+    return config.getBoolean("enabled", false);
+  }
+
+  @Override
   public String getDisplayCategory() {
     return "Group Importer";
   }
 
   @Override
   public String getDisplayType() {
-    return "Script to Group";
+    return "Script to Group (legacy)";
   }
 
   @Override
@@ -117,7 +135,7 @@ public class ScriptToGroupMapper extends AbstractIdentityProviderMapper {
         .parseBoolean(mapperModel.getConfig().get(CLEAR_BEFORE_RUN));
     List<GroupModel> groups = resolve(session, realm, mapperModel, context);
     if (clearBeforeRun) {
-      for (GroupModel group : user.getGroups()) {
+      for (GroupModel group : user.getGroupsStream().collect(Collectors.toList())) {
         user.leaveGroup(group);
       }
     }
@@ -144,8 +162,8 @@ public class ScriptToGroupMapper extends AbstractIdentityProviderMapper {
    * @return the {@link GroupModel}
    * @throws IdentityBrokerException if the group doesn't exist.
    */
-  private GroupModel getGroup(final RealmModel realm, final String groupToSearch) {
-    GroupModel group = KeycloakModelUtils.findGroupByPath(realm, groupToSearch);
+  private GroupModel getGroup(final KeycloakSession session, final RealmModel realm, final String groupToSearch) {
+    GroupModel group = KeycloakModelUtils.findGroupByPath(session, realm, groupToSearch);
 
     if (group == null) {
       LOGGER.error("Unable to find group: " + groupToSearch);
@@ -184,8 +202,8 @@ public class ScriptToGroupMapper extends AbstractIdentityProviderMapper {
         attributeValue = Arrays.asList((Object[]) attributeValue);
       }
       if (attributeValue instanceof Iterable) {
-        for (Object value : (Iterable) attributeValue) {
-          GroupModel group = getGroup(realm, value.toString());
+        for (Object value : (Iterable<?>) attributeValue) {
+          GroupModel group = getGroup(session, realm, value.toString());
           if (group != null) {
             groups.add(group);
           }
@@ -193,7 +211,7 @@ public class ScriptToGroupMapper extends AbstractIdentityProviderMapper {
 
       } else {
         // single value case
-        GroupModel group = getGroup(realm, attributeValue.toString());
+        GroupModel group = getGroup(session, realm, attributeValue.toString());
         if (group != null) {
           groups.add(group);
         }

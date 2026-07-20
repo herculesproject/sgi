@@ -41,7 +41,7 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "ckeditor5-custom-build": "file:ckeditor5",
     "fontsource-poppins": "^3.0.3",
-    "keycloak-js": "11.0.0",
+    "keycloak-js": "21.1.2",
     "luxon": "^1.26.0",
     "mat-timepicker": "^5.1.4",
     "material-icons": "^1.10.7",

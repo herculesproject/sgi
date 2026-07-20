@@ -1,15 +1,15 @@
 import { PlatformLocation } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import * as Keycloak_ from 'keycloak-js';
+import type { KeycloakInitOptions, KeycloakLoginOptions, KeycloakLogoutOptions, KeycloakTokenParsed } from 'keycloak-js';
+import Keycloak from 'keycloak-js';
 import { from, Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { extractModuleAccess } from './auth.authority';
 import { SgiAuthConfig } from './auth.config';
 import { defaultAuthStatus, IAuthStatus, SgiAuthService } from './auth.service';
-export const Keycloak = Keycloak_;
 
-interface IKeycloakToken extends Keycloak.KeycloakTokenParsed {
+interface IKeycloakToken extends KeycloakTokenParsed {
   preferred_username: string;
   investigador: boolean;
   user_ref_id: string;
@@ -21,22 +21,23 @@ interface IKeycloakToken extends Keycloak.KeycloakTokenParsed {
 @Injectable()
 export class AuthKeycloakService extends SgiAuthService {
 
-  private keycloak: Keycloak.KeycloakInstance;
+  private keycloak: Keycloak;
   constructor(private router: Router, private platformLocation: PlatformLocation) {
     super();
   }
 
   public init(authConfig: SgiAuthConfig): Observable<boolean> {
-    this.keycloak = Keycloak({
+    this.keycloak = new Keycloak({
       clientId: authConfig.ssoClientId,
       realm: authConfig.ssoRealm,
       url: authConfig.ssoUrl
     });
     this.bindEvents();
     this.protectedResources = authConfig.protectedResources;
-    let initOptions: Keycloak.KeycloakInitOptions;
-    initOptions = {
-      enableLogging: true
+    const initOptions: KeycloakInitOptions = {
+      enableLogging: true,
+      pkceMethod: 'S256',
+      checkLoginIframe: false
     };
 
     return from(this.keycloak.init(initOptions));
@@ -80,7 +81,7 @@ export class AuthKeycloakService extends SgiAuthService {
   }
 
   public login(redirectUri?: string): Observable<void> {
-    let loginOptions: Keycloak.KeycloakLoginOptions;
+    let loginOptions: KeycloakLoginOptions;
     if (redirectUri) {
       let baseUrl = `${this.platformLocation.protocol}//${this.platformLocation.hostname}`;
       if (this.platformLocation.port) {
@@ -94,17 +95,17 @@ export class AuthKeycloakService extends SgiAuthService {
   }
 
   public logout(redirectUri?: string): Observable<void> {
-    let logoutOptios: Keycloak.KeycloakLogoutOptions;
+    let logoutOptions: KeycloakLogoutOptions;
     if (redirectUri) {
       let baseUrl = `${this.platformLocation.protocol}//${this.platformLocation.hostname}`;
       if (this.platformLocation.port) {
         baseUrl += `:${this.platformLocation.port}`;
       }
-      logoutOptios = {
+      logoutOptions = {
         redirectUri: baseUrl + redirectUri
       };
     }
-    return from(this.keycloak.logout(logoutOptios));
+    return from(this.keycloak.logout(logoutOptions));
   }
 
   private get decodedToken(): IKeycloakToken {

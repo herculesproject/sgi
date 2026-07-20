@@ -48,7 +48,7 @@
   </repositories>
 
   <properties>
-    <java.version>1.8</java.version>
+    <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -56,10 +56,15 @@
     <maven-help-plugin.version>3.2.0</maven-help-plugin.version>
 
     <!-- Keycloak Version (must match deployed version) -->
-    <org.keycloak.version>13.0.0</org.keycloak.version>
+    <org.keycloak.version>26.6.4</org.keycloak.version>
 
-    <!-- Plugin versions (only those that are not defined in `spring-boot-starter-parent`) -->
-    <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+    <!-- Dependency versions -->
+    <junit-jupiter.version>5.10.2</junit-jupiter.version>
+    <mockito.version>5.11.0</mockito.version>
+
+    <!-- Plugin versions -->
+    <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
+    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
     <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
     <maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
     <jdepend-maven-plugin.version>2.0</jdepend-maven-plugin.version>
@@ -149,6 +154,11 @@
               </goals>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
