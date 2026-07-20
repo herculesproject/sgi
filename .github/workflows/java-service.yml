@@ -108,7 +108,6 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
-          cache: maven
 
       - name: Download shared dependencies
         uses: actions/download-artifact@v8
@@ -193,7 +192,6 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
-          cache: maven
 
       - name: Download shared dependencies
         uses: actions/download-artifact@v8
@@ -281,7 +279,6 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
-          cache: maven
 
       - name: Download shared dependencies
         uses: actions/download-artifact@v8
