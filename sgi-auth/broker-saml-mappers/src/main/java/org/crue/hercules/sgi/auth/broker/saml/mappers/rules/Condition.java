@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * <p>
  * Una {@code Condition} es una condición o un operador lógico.
  *
- * <h3>Condiciones</h3>
+ * <b>Condiciones</b>
  * <ul>
  * <li>{@code attribute} + {@code anyOf}: algún valor del atributo es igual a
  * una
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * la expresión regular indicada.</li>
  * </ul>
  *
- * <h3>Operadores lógicos</h3>
+ * <b>Operadores lógicos</b>
  * <ul>
  * <li>{@code all}: se satisfacen todas las condiciones anidadas.</li>
  * <li>{@code any}: se satisface al menos una condición anidada.</li>
