@@ -128,12 +128,11 @@ jobs:
 
       - name: Start-up SGI-Auth for Tests
         run: docker run --rm --name sgi-auth
-          -e KEYCLOAK_USER=test
-          -e KEYCLOAK_PASSWORD=test
-          -e PROXY_ADDRESS_FORWARDING=true
-          -e KEYCLOAK_IMPORT=/realm/sgi-realm.json
+          -e KC_BOOTSTRAP_ADMIN_USERNAME=test
+          -e KC_BOOTSTRAP_ADMIN_PASSWORD=test
           -p ${{ inputs.auth-port }}:8080
           -d herculesproject/sgi-auth:${{ needs.package.outputs.auth-tag }}
+          start-dev --import-realm
 
       - name: Start-up PostgreSQL for Tests
         run: docker run --rm --name postgres
@@ -144,8 +143,20 @@ jobs:
           -d postgres:12
 
       - name: Wait for services to be ready
-        run: sleep 30s
         shell: bash
+        run: |
+          ISSUER="http://localhost:${{ inputs.auth-port }}/auth/realms/sgi/.well-known/openid-configuration"
+          echo "Waiting for Keycloak at $ISSUER ..."
+          for i in $(seq 1 60); do
+            if curl -fs "$ISSUER" > /dev/null 2>&1; then
+              echo "Keycloak is ready after ${i}0s"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Keycloak did not become ready in time"
+          docker logs sgi-auth || true
+          exit 1
 
       - name: Test
         working-directory: ${{ inputs.service-name }}
@@ -202,12 +213,11 @@ jobs:
 
       - name: Start-up SGI-Auth for Tests
         run: docker run --rm --name sgi-auth
-          -e KEYCLOAK_USER=test
-          -e KEYCLOAK_PASSWORD=test
-          -e PROXY_ADDRESS_FORWARDING=true
-          -e KEYCLOAK_IMPORT=/realm/sgi-realm.json
+          -e KC_BOOTSTRAP_ADMIN_USERNAME=test
+          -e KC_BOOTSTRAP_ADMIN_PASSWORD=test
           -p ${{ inputs.auth-port }}:8080
           -d herculesproject/sgi-auth:${{ needs.package.outputs.auth-tag }}
+          start-dev --import-realm
 
       - name: Start-up PostgreSQL for Integration Tests
         run: docker run --rm --name postgres
@@ -218,8 +228,20 @@ jobs:
           -d postgres:12
 
       - name: Wait for services to be ready
-        run: sleep 30s
         shell: bash
+        run: |
+          ISSUER="http://localhost:${{ inputs.auth-port }}/auth/realms/sgi/.well-known/openid-configuration"
+          echo "Waiting for Keycloak at $ISSUER ..."
+          for i in $(seq 1 60); do
+            if curl -fs "$ISSUER" > /dev/null 2>&1; then
+              echo "Keycloak is ready after ${i}0s"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Keycloak did not become ready in time"
+          docker logs sgi-auth || true
+          exit 1
 
       - name: Integration Test
         working-directory: ${{ inputs.service-name }}
