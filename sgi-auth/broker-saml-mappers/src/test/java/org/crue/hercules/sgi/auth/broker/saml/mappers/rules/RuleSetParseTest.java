@@ -21,11 +21,16 @@ class RuleSetParseTest {
     // given: un ruleset mínimo válido con una única regla
     String json = """
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["G"],
-            "when": { "attribute": "a", "anyOf": ["v"] }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "attribute": "a",
+                "anyOf": ["v"]
+              }
+            }
+          ]
         }
         """;
 
@@ -45,9 +50,19 @@ class RuleSetParseTest {
     // given: un ruleset con un splitter declarado
     String json = """
         {
-          "splitters": { "groups": "," },
-          "rules": [{ "name": "r", "grant": ["G"],
-            "when": { "attribute": "groups", "anyOf": ["x"] } }]
+          "splitters": {
+            "groups": ","
+          },
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "attribute": "groups",
+                "anyOf": ["x"]
+              }
+            }
+          ]
         }
         """;
 
@@ -64,9 +79,19 @@ class RuleSetParseTest {
     // given: un ruleset con un fallback declarado
     String json = """
         {
-          "rules": [{ "name": "r", "grant": ["G"],
-            "when": { "attribute": "a", "anyOf": ["v"] } }],
-          "fallback": { "whenNoRulesMatched": ["INVESTIGADOR"] }
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "attribute": "a",
+                "anyOf": ["v"]
+              }
+            }
+          ],
+          "fallback": {
+            "whenNoRulesMatched": ["INVESTIGADOR"]
+          }
         }
         """;
 
@@ -83,16 +108,24 @@ class RuleSetParseTest {
     // given: un ruleset con una condición que usa el combinador 'all'
     String json = """
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["G"],
-            "when": {
-              "all": [
-                { "attribute": "a", "anyOf": ["1"] },
-                { "attribute": "a", "startsWithAny": ["prefix:"] }
-              ]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "all": [
+                  {
+                    "attribute": "a",
+                    "anyOf": ["1"]
+                  },
+                  {
+                    "attribute": "a",
+                    "startsWithAny": ["prefix:"]
+                  }
+                ]
+              }
             }
-          }]
+          ]
         }
         """;
 
@@ -110,8 +143,16 @@ class RuleSetParseTest {
     String json = """
         {
           "futureField": "whatever",
-          "rules": [{ "name": "r", "grant": ["G"],
-            "when": { "attribute": "a", "anyOf": ["v"] } }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "attribute": "a",
+                "anyOf": ["v"]
+              }
+            }
+          ]
         }
         """;
 
@@ -142,7 +183,9 @@ class RuleSetParseTest {
   void parse_WithEmptyRulesArray_ThrowsIllegalArgumentException() {
     // given: un ruleset con el array de reglas vacío
     String json = """
-        { "rules": [] }
+        {
+          "rules": []
+        }
         """;
 
     // when: se parsea el ruleset
@@ -157,7 +200,11 @@ class RuleSetParseTest {
   void parse_WithMissingRules_ThrowsIllegalArgumentException() {
     // given: un ruleset sin el campo 'rules'
     String json = """
-        { "fallback": { "whenNoRulesMatched": ["G"] } }
+        {
+          "fallback": {
+            "whenNoRulesMatched": ["G"]
+          }
+        }
         """;
 
     // when: se parsea el ruleset
@@ -173,8 +220,15 @@ class RuleSetParseTest {
     // given: una condición hoja sin 'attribute'
     String json = """
         {
-          "rules": [{ "name": "r", "grant": ["G"],
-            "when": { "anyOf": ["v"] } }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "anyOf": ["v"]
+              }
+            }
+          ]
         }
         """;
 
@@ -192,8 +246,17 @@ class RuleSetParseTest {
     // given: una condición hoja con dos operadores (anyOf y regex)
     String json = """
         {
-          "rules": [{ "name": "r", "grant": ["G"],
-            "when": { "attribute": "a", "anyOf": ["v"], "regex": "x" } }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "attribute": "a",
+                "anyOf": ["v"],
+                "regex": "x"
+              }
+            }
+          ]
         }
         """;
 
@@ -211,9 +274,22 @@ class RuleSetParseTest {
     // given: una condición que mezcla un combinador con operadores de hoja
     String json = """
         {
-          "rules": [{ "name": "r", "grant": ["G"],
-            "when": { "all": [{ "attribute": "a", "anyOf": ["v"] }],
-                      "attribute": "b", "anyOf": ["w"] } }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "all": [
+                  {
+                    "attribute": "a",
+                    "anyOf": ["v"]
+                  }
+                ],
+                "attribute": "b",
+                "anyOf": ["w"]
+              }
+            }
+          ]
         }
         """;
 
@@ -232,9 +308,26 @@ class RuleSetParseTest {
     // given: una condición con dos combinadores ('all' y 'any') en el mismo nodo
     String json = """
         {
-          "rules": [{ "name": "r", "grant": ["G"],
-            "when": { "all": [{ "attribute": "a", "anyOf": ["v"] }],
-                      "any": [{ "attribute": "b", "anyOf": ["w"] }] } }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"],
+              "when": {
+                "all": [
+                  {
+                    "attribute": "a",
+                    "anyOf": ["v"]
+                  }
+                ],
+                "any": [
+                  {
+                    "attribute": "b",
+                    "anyOf": ["w"]
+                  }
+                ]
+              }
+            }
+          ]
         }
         """;
 
@@ -265,8 +358,15 @@ class RuleSetParseTest {
     // given: una regla sin el campo 'grant'
     String json = """
         {
-          "rules": [{ "name": "r",
-            "when": { "attribute": "a", "anyOf": ["v"] } }]
+          "rules": [
+            {
+              "name": "r",
+              "when": {
+                "attribute": "a",
+                "anyOf": ["v"]
+              }
+            }
+          ]
         }
         """;
 
@@ -284,8 +384,16 @@ class RuleSetParseTest {
     // given: una regla con el campo 'grant' vacío
     String json = """
         {
-          "rules": [{ "name": "r", "grant": [],
-            "when": { "attribute": "a", "anyOf": ["v"] } }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": [],
+              "when": {
+                "attribute": "a",
+                "anyOf": ["v"]
+              }
+            }
+          ]
         }
         """;
 
@@ -303,7 +411,12 @@ class RuleSetParseTest {
     // given: una regla sin el campo 'when'
     String json = """
         {
-          "rules": [{ "name": "r", "grant": ["G"] }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["G"]
+            }
+          ]
         }
         """;
 

@@ -21,11 +21,16 @@ class RuleEngineTest {
     // given: una regla con anyOf sobre el atributo 'grupos'
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["GESTOR-CSP"],
-            "when": { "attribute": "grupos", "anyOf": ["gestor-csp"] }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["GESTOR-CSP"],
+              "when": {
+                "attribute": "grupos",
+                "anyOf": ["gestor-csp"]
+              }
+            }
+          ]
         }
         """);
 
@@ -41,11 +46,16 @@ class RuleEngineTest {
     // given: una regla con anyOf sobre el atributo 'grupos'
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["GESTOR-CSP"],
-            "when": { "attribute": "grupos", "anyOf": ["gestor-csp"] }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["GESTOR-CSP"],
+              "when": {
+                "attribute": "grupos",
+                "anyOf": ["gestor-csp"]
+              }
+            }
+          ]
         }
         """);
 
@@ -61,11 +71,16 @@ class RuleEngineTest {
     // given: una regla con anyOf de varios valores admitidos
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["TECNICO-ETICA"],
-            "when": { "attribute": "grupos", "anyOf": ["tecnico-etica", "tecnico-bioseguridad"] }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["TECNICO-ETICA"],
+              "when": {
+                "attribute": "grupos",
+                "anyOf": ["tecnico-etica", "tecnico-bioseguridad"]
+              }
+            }
+          ]
         }
         """);
 
@@ -81,11 +96,16 @@ class RuleEngineTest {
     // given: una regla con anyOf sobre el atributo 'grupos'
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["GESTOR-CSP"],
-            "when": { "attribute": "grupos", "anyOf": ["gestor-csp"] }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["GESTOR-CSP"],
+              "when": {
+                "attribute": "grupos",
+                "anyOf": ["gestor-csp"]
+              }
+            }
+          ]
         }
         """);
 
@@ -102,8 +122,22 @@ class RuleEngineTest {
     RuleSet rs = parse("""
         {
           "rules": [
-            { "name": "r1", "grant": ["GESTOR-CSP"],  "when": { "attribute": "g", "anyOf": ["gestor"] } },
-            { "name": "r2", "grant": ["VISOR-CSP"],   "when": { "attribute": "g", "anyOf": ["visor"] } }
+            {
+              "name": "r1",
+              "grant": ["GESTOR-CSP"],
+              "when": {
+                "attribute": "g",
+                "anyOf": ["gestor"]
+              }
+            },
+            {
+              "name": "r2",
+              "grant": ["VISOR-CSP"],
+              "when": {
+                "attribute": "g",
+                "anyOf": ["visor"]
+              }
+            }
           ]
         }
         """);
@@ -124,17 +158,22 @@ class RuleEngineTest {
     // given: una regla con startsWithAny sobre un prefijo
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["VISOR-PRC"],
-            "when": { "attribute": "code", "startsWithAny": ["urn:mace:rediris.es:um.es:classif:UNIDADES:a003"] }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["VISOR-PRC"],
+              "when": {
+                "attribute": "code",
+                "startsWithAny": ["urn:schac:personalUniqueCode:es:employeeID:a003"]
+              }
+            }
+          ]
         }
         """);
 
     // when: se evalúa con un valor que empieza por el prefijo
     Set<String> result = apply(rs,
-        attrs("code", "urn:mace:rediris.es:um.es:classif:UNIDADES:a003b025"));
+        attrs("code", "urn:schac:personalUniqueCode:es:employeeID:a003b025"));
 
     // then: se concede el grupo de la regla
     assertEquals(Collections.singleton("VISOR-PRC"), result);
@@ -145,17 +184,22 @@ class RuleEngineTest {
     // given: una regla con startsWithAny sobre un prefijo
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["VISOR-PRC"],
-            "when": { "attribute": "code", "startsWithAny": ["urn:mace:rediris.es:um.es:classif:UNIDADES:a003"] }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["VISOR-PRC"],
+              "when": {
+                "attribute": "code",
+                "startsWithAny": ["urn:schac:personalUniqueCode:es:employeeID:a003"]
+              }
+            }
+          ]
         }
         """);
 
     // when: se evalúa con un valor que no empieza por el prefijo
     Set<String> result = apply(rs,
-        attrs("code", "urn:mace:rediris.es:um.es:classif:UNIDADES:a999x000"));
+        attrs("code", "urn:schac:personalUniqueCode:es:employeeID:a999x000"));
 
     // then: no se concede nada
     assertTrue(result.isEmpty());
@@ -166,11 +210,16 @@ class RuleEngineTest {
     // given: una regla con una expresión regular
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["INVESTIGADOR"],
-            "when": { "attribute": "uid", "regex": "inv-\\\\d+" }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["INVESTIGADOR"],
+              "when": {
+                "attribute": "uid",
+                "regex": "inv-\\\\d+"
+              }
+            }
+          ]
         }
         """);
 
@@ -186,11 +235,16 @@ class RuleEngineTest {
     // given: una regla con una expresión regular
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["INVESTIGADOR"],
-            "when": { "attribute": "uid", "regex": "inv-\\\\d+" }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["INVESTIGADOR"],
+              "when": {
+                "attribute": "uid",
+                "regex": "inv-\\\\d+"
+              }
+            }
+          ]
         }
         """);
 
@@ -206,16 +260,24 @@ class RuleEngineTest {
     // given: una regla con 'all' que exige dos condiciones
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["GESTOR-CSP-OPE"],
-            "when": {
-              "all": [
-                { "attribute": "classif", "anyOf": ["FILIACION:a003"] },
-                { "attribute": "classif", "startsWithAny": ["UNIDADES:a001b085c005"] }
-              ]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["GESTOR-CSP-OPE"],
+              "when": {
+                "all": [
+                  {
+                    "attribute": "classif",
+                    "anyOf": ["FILIACION:a003"]
+                  },
+                  {
+                    "attribute": "classif",
+                    "startsWithAny": ["UNIDADES:a001b085c005"]
+                  }
+                ]
+              }
             }
-          }]
+          ]
         }
         """);
 
@@ -235,16 +297,24 @@ class RuleEngineTest {
     // given: una regla con 'any' con dos condiciones
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["ADMIN"],
-            "when": {
-              "any": [
-                { "attribute": "role", "anyOf": ["admin-a"] },
-                { "attribute": "role", "anyOf": ["admin-b"] }
-              ]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["ADMIN"],
+              "when": {
+                "any": [
+                  {
+                    "attribute": "role",
+                    "anyOf": ["admin-a"]
+                  },
+                  {
+                    "attribute": "role",
+                    "anyOf": ["admin-b"]
+                  }
+                ]
+              }
             }
-          }]
+          ]
         }
         """);
 
@@ -263,11 +333,18 @@ class RuleEngineTest {
     // given: una regla con 'not' sobre una condición
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["PUBLICO"],
-            "when": { "not": { "attribute": "role", "anyOf": ["blocked"] } }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["PUBLICO"],
+              "when": {
+                "not": {
+                  "attribute": "role",
+                  "anyOf": ["blocked"]
+                }
+              }
+            }
+          ]
         }
         """);
 
@@ -286,11 +363,18 @@ class RuleEngineTest {
     // given: una regla con el 'not' sobre una condición
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["PUBLICO"],
-            "when": { "not": { "attribute": "role", "anyOf": ["blocked"] } }
-          }]
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["PUBLICO"],
+              "when": {
+                "not": {
+                  "attribute": "role",
+                  "anyOf": ["blocked"]
+                }
+              }
+            }
+          ]
         }
         """);
 
@@ -306,12 +390,19 @@ class RuleEngineTest {
     // given: un splitter por comas y una regla sobre uno de los tokens
     RuleSet rs = parse("""
         {
-          "splitters": { "groups": "," },
-          "rules": [{
-            "name": "r",
-            "grant": ["ADMINISTRADOR-CSP"],
-            "when": { "attribute": "groups", "anyOf": ["SGI.administrador-csp"] }
-          }]
+          "splitters": {
+            "groups": ","
+          },
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["ADMINISTRADOR-CSP"],
+              "when": {
+                "attribute": "groups",
+                "anyOf": ["SGI.administrador-csp"]
+              }
+            }
+          ]
         }
         """);
 
@@ -328,12 +419,19 @@ class RuleEngineTest {
     // given: un splitter por comas y una regla sobre un token concreto
     RuleSet rs = parse("""
         {
-          "splitters": { "groups": "," },
-          "rules": [{
-            "name": "r",
-            "grant": ["ADMINISTRADOR-CSP"],
-            "when": { "attribute": "groups", "anyOf": ["SGI.administrador-csp"] }
-          }]
+          "splitters": {
+            "groups": ","
+          },
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["ADMINISTRADOR-CSP"],
+              "when": {
+                "attribute": "groups",
+                "anyOf": ["SGI.administrador-csp"]
+              }
+            }
+          ]
         }
         """);
 
@@ -349,12 +447,19 @@ class RuleEngineTest {
     // given: una regla y un fallback declarado
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["ADMIN"],
-            "when": { "attribute": "role", "anyOf": ["admin"] }
-          }],
-          "fallback": { "whenNoRulesMatched": ["INVESTIGADOR"] }
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["ADMIN"],
+              "when": {
+                "attribute": "role",
+                "anyOf": ["admin"]
+              }
+            }
+          ],
+          "fallback": {
+            "whenNoRulesMatched": ["INVESTIGADOR"]
+          }
         }
         """);
 
@@ -370,12 +475,19 @@ class RuleEngineTest {
     // given: una regla y un fallback declarado
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "r",
-            "grant": ["ADMIN"],
-            "when": { "attribute": "role", "anyOf": ["admin"] }
-          }],
-          "fallback": { "whenNoRulesMatched": ["INVESTIGADOR"] }
+          "rules": [
+            {
+              "name": "r",
+              "grant": ["ADMIN"],
+              "when": {
+                "attribute": "role",
+                "anyOf": ["admin"]
+              }
+            }
+          ],
+          "fallback": {
+            "whenNoRulesMatched": ["INVESTIGADOR"]
+          }
         }
         """);
 
@@ -391,11 +503,16 @@ class RuleEngineTest {
     // given: una regla que concede varios grupos a la vez
     RuleSet rs = parse("""
         {
-          "rules": [{
-            "name": "sysadm",
-            "grant": ["SYSADM-CSP", "ADMINISTRADOR-SGI"],
-            "when": { "attribute": "grupos", "anyOf": ["sysadm"] }
-          }]
+          "rules": [
+            {
+              "name": "sysadm",
+              "grant": ["SYSADM-CSP", "ADMINISTRADOR-SGI"],
+              "when": {
+                "attribute": "grupos",
+                "anyOf": ["sysadm"]
+              }
+            }
+          ]
         }
         """);
 
@@ -414,9 +531,30 @@ class RuleEngineTest {
     RuleSet rs = parse("""
         {
           "rules": [
-            { "name": "r1", "grant": ["A"], "when": { "attribute": "x", "anyOf": ["1"] } },
-            { "name": "r2", "grant": ["B"], "when": { "attribute": "x", "anyOf": ["1"] } },
-            { "name": "r3", "grant": ["C"], "when": { "attribute": "x", "anyOf": ["1"] } }
+            {
+              "name": "r1",
+              "grant": ["A"],
+              "when": {
+                "attribute": "x",
+                "anyOf": ["1"]
+              }
+            },
+            {
+              "name": "r2",
+              "grant": ["B"],
+              "when": {
+                "attribute": "x",
+                "anyOf": ["1"]
+              }
+            },
+            {
+              "name": "r3",
+              "grant": ["C"],
+              "when": {
+                "attribute": "x",
+                "anyOf": ["1"]
+              }
+            }
           ]
         }
         """);
@@ -438,7 +576,10 @@ class RuleEngineTest {
             {
               "name": "r", // comentario en línea
               "grant": ["G"],
-              "when": { "attribute": "a", "anyOf": ["v"], },
+              "when": {
+                "attribute": "a",
+                "anyOf": ["v"],
+              },
             },
           ],
         }

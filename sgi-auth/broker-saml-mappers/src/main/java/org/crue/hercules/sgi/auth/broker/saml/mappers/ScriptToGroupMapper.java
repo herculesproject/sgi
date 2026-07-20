@@ -202,7 +202,7 @@ public class ScriptToGroupMapper extends AbstractIdentityProviderMapper implemen
         attributeValue = Arrays.asList((Object[]) attributeValue);
       }
       if (attributeValue instanceof Iterable) {
-        for (Object value : (Iterable) attributeValue) {
+        for (Object value : (Iterable<?>) attributeValue) {
           GroupModel group = getGroup(session, realm, value.toString());
           if (group != null) {
             groups.add(group);
