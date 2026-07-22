@@ -6,6 +6,7 @@ FROM quay.io/keycloak/keycloak:26.6.4 AS builder
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=false
 ENV KC_HTTP_RELATIVE_PATH=/auth
+ENV KC_HTTP_MANAGEMENT_RELATIVE_PATH=/
 
 # Driver JDBC de Oracle ( Keycloak no lo redistribuye).
 ADD --chown=1000:0 \
@@ -32,6 +33,8 @@ ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=false
 ENV KC_HTTP_RELATIVE_PATH=/auth
 ENV KC_HTTP_MANAGEMENT_RELATIVE_PATH=/
+ENV KC_SPI_IDENTITY_PROVIDER_MAPPER__SAML_SCRIPT_ATTRIBUTE_IDP_MAPPER__ENABLED=false
+ENV KC_SPI_IDENTITY_PROVIDER_MAPPER__SAML_SCRIPT_GROUP_IDP_MAPPER__ENABLED=false
 
 # Los ficheros del realm de ejemplo se incluyen en la imagen, pero no se importan
 # automáticamente; la importación depende del modo de arranque.
