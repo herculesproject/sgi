@@ -16,7 +16,7 @@
 
 ### Changed
 
-- Actualizado el servicio de autenticación de Keycloak 13 a Keycloak 26.6.4 y se añaden dos mappers SAML declarativos (`JSON Rules Group Importer` y `Prefix Match & Strip Attribute Importer`) que sustituyen a los mappers basados en JavaScript, desactivados por defecto. ([#115](https://github.com/herculesproject/sgi/issues/115)).
+- Actualizado el servicio de autenticación de Keycloak 13 a Keycloak 26.7.0 y se añaden dos mappers SAML declarativos (`JSON Rules Group Importer` y `Prefix Match & Strip Attribute Importer`) que sustituyen a los mappers basados en JavaScript, desactivados por defecto. ([#115](https://github.com/herculesproject/sgi/issues/115)).
 
 ### Fixed
 
