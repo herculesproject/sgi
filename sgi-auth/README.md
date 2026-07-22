@@ -5,7 +5,7 @@ El objetivo del Proyecto SGI dentro del Proyecto HÉRCULES es crear un Prototipo
 
 # HÉRCULES SGI - Auth
 
-Servicio de autenticación del SGI basado en **Keycloak 26.6.4**.
+Servicio de autenticación del SGI basado en **Keycloak 26.7.0**.
 
 ## Build
 

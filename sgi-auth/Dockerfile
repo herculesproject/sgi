@@ -1,5 +1,5 @@
 # Stage 1: build de una imagen Keycloak optimizada con los providers del SGI
-FROM quay.io/keycloak/keycloak:26.6.4 AS builder
+FROM quay.io/keycloak/keycloak:26.7.0 AS builder
 
 # Configuración persistida durante el build de Quarkus.
 # KC_DB se configura en runtime porque depende de cada implantación.
@@ -23,7 +23,7 @@ RUN /opt/keycloak/bin/kc.sh build \
 
 
 # Stage 2: imagen de runtime
-FROM quay.io/keycloak/keycloak:26.6.4
+FROM quay.io/keycloak/keycloak:26.7.0
 
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 

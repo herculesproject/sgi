@@ -56,7 +56,7 @@
     <maven-help-plugin.version>3.2.0</maven-help-plugin.version>
 
     <!-- Keycloak Version (must match deployed version) -->
-    <org.keycloak.version>26.6.4</org.keycloak.version>
+    <org.keycloak.version>26.7.0</org.keycloak.version>
 
     <!-- Dependency versions -->
     <junit-jupiter.version>5.10.2</junit-jupiter.version>
