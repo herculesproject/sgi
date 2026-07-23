@@ -223,7 +223,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       unidadGestion: new FormControl(null),
       estadoSolicitudHistorico: new FormControl(null),
       fechaEstadoSolicitudDesde: new FormControl(null),
-      fechaEstadoSolicitudHasta: new FormControl(null)
+      fechaEstadoSolicitudHasta: new FormControl(null),
+      unidadVinculacion: new FormControl(null)
     });
 
     this.filter = this.createFilter();
