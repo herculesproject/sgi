@@ -46,6 +46,6 @@ La imagen de Keycloak expone dos interfaces HTTP:
 
 ## Documentación relacionada
 
-- Actualización a KC26: [notas de la versión](../docs/upgrade/1.3.0-SNAPSHOT.md).
+- Actualización a KC26: [notas de la versión](../docs/upgrade/1.3.0.md).
 - Mappers SAML: [`docs/keycloak-saml-mappers.md`](../docs/keycloak-saml-mappers.md).
 - Rotación de secretos/keys: [`docs/keycloak-secrets-rotation.md`](../docs/keycloak-secrets-rotation.md).
