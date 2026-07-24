@@ -10,22 +10,334 @@
 
   <changeSet author="master" id="1.3.0-updateTemplatesOracle" dbms="oracle">
     <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_FIRST_NO_PRORROGA_NO_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_FIRST_NO_PRORROGA_NO_LAST_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/csp/csp-com-proyecto-hito/CSP_PROYECTO_HITO_CONTENT_text.ftl" />
       <where>name='CSP_PROYECTO_HITO_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_html.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT' AND dbms_lob.compare(tpl_html, default_tpl_html) = 0</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_text.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT' AND dbms_lob.compare(tpl_text, default_tpl_text) = 0</where>
     </update>
   </changeSet>
 
   <changeSet author="master" id="1.3.0-updateTemplatesNotOracle" dbms="!oracle">
     <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_FIRST_NO_PRORROGA_NO_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_FIRST_NO_PRORROGA_NO_LAST_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/csp/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/csp/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
       <column name="tpl_text" valueClobFile="clob/csp/csp-com-proyecto-hito/CSP_PROYECTO_HITO_CONTENT_text.ftl" />
       <where>name='CSP_PROYECTO_HITO_CONTENT' AND tpl_text = default_tpl_text</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_html" valueClobFile="clob/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_html.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT' AND tpl_html = default_tpl_html</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="tpl_text" valueClobFile="clob/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_text.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT' AND tpl_text = default_tpl_text</where>
     </update>
   </changeSet>
 
   <changeSet author="master" id="1.3.0-updateDefaultTemplates">
     <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_FIRST_NO_PRORROGA_NO_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_FIRST_NO_PRORROGA_NO_LAST_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_NO_REQUISITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/notificar/CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_UNICA_NOT_IN_PRORROGA_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_html.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-calendario-facturacion/validar-ip/CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT_text.ftl" />
+      <where>name='CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_VALIDADA_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-fin-periodo-justificacion-socio/CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-fin-seguimiento-cientifico/CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_FIN_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-inicio-periodo-justificacion-socio/CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-inicio-presentacion-gasto/CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_GASTO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ug/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_html.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-inicio-seguimiento-cientifico/ips/CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT_text.ftl" />
+      <where>name='CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_IP_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/csp/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT_html.ftl" />
+      <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-proyecto-periodo-pago-socio/CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT_text.ftl" />
+      <where>name='CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
       <column name="default_tpl_text" valueClobFile="clob/csp/csp-com-proyecto-hito/CSP_PROYECTO_HITO_CONTENT_text.ftl" />
       <where>name='CSP_PROYECTO_HITO_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_html" valueClobFile="clob/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_html.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT'</where>
+    </update>
+    <update tableName="content_tpl">
+      <column name="default_tpl_text" valueClobFile="clob/prc/PRC_COM_PROCESO_BAREMACION_FIN_CONTENT_text.ftl" />
+      <where>name='PRC_COM_PROCESO_BAREMACION_FIN_CONTENT'</where>
     </update>
   </changeSet>
 

@@ -1,0 +1,92 @@
+<#ftl output_format="HTML">
+<#assign data = CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_DATA?eval />
+<#--
+  Formato CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_DATA:
+  {
+    "titulo": [
+      {
+        "lang": "es",
+        "value": "Proyecto de prueba"
+      }
+    ],
+    "nombreEntidad": "Entidad Colaboradora",
+    "fechaInicio": "2022-01-01T00:00:00Z",
+    "numPeriodo": 2
+  }
+-->
+<#macro renderEs>
+<#setting locale="es">
+<p>Próximamente dará inicio el periodo de presentación de justificación para el socio de proyecto referenciado más abajo.</p>
+<p>
+- Fecha de inicio de periodo de justificación: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
+- Entidad socia: ${data.nombreEntidad}<br>
+- Proyecto en el que colabora: ${sgi.getFieldValue(data.titulo)}<br>
+- Periodo que se debe justificar: ${data.numPeriodo}
+</p>
+<p>
+Reciba un cordial saludo,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
+</#macro>
+<#macro renderEn>
+<#setting locale="en">
+<p>The period for submitting justification for the project partner referred to below will begin soon.</p>
+<p>
+- Start date of the justification period: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
+- Partner entity: ${data.nombreEntidad}<br>
+- Collaboration project: ${sgi.getFieldValue(data.titulo)}<br>
+- Period to be justified: ${data.numPeriodo}
+</p>
+<p>
+Yours sincerely,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
+</#macro>
+<#macro renderEu>
+<#setting locale="eu">
+<p>Laster hasiko da beherago aipatutako proiektuko bazkidearentzako justifikazioa aurkezteko epea.</p>
+<p>
+- Justifikazio epearen hasiera data: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
+- Erakunde bazkidea: ${data.nombreEntidad}<br>
+- Zer proiektutan kolaboratzen duen: ${sgi.getFieldValue(data.titulo)}<br>
+- Justifikatu beharreko aldia: ${data.numPeriodo}
+</p>
+<p>
+Jaso agur bero bat.<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
+</#macro>
+<#macro renderCa>
+<#setting locale="ca">
+<p>Benvolgut/da investigador/a,</p>
+<p>Properament donarà inici el període de presentació de justificació per al soci de projecte referenciat més avall.</p>
+<p>
+- Data d'inici de període de justificació: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
+- Entitat sòcia: ${data.nombreEntidad}<br>
+- Projecte en el qual col·labora: ${sgi.getFieldValue(data.titulo)}<br>
+- Període que cal justificar: ${data.numPeriodo}
+</p>
+<p>
+Rebeu una cordial salutació,<br>
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
+</p>
+</#macro>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+<#list languagePriorities as renderLang>
+<@.vars["render${renderLang?capitalize}"] />
+<#if renderLang?has_next>
+<hr>
+</#if>
+</#list>
+</body>
+</html>
