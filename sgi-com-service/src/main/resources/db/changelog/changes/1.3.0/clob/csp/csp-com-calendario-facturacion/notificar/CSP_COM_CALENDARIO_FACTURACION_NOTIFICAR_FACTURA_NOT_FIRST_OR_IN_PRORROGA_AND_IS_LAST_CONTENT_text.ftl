@@ -98,7 +98,7 @@ Seguint el calendari de facturació del contracte referenciat més avall, s'ha d
 - Títol del contracte:${sgi.getFieldValue(data.tituloProyecto)}
 - Codi/s de projecte/s associat/s: ${data.codigosSge?join(", ")}
 - Núm.: ${data.numPrevision}
-- Tipus facturació: ${data.tipoFacturacion}
+- Tipus facturació: ${sgi.getFieldValue(data.tipoFacturacion)}
 
 En relació amb els treballs que ha realitzat en el marc d'aquest contracte, és aconsellable que ens remeti còpia dels informes finals lliurats a la/les empresa/es, objecte del contracte, per conèixer del desenvolupament, execució i compliment dels treballs.
 

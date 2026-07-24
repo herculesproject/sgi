@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.com.model.SubjectTpl;
 import org.crue.hercules.sgi.com.repository.EmailTplRepository;
 import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.Language;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.StringUtils;
 
+import freemarker.template.AttemptExceptionReporter;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -65,6 +67,15 @@ class EmailTemplatesFtlIT extends BaseIT {
 
   @Autowired
   private Configuration freemarkerCfg;
+
+  @BeforeEach
+  void configureFreemarkerLikeProduction() {
+    // El render usa el bean Configuration de producción pero sin pasar por
+    // processTemplate(); se replica su reporter de <#attempt> para que las
+    // excepciones recuperadas (p. ej. el fallback de sgi.getFieldValue) se
+    // registren como WARN y no como ERROR.
+    freemarkerCfg.setAttemptExceptionReporter(AttemptExceptionReporter.LOG_WARN_REPORTER);
+  }
 
   @Test
   void allEmailTemplates_parseWithoutErrors() {
@@ -127,7 +138,7 @@ class EmailTemplatesFtlIT extends BaseIT {
           "codigosSge": ["00001", "00002"],
           "numPrevision": 2,
           "entidadesFinanciadoras": ["Entidad Financiadora 1", "Entidad Financiadora 2"],
-          "tipoFacturacion": "Sin Requisitos",
+          "tipoFacturacion": [{"lang": "es", "value": "Sin Requisitos"}],
           "apellidosDestinatario": "Apellido1 Apellido2",
           "enlaceAplicacion": "https://sgi.hercules.org"
         }
