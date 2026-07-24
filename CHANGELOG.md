@@ -23,6 +23,7 @@
 - [CSP] Corregido error en la exportación a excel de los listados que se producía cuando alguna de las personas no tenían informados los emails. ([#118](https://github.com/herculesproject/sgi/issues/118)).
 - [CSP] Corregido texto mal traducido en la plantilla del comunicado de los hitos del proyecto. ([#121](https://github.com/herculesproject/sgi/issues/121)).
 - [CSP] Corregido el error en la búsqueda ampliada de solicitudes que impedía realizar cualquier búsqueda. ([#124](https://github.com/herculesproject/sgi/issues/124)).
+- [CSP] Corregidas varias plantillas de comunicados (calendario de facturación y presentación) que impedían el envío del comunicado por errores en la plantilla: macros sin cerrar o anidadas, `?no_esc` en plantillas de texto y un campo multiidioma impreso sin resolver en la versión catalana. Actualizados además los ejemplos de datos de los comentarios de las plantillas. ([#127](https://github.com/herculesproject/sgi/issues/127)).
 
 ## 1.2.0 (2026-06-30)
 
