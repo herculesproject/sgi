@@ -1,5 +1,12 @@
 # Guía de despliegue del SGI con Helm
 
+Esta guía describe el procedimiento **estándar** de despliegue del SGI con Helm sobre Kubernetes. Los valores entre `<...>` se sustituyen por los de cada entorno, y las particularidades de cada versión están en sus notas de actualización.
+
+## Requisitos previos
+
+- **Helm** y **kubectl** instalados en el equipo desde el que se despliega.
+- Acceso al clúster de Kubernetes objetivo: un `kubeconfig` con el contexto y el namespace correctos y permisos suficientes para instalar o actualizar el release.
+
 ## 1. Preparación del entorno
 
 ### Actualizar repositorio de Helm
@@ -55,11 +62,12 @@ global:
     pullPolicy: IfNotPresent
 ```
 
-Instalar o actualizar el SGI:
+Instalar o actualizar el SGI fijando con `--version` la versión del chart `sgi-umbrella` validada para la versión del SGI que se despliega (indicada en sus notas de actualización). El chart se versiona de forma independiente del SGI, por lo que sin `--version` se desplegaría el último chart publicado, que puede no estar validado con esa versión:
 
 ```bash
 helm upgrade sgi sgi-helm/sgi-umbrella \
   --install \
+  --version <versión-del-chart> \
   --namespace <namespace> \
   --timeout 10m0s \
   --wait --wait-for-jobs \
