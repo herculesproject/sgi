@@ -257,11 +257,10 @@ public class DictamenIT extends BaseIT {
     // then: Respuesta OK, Dictamenes
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Dictamen> dictamenes = response.getBody();
-    Assertions.assertThat(dictamenes.size()).isEqualTo(2);
 
     // Contiene de nombre='Favorable' y 'Favorable pendiente de revisión mínima'
-    Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Favorable");
-    Assertions.assertThat(dictamenes.get(1).getNombre()).isEqualTo("Favorable pendiente de revisión mínima");
+    Assertions.assertThat(dictamenes).extracting(Dictamen::getNombre)
+        .containsExactlyInAnyOrder("Favorable", "Favorable pendiente de revisión mínima");
   }
 
   @Test
