@@ -10,15 +10,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.com.model.ContentTpl;
 import org.crue.hercules.sgi.com.model.EmailTpl;
 import org.crue.hercules.sgi.com.model.SubjectTpl;
 import org.crue.hercules.sgi.com.repository.EmailTplRepository;
-import org.crue.hercules.sgi.framework.i18n.I18nConfig;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +52,6 @@ import freemarker.template.Template;
     "spring.datasource.driver-class-name=${SGI_TPL_DB_DRIVER:org.h2.Driver}",
     "spring.jpa.properties.hibernate.dialect=${SGI_TPL_DB_DIALECT:org.hibernate.dialect.H2Dialect}",
     "spring.jpa.properties.hibernate.default_schema=${SGI_TPL_DB_SCHEMA:test}",
-    "sgi.rest.api.cnf-url=${SGI_TPL_CNF_URL:}",
 })
 class EmailTemplatesFtlIT extends BaseIT {
 
@@ -1507,24 +1503,14 @@ class EmailTemplatesFtlIT extends BaseIT {
   }
 
   /**
-   * Idiomas a renderizar. Si el servicio de configuración (CNF) está disponible y
-   * devuelve prioridades de idioma, se usan esas (el comportamiento real de
-   * producción, con los idiomas que la implantación tiene habilitados). Si no
-   * (CNF sin configurar, p. ej. en CI), se usan los idiomas para los que la
-   * plantilla define un macro {@code render<Lang>}; {@code ["es"]} si no define
+   * Idiomas a renderizar: los que la plantilla define con un macro
+   * {@code render<Lang>} (es, en, eu, ca...); {@code ["es"]} si no define
    * ninguno.
    *
    * @param tpl el contenido de la plantilla
    * @return la lista de códigos de idioma a renderizar
    */
   private List<String> languagePrioritiesFor(String tpl) {
-    List<String> configured = I18nConfig.get().getLanguagePriorities().stream()
-        .map(Language::getCode)
-        .collect(Collectors.toList());
-    if (!configured.isEmpty()) {
-      return configured;
-    }
-
     List<String> defined = new ArrayList<>();
     Matcher m = RENDER_MACRO.matcher(tpl);
     while (m.find()) {

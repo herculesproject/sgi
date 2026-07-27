@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.com.service.sgi;
 
 import org.crue.hercules.sgi.com.config.RestApiProperties;
 import org.crue.hercules.sgi.com.enums.ServiceType;
+import org.crue.hercules.sgi.com.exceptions.ServiceUrlNotConfiguredException;
 import org.crue.hercules.sgi.com.exceptions.UnknownServiceTypeException;
 import org.crue.hercules.sgi.framework.http.HttpEntityBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -58,7 +59,11 @@ public abstract class SgiApiBaseService {
       default:
         throw new UnknownServiceTypeException(serviceType.name());
     }
-    // TODO revisit implementation
+
+    if (serviceURL == null || serviceURL.isEmpty()) {
+      throw new ServiceUrlNotConfiguredException(serviceType.name());
+    }
+
     String mergedURL = new StringBuilder(serviceURL).append(relativeUrl).toString();
     log.debug("buildUrl(ServiceType serviceType, String relativeUrl) - end");
     return mergedURL;
