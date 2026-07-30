@@ -14,6 +14,10 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+### Fixed
+
+- [CSP] Corregido el error en la búsqueda de solicitudes por unidad de vinculación. ([#132](https://github.com/herculesproject/sgi/issues/132)).
+
 ## 1.3.0 (2026-07-24)
 
 **Notas de actualización:** [1.3.0](/docs/upgrade/1.3.0.md)
