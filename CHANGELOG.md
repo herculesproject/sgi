@@ -17,6 +17,7 @@
 ### Fixed
 
 - [CSP] Corregido el error en la búsqueda de solicitudes por unidad de vinculación. ([#132](https://github.com/herculesproject/sgi/issues/132)).
+- [CSP] Corregida la pantalla de clasificación de gastos de ejecución económica, que proponía una clasificación automática incorrecta cuando el gasto no tenía informado el código económico. ([#135](https://github.com/herculesproject/sgi/issues/135)).
 
 ## 1.3.0 (2026-07-24)
 

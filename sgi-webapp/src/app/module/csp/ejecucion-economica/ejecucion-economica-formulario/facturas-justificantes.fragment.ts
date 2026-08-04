@@ -19,7 +19,7 @@ import { LanguageService } from '@core/services/language.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, from, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { combineAll, concatMap, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 import { DesgloseEconomicoFragment, IColumnDefinition, IDesgloseEconomicoExportData, IRowConfig, RowTreeDesglose } from './desglose-economico.fragment';
@@ -36,9 +36,9 @@ export interface IDesglose extends IDatoEconomico {
 }
 
 export enum GastosClasficadosSgiEnum {
-  TODOS = "TODOS",
-  SI = "SI",
-  NO = "NO"
+  TODOS = 'TODOS',
+  SI = 'SI',
+  NO = 'NO'
 }
 
 export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFragment<IDesglose> {
@@ -111,8 +111,8 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
   ): Observable<IDatoEconomico[]>;
 
   /**
-   * Crea la fila para mostrar el dato economico en la tabla y los agrupadores de  Anualidad - Proyecto SGI, Concepto gasto y Clasificacion SGE
-   * que no existan ya de añadir otros datos economicos
+   * Crea la fila para mostrar el dato economico en la tabla y los agrupadores de  Anualidad - Proyecto SGI,
+   * Concepto gasto y Clasificacion SGE que no existan ya de añadir otros datos economicos
    */
   protected buildRows(datosEconomicos: IDatoEconomico[], rowConfig: IRowConfig): Observable<RowTreeDesglose<IDesglose>[]> {
 
@@ -452,7 +452,9 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     return anualidadItemA.localeCompare(anualidadItemB);
   }
 
-  protected compareProyectoTituloRowTree(itemA: RowTreeDesglose<IDesglose>, itemB: RowTreeDesglose<IDesglose>, rowConfig?: IRowConfig): number {
+  protected compareProyectoTituloRowTree(
+    itemA: RowTreeDesglose<IDesglose>, itemB: RowTreeDesglose<IDesglose>, rowConfig?: IRowConfig
+  ): number {
     if (rowConfig && !rowConfig.proyectoShow) {
       return 0;
     }
@@ -477,8 +479,10 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
       return 0;
     }
 
-    const nombreConceptoGastoItemA = this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre ? this.languageService.getFieldValue(this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre) : '';
-    const nombreConceptoGastoItemB = this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre ? this.languageService.getFieldValue(this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre) : '';
+    const nombreConceptoGastoItemA = this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre
+      ? this.languageService.getFieldValue(this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre) : '';
+    const nombreConceptoGastoItemB = this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre
+      ? this.languageService.getFieldValue(this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre) : '';
     return nombreConceptoGastoItemA.localeCompare(nombreConceptoGastoItemB);
   }
 
@@ -488,7 +492,9 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     return nombreConceptoGastoItemA.localeCompare(nombreConceptoGastoItemB);
   }
 
-  protected compareClasificacionSGENombreRowTree(itemA: RowTreeDesglose<IDesglose>, itemB: RowTreeDesglose<IDesglose>, rowConfig?: IRowConfig): number {
+  protected compareClasificacionSGENombreRowTree(
+    itemA: RowTreeDesglose<IDesglose>, itemB: RowTreeDesglose<IDesglose>, rowConfig?: IRowConfig
+  ): number {
     if (rowConfig && !rowConfig.clasificacionSgeShow) {
       return 0;
     }
@@ -512,7 +518,9 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     return nombreClasificacionSGEItemA.localeCompare(nombreClasificacionSGEItemB);
   }
 
-  protected comparePartidaPresupuestariaRowTree(itemA: RowTreeDesglose<IDesglose>, itemB: RowTreeDesglose<IDesglose>, rowConfig?: IRowConfig): number {
+  protected comparePartidaPresupuestariaRowTree(
+    itemA: RowTreeDesglose<IDesglose>, itemB: RowTreeDesglose<IDesglose>, rowConfig?: IRowConfig
+  ): number {
     if (rowConfig && !rowConfig.aplicacionPresupuestariaShow) {
       return 0;
     }
@@ -576,7 +584,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
         if (!proyectoInMap) {
           return this.proyectoService.findById(relacion.id).pipe(
             tap(proyecto => this.proyectosMap.set(proyecto.id.toString(), proyecto))
-          )
+          );
         }
 
         return of(proyectoInMap);
@@ -587,25 +595,25 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
   }
 
   /**
-   * Rellena el proyecto y el concepto de gasto a partir de los datos de gastoProyecto y si no esta clasificado se intenta hacer la clasificacion automatica
-   * con los datos de elegibilidad del proyecto.
-   * 
+   * Rellena el proyecto y el concepto de gasto a partir de los datos de gastoProyecto y si no esta clasificado se intenta hacer
+   * la clasificacion automatica con los datos de elegibilidad del proyecto.
+   *
    * @param datoEconomico un dato economico
-   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de la elegibilidad del proyecto y si no se pueden establecer 
-   * ambos como Sin clasificar.
+   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de la elegibilidad del proyecto
+   * y si no se pueden establecer  ambos como Sin clasificar.
    */
   private fillDatoEconomicoWithGastoProyectoOrElegibilidad(datoEconomico: IDesglose): Observable<IDesglose> {
     return this.fillDatoEconomicoClasificacionWithGastoProyecto(datoEconomico).pipe(
-      switchMap(datoEconomico => {
-        if (!!datoEconomico?.gastoProyectoId) {
-          datoEconomico.clasificadoAutomaticamente = false;
-          return of(datoEconomico);
+      switchMap(datoEconomicoWithGastoProyecto => {
+        if (!!datoEconomicoWithGastoProyecto?.gastoProyectoId) {
+          datoEconomicoWithGastoProyecto.clasificadoAutomaticamente = false;
+          return of(datoEconomicoWithGastoProyecto);
         }
 
-        return this.fillDatoEconomicoClasificacionWithElegibilidad(datoEconomico).pipe(
-          map(datoEconomico => {
-            datoEconomico.clasificadoAutomaticamente = !!datoEconomico.proyecto?.id;
-            return datoEconomico;
+        return this.fillDatoEconomicoClasificacionWithElegibilidad(datoEconomicoWithGastoProyecto).pipe(
+          map(datoEconomicoWithElegibilidad => {
+            datoEconomicoWithElegibilidad.clasificadoAutomaticamente = !!datoEconomicoWithElegibilidad.proyecto?.id;
+            return datoEconomicoWithElegibilidad;
           })
         );
       })
@@ -614,12 +622,12 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   /**
    * Rellena el proyecto y el concepto de gasto a partir de los datos de gastoProyecto.
-   * 
-   * Si el gasto ya esta clasificado o validado se recuperan el proyecto y el concepto de gasto con los que esta asociado, 
+   *
+   * Si el gasto ya esta clasificado o validado se recuperan el proyecto y el concepto de gasto con los que esta asociado,
    * si no es gasto no esta clasificado se dejan el proyecto y el concepto de gasto como 'Sin clasificar'.
-   * 
+   *
    * @param datoEconomico un dato economico
-   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de gastoProyecto y si no se dejan 
+   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de gastoProyecto y si no se dejan
    * ambos como 'Sin clasificar'.
    */
   private fillDatoEconomicoClasificacionWithGastoProyecto(datoEconomico: IDesglose): Observable<IDesglose> {
@@ -631,7 +639,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
       map(response => {
         if (response.items.length) {
           const gastoProyecto = response.items[0];
-          datoEconomico.gastoProyectoId = gastoProyecto.id
+          datoEconomico.gastoProyectoId = gastoProyecto.id;
           datoEconomico.proyecto = this.proyectosMap.get(gastoProyecto.proyectoId?.toString());
           datoEconomico.conceptoGasto = gastoProyecto.conceptoGasto;
         }
@@ -650,14 +658,14 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   /**
    * Rellena el proyecto y el concepto de gasto a partir de los datos de elegibilidad del proyecto.
-   * 
-   * Si el codigo economico del datoEconomico esta incluido como proyectoConceptoGastoCodigoEc de uno solo de los proyectos del sgi   
+   *
+   * Si el codigo economico del datoEconomico esta incluido como proyectoConceptoGastoCodigoEc de uno solo de los proyectos del sgi
    * relacionados rellena el conceptoGasto al que esta asociado el codigo economico y el proyecto en el que esta el concepto de gasto,
    * si no esta o esta en varios proyectos se dejan ambos como 'Sin clasificar'
-   * 
+   *
    * @param datoEconomico un dato economico
-   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de la elegibilidad del proyecto y si no se pueden establecer 
-   * ambos como 'Sin clasificar'.
+   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de la elegibilidad del proyecto
+   * y si no se pueden establecer ambos como 'Sin clasificar'.
    */
   private fillDatoEconomicoClasificacionWithElegibilidad(datoEconomico: IDesglose): Observable<IDesglose> {
     if (!datoEconomico.codigoEconomico?.id) {
@@ -726,12 +734,14 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   /**
    * Elimina las filas que no cumplen con el filtro directamente y los agrupadores que quedan vacios al aplicar el filtro
-   * 
+   *
    * @param rows la lista de filas a filtrar
    * @param filter el filtro
    * @returns la lista de filas filtradas
    */
-  private applyFilterGastosClasficadosSgi(rows: RowTreeDesglose<IDesglose>[], filter: GastosClasficadosSgiEnum): RowTreeDesglose<IDesglose>[] {
+  private applyFilterGastosClasficadosSgi(
+    rows: RowTreeDesglose<IDesglose>[], filterClasificados: GastosClasficadosSgiEnum
+  ): RowTreeDesglose<IDesglose>[] {
     const rowConfig = this.getRowConfig();
     let filterLevel = 3;
 
@@ -745,29 +755,29 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
     return rows.filter(row => {
       if (row.level < filterLevel) {
-        row.childs = this.applyFilterGastosClasficadosSgi(row.childs, filter);
+        row.childs = this.applyFilterGastosClasficadosSgi(row.childs, filterClasificados);
       }
 
       return (row.level < filterLevel && row.childs.length > 0)
         || (row.level === filterLevel && this.desgloseMatchFilterGastosClasficadosSgi({
           ...row.item,
           conceptoGasto: this.getItemLevel(row, 1).item.conceptoGasto
-        } as IDesglose, filter));
+        } as IDesglose, filterClasificados));
     });
   }
 
   /**
    * Comprueba si el elemento cumple con el filtro
-   * 
+   *
    * @param desglose el elemento sobre el que se aplica el filtro
-   * @param filter el filtro
-   * @returns si el elemento cumple o no con el filtro 
+   * @param filterClasificados el filtro
+   * @returns si el elemento cumple o no con el filtro
    */
-  private desgloseMatchFilterGastosClasficadosSgi(desglose: IDesglose, filter: GastosClasficadosSgiEnum): boolean {
-    return !filter
-      || filter === GastosClasficadosSgiEnum.TODOS
-      || (filter === GastosClasficadosSgiEnum.SI && !!desglose.conceptoGasto?.id && !desglose.clasificadoAutomaticamente)
-      || (filter === GastosClasficadosSgiEnum.NO && (!desglose.conceptoGasto?.id || !!desglose.clasificadoAutomaticamente));
+  private desgloseMatchFilterGastosClasficadosSgi(desglose: IDesglose, filterClasificados: GastosClasficadosSgiEnum): boolean {
+    return !filterClasificados
+      || filterClasificados === GastosClasficadosSgiEnum.TODOS
+      || (filterClasificados === GastosClasficadosSgiEnum.SI && !!desglose.conceptoGasto?.id && !desglose.clasificadoAutomaticamente)
+      || (filterClasificados === GastosClasficadosSgiEnum.NO && (!desglose.conceptoGasto?.id || !!desglose.clasificadoAutomaticamente));
   }
 
   private isSaveOrUpdateComplete(): boolean {
@@ -776,7 +786,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   /**
    * Genera el titulo sin clasificar para el proyecto en el idioma actual
-   * 
+   *
    * @returns el titulo sin clasificar en el idioma actual
    */
   private getTituloProyectoSinClasificar(): I18nFieldValue[] {
@@ -790,7 +800,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   /**
    * Genera el nombre sin clasificar para el concepto gasto en el idioma actual
-   * 
+   *
    * @returns el nombre sin clasificar en el idioma actual
    */
   private getNombreConceptoGastoSinClasificar(): I18nFieldValue[] {
