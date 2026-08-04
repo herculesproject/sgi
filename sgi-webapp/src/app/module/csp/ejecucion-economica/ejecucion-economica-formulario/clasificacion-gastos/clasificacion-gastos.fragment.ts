@@ -19,8 +19,8 @@ import { EjecucionEconomicaService, TipoOperacion } from '@core/services/sge/eje
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, forkJoin, from, merge, of } from 'rxjs';
-import { concatAll, concatMap, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
+import { concatAll, concatMap, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition } from '../desglose-economico.fragment';
 import { GastosClasficadosSgiEnum } from '../facturas-justificantes.fragment';
@@ -36,9 +36,9 @@ export interface ClasificacionGasto extends IDatoEconomico {
 }
 
 export interface ColumnDefinitionClasificacionGasto extends IColumnDefinition {
-  idFacturasGastos: string,
-  idViajesDietas: string,
-  idPersonalContratado: string
+  idFacturasGastos: string;
+  idViajesDietas: string;
+  idPersonalContratado: string;
 }
 
 export class ClasificacionGastosFragment extends Fragment {
@@ -115,7 +115,8 @@ export class ClasificacionGastosFragment extends Fragment {
     );
 
     this.subscriptions.push(
-      gastos$.pipe(
+      this.fillProyectosMap().pipe(
+        switchMap(() => gastos$),
         map(gastos => {
           if (gastos.length === 0) {
             return of(void 0);
@@ -149,9 +150,9 @@ export class ClasificacionGastosFragment extends Fragment {
                   }
 
                   return this.fillDatoEconomicoClasificacionWithElegibilidad(datoEconomico).pipe(
-                    map(datoEconomico => {
-                      datoEconomico.clasificadoAutomaticamente = !!datoEconomico.proyecto?.id;
-                      return datoEconomico;
+                    map(datoEconomicoWithElegibilidad => {
+                      datoEconomicoWithElegibilidad.clasificadoAutomaticamente = !!datoEconomicoWithElegibilidad.proyecto?.id;
+                      return datoEconomicoWithElegibilidad;
                     })
                   );
                 })
@@ -171,30 +172,58 @@ export class ClasificacionGastosFragment extends Fragment {
 
   /**
    * Comprueba si el elemento cumple con el filtro
-   * 
+   *
    * @param desglose el elemento sobre el que se aplica el filtro
-   * @param filter el filtro
-   * @returns si el elemento cumple o no con el filtro 
+   * @param gastosClasficadosSgiFilter el filtro
+   * @returns si el elemento cumple o no con el filtro
    */
-  private desgloseMatchFilterGastosClasficadosSgi(desglose: ClasificacionGasto, filter: GastosClasficadosSgiEnum): boolean {
-    return !filter
-      || filter === GastosClasficadosSgiEnum.TODOS
-      || (filter === GastosClasficadosSgiEnum.SI && !!desglose.conceptoGasto?.id && !desglose.clasificadoAutomaticamente)
-      || (filter === GastosClasficadosSgiEnum.NO && (!desglose.conceptoGasto?.id || !!desglose.clasificadoAutomaticamente));
+  private desgloseMatchFilterGastosClasficadosSgi(
+    desglose: ClasificacionGasto, gastosClasficadosSgiFilter: GastosClasficadosSgiEnum
+  ): boolean {
+    const clasificado = !!desglose.conceptoGasto?.id && !desglose.clasificadoAutomaticamente;
+    return !gastosClasficadosSgiFilter
+      || gastosClasficadosSgiFilter === GastosClasficadosSgiEnum.TODOS
+      || (gastosClasficadosSgiFilter === GastosClasficadosSgiEnum.SI && clasificado)
+      || (gastosClasficadosSgiFilter === GastosClasficadosSgiEnum.NO && !clasificado);
+  }
+
+  /**
+   * Recupera y cachea en proyectosMap los proyectos del sgi relacionados con el proyecto sge.
+   *
+   * @returns el mapa de proyectos relacionados indexado por su id
+   */
+  private fillProyectosMap(): Observable<Map<number, IProyecto>> {
+    return from(this.relaciones).pipe(
+      filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),
+      concatMap(relacion => this.getProyecto(relacion.id)),
+      toArray(),
+      map(() => this.proyectosMap)
+    );
   }
 
   /**
    * Rellena el proyecto y el concepto de gasto a partir de los datos de elegibilidad del proyecto.
-   * 
-   * Si el codigo economico del datoEconomico esta incluido como proyectoConceptoGastoCodigoEc de uno solo de los proyectos del sgi   
+   *
+   * Si el codigo economico del datoEconomico esta incluido como proyectoConceptoGastoCodigoEc de uno solo de los proyectos del sgi
    * relacionados rellena el conceptoGasto al que esta asociado el codigo economico y el proyecto en el que esta el concepto de gasto,
    * si no esta o esta en varios proyectos se dejan ambos como 'Sin clasificar'
-   * 
+   *
    * @param datoEconomico un dato economico
-   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de la elegibilidad del proyecto y si no se pueden establecer 
-   * ambos como 'Sin clasificar'.
+   * @returns el datoEconomico con el proyecto y el conceptoGasto rellenos con los datos obtenidos de la elegibilidad del proyecto
+   * y si no se pueden establecer ambos como 'Sin clasificar'.
    */
   private fillDatoEconomicoClasificacionWithElegibilidad(datoEconomico: ClasificacionGasto): Observable<ClasificacionGasto> {
+    if (!datoEconomico.codigoEconomico?.id) {
+      datoEconomico.proyecto = {
+        titulo: this.getTituloProyectoSinClasificar()
+      } as IProyecto;
+      datoEconomico.conceptoGasto = {
+        nombre: this.getNombreConceptoGastoSinClasificar()
+      } as IConceptoGasto;
+
+      return of(datoEconomico);
+    }
+
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('codigoEconomicoRef', SgiRestFilterOperator.EQUALS, datoEconomico.codigoEconomico.id)
         .and(
@@ -382,7 +411,7 @@ export class ClasificacionGastosFragment extends Fragment {
 
   /**
    * Genera el titulo sin clasificar para el proyecto en el idioma actual
-   * 
+   *
    * @returns el titulo sin clasificar en el idioma actual
    */
   private getTituloProyectoSinClasificar(): I18nFieldValue[] {
@@ -396,7 +425,7 @@ export class ClasificacionGastosFragment extends Fragment {
 
   /**
    * Genera el nombre sin clasificar para el concepto gasto en el idioma actual
-   * 
+   *
    * @returns el nombre sin clasificar en el idioma actual
    */
   private getNombreConceptoGastoSinClasificar(): I18nFieldValue[] {
