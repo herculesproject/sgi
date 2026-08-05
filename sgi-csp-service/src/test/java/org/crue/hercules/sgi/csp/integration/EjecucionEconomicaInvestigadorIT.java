@@ -181,4 +181,139 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
         ArgumentMatchers.any(), ArgumentMatchers.any());
   }
 
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto_proyecto_sge.sql",
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_equipo.sql"
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFacturasEmitidas_refAjena_returns403() throws Exception {
+    // given: "ajeno" no es investigador principal de ningun proyecto con esa ref
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/facturas-emitidas")
+        .queryParam("proyectoSgeRef", PROYECTO_SGE_REF).build().toUri();
+
+    // when: consulta las facturas emitidas de un proyecto SGE ajeno
+    final ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest("ajeno", ROLES_INVESTIGADOR), new ParameterizedTypeReference<Object>() {
+        });
+
+    // then: acceso denegado y el SGE NO se invoca (la autorizacion falla antes)
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    Mockito.verify(sgiApiSgeService, Mockito.never()).findFacturasEmitidas(ArgumentMatchers.any(),
+        ArgumentMatchers.any(), ArgumentMatchers.any());
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto_proyecto_sge.sql",
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_equipo.sql"
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFacturasEmitidas_refPropia_reenviaAlSge() throws Exception {
+    // given: "user" es investigador principal del proyecto 1 (proyecto-sge-ref-001)
+    Mockito.when(sgiApiSgeService.findFacturasEmitidas(ArgumentMatchers.any(), ArgumentMatchers.any(),
+        ArgumentMatchers.any()))
+        .thenReturn(new PageImpl<>(Collections.singletonList(Collections.singletonMap("id", "factura-1")),
+            Pageable.unpaged(), 1));
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/facturas-emitidas")
+        .queryParam("proyectoSgeRef", PROYECTO_SGE_REF).build().toUri();
+
+    // when: consulta las facturas emitidas de un proyecto SGE propio
+    final ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest("user", ROLES_INVESTIGADOR), new ParameterizedTypeReference<Object>() {
+        });
+
+    // then: acceso permitido y la peticion se reenvia al SGE
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Mockito.verify(sgiApiSgeService, Mockito.times(1)).findFacturasEmitidas(ArgumentMatchers.any(),
+        ArgumentMatchers.any(), ArgumentMatchers.any());
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto_proyecto_sge.sql",
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_equipo.sql"
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFacturaEmitidaDetalle_refAjena_returns403() throws Exception {
+    // given: "ajeno" no es investigador principal de ningun proyecto con esa ref
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/facturas-emitidas/factura-1")
+        .queryParam("proyectoSgeRef", PROYECTO_SGE_REF).build().toUri();
+
+    // when: consulta el detalle de una factura emitida de un proyecto SGE ajeno
+    final ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest("ajeno", ROLES_INVESTIGADOR), new ParameterizedTypeReference<Object>() {
+        });
+
+    // then: acceso denegado y el SGE NO se invoca (la autorizacion falla antes)
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    Mockito.verify(sgiApiSgeService, Mockito.never()).findFacturaEmitidaDetalle(ArgumentMatchers.anyString());
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+      // @formatter:off
+      "classpath:scripts/modelo_ejecucion.sql",
+      "classpath:scripts/modelo_unidad.sql",
+      "classpath:scripts/tipo_finalidad.sql",
+      "classpath:scripts/tipo_ambito_geografico.sql",
+      "classpath:scripts/tipo_regimen_concurrencia.sql",
+      "classpath:scripts/convocatoria.sql",
+      "classpath:scripts/proyecto.sql",
+      "classpath:scripts/proyecto_proyecto_sge.sql",
+      "classpath:scripts/rol_proyecto.sql",
+      "classpath:scripts/proyecto_equipo.sql"
+      // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFacturaEmitidaDetalle_refPropia_reenviaAlSge() throws Exception {
+    // given: "user" es investigador principal del proyecto 1 (proyecto-sge-ref-001)
+    Mockito.when(sgiApiSgeService.findFacturaEmitidaDetalle(ArgumentMatchers.anyString()))
+        .thenReturn(Collections.singletonMap("id", "factura-1"));
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/facturas-emitidas/factura-1")
+        .queryParam("proyectoSgeRef", PROYECTO_SGE_REF).build().toUri();
+
+    // when: consulta el detalle de una factura emitida de un proyecto SGE propio
+    final ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest("user", ROLES_INVESTIGADOR), new ParameterizedTypeReference<Object>() {
+        });
+
+    // then: acceso permitido y la peticion se reenvia al SGE con los argumentos
+    // recibidos
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Mockito.verify(sgiApiSgeService, Mockito.times(1)).findFacturaEmitidaDetalle(ArgumentMatchers.eq("factura-1"));
+  }
+
 }
