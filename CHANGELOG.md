@@ -14,6 +14,10 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+### Added
+
+- [CSP] Añadida la pantalla de facturas emitidas de ejecución económica a la vista del perfil de investigación. ([#134](https://github.com/herculesproject/sgi/issues/134)).
+
 ### Fixed
 
 - [CSP] Corregido el error en la búsqueda de solicitudes por unidad de vinculación. ([#132](https://github.com/herculesproject/sgi/issues/132)).

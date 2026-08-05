@@ -10,7 +10,12 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IRowConfig } from '../desglose-economico.fragment';
-import { DesgloseFacturaEmitidaFragment, IColumnDefinitionFacturaEmitida, IDesgloseFacturaEmitidaExportData, RowTreeDesgloseFacturaEmitida } from '../desglose-facturas.fragment';
+import {
+  DesgloseFacturaEmitidaFragment,
+  IColumnDefinitionFacturaEmitida,
+  IDesgloseFacturaEmitidaExportData,
+  RowTreeDesgloseFacturaEmitida
+} from '../desglose-facturas.fragment';
 
 export class FacturasEmitidasFragment extends DesgloseFacturaEmitidaFragment<IFacturaEmitida> {
 
@@ -26,8 +31,8 @@ export class FacturasEmitidasFragment extends DesgloseFacturaEmitidaFragment<IFa
     proyectoService: ProyectoService,
     private calendarioFacturacionService: CalendarioFacturacionService,
     protected readonly languageService: LanguageService,
-    protected readonly config: IConfiguracion
-
+    protected readonly config: IConfiguracion,
+    readonly isInvestigador: boolean = false
   ) {
     super(key, proyectoSge, relaciones, proyectoService, languageService, config);
   }

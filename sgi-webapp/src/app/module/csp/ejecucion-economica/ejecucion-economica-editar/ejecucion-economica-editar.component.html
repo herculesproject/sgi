@@ -230,6 +230,13 @@
             </ng-container>
           </sgi-action-fragment-menu-group>
         </ng-container>
+        <!-- INV: Facturas emitidas -->
+        <ng-container *ngIf="isOpcionHabilitadaIntegracionesEcc(SGE_INTEGRACIONES_ECC_MENUS.ECC_FACTURAS_EMITIDAS)">
+          <sgi-action-fragment-menu-item [route]="[EJECUCION_ECONOMICA_ROUTE_NAMES.FACTURAS_EMITIDAS]"
+            [title]="'menu.csp.ejecucion-economica.facturas-emitidas' | translate"
+            [fragment]="actionService.getFragment(actionService.FRAGMENT.FACTURAS_EMITIDAS)">
+          </sgi-action-fragment-menu-item>
+        </ng-container>
       </ng-container>
     </ng-container>
   </ng-container>

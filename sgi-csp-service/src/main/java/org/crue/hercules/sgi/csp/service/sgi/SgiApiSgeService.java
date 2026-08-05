@@ -114,6 +114,84 @@ public class SgiApiSgeService extends SgiApiBaseService {
   }
 
   /**
+   * Obtiene las columnas de las facturas emitidas del SGE.
+   *
+   * @param query filtro RSQL.
+   * @return la lista de {@link ColumnaOutput}.
+   */
+  public List<ColumnaOutput> findColumnasFacturasEmitidas(String query) {
+    log.debug("findColumnasFacturasEmitidas - query: {}", query);
+
+    String relativeUrl = "/facturas-emitidas/columnas?q={query}";
+    String mergedURL = buildUri(ServiceType.SGE, relativeUrl);
+
+    List<ColumnaOutput> response = super.<List<ColumnaOutput>>callEndpoint(mergedURL, HttpMethod.GET,
+        new ParameterizedTypeReference<List<ColumnaOutput>>() {
+        }, query).getBody();
+
+    log.debug("findColumnasFacturasEmitidas - response: {}", SgiLogUtils.collection(response));
+    return response != null ? response : Collections.emptyList();
+  }
+
+  /**
+   * Obtiene las facturas emitidas paginadas del SGE. Reenvía la paginación al
+   * SGE mediante las cabeceras {@code X-Page} y {@code X-Page-Size}, y
+   * reconstruye un {@link Page} a partir del total devuelto en la cabecera
+   * {@code X-Total-Count}.
+   *
+   * @param query    filtro RSQL.
+   * @param sort     criterio de ordenación.
+   * @param pageable paginación solicitada.
+   * @return la página de facturas emitidas (estructura del SGE).
+   */
+  public Page<Object> findFacturasEmitidas(String query, String sort, Pageable pageable) {
+    log.debug("findFacturasEmitidas - query: {}, sort: {}, pageable: {}", query, sort, SgiLogUtils.pageable(pageable));
+
+    HttpHeaders headers = new HttpHeaders();
+    if (pageable != null && pageable.isPaged()) {
+      headers.add("X-Page", String.valueOf(pageable.getPageNumber()));
+      headers.add("X-Page-Size", String.valueOf(pageable.getPageSize()));
+    }
+
+    String relativeUrl = "/facturas-emitidas?q={query}&s={sort}";
+    String mergedURL = buildUri(ServiceType.SGE, relativeUrl);
+
+    ResponseEntity<List<Object>> response = super.<Void, List<Object>>callEndpoint(mergedURL, HttpMethod.GET, null,
+        headers, new ParameterizedTypeReference<List<Object>>() {
+        }, query != null ? query : "", sort != null ? sort : "");
+
+    List<Object> content = response.getBody() != null ? response.getBody() : Collections.emptyList();
+    String totalCount = response.getHeaders().getFirst("X-Total-Count");
+    long total = StringUtils.hasText(totalCount) ? Long.parseLong(totalCount) : content.size();
+
+    Page<Object> page = new PageImpl<>(content, pageable != null ? pageable : Pageable.unpaged(), total);
+    log.debug("findFacturasEmitidas - response: {}", SgiLogUtils.page(page));
+    return page;
+  }
+
+  /**
+   * Obtiene el detalle de una factura emitida del SGE.
+   *
+   * @param id identificador de la factura emitida en el SGE.
+   * @return el detalle de la factura emitida (estructura del SGE).
+   */
+  public Object findFacturaEmitidaDetalle(String id) {
+    log.debug("findFacturaEmitidaDetalle - id: {}", id);
+
+    AssertHelper.fieldNotNull(id, ColumnaOutput.class, AssertHelper.MESSAGE_KEY_ID);
+
+    String relativeUrl = "/facturas-emitidas/{id}";
+    String mergedURL = buildUri(ServiceType.SGE, relativeUrl);
+
+    Object response = super.<Object>callEndpoint(mergedURL, HttpMethod.GET,
+        new ParameterizedTypeReference<Object>() {
+        }, id).getBody();
+
+    log.debug("findFacturaEmitidaDetalle - response: {}", response);
+    return response;
+  }
+
+  /**
    * Obtiene los datos de un proyecto del SGE por su referencia.
    *
    * @param proyectoSgeRef identificador del proyecto en el SGE.

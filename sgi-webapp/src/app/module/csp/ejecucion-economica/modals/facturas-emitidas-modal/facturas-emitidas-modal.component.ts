@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogCommonComponent } from '@core/component/dialog-common.component';
 import { SgiError } from '@core/errors/sgi-error';
@@ -10,6 +10,11 @@ import { DocumentoService } from '@core/services/sge/documento.service';
 
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 
+export interface FacturaEmitidaModalData {
+  detalle: IFacturaEmitidaDetalle;
+  isInvestigador: boolean;
+}
+
 @Component({
   templateUrl: './facturas-emitidas-modal.component.html',
   styleUrls: ['./facturas-emitidas-modal.component.scss']
@@ -19,7 +24,7 @@ export class FacturasEmitidasModalComponent extends DialogCommonComponent {
   constructor(
     matDialogRef: MatDialogRef<FacturasEmitidasModalComponent>,
     private documentoService: DocumentoService,
-    @Inject(MAT_DIALOG_DATA) public data: IFacturaEmitidaDetalle
+    @Inject(MAT_DIALOG_DATA) public data: FacturaEmitidaModalData
   ) {
     super(matDialogRef);
   }

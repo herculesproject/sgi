@@ -6,7 +6,6 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgeEjecucionEconomicaFiltros } from '@core/models/csp/configuracion';
 import { IFacturaEmitida } from '@core/models/sge/factura-emitida';
-import { IFacturaEmitidaDetalle } from '@core/models/sge/factura-emitida-detalle';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConfigService } from '@core/services/cnf/config.service';
@@ -14,7 +13,9 @@ import { CalendarioFacturacionService } from '@core/services/sge/calendario-fact
 import { DateTime } from 'luxon';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
-import { FacturasEmitidasModalComponent } from '../../modals/facturas-emitidas-modal/facturas-emitidas-modal.component';
+import {
+  FacturaEmitidaModalData, FacturasEmitidasModalComponent
+} from '../../modals/facturas-emitidas-modal/facturas-emitidas-modal.component';
 import { IDesgloseFacturaEmitidaExportData, RowTreeDesgloseFacturaEmitida } from '../desglose-facturas.fragment';
 import { IDesglose } from '../facturas-justificantes.fragment';
 import { FacturasEmitidasExportModalComponent } from './export/facturas-emitidas-export-modal.component';
@@ -89,8 +90,8 @@ export class FacturasEmitidasComponent extends FragmentComponent implements OnIn
   showDetail(element: IDesglose): void {
     this.subscriptions.push(this.calendarioFacturacionService.getFacturaEmitidaDetalle(element.id).subscribe(
       (detalle) => {
-        const config: MatDialogConfig<IFacturaEmitidaDetalle> = {
-          data: detalle
+        const config: MatDialogConfig<FacturaEmitidaModalData> = {
+          data: { detalle, isInvestigador: this.formPart.isInvestigador }
         };
         this.matDialog.open(FacturasEmitidasModalComponent, config);
       }
