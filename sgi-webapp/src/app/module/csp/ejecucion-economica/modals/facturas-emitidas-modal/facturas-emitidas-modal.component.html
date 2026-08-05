@@ -2,15 +2,24 @@
 </sgi-dialog-header>
 <sgi-dialog-content>
 
-  <div>
-    <p>{{'sge.dato-economico.anualidad' | translate}}: {{data?.anualidad| translate}}</p>
-    <p>{{'sge.dato-economico.factura' | translate}}: {{data?.numeroFactura}}</p>
-    <p *ngFor="let campo of data?.campos">{{campo?.nombre}}: {{campo?.valor}}</p>
+  <div fxLayout="column">
+    <mat-form-field>
+      <mat-label>{{'sge.dato-economico.anualidad' | translate}}</mat-label>
+      <input matInput [disabled]="true" [value]="data?.detalle?.anualidad | translate">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{'sge.dato-economico.factura' | translate}}</mat-label>
+      <input matInput [disabled]="true" [value]="data?.detalle?.numeroFactura">
+    </mat-form-field>
+    <mat-form-field *ngFor="let campo of data?.detalle?.campos">
+      <mat-label>{{campo?.nombre}}</mat-label>
+      <textarea matInput [disabled]="true" cdkTextareaAutosize cdkAutosizeMinRows="1" [value]="campo?.valor"></textarea>
+    </mat-form-field>
   </div>
 
-  <div>
+  <div *ngIf="!data?.isInvestigador">
     <h3>{{'csp.documentos' | translate}}</h3>
-    <table mat-table [dataSource]="data?.documentos" class="mat-elevation-z4">
+    <table mat-table [dataSource]="data?.detalle?.documentos" class="mat-elevation-z4">
 
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef>
@@ -39,6 +48,7 @@
   </div>
 </sgi-dialog-content>
 <mat-dialog-actions>
-  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
-    translate}}</button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{'btn.cancel' | translate}}
+  </button>
 </mat-dialog-actions>

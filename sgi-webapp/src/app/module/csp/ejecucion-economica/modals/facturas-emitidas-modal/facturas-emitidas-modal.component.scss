@@ -2,4 +2,11 @@
   sgi-dialog-content {
     min-width: 40vw;
   }
+
+  .mat-header-cell.mat-column-acciones,
+  .mat-cell.mat-column-acciones {
+    width: 60px;
+    flex: none;
+  }
+
 }

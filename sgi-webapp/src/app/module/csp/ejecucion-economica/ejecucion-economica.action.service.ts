@@ -289,7 +289,8 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoService,
       calendarioFacturacionService,
       languageService,
-      this.data.configuracion
+      this.data.configuracion,
+      isInvestigador
     );
 
     this.seguimientoJustificacionResumen = new SeguimientoJustificacionResumenFragment(

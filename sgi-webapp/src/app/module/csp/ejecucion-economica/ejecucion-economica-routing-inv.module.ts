@@ -14,6 +14,7 @@ import { DetalleOperacionesModificacionesComponent } from './ejecucion-economica
 import { EjecucionPresupuestariaEstadoActualComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-estado-actual/ejecucion-presupuestaria-estado-actual.component';
 import { EjecucionPresupuestariaGastosComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-gastos/ejecucion-presupuestaria-gastos.component';
 import { EjecucionPresupuestariaIngresosComponent } from './ejecucion-economica-formulario/ejecucion-presupuestaria-ingresos/ejecucion-presupuestaria-ingresos.component';
+import { FacturasEmitidasComponent } from './ejecucion-economica-formulario/facturas-emitidas/facturas-emitidas.component';
 import { FacturasGastosComponent } from './ejecucion-economica-formulario/facturas-gastos/facturas-gastos.component';
 import { PersonalContratadoComponent } from './ejecucion-economica-formulario/personal-contratado/personal-contratado.component';
 import { ProyectosComponent } from './ejecucion-economica-formulario/proyectos/proyectos.component';
@@ -90,6 +91,11 @@ const routes: SgiRoutes = [
       {
         path: EJECUCION_ECONOMICA_ROUTE_NAMES.FACTURAS_GASTOS,
         component: FacturasGastosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EJECUCION_ECONOMICA_ROUTE_NAMES.FACTURAS_EMITIDAS,
+        component: FacturasEmitidasComponent,
         canDeactivate: [FragmentGuard]
       },
       {
