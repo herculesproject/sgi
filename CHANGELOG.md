@@ -21,6 +21,7 @@
 ### Changed
 
 - [CSP] Ampliado el acceso de solo lectura del Rol Visor en Proyectos a las pantallas Relaciones, Histórico de estados, Amortización de fondos, detalle de Socios, Seguimiento científico y Prórrogas. Se elimina el acceso a Ejecución Económica - Clasificación de gastos. ([#138](https://github.com/herculesproject/sgi/issues/138)).
+- [CNF] En la pantalla de login de Keycloak, el texto "SGI" se sustituye por el logo configurado como logo 1 de la cabecera web (por defecto, el logo de HÉRCULES SGI, salvo que la instalación ya lo hubiera personalizado) y se renombra la clave interna de los 3 logos configurables de la cabecera web (`web-header-logo-ministerio`/`-feder`/`-ue` → `web-header-logo-1`/`-2`/`-3`) para que sea coherente con la etiqueta genérica que ya mostraba la pantalla de configuración ("Logo 1/2/3 cabecera web"). ([#140](https://github.com/herculesproject/sgi/issues/140)).
 
 ### Fixed
 

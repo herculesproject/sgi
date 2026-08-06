@@ -1,6 +1,7 @@
 {
   "id": "sgi",
   "realm": "sgi",
+  "displayNameHtml": "<div class=\"pf-v5-c-login__main pf-v5-c-login__main-header\" style=\"padding: 1em;margin-bottom: 5em;\"><img src=\"/api/cnf/public/resources/web-header-logo-1\" srcset=\"/api/cnf/public/resources/web-header-logo-1-2x 2x, /api/cnf/public/resources/web-header-logo-1-3x 3x\" alt=\"Hércules SGI\" style=\"width:100%;height:auto;padding:0 !important;\"></div>",
   "notBefore": 1596112876,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
