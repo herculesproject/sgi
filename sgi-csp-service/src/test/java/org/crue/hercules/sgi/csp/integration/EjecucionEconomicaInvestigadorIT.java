@@ -1,5 +1,8 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+
 import java.net.URI;
 import java.util.Collections;
 
@@ -8,7 +11,7 @@ import org.crue.hercules.sgi.csp.controller.EjecucionEconomicaInvestigadorContro
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
+import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
@@ -71,8 +74,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
 
     // then: acceso denegado y el SGE NO se invoca (la autorizacion falla antes)
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    Mockito.verify(sgiApiSgeService, Mockito.never()).findDatoEconomicoDetalle(ArgumentMatchers.anyString(),
-        ArgumentMatchers.any());
+    BDDMockito.then(sgiApiSgeService).should(never())
+        .findDatoEconomicoDetalle(ArgumentMatchers.anyString(), ArgumentMatchers.any());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -93,8 +96,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
   @Test
   void findDatoEconomicoDetalle_refPropia_reenviaAlSge() throws Exception {
     // given: "user" es investigador principal del proyecto 1 (proyecto-sge-ref-001)
-    Mockito.when(sgiApiSgeService.findDatoEconomicoDetalle(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
-        .thenReturn(Collections.singletonMap("id", "oper-1"));
+    BDDMockito.given(sgiApiSgeService.findDatoEconomicoDetalle(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+        .willReturn(Collections.singletonMap("id", "oper-1"));
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/oper-1")
         .queryParam("proyectoSgeRef", PROYECTO_SGE_REF)
@@ -108,8 +111,7 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
     // then: acceso permitido y la peticion se reenvia al SGE con los argumentos
     // recibidos
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Mockito.verify(sgiApiSgeService, Mockito.times(1)).findDatoEconomicoDetalle(ArgumentMatchers.eq("oper-1"),
-        ArgumentMatchers.eq("EPG"));
+    BDDMockito.then(sgiApiSgeService).should(times(1)).findDatoEconomicoDetalle("oper-1", "EPG");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -140,8 +142,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
 
     // then: acceso denegado y el SGE NO se invoca (la autorizacion falla antes)
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    Mockito.verify(sgiApiSgeService, Mockito.never()).findDatosEconomicos(ArgumentMatchers.any(),
-        ArgumentMatchers.any(), ArgumentMatchers.any());
+    BDDMockito.then(sgiApiSgeService).should(never())
+        .findDatosEconomicos(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -162,9 +164,9 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
   @Test
   void findDatosEconomicos_refPropia_reenviaAlSge() throws Exception {
     // given: "user" es investigador principal del proyecto 1 (proyecto-sge-ref-001)
-    Mockito.when(sgiApiSgeService.findDatosEconomicos(ArgumentMatchers.any(), ArgumentMatchers.any(),
+    BDDMockito.given(sgiApiSgeService.findDatosEconomicos(ArgumentMatchers.any(), ArgumentMatchers.any(),
         ArgumentMatchers.any()))
-        .thenReturn(new PageImpl<>(Collections.singletonList(Collections.singletonMap("id", "oper-1")),
+        .willReturn(new PageImpl<>(Collections.singletonList(Collections.singletonMap("id", "oper-1")),
             Pageable.unpaged(), 1));
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH)
@@ -177,8 +179,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
 
     // then: acceso permitido y la peticion se reenvia al SGE
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Mockito.verify(sgiApiSgeService, Mockito.times(1)).findDatosEconomicos(ArgumentMatchers.any(),
-        ArgumentMatchers.any(), ArgumentMatchers.any());
+    BDDMockito.then(sgiApiSgeService).should(times(1))
+        .findDatosEconomicos(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -209,8 +211,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
 
     // then: acceso denegado y el SGE NO se invoca (la autorizacion falla antes)
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    Mockito.verify(sgiApiSgeService, Mockito.never()).findFacturasEmitidas(ArgumentMatchers.any(),
-        ArgumentMatchers.any(), ArgumentMatchers.any());
+    BDDMockito.then(sgiApiSgeService).should(never())
+        .findFacturasEmitidas(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -231,9 +233,9 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
   @Test
   void findFacturasEmitidas_refPropia_reenviaAlSge() throws Exception {
     // given: "user" es investigador principal del proyecto 1 (proyecto-sge-ref-001)
-    Mockito.when(sgiApiSgeService.findFacturasEmitidas(ArgumentMatchers.any(), ArgumentMatchers.any(),
+    BDDMockito.given(sgiApiSgeService.findFacturasEmitidas(ArgumentMatchers.any(), ArgumentMatchers.any(),
         ArgumentMatchers.any()))
-        .thenReturn(new PageImpl<>(Collections.singletonList(Collections.singletonMap("id", "factura-1")),
+        .willReturn(new PageImpl<>(Collections.singletonList(Collections.singletonMap("id", "factura-1")),
             Pageable.unpaged(), 1));
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/facturas-emitidas")
@@ -246,8 +248,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
 
     // then: acceso permitido y la peticion se reenvia al SGE
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Mockito.verify(sgiApiSgeService, Mockito.times(1)).findFacturasEmitidas(ArgumentMatchers.any(),
-        ArgumentMatchers.any(), ArgumentMatchers.any());
+    BDDMockito.then(sgiApiSgeService).should(times(1))
+        .findFacturasEmitidas(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -278,7 +280,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
 
     // then: acceso denegado y el SGE NO se invoca (la autorizacion falla antes)
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    Mockito.verify(sgiApiSgeService, Mockito.never()).findFacturaEmitidaDetalle(ArgumentMatchers.anyString());
+    BDDMockito.then(sgiApiSgeService).should(never())
+        .findFacturaEmitidaDetalle(ArgumentMatchers.anyString());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -299,8 +302,8 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
   @Test
   void findFacturaEmitidaDetalle_refPropia_reenviaAlSge() throws Exception {
     // given: "user" es investigador principal del proyecto 1 (proyecto-sge-ref-001)
-    Mockito.when(sgiApiSgeService.findFacturaEmitidaDetalle(ArgumentMatchers.anyString()))
-        .thenReturn(Collections.singletonMap("id", "factura-1"));
+    BDDMockito.given(sgiApiSgeService.findFacturaEmitidaDetalle(ArgumentMatchers.anyString()))
+        .willReturn(Collections.singletonMap("id", "factura-1"));
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/facturas-emitidas/factura-1")
         .queryParam("proyectoSgeRef", PROYECTO_SGE_REF).build().toUri();
@@ -313,7 +316,7 @@ class EjecucionEconomicaInvestigadorIT extends BaseIT {
     // then: acceso permitido y la peticion se reenvia al SGE con los argumentos
     // recibidos
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Mockito.verify(sgiApiSgeService, Mockito.times(1)).findFacturaEmitidaDetalle(ArgumentMatchers.eq("factura-1"));
+    BDDMockito.then(sgiApiSgeService).should(times(1)).findFacturaEmitidaDetalle("factura-1");
   }
 
 }

@@ -166,8 +166,8 @@
         <!-- Ámbito geográfico -->
         <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
           <mat-label>{{'csp.proyecto.ambito-geografico' | translate}}</mat-label>
-          <sgi-select-entity formControlName="ambitoGeografico" [options]="ambitoGeografico$ | async">
-          </sgi-select-entity>
+          <sgi-select-tipo-ambito-geografico formControlName="ambitoGeografico">
+          </sgi-select-tipo-ambito-geografico>
         </mat-form-field>
 
         <!-- Responsable de proyecto -->

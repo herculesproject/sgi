@@ -64,7 +64,7 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_EDIT_TITLE,
-      hasAuthorityForAnyUO: 'CSP-PRO-E'
+      hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E']
     },
     resolve: {
       [PROYECTO_PERIODO_SEGUIMIENTO_DATA_KEY]: ProyectoPeriodoSeguimientoDataResolver

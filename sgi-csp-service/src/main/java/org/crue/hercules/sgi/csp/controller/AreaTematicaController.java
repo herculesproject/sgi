@@ -1,10 +1,8 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import javax.validation.Valid;
-import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.service.AreaTematicaService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -172,7 +169,7 @@ public class AreaTematicaController {
    * @return la lista de entidades {@link AreaTematica} paginadas
    */
   @GetMapping("/grupo/todos")
-  @PreAuthorize("hasAnyAuthority('CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")
+  @PreAuthorize("hasAnyAuthority('CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B', 'CSP-AREA-R', 'CSP-CON-V', 'CSP-CON-E', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER')")
   public ResponseEntity<Page<AreaTematica>> findAllTodosGrupo(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodosGrupo(String query, Pageable paging) - start");

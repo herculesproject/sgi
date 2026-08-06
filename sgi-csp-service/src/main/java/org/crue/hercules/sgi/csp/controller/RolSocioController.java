@@ -55,7 +55,7 @@ public class RolSocioController {
    *         paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-ER')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V', 'CSP-SOL-E', 'CSP-SOL-INV-ER', 'CSP-SOL-V')")
   public ResponseEntity<Page<RolSocioOutput>> findActivos(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findActivos(String query, Pageable paging) - start");
@@ -77,7 +77,7 @@ public class RolSocioController {
    * @return {@link RolSocio} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-ROLS-E','CSP-PRO-E','CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V', 'CSP-ROLS-E')")
   public RolSocioOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     RolSocio returnValue = service.findById(id);

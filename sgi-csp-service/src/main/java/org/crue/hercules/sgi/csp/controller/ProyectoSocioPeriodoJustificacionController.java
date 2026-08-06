@@ -71,7 +71,7 @@ public class ProyectoSocioPeriodoJustificacionController {
    * @return {@link ProyectoSocioPeriodoJustificacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ProyectoSocioPeriodoJustificacion findById(@PathVariable Long id) {
     log.debug("findById - id: {}", id);
     return service.findById(id);
@@ -85,7 +85,7 @@ public class ProyectoSocioPeriodoJustificacionController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("exists - id: {}", id);
     return service.existsById(id) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);

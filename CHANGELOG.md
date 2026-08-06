@@ -18,6 +18,10 @@
 
 - [CSP] Añadida la pantalla de facturas emitidas de ejecución económica a la vista del perfil de investigación. ([#134](https://github.com/herculesproject/sgi/issues/134)).
 
+### Changed
+
+- [CSP] Ampliado el acceso de solo lectura del Rol Visor en Proyectos a las pantallas Relaciones, Histórico de estados, Amortización de fondos, detalle de Socios, Seguimiento científico y Prórrogas. Se elimina el acceso a Ejecución Económica - Clasificación de gastos. ([#138](https://github.com/herculesproject/sgi/issues/138)).
+
 ### Fixed
 
 - [CSP] Corregido el error en la búsqueda de solicitudes por unidad de vinculación. ([#132](https://github.com/herculesproject/sgi/issues/132)).

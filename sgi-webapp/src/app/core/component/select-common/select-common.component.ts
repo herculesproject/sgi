@@ -4,7 +4,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
-import { Observable, Subject, Subscription, of } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 let nextUniqueId = 0;
@@ -45,6 +45,9 @@ export abstract class SelectCommonComponent<T>
   private isInitialValue = true;
 
   private loadOptionsHandler$ = new Subject<void>();
+
+  /** True when a loadData() call has been scheduled but not yet emitted */
+  private loadDataScheduled = false;
 
   get tabIndex(): number { return -1; }
 
@@ -464,9 +467,21 @@ export abstract class SelectCommonComponent<T>
    * Load the options to be rendered.
    *
    * If the currente value is missing from the options and showMissingOption is true, then the value will be added.
+   *
+   * Several synchronous calls (e.g. triggered by more than one @Input changing in the same change
+   * detection cycle) are coalesced into a single emission, deferred to a microtask, so only one
+   * request is actually launched with the final state of every input.
    */
   protected loadData(): void {
-    this.loadOptionsHandler$.next();
+    if (this.loadDataScheduled) {
+      return;
+    }
+
+    this.loadDataScheduled = true;
+    Promise.resolve().then(() => {
+      this.loadDataScheduled = false;
+      this.loadOptionsHandler$.next();
+    });
   }
 
   /**
@@ -478,7 +493,7 @@ export abstract class SelectCommonComponent<T>
 
   /**
    * Initializes the subscription that manages the loading of options.
-   * 
+   *
    * This method sets up an observable subscription to listen for events that trigger
    * the loading of options. When a new load event is received, any previous loading
    * process is canceled to avoid unnecessary operations, thanks to the use of `switchMap`.

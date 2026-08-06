@@ -9,7 +9,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { ConfigService as CspConfigService } from '@core/services/csp/configuracion/config.service';
@@ -26,7 +25,7 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOpt
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
+import { from, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { SOLICITUD_ACTION_LINK_KEY } from '../../solicitud/solicitud.action.service';
@@ -74,8 +73,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   busquedaAvanzada = false;
 
   private subscriptions: Subscription[] = [];
-
-  ambitoGeografico$: BehaviorSubject<ITipoAmbitoGeografico[]> = new BehaviorSubject<ITipoAmbitoGeografico[]>([]);
 
   private convocatoriaId: number;
   private solicitudId: number;
@@ -229,7 +226,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       rolUniversidad: new FormControl(null),
       unidadVinculacion: new FormControl(null)
     });
-    this.loadAmbitoGeografico();
+
     this.loadColectivos();
     this.filter = this.createFilter();
   }
@@ -507,18 +504,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    */
   toggleBusquedaAvanzada(): void {
     this.busquedaAvanzada = !this.busquedaAvanzada;
-  }
-
-  /**
-   * Cargar ámbitos geográficos
-   */
-  private loadAmbitoGeografico() {
-    this.suscripciones.push(
-      this.tipoAmbitoGeograficoService.findTodos().subscribe(
-        (res) => this.ambitoGeografico$.next(res.items),
-        (error) => this.logger.error(error)
-      )
-    );
   }
 
   /**

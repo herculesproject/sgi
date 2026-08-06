@@ -145,7 +145,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = PATH_ID, method = RequestMethod.HEAD)
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("ProyectoPeriodoSeguimiento exists(Long id) - start");
     if (service.existsById(id)) {
@@ -163,7 +163,7 @@ public class ProyectoPeriodoSeguimientoController {
    * @return {@link ProyectoPeriodoSeguimiento} correspondiente al id.
    */
   @GetMapping(PATH_ID)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ProyectoPeriodoSeguimiento findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoPeriodoSeguimiento returnValue = service.findById(id);
