@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: classpath*:db/changelog/changes/1.4.0/1.4.0-update-initial-master-data-common.xml
