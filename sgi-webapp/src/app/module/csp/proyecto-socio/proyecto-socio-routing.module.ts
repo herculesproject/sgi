@@ -72,7 +72,7 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: PROYECTO_SOCIO_KEY,
-      hasAuthorityForAnyUO: 'CSP-PRO-E'
+      hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E']
     },
     resolve: {
       [PROYECTO_SOCIO_DATA_KEY]: ProyectoSocioDataResolver
@@ -110,7 +110,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: PROYECTO_SOCIO_KEY,
-      hasAuthorityForAnyUO: 'CSP-PRO-E'
+      hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E']
     },
     resolve: {
       [PROYECTO_SOCIO_DATA_KEY]: ProyectoSocioDataResolver

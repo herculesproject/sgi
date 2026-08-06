@@ -110,7 +110,7 @@ public class ProyectoProrrogaController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("ProyectoProrroga exists(Long id) - start");
     if (service.existsById(id)) {
@@ -128,7 +128,7 @@ public class ProyectoProrrogaController {
    * @return {@link ProyectoProrroga} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-INV-ER')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-INV-ER', 'CSP-PRO-V')")
   public ProyectoProrroga findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     ProyectoProrroga returnValue = service.findById(id);

@@ -87,7 +87,7 @@ public class FuenteFinanciacionController {
    *         paginadas y filtradas.
    */
   @GetMapping("/todos")
-  @PreAuthorize("hasAnyAuthority('CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R')")
+  @PreAuthorize("hasAnyAuthority('CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R', 'CSP-PRO-E', 'CSP-PRO-V', 'CSP-SOL-E', 'CSP-SOL-V')")
   public ResponseEntity<Page<FuenteFinanciacionOutput>> findAll(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query, Pageable paging) - start");

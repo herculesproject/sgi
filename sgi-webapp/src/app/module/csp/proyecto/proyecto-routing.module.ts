@@ -196,7 +196,7 @@ const routes: SgiAuthRoutes = [
         canDeactivate: [FragmentGuard],
         canActivate: [SgiAuthGuard],
         data: {
-          hasAuthorityForAnyUO: 'CSP-PRO-E'
+          hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E']
         },
       },
       {
@@ -307,7 +307,7 @@ const routes: SgiAuthRoutes = [
     data: {
       title: PROYECTO_KEY,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
-      hasAuthorityForAnyUO: 'CSP-PRO-E',
+      hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E'],
       module: Module.CSP
     },
     resolve: {
@@ -335,7 +335,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: PROYECTO_PERIODOS_SEGUIMIENTO_KEY,
-          hasAuthorityForAnyUO: 'CSP-PRO-E',
+          hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E'],
           module: Module.CSP
         }
       },
@@ -347,7 +347,8 @@ const routes: SgiAuthRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: PROYECTO_AGRUPACION_GASTO_KEY
+          title: PROYECTO_AGRUPACION_GASTO_KEY,
+          hasAuthorityForAnyUO: 'CSP-PRO-E'
         }
       },
       {
@@ -359,7 +360,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: PROYECTO_PRORROGA_KEY,
-          hasAuthorityForAnyUO: 'CSP-PRO-E',
+          hasAnyAuthorityForAnyUO: ['CSP-PRO-V', 'CSP-PRO-E'],
           module: Module.CSP
         }
       },
@@ -373,6 +374,7 @@ const routes: SgiAuthRoutes = [
         data: {
           title: PROYECTO_ELEGIBILIDAD_KEY,
           permitido: true,
+          hasAuthorityForAnyUO: 'CSP-PRO-E',
           module: Module.CSP
         }
       },
@@ -386,6 +388,7 @@ const routes: SgiAuthRoutes = [
         data: {
           title: PROYECTO_ELEGIBILIDAD_KEY,
           permitido: false,
+          hasAuthorityForAnyUO: 'CSP-PRO-E',
           module: Module.CSP
         }
       },

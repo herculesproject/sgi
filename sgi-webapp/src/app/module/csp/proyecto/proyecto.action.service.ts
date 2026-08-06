@@ -872,6 +872,10 @@ export class ProyectoActionService extends ActionService {
 
       this.proyectosSge.proyectosSge$.subscribe(value => this.fichaGeneral.proyectosSgeIds$.next(value.map(v => v.value.proyectoSge.id))),
 
+      this.proyectosSge.proyectosSge$.subscribe(value => {
+        this.amortizacionFondos.proyectosSGE$.next(value.map(wraper => wraper.value));
+      }),
+
       this.fichaGeneral.initialized$.pipe(filter(Boolean)).subscribe(() => this.proyectoEquipo.initialize()),
 
       this.fichaGeneral.iva$.subscribe(newIVA => this.proyectoCalendarioFacturacion.proyectoIVA = newIVA),
@@ -927,7 +931,6 @@ export class ProyectoActionService extends ActionService {
 
         this.proyectosSge.proyectosSge$.subscribe(value => {
           this.fichaGeneral.vinculacionesProyectosSge$.next(value.length > 0);
-          this.amortizacionFondos.proyectosSGE$.next(value.map(wraper => wraper.value));
           this.proyectoCalendarioFacturacion.proyectosSGE$.next(value.map(wraper => wraper.value.proyectoSge));
         }),
 
@@ -943,6 +946,10 @@ export class ProyectoActionService extends ActionService {
 
         this.elegibilidad.initialized$.pipe(filter(Boolean)).subscribe(() => this.elegibilidad.proyecto$.next(this.data.proyecto))
       );
+    } else {
+      // El Visor no puede editar el formulario y el campo 'coordinado' está
+      // deshabilitado así que se inicializa showSocios$ directamente con el dato ya cargado del proyecto.
+      this.showSocios$.next(Boolean(this.data?.proyecto?.coordinado));
     }
   }
 

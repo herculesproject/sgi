@@ -124,7 +124,7 @@ public class ProyectoSocioController {
    * @return HTTP 200 si existe y HTTP 204 si no.
    */
   @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Void> exists(@PathVariable Long id) {
     log.debug("exists - id: {}", id);
     return service.existsById(id) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -137,7 +137,7 @@ public class ProyectoSocioController {
    * @return {@link ProyectoSocio} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ProyectoSocio findById(@PathVariable Long id) {
     log.debug("findById - id: {}", id);
     return service.findById(id);
@@ -153,7 +153,7 @@ public class ProyectoSocioController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/proyectosocioequipos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoSocioEquipo>> findAllProyectoSocioEquipo(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocioEquipo(Long id, String query, Pageable paging) - start");
@@ -178,7 +178,7 @@ public class ProyectoSocioController {
    *         paginados y filtrados.
    */
   @GetMapping("/{id}/proyectosocioperiodopagos")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-INV-VR', 'CSP-PRO-V')")
   public ResponseEntity<Page<ProyectoSocioPeriodoPago>> findAllProyectoSocioPeriodoPago(@PathVariable Long id,
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllProyectoSocioPeriodoPago(Long id, String query, Pageable paging) - start");

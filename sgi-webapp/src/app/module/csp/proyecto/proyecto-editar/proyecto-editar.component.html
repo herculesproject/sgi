@@ -27,12 +27,12 @@
           [title]="'csp.proyecto-clasificacion'  | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.CLASIFICACIONES)">
         </sgi-action-fragment-menu-item>
-        <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E']"
+        <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
           [route]="[PROYECTO_ROUTE_NAMES.HISTORICO_ESTADOS]"
           [title]="'menu.csp.proyectos.datos-generales.historicos-estados' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.HISTORICO_ESTADOS)">
         </sgi-action-fragment-menu-item>
-        <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E']"
+        <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
           [route]="[PROYECTO_ROUTE_NAMES.RELACIONES]"
           [title]="'menu.csp.proyectos.datos-generales.relaciones' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.RELACIONES)">
@@ -130,7 +130,7 @@
           [title]="'csp.proyectos.configuracion-economica.consulta-presupuesto' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.CONSULTA_PRESUPUESTO)">
         </sgi-action-fragment-menu-item>
-        <sgi-action-fragment-menu-item *sgiHasAuthorityForAnyUO="'CSP-PRO-E'"
+        <sgi-action-fragment-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-V', 'CSP-PRO-E']"
           [route]="[PROYECTO_ROUTE_NAMES.AMORTIZACION_FONDOS]"
           [title]="'csp.proyectos.configuracion-economica.amortizacion-fondos' | translate"
           [fragment]="actionService.getFragment(actionService.FRAGMENT.AMORTIZACION_FONDOS)">
