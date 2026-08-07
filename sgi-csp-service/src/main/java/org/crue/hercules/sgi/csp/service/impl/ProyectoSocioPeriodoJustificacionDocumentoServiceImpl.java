@@ -2,19 +2,22 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
-import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoJustificacionDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -52,10 +55,10 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceImpl
   /**
    * {@link ProyectoSocioPeriodoJustificacionDocumentoServiceImpl}.
    *
-   * @param proyectoSocioPeriodoJustificacionRepository {@link ProyectoSocioPeriodoJustificacionDocumentoRepository}.
-   * @param proyectoSocioRepository                     {@link ProyectoSocioPeriodoJustificacionRepository}.
+   * @param proyectoSocioPeriodoJustificacionRepository              {@link ProyectoSocioPeriodoJustificacionDocumentoRepository}.
+   * @param proyectoSocioRepository                                  {@link ProyectoSocioPeriodoJustificacionRepository}.
    * @param proyectoSocioPeriodoJustificacionProyectoSocioRepository {@link ProyectoSocioRepository}.
-   * @param proyectoHelper                              {@link ProyectoHelper}.
+   * @param proyectoHelper                                           {@link ProyectoHelper}.
    */
   public ProyectoSocioPeriodoJustificacionDocumentoServiceImpl(
       ProyectoSocioPeriodoJustificacionDocumentoRepository proyectoSocioPeriodoJustificacionRepository,
@@ -171,19 +174,29 @@ public class ProyectoSocioPeriodoJustificacionDocumentoServiceImpl
    */
   public Page<ProyectoSocioPeriodoJustificacionDocumento> findAllByProyectoSocioPeriodoJustificacion(
       Long proyectoSocioId, String query, Pageable pageable) {
-    log.debug(
-        "findAllByProyectoSocioPeriodoJustificacion(Long proyectoSocioId, String query, Pageable pageable) - start");
-    proyectoSocioRepository.findById(proyectoSocioId)
-        .flatMap(periodo -> proyectoSocioPeriodoJustificacionProyectoSocioRepository
-            .findById(periodo.getProyectoSocioId()))
-        .ifPresent(socio -> proyectoHelper.checkCanAccessProyecto(socio.getProyectoId(),
-            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
+    log.debug("findAllByProyectoProrroga - proyectoSocioId: {}, query: {}, pageable: {}",
+        proyectoSocioId, query,
+        SgiLogUtils.pageable(pageable));
+
+    boolean isGestorOrVisor = true;
+    Optional<Long> proyectoId = proyectoSocioRepository.findById(proyectoSocioId)
+        .flatMap(
+            periodo -> proyectoSocioPeriodoJustificacionProyectoSocioRepository.findById(periodo.getProyectoSocioId()))
+        .map(ProyectoSocio::getProyectoId);
+    if (proyectoId.isPresent()) {
+      proyectoHelper.checkCanAccessProyecto(proyectoId.get(),
+          ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+      isGestorOrVisor = proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId.get());
+    }
+
     Specification<ProyectoSocioPeriodoJustificacionDocumento> specs = ProyectoSocioPeriodoJustificacionDocumentoSpecifications
         .byProyectoSocioPeriodoJustificacionId(proyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));
+    if (!isGestorOrVisor) {
+      specs = specs.and(ProyectoSocioPeriodoJustificacionDocumentoSpecifications.onlyVisibles());
+    }
 
     Page<ProyectoSocioPeriodoJustificacionDocumento> returnValue = repository.findAll(specs, pageable);
-    log.debug(
-        "findAllByProyectoSocioPeriodoJustificacion(Long proyectoSocioId, String query, Pageable pageable) - end");
+    log.debug("findAllByProyectoSocioPeriodoJustificacion - response: {}", SgiLogUtils.page(returnValue));
     return returnValue;
   }
 

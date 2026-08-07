@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.Period;
 import java.time.ZoneOffset;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
@@ -15,10 +16,12 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoSeguimientoDocumentoSpecifications;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.domain.Specification;
 
 @DataJpaTest
 class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepositoryTest {
@@ -226,6 +229,100 @@ class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepositoryTe
     repository.deleteByProyectoPeriodoSeguimientoId(1L);
     boolean exists = repository.existsByProyectoPeriodoSeguimientoId(1L);
     Assertions.assertThat(exists).isFalse();
+  }
+
+  @Test
+  void findAll_WithOnlyVisiblesSpecification_ReturnsVisiblesAndNullDocumentos() {
+    // given: un periodo de seguimiento con documentos visible=true, visible=false y
+    // visible=null
+    ProyectoPeriodoSeguimiento periodo = generarMockProyectoPeriodoSeguimiento();
+
+    ProyectoPeriodoSeguimientoDocumento documentoVisible = generarMockProyectoPeriodoSeguimientoDocumento("-001",
+        periodo.getId(), Boolean.TRUE);
+    ProyectoPeriodoSeguimientoDocumento documentoNoVisible = generarMockProyectoPeriodoSeguimientoDocumento("-002",
+        periodo.getId(), Boolean.FALSE);
+    ProyectoPeriodoSeguimientoDocumento documentoSinValor = generarMockProyectoPeriodoSeguimientoDocumento("-003",
+        periodo.getId(), null);
+
+    Specification<ProyectoPeriodoSeguimientoDocumento> specs = ProyectoPeriodoSeguimientoDocumentoSpecifications
+        .byProyectoPeriodoSeguimientoId(periodo.getId())
+        .and(ProyectoPeriodoSeguimientoDocumentoSpecifications.onlyVisibles());
+
+    // when: se buscan los documentos visibles del periodo
+    List<ProyectoPeriodoSeguimientoDocumento> result = repository.findAll(specs);
+
+    // then: se devuelven los documentos visibles
+    Assertions.assertThat(result)
+        .hasSize(1)
+        .extracting(ProyectoPeriodoSeguimientoDocumento::getId)
+        .containsExactlyInAnyOrder(documentoVisible.getId())
+        .doesNotContain(documentoNoVisible.getId(), documentoSinValor.getId());
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoPeriodoSeguimiento persistido, junto
+   * con su Proyecto
+   *
+   * @return el objeto ProyectoPeriodoSeguimiento
+   */
+  private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento() {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion"));
+
+    ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
+        .nombre(nombreModeloEjecucion)
+        .activo(Boolean.TRUE)
+        .contrato(Boolean.FALSE)
+        .externo(Boolean.FALSE)
+        .build();
+    entityManager.persistAndFlush(modeloEjecucion);
+
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "titulo-001"));
+
+    Proyecto proyecto = Proyecto.builder()
+        .unidadGestionRef("2")
+        .modeloEjecucion(modeloEjecucion)
+        .titulo(tituloProyecto)
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(3))))
+        .activo(Boolean.TRUE)
+        .build();
+    entityManager.persistAndFlush(proyecto);
+
+    ProyectoPeriodoSeguimiento periodo = ProyectoPeriodoSeguimiento.builder()
+        .proyectoId(proyecto.getId())
+        .numPeriodo(1)
+        .tipoSeguimiento(TipoSeguimiento.FINAL)
+        .fechaInicio(Instant.now().plus(Period.ofDays(1)))
+        .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1))))
+        .build();
+
+    return entityManager.persistAndFlush(periodo);
+  }
+
+  /**
+   * Función que devuelve un objeto ProyectoPeriodoSeguimientoDocumento
+   *
+   * @param suffix                       sufijo para los campos únicos
+   * @param proyectoPeriodoSeguimientoId id del {@link ProyectoPeriodoSeguimiento}
+   * @param visible                      flag visible del documento (puede ser
+   *                                     {@code null})
+   * @return el objeto ProyectoPeriodoSeguimientoDocumento
+   */
+  private ProyectoPeriodoSeguimientoDocumento generarMockProyectoPeriodoSeguimientoDocumento(String suffix,
+      Long proyectoPeriodoSeguimientoId, Boolean visible) {
+    Set<ProyectoPeriodoSeguimientoDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES, "nombre" + suffix));
+
+    ProyectoPeriodoSeguimientoDocumento documento = ProyectoPeriodoSeguimientoDocumento.builder()
+        .proyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoId)
+        .nombre(nombreDocumento)
+        .documentoRef("documentoRef" + suffix)
+        .visible(visible)
+        .build();
+
+    return entityManager.persistAndFlush(documento);
   }
 
 }

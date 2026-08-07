@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProrrogaDocumentoSpeci
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -150,27 +151,28 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
     return returnValue;
   }
 
-  /**
-   * Obtener todas las entidades {@link ProrrogaDocumento} para una
-   * {@link ProyectoProrroga} paginadas y/o filtradas.
-   * 
-   * @param idProrroga id de {@link ProyectoProrroga}
-   * @param query      la información del filtro.
-   * @param paging     la información de la paginación.
-   * @return la lista de entidades {@link ProrrogaDocumento} paginadas y/o
-   *         filtradas.
-   */
   @Override
   public Page<ProrrogaDocumento> findAllByProyectoProrroga(Long idProrroga, String query, Pageable paging) {
-    log.debug("findAllByProyectoProrroga(Long idProrroga, String query, Pageable pageable) - start");
-    proyectoProrrogaRepository.findById(idProrroga)
-        .ifPresent(prorroga -> proyectoHelper.checkCanAccessProyecto(prorroga.getProyectoId(),
-            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
+    log.debug("findAllByProyectoProrroga - idProrroga: {}, query: {}, paging: {}", idProrroga, query,
+        SgiLogUtils.pageable(paging));
+
+    boolean isGestorOrVisor = true;
+    Optional<ProyectoProrroga> prorroga = proyectoProrrogaRepository.findById(idProrroga);
+    if (prorroga.isPresent()) {
+      Long proyectoId = prorroga.get().getProyectoId();
+      proyectoHelper.checkCanAccessProyecto(proyectoId,
+          ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+      isGestorOrVisor = proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId);
+    }
+
     Specification<ProrrogaDocumento> specs = ProrrogaDocumentoSpecifications.byProyectoProrrogaId(idProrroga)
         .and(SgiRSQLJPASupport.toSpecification(query));
+    if (!isGestorOrVisor) {
+      specs = specs.and(ProrrogaDocumentoSpecifications.onlyVisibles());
+    }
 
     Page<ProrrogaDocumento> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllByProyectoProrroga(Long idProrroga, String query, Pageable pageable) - end");
+    log.debug("findAllByProyectoProrroga - response: {}", SgiLogUtils.page(returnValue));
     return returnValue;
 
   }

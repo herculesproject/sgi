@@ -22,10 +22,12 @@ import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
 import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
+import org.crue.hercules.sgi.csp.repository.specification.ProyectoSocioPeriodoJustificacionDocumentoSpecifications;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.domain.Specification;
 
 @DataJpaTest
 class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepositoryTest {
@@ -133,6 +135,100 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
         .isEqualTo(proyectoSocioPeriodoJustificacionDocumento1.getProyectoSocioPeriodoJustificacionId());
     Assertions.assertThat(dataFound.get(0).getNombre())
         .isEqualTo(proyectoSocioPeriodoJustificacionDocumento1.getNombre());
+  }
+
+  @Test
+  void findAll_WithOnlyVisiblesSpecification_ReturnsOnlyVisibleDocumentos() {
+    // given: un ProyectoSocioPeriodoJustificacion con un documento visible y otro
+    // no visible
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion = new HashSet<>();
+    descripcionModeloEjecucion.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-1"));
+
+    ModeloEjecucion modeloEjecucion = entityManager.persistAndFlush(
+        new ModeloEjecucion(null, nombreModeloEjecucion, descripcionModeloEjecucion, true, false, false, false));
+
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "proyecto"));
+
+    Proyecto proyecto = entityManager.persistAndFlush(Proyecto.builder()
+        .titulo(tituloProyecto)
+        .fechaInicio(Instant.parse("2020-09-18T00:00:00Z"))
+        .fechaFin(Instant.parse("2022-10-11T23:59:59Z"))
+        .unidadGestionRef("2")
+        .modeloEjecucion(modeloEjecucion)
+        .activo(Boolean.TRUE)
+        .build());
+
+    Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
+    rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+
+    Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
+    rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
+
+    Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
+    rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
+
+    RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()
+        .abreviatura(rolSocioAbreviatura)
+        .nombre(rolSocioNombre)
+        .descripcion(rolSocioDescripcion)
+        .coordinador(Boolean.FALSE)
+        .activo(Boolean.TRUE)
+        .build());
+
+    ProyectoSocio proyectoSocio = entityManager.persistAndFlush(ProyectoSocio.builder()
+        .proyectoId(proyecto.getId())
+        .empresaRef("codigo-1")
+        .rolSocio(rolSocio)
+        .build());
+
+    Set<ProyectoSocioPeriodoJustificacionObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoSocioPeriodoJustificacionObservaciones(Language.ES, "observaciones"));
+
+    ProyectoSocioPeriodoJustificacion periodo = entityManager
+        .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio.getId(), 1,
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+            observaciones, Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
+
+    Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumentoVisible = new HashSet<>();
+    nombreDocumentoVisible.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "doc-visible"));
+
+    ProyectoSocioPeriodoJustificacionDocumento documentoVisible = entityManager.persistAndFlush(
+        ProyectoSocioPeriodoJustificacionDocumento.builder()
+            .nombre(nombreDocumentoVisible)
+            .documentoRef("doc-visible")
+            .proyectoSocioPeriodoJustificacionId(periodo.getId())
+            .visible(Boolean.TRUE)
+            .build());
+
+    Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumentoNoVisible = new HashSet<>();
+    nombreDocumentoNoVisible.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "doc-no-visible"));
+
+    ProyectoSocioPeriodoJustificacionDocumento documentoNoVisible = entityManager.persistAndFlush(
+        ProyectoSocioPeriodoJustificacionDocumento.builder()
+            .nombre(nombreDocumentoNoVisible)
+            .documentoRef("doc-no-visible")
+            .proyectoSocioPeriodoJustificacionId(periodo.getId())
+            .visible(Boolean.FALSE)
+            .build());
+
+    Specification<ProyectoSocioPeriodoJustificacionDocumento> specs = ProyectoSocioPeriodoJustificacionDocumentoSpecifications
+        .byProyectoSocioPeriodoJustificacionId(periodo.getId())
+        .and(ProyectoSocioPeriodoJustificacionDocumentoSpecifications.onlyVisibles());
+
+    // when: se buscan los documentos visibles del periodo de justificación
+    List<ProyectoSocioPeriodoJustificacionDocumento> result = repository.findAll(specs);
+
+    // then: solo se devuelve el documento visible
+    Assertions.assertThat(result)
+        .hasSize(1)
+        .extracting(ProyectoSocioPeriodoJustificacionDocumento::getId)
+        .containsExactly(documentoVisible.getId())
+        .doesNotContain(documentoNoVisible.getId());
   }
 
 }

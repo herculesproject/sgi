@@ -236,7 +236,6 @@ export class ProyectoDocumentosFragment extends Fragment {
       map(response => response.items.map(documento => this.toDocumentoData(documento))),
       map((response => {
         if (response) {
-          response = response.filter(documento => documento.publico);
           const keyTipo = TIPO_DOCUMENTO.CONVOCATORIA;
           const nodes: NodeDocumento[] = [];
           response.forEach((documento) => {

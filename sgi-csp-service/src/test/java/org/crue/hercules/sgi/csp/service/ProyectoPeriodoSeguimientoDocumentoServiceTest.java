@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
@@ -49,7 +51,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   private ProyectoPeriodoSeguimientoDocumentoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoPeriodoSeguimientoDocumentoServiceImpl(
         proyectoPeriodoSeguimientoDocumentoRepository,
         proyectoPeriodoSeguimientoRepository,
@@ -111,7 +113,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void create_WithoutProyectoPeriodoSeguimiento_ThrowsNotFoundException() throws Exception {
+  void create_WithoutProyectoPeriodoSeguimiento_ThrowsNotFoundException() {
     // given: solicitud id null
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
@@ -195,7 +197,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void update_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void update_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
@@ -211,7 +213,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void update_WithoutProyectoPeriodoSeguimiento_ThrowsNotFoundException() throws Exception {
+  void update_WithoutProyectoPeriodoSeguimiento_ThrowsNotFoundException() {
     // given: solicitud id null
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
@@ -225,7 +227,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void update_WithoutNombreDocumento_ThrowsNotFoundException() throws Exception {
+  void update_WithoutNombreDocumento_ThrowsNotFoundException() {
     // given: nombre documento null
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
@@ -239,7 +241,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void update_WithoutDocumentoRef_ThrowsNotFoundException() throws Exception {
+  void update_WithoutDocumentoRef_ThrowsNotFoundException() {
     // given: nombre documento null
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
@@ -282,7 +284,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithoutId_ThrowsIllegalArgumentException() throws Exception {
+  void delete_WithoutId_ThrowsIllegalArgumentException() {
     // given: no id
     Long id = null;
 
@@ -294,7 +296,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -309,7 +311,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithExistingId_ReturnsProyectoPeriodoSeguimientoDocumento() throws Exception {
+  void findById_WithExistingId_ReturnsProyectoPeriodoSeguimientoDocumento() {
     // given: existing ProyectoPeriodoSeguimientoDocumento
     ProyectoPeriodoSeguimientoDocumento givenProyectoPeriodoSeguimientoDocumento = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
@@ -339,7 +341,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void findById_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
     BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
@@ -376,9 +378,7 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
                 : toIndex;
             List<ProyectoPeriodoSeguimientoDocumento> content = proyectoPeriodoSeguimientoDocumentos.subList(fromIndex,
                 toIndex);
-            Page<ProyectoPeriodoSeguimientoDocumento> page = new PageImpl<>(content, pageable,
-                proyectoPeriodoSeguimientoDocumentos.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectoPeriodoSeguimientoDocumentos.size());
           }
         });
 
@@ -399,9 +399,67 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
     }
   }
 
+  @Test
+  void findAllByProyectoPeriodoSeguimiento_UserIsGestor_ReturnsAllDocumentos() {
+    // given: un usuario con acceso de gestión (visor/editor) sobre el proyecto del
+    // periodo
+    Long proyectoPeriodoSeguimientoId = 1L;
+    Long proyectoId = 10L;
+    ProyectoPeriodoSeguimiento periodo = new ProyectoPeriodoSeguimiento();
+    periodo.setId(proyectoPeriodoSeguimientoId);
+    periodo.setProyectoId(proyectoId);
+    BDDMockito.given(proyectoPeriodoSeguimientoRepository.findById(proyectoPeriodoSeguimientoId))
+        .willReturn(Optional.of(periodo));
+    BDDMockito.given(proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId)).willReturn(true);
+
+    List<ProyectoPeriodoSeguimientoDocumento> documentos = Arrays.asList(
+        generarMockProyectoPeriodoSeguimientoDocumento(1L), generarMockProyectoPeriodoSeguimientoDocumento(2L));
+    Page<ProyectoPeriodoSeguimientoDocumento> page = new PageImpl<>(documentos);
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findAll(
+        ArgumentMatchers.<Specification<ProyectoPeriodoSeguimientoDocumento>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(page);
+
+    // when: se buscan los documentos del periodo de seguimiento
+    Page<ProyectoPeriodoSeguimientoDocumento> result = service
+        .findAllByProyectoPeriodoSeguimiento(proyectoPeriodoSeguimientoId, null, PageRequest.of(0, 10));
+
+    // then: se devuelven todos los documentos, sin filtrar por visible
+    Assertions.assertThat(result.getContent()).isEqualTo(documentos);
+  }
+
+  @Test
+  void findAllByProyectoPeriodoSeguimiento_UserIsNotGestor_AppliesOnlyVisiblesFilter() {
+    // given: un usuario sin acceso de gestión (investigador) sobre el proyecto del
+    // periodo
+    Long proyectoPeriodoSeguimientoId = 1L;
+    Long proyectoId = 10L;
+    ProyectoPeriodoSeguimiento periodo = new ProyectoPeriodoSeguimiento();
+    periodo.setId(proyectoPeriodoSeguimientoId);
+    periodo.setProyectoId(proyectoId);
+    BDDMockito.given(proyectoPeriodoSeguimientoRepository.findById(proyectoPeriodoSeguimientoId))
+        .willReturn(Optional.of(periodo));
+    BDDMockito.given(proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId)).willReturn(false);
+
+    List<ProyectoPeriodoSeguimientoDocumento> documentosVisibles = Arrays
+        .asList(generarMockProyectoPeriodoSeguimientoDocumento(1L));
+    Page<ProyectoPeriodoSeguimientoDocumento> page = new PageImpl<>(documentosVisibles);
+    BDDMockito.given(proyectoPeriodoSeguimientoDocumentoRepository.findAll(
+        ArgumentMatchers.<Specification<ProyectoPeriodoSeguimientoDocumento>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(page);
+
+    // when: se buscan los documentos del periodo de seguimiento
+    Page<ProyectoPeriodoSeguimientoDocumento> result = service
+        .findAllByProyectoPeriodoSeguimiento(proyectoPeriodoSeguimientoId, null, PageRequest.of(0, 10));
+
+    // then: se comprueba la condición de gestor y se devuelve la página filtrada
+    // por el repositorio
+    Assertions.assertThat(result.getContent()).isEqualTo(documentosVisibles);
+    BDDMockito.then(proyectoHelper).should().hasUserAuthorityViewAsGestorOrVisor(proyectoId);
+  }
+
   /**
    * Función que devuelve un objeto ProyectoPeriodoSeguimientoDocumento
-   * 
+   *
    * @param id id del ProyectoPeriodoSeguimientoDocumento
    * @return el objeto ProyectoPeriodoSeguimientoDocumento
    */

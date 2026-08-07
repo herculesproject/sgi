@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
@@ -29,6 +32,11 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * ProrrogaDocumentoServiceTest
@@ -47,7 +55,7 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
   private ProrrogaDocumentoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProrrogaDocumentoServiceImpl(repository, proyectoProrrogaRepository, modeloTipoDocumentoRepository,
         proyectoHelper);
   }
@@ -598,7 +606,7 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithoutId_ThrowsIllegalArgumentException() throws Exception {
+  void delete_WithoutId_ThrowsIllegalArgumentException() {
     // given: no id
     Long id = null;
 
@@ -610,7 +618,7 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -621,6 +629,55 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
         () -> service.delete(id))
         // then: NotFoundException is thrown
         .isInstanceOf(ProrrogaDocumentoNotFoundException.class);
+  }
+
+  @Test
+  void findAllByProyectoProrroga_UserIsGestor_ReturnsAllDocumentos() {
+    // given: un usuario con acceso de gestión (visor/editor) sobre el proyecto de
+    // la prórroga
+    Long idProrroga = 1L;
+    Long proyectoId = 10L;
+    ProyectoProrroga prorroga = ProyectoProrroga.builder().id(idProrroga).proyectoId(proyectoId).build();
+    BDDMockito.given(proyectoProrrogaRepository.findById(idProrroga)).willReturn(Optional.of(prorroga));
+    BDDMockito.given(proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId)).willReturn(true);
+
+    List<ProrrogaDocumento> documentos = Arrays.asList(generarMockProrrogaDocumento(1L, idProrroga, 1L),
+        generarMockProrrogaDocumento(2L, idProrroga, 1L));
+    Page<ProrrogaDocumento> page = new PageImpl<>(documentos);
+    BDDMockito.given(
+        repository.findAll(ArgumentMatchers.<Specification<ProrrogaDocumento>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(page);
+
+    // when: se buscan los documentos de la prórroga
+    Page<ProrrogaDocumento> result = service.findAllByProyectoProrroga(idProrroga, null, PageRequest.of(0, 10));
+
+    // then: se devuelven todos los documentos, sin filtrar por visible
+    Assertions.assertThat(result.getContent()).isEqualTo(documentos);
+  }
+
+  @Test
+  void findAllByProyectoProrroga_UserIsNotGestor_AppliesOnlyVisiblesFilter() {
+    // given: un usuario sin acceso de gestión (investigador) sobre el proyecto de
+    // la prórroga
+    Long idProrroga = 1L;
+    Long proyectoId = 10L;
+    ProyectoProrroga prorroga = ProyectoProrroga.builder().id(idProrroga).proyectoId(proyectoId).build();
+    BDDMockito.given(proyectoProrrogaRepository.findById(idProrroga)).willReturn(Optional.of(prorroga));
+    BDDMockito.given(proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId)).willReturn(false);
+
+    List<ProrrogaDocumento> documentosVisibles = Arrays.asList(generarMockProrrogaDocumento(1L, idProrroga, 1L));
+    Page<ProrrogaDocumento> page = new PageImpl<>(documentosVisibles);
+    BDDMockito.given(
+        repository.findAll(ArgumentMatchers.<Specification<ProrrogaDocumento>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(page);
+
+    // when: se buscan los documentos de la prórroga
+    Page<ProrrogaDocumento> result = service.findAllByProyectoProrroga(idProrroga, null, PageRequest.of(0, 10));
+
+    // then: se comprueba la condición de gestor y se devuelve la página filtrada
+    // por el repositorio
+    Assertions.assertThat(result.getContent()).isEqualTo(documentosVisibles);
+    BDDMockito.then(proyectoHelper).should().hasUserAuthorityViewAsGestorOrVisor(proyectoId);
   }
 
   @Test
@@ -650,7 +707,7 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsProrrogaDocumentoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProrrogaDocumentoNotFoundException() {
     // given: Ningun ProrrogaDocumento con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());

@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoDocumentoSpeci
 import org.crue.hercules.sgi.csp.service.ProyectoDocumentoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -152,24 +153,23 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
     log.debug("delete(Long id) - end");
   }
 
-  /**
-   * Obtiene las {@link ProyectoDocumento} para una {@link Proyecto}.
-   *
-   * @param proyectoId el id de la {@link Proyecto}.
-   * @param query      la información del filtro.
-   * @param pageable   la información de la paginación.
-   * @return la lista de entidades {@link ProyectoDocumento} de la
-   *         {@link Proyecto} paginadas.
-   */
+  @Override
   public Page<ProyectoDocumento> findAllByProyectoId(Long proyectoId, String query, Pageable pageable) {
-    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - start");
-    proyectoHelper.checkCanAccessProyecto(proyectoId,
+    log.debug("findAllByProyectoId - proyectoId: {}, query: {}, pageable: {}", proyectoId, query,
+        SgiLogUtils.pageable(pageable));
+    Proyecto proyecto = proyectoRepository.findById(proyectoId)
+        .orElseThrow(() -> new ProyectoNotFoundException(proyectoId));
+    proyectoHelper.checkCanAccessProyecto(proyecto,
         ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
     Specification<ProyectoDocumento> specs = ProyectoDocumentoSpecifications.byProyectoId(proyectoId)
         .and(SgiRSQLJPASupport.toSpecification(query));
 
+    if (!proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyecto)) {
+      specs = specs.and(ProyectoDocumentoSpecifications.onlyVisibles());
+    }
+
     Page<ProyectoDocumento> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByProyecto(Long proyectoId, String query, Pageable pageable) - end");
+    log.debug("findAllByProyectoId - response: {}", SgiLogUtils.page(returnValue));
     return returnValue;
   }
 

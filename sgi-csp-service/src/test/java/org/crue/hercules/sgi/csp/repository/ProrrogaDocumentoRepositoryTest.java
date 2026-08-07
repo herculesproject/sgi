@@ -24,10 +24,12 @@ import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
+import org.crue.hercules.sgi.csp.repository.specification.ProrrogaDocumentoSpecifications;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * ProrrogaDocumentoRepositoryTest
@@ -89,6 +91,52 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
 
     // then: retorna la lista de documentos eliminados
     Assertions.assertThat(result).isEmpty();
+  }
+
+  @Test
+  void findAll_WithOnlyVisiblesSpecification_ReturnsOnlyVisibleProrrogaDocumento() {
+    // given: una ProyectoProrroga con un ProrrogaDocumento visible y otro no
+    // visible
+    Proyecto proyecto = generarMockProyecto("-001");
+    TipoDocumento tipoDocumento = generarMockTipoDocumento("-001");
+    ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga("-001", proyecto,
+        Instant.parse("2020-01-01T00:00:00Z"));
+
+    Set<ProrrogaDocumentoNombre> nombreDocumentoVisible = new HashSet<>();
+    nombreDocumentoVisible.add(new ProrrogaDocumentoNombre(Language.ES, "prorroga-documento-visible"));
+
+    ProrrogaDocumento documentoVisible = entityManager.persistAndFlush(ProrrogaDocumento.builder()
+        .proyectoProrrogaId(proyectoProrroga.getId())
+        .nombre(nombreDocumentoVisible)
+        .documentoRef("documentoRef-visible")
+        .tipoDocumento(tipoDocumento)
+        .visible(Boolean.TRUE)
+        .build());
+
+    Set<ProrrogaDocumentoNombre> nombreDocumentoNoVisible = new HashSet<>();
+    nombreDocumentoNoVisible.add(new ProrrogaDocumentoNombre(Language.ES, "prorroga-documento-no-visible"));
+
+    ProrrogaDocumento documentoNoVisible = entityManager.persistAndFlush(ProrrogaDocumento.builder()
+        .proyectoProrrogaId(proyectoProrroga.getId())
+        .nombre(nombreDocumentoNoVisible)
+        .documentoRef("documentoRef-no-visible")
+        .tipoDocumento(tipoDocumento)
+        .visible(Boolean.FALSE)
+        .build());
+
+    Specification<ProrrogaDocumento> specs = ProrrogaDocumentoSpecifications
+        .byProyectoProrrogaId(proyectoProrroga.getId())
+        .and(ProrrogaDocumentoSpecifications.onlyVisibles());
+
+    // when: se buscan los ProrrogaDocumento visibles de la prórroga
+    List<ProrrogaDocumento> result = repository.findAll(specs);
+
+    // then: solo se devuelve el documento visible
+    Assertions.assertThat(result)
+        .hasSize(1)
+        .extracting(ProrrogaDocumento::getId)
+        .containsExactly(documentoVisible.getId())
+        .doesNotContain(documentoNoVisible.getId());
   }
 
   /**

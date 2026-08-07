@@ -104,6 +104,29 @@ public class ProyectoHelper extends AuthorityHelper {
   }
 
   /**
+   * Comprueba si el usuario actual accede al {@link Proyecto} como gestor o
+   * visor.
+   *
+   * @param proyecto el {@link Proyecto} sobre el que realizar la comprobación
+   * @return {@code true} si el usuario accede como personal de gestión
+   */
+  public boolean hasUserAuthorityViewAsGestorOrVisor(Proyecto proyecto) {
+    return hasUserAuthorityViewMod() || hasUserAuthorityViewUO(proyecto);
+  }
+
+  /**
+   * Variante de {@link #hasUserAuthorityViewAsGestorOrVisor(Proyecto)} que
+   * recupera el {@link Proyecto} a partir de su identificador.
+   *
+   * @param proyectoId identificador del {@link Proyecto}
+   * @return {@code true} si el usuario accede como personal de gestión
+   */
+  public boolean hasUserAuthorityViewAsGestorOrVisor(Long proyectoId) {
+    return hasUserAuthorityViewAsGestorOrVisor(
+        repository.findById(proyectoId).orElseThrow(() -> new ProyectoNotFoundException(proyectoId)));
+  }
+
+  /**
    * Variante de
    * {@link #checkCanAccessProyecto(Proyecto, InvestigadorAccessConstraint)}
    * que recupera el {@link Proyecto} a partir de su identificador.
