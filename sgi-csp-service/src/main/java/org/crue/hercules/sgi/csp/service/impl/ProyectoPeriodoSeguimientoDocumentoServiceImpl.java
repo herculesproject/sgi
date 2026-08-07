@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -12,6 +13,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoSeguimi
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.csp.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -94,7 +96,7 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
         ProyectoPeriodoSeguimientoDocumento.class, MSG_KEY_DOCUMENTO_REF);
 
     return repository.findById(proyectoPeriodoSeguimientoDocumento.getId())
-        .map((proyectoPeriodoSeguimientoDocumentoExistente) -> {
+        .map(proyectoPeriodoSeguimientoDocumentoExistente -> {
 
           proyectoPeriodoSeguimientoDocumentoExistente
               .setComentario(proyectoPeriodoSeguimientoDocumento.getComentario());
@@ -164,17 +166,27 @@ public class ProyectoPeriodoSeguimientoDocumentoServiceImpl implements ProyectoP
   @Override
   public Page<ProyectoPeriodoSeguimientoDocumento> findAllByProyectoPeriodoSeguimiento(
       Long proyectoPeriodoSeguimientoId, String query, Pageable paging) {
-    log.debug("findAllByProyectoPeriodoSeguimiento(Long solicitudId, String query, Pageable paging) - start");
+    log.debug("findAllByProyectoPeriodoSeguimiento - proyectoPeriodoSeguimientoId: {}, query: {}, paging: {}",
+        proyectoPeriodoSeguimientoId, query, SgiLogUtils.pageable(paging));
 
-    proyectoPeriodoSeguimientoRepository.findById(proyectoPeriodoSeguimientoId)
-        .ifPresent(periodo -> proyectoHelper.checkCanAccessProyecto(periodo.getProyectoId(),
-            ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA));
+    boolean isGestorOrVisor = true;
+    Optional<ProyectoPeriodoSeguimiento> periodo = proyectoPeriodoSeguimientoRepository
+        .findById(proyectoPeriodoSeguimientoId);
+    if (periodo.isPresent()) {
+      Long proyectoId = periodo.get().getProyectoId();
+      proyectoHelper.checkCanAccessProyecto(proyectoId,
+          ProyectoHelper.InvestigadorAccessConstraint.ROL_PRINCIPAL_ACTUAL_VISTA_AMPLIADA);
+      isGestorOrVisor = proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId);
+    }
 
     Specification<ProyectoPeriodoSeguimientoDocumento> specs = ProyectoPeriodoSeguimientoDocumentoSpecifications
         .byProyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoId).and(SgiRSQLJPASupport.toSpecification(query));
+    if (!isGestorOrVisor) {
+      specs = specs.and(ProyectoPeriodoSeguimientoDocumentoSpecifications.onlyVisibles());
+    }
 
     Page<ProyectoPeriodoSeguimientoDocumento> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllByProyectoPeriodoSeguimiento(Long solicitudId, String query, Pageable paging) - end");
+    log.debug("findAllByProyectoPeriodoSeguimiento - response: {}", SgiLogUtils.page(returnValue));
     return returnValue;
   }
 

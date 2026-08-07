@@ -6,6 +6,10 @@ import org.crue.hercules.sgi.csp.model.ProyectoDocumento_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.springframework.data.jpa.domain.Specification;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProyectoDocumentoSpecifications {
 
   /**
@@ -19,6 +23,16 @@ public class ProyectoDocumentoSpecifications {
     return (root, query, cb) -> {
       return cb.equal(root.get(ProyectoDocumento_.proyecto).get(Proyecto_.id), id);
     };
+  }
+
+  /**
+   * {@link ProyectoDocumento} visibles.
+   *
+   * @return specification para obtener los {@link ProyectoDocumento}
+   *         visibles.
+   */
+  public static Specification<ProyectoDocumento> onlyVisibles() {
+    return (root, query, cb) -> cb.isTrue(root.get(ProyectoDocumento_.visible));
   }
 
 }

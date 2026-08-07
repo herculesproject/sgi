@@ -8,6 +8,10 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.springframework.data.jpa.domain.Specification;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProyectoPeriodoSeguimientoDocumentoSpecifications {
 
   /**
@@ -20,11 +24,10 @@ public class ProyectoPeriodoSeguimientoDocumentoSpecifications {
    *         {@link ProyectoPeriodoSeguimiento} con el id indicado.
    */
   public static Specification<ProyectoPeriodoSeguimientoDocumento> byProyectoPeriodoSeguimientoId(Long id) {
-    return (root, query, cb) -> {
-      return cb.equal(
-          root.get(ProyectoPeriodoSeguimientoDocumento_.proyectoPeriodoSeguimiento).get(ProyectoPeriodoSeguimiento_.id),
-          id);
-    };
+    return (root, query, cb) -> cb.equal(
+        root.get(ProyectoPeriodoSeguimientoDocumento_.proyectoPeriodoSeguimiento).get(ProyectoPeriodoSeguimiento_.id),
+        id);
+
   }
 
   /**
@@ -37,10 +40,19 @@ public class ProyectoPeriodoSeguimientoDocumentoSpecifications {
    *         con el id indicado.
    */
   public static Specification<ProyectoPeriodoSeguimientoDocumento> byProyectoId(Long id) {
-    return (root, query, cb) -> {
-      return cb.equal(root.get(ProyectoPeriodoSeguimientoDocumento_.proyectoPeriodoSeguimiento)
-          .get(ProyectoPeriodoSeguimiento_.proyecto).get(Proyecto_.id), id);
-    };
+    return (root, query, cb) -> cb.equal(root.get(ProyectoPeriodoSeguimientoDocumento_.proyectoPeriodoSeguimiento)
+        .get(ProyectoPeriodoSeguimiento_.proyecto).get(Proyecto_.id), id);
+  }
+
+  /**
+   * {@link ProyectoPeriodoSeguimientoDocumento} visibles.
+   *
+   * @return specification para obtener los
+   *         {@link ProyectoPeriodoSeguimientoDocumento} visibles.
+   */
+  public static Specification<ProyectoPeriodoSeguimientoDocumento> onlyVisibles() {
+    return (root, query, cb) -> cb.isTrue(root.get(ProyectoPeriodoSeguimientoDocumento_.visible));
+
   }
 
 }

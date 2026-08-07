@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
+import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoComentario;
@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,7 +53,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
   private ProyectoSocioPeriodoJustificacionDocumentoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoSocioPeriodoJustificacionDocumentoServiceImpl(
         repository,
         proyectoSocioRepository,
@@ -114,7 +113,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
             }
             periodoJustificacion.setProyectoSocioPeriodoJustificacionId(proyectoSocioId);
             return periodoJustificacion;
-          }).collect(Collectors.toList());
+          }).toList();
         });
 
     // when: update
@@ -154,10 +153,8 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     Assertions.assertThat(periodosJustificacionActualizados.get(1).getVisible()).as("get(1).getVisible()")
         .isEqualTo(updatedProyectoSocioPeriodoJustificacionDocumento.getVisible());
 
-    Mockito.verify(repository, Mockito.times(1))
-        .deleteAll(ArgumentMatchers.<ProyectoSocioPeriodoJustificacionDocumento>anyList());
-    Mockito.verify(repository, Mockito.times(1))
-        .saveAll(ArgumentMatchers.<ProyectoSocioPeriodoJustificacionDocumento>anyList());
+    BDDMockito.then(repository).should().deleteAll(ArgumentMatchers.<ProyectoSocioPeriodoJustificacionDocumento>anyList());
+    BDDMockito.then(repository).should().saveAll(ArgumentMatchers.<ProyectoSocioPeriodoJustificacionDocumento>anyList());
   }
 
   @Test
@@ -166,15 +163,17 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     // ProyectoSocioPeriodoJustificacion
     Long proyectoSocioId = 1L;
     Long proyectoSocioPeriodoJustificacionId = 1L;
-    ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacion = generarMockProyectoSocioPeriodoJustificacionDocumento(
+    ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = generarMockProyectoSocioPeriodoJustificacionDocumento(
         1L, proyectoSocioPeriodoJustificacionId);
+    List<ProyectoSocioPeriodoJustificacionDocumento> documentos = Arrays
+        .asList(proyectoSocioPeriodoJustificacionDocumento);
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
         .willReturn(false);
 
     Assertions.assertThatThrownBy(
         // when: update ProyectoSocioPeriodoJustificacionEntidadGestora
-        () -> service.update(proyectoSocioId, Arrays.asList(proyectoSocioPeriodoJustificacion)))
+        () -> service.update(proyectoSocioId, documentos))
         // then: throw exception as ProyectoSocioPeriodoJustificacion is not found
         .isInstanceOf(ProyectoSocioPeriodoJustificacionNotFoundException.class);
   }
@@ -187,6 +186,8 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     Long proyectoSocioPeriodoJustificacionId = 1L;
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = generarMockProyectoSocioPeriodoJustificacionDocumento(
         1L, proyectoSocioPeriodoJustificacionId);
+    List<ProyectoSocioPeriodoJustificacionDocumento> documentos = Arrays
+        .asList(proyectoSocioPeriodoJustificacionDocumento);
 
     BDDMockito.given(proyectoSocioRepository.existsById(ArgumentMatchers.anyLong()))
         .willReturn(true);
@@ -200,7 +201,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     // existe
     Assertions
         .assertThatThrownBy(
-            () -> service.update(proyectoSocioId, Arrays.asList(proyectoSocioPeriodoJustificacionDocumento)))
+            () -> service.update(proyectoSocioId, documentos))
         .isInstanceOf(ProyectoSocioPeriodoJustificacionDocumentoNotFoundException.class);
   }
 
@@ -212,6 +213,8 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     Long proyectoSocioPeriodoJustificacionId = 1L;
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = generarMockProyectoSocioPeriodoJustificacionDocumento(
         1L, proyectoSocioPeriodoJustificacionId);
+    List<ProyectoSocioPeriodoJustificacionDocumento> documentos = Arrays
+        .asList(proyectoSocioPeriodoJustificacionDocumento);
 
     proyectoSocioPeriodoJustificacionDocumento.setProyectoSocioPeriodoJustificacionId(3L);
 
@@ -223,7 +226,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
 
     Assertions.assertThatThrownBy(
         // when: update
-        () -> service.update(proyectoSocioId, Arrays.asList(proyectoSocioPeriodoJustificacionDocumento)))
+        () -> service.update(proyectoSocioId, documentos))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("No se puede Modificar Proyecto Socio para Proyecto Socio Periodo Justificación Documento");
@@ -254,9 +257,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
               : toIndex;
           List<ProyectoSocioPeriodoJustificacionDocumento> content = proyectoSociosEntidadesConvocantes
               .subList(fromIndex, toIndex);
-          Page<ProyectoSocioPeriodoJustificacionDocumento> pageResponse = new PageImpl<>(content, pageable,
-              proyectoSociosEntidadesConvocantes.size());
-          return pageResponse;
+          return new PageImpl<>(content, pageable, proyectoSociosEntidadesConvocantes.size());
 
         });
 
@@ -280,6 +281,85 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
       Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacion.getNombre(), Language.ES))
           .isEqualTo("nombre-" + i);
     }
+  }
+
+  @Test
+  void findAllByProyectoSocioPeriodoJustificacion_UserIsGestor_ReturnsAllDocumentos() {
+    // given: un usuario con acceso de gestión (visor/editor) sobre el proyecto del
+    // socio
+    Long proyectoSocioPeriodoJustificacionId = 1L;
+    Long proyectoSocioId = 5L;
+    Long proyectoId = 10L;
+
+    ProyectoSocioPeriodoJustificacion periodo = new ProyectoSocioPeriodoJustificacion();
+    periodo.setId(proyectoSocioPeriodoJustificacionId);
+    periodo.setProyectoSocioId(proyectoSocioId);
+    BDDMockito.given(proyectoSocioRepository.findById(proyectoSocioPeriodoJustificacionId))
+        .willReturn(Optional.of(periodo));
+
+    ProyectoSocio socio = new ProyectoSocio();
+    socio.setId(proyectoSocioId);
+    socio.setProyectoId(proyectoId);
+    BDDMockito.given(proyectoSocioPeriodoJustificacionProyectoSocioRepository.findById(proyectoSocioId))
+        .willReturn(Optional.of(socio));
+
+    BDDMockito.given(proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId)).willReturn(true);
+
+    List<ProyectoSocioPeriodoJustificacionDocumento> documentos = Arrays.asList(
+        generarMockProyectoSocioPeriodoJustificacionDocumento(1L, proyectoSocioPeriodoJustificacionId),
+        generarMockProyectoSocioPeriodoJustificacionDocumento(2L, proyectoSocioPeriodoJustificacionId));
+    Page<ProyectoSocioPeriodoJustificacionDocumento> page = new PageImpl<>(documentos);
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<ProyectoSocioPeriodoJustificacionDocumento>>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willReturn(page);
+
+    // when: se buscan los documentos del periodo de justificación
+    Page<ProyectoSocioPeriodoJustificacionDocumento> result = service
+        .findAllByProyectoSocioPeriodoJustificacion(proyectoSocioPeriodoJustificacionId, null, PageRequest.of(0, 10));
+
+    // then: se devuelven todos los documentos, sin filtrar por visible
+    Assertions.assertThat(result.getContent()).isEqualTo(documentos);
+  }
+
+  @Test
+  void findAllByProyectoSocioPeriodoJustificacion_UserIsNotGestor_AppliesOnlyVisiblesFilter() {
+    // given: un usuario sin acceso de gestión (investigador) sobre el proyecto del
+    // socio
+    Long proyectoSocioPeriodoJustificacionId = 1L;
+    Long proyectoSocioId = 5L;
+    Long proyectoId = 10L;
+
+    ProyectoSocioPeriodoJustificacion periodo = new ProyectoSocioPeriodoJustificacion();
+    periodo.setId(proyectoSocioPeriodoJustificacionId);
+    periodo.setProyectoSocioId(proyectoSocioId);
+    BDDMockito.given(proyectoSocioRepository.findById(proyectoSocioPeriodoJustificacionId))
+        .willReturn(Optional.of(periodo));
+
+    ProyectoSocio socio = new ProyectoSocio();
+    socio.setId(proyectoSocioId);
+    socio.setProyectoId(proyectoId);
+    BDDMockito.given(proyectoSocioPeriodoJustificacionProyectoSocioRepository.findById(proyectoSocioId))
+        .willReturn(Optional.of(socio));
+
+    BDDMockito.given(proyectoHelper.hasUserAuthorityViewAsGestorOrVisor(proyectoId)).willReturn(false);
+
+    List<ProyectoSocioPeriodoJustificacionDocumento> documentosVisibles = Arrays
+        .asList(generarMockProyectoSocioPeriodoJustificacionDocumento(1L, proyectoSocioPeriodoJustificacionId));
+    Page<ProyectoSocioPeriodoJustificacionDocumento> page = new PageImpl<>(documentosVisibles);
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<ProyectoSocioPeriodoJustificacionDocumento>>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willReturn(page);
+
+    // when: se buscan los documentos del periodo de justificación
+    Page<ProyectoSocioPeriodoJustificacionDocumento> result = service
+        .findAllByProyectoSocioPeriodoJustificacion(proyectoSocioPeriodoJustificacionId, null, PageRequest.of(0, 10));
+
+    // then: se comprueba la condición de gestor y se devuelve la página filtrada
+    // por el repositorio
+    Assertions.assertThat(result.getContent()).isEqualTo(documentosVisibles);
+    BDDMockito.then(proyectoHelper).should().hasUserAuthorityViewAsGestorOrVisor(proyectoId);
   }
 
   @Test
@@ -309,8 +389,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsProyectoSocioPeriodoJustificacionDocumentoNotFoundException()
-      throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoSocioPeriodoJustificacionDocumentoNotFoundException() {
     // given: Ningun ProyectoSocioPeriodoJustificacionDocumento con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -344,12 +423,15 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     comentarioDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoComentario(Language.ES, "comentario"));
 
     TipoDocumento tipoDocumento = TipoDocumento.builder().nombre(nombreTipoDocumento).activo(Boolean.TRUE).build();
-    ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = ProyectoSocioPeriodoJustificacionDocumento
-        .builder().id(id).nombre(nombreDocumento).comentario(comentarioDocumento).documentoRef("001")
-        .proyectoSocioPeriodoJustificacionId(proyectoSocioPeriodoJustificacionId).tipoDocumento(tipoDocumento)
-        .visible(Boolean.TRUE).build();
-
-    return proyectoSocioPeriodoJustificacionDocumento;
+    return ProyectoSocioPeriodoJustificacionDocumento.builder()
+        .id(id)
+        .nombre(nombreDocumento)
+        .comentario(comentarioDocumento)
+        .documentoRef("001")
+        .proyectoSocioPeriodoJustificacionId(proyectoSocioPeriodoJustificacionId)
+        .tipoDocumento(tipoDocumento)
+        .visible(Boolean.TRUE)
+        .build();
   }
 
 }
