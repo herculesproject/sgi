@@ -2961,6 +2961,7 @@
   "msg.formly.validations.email-principal-required": "One of the email addresses must be the main address",
   "msg.formly.validations.email-principal-unique": "You can only have one main email address",
   "msg.formly.validations.field-array-max": "The maximum number of elements is {max}",
+  "msg.formly.validations.i18n-max-length": "The maximum length is {max} characters",
   "msg.formly.validations.multicheckbox-restricted": "The answers ${option1} and {option2} are not compatible",
   "msg.formly.validations.oneRowRequired": "The table must contain at least one row",
   "msg.formly.validations.required": "Is mandatory",
