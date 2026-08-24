@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { i18nMaxLength } from '@formly-forms/validators/i18n-max-length.validator';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FieldType } from '@ngx-formly/material/form-field';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   template: `
@@ -21,7 +23,16 @@ import { FieldType } from '@ngx-formly/material/form-field';
 export class I18nInputTypeComponent extends FieldType implements OnInit {
 
   defaultOptions: FormlyFieldConfig = {
-    defaultValue: []
+    defaultValue: [],
+    validators: {
+      'i18n-max-length': i18nMaxLength(this.translate)
+    }
+  };
+
+  constructor(
+    private readonly translate: TranslateService
+  ) {
+    super();
   }
 
 }

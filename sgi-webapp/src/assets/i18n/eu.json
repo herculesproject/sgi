@@ -2961,6 +2961,7 @@
   "msg.formly.validations.email-principal-required": "Nahitaezkoa da e-mailetako bat nagusia izatea",
   "msg.formly.validations.email-principal-unique": "E-mail nagusi bat bakarrik eduki dezake",
   "msg.formly.validations.field-array-max": "Gehieneko elementu kopurua {max} da",
+  "msg.formly.validations.i18n-max-length": "Gehieneko luzera {max} karaktere da",
   "msg.formly.validations.multicheckbox-restricted": "{option1} eta {option2} erantzunak ez dira bateragarriak",
   "msg.formly.validations.oneRowRequired": "Taulak errenkada bat izan behar du gutxienez",
   "msg.formly.validations.required": "Nahitaez bete behar da",

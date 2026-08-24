@@ -2961,6 +2961,7 @@
   "msg.formly.validations.email-principal-required": "És obligatori que un dels emails sigui principal",
   "msg.formly.validations.email-principal-unique": "Només pot tenir un email principal",
   "msg.formly.validations.field-array-max": "El nombre màxim d'elements és {max}",
+  "msg.formly.validations.i18n-max-length": "La longitud màxima és de {max} caràcters",
   "msg.formly.validations.multicheckbox-restricted": "Les respostes {option1} i {option2} no són compatibles",
   "msg.formly.validations.oneRowRequired": "La taula ha de contenir almenys una fila",
   "msg.formly.validations.required": "El camp és obligatori",

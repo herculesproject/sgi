@@ -2961,6 +2961,7 @@
   "msg.formly.validations.email-principal-required": "Es obligatorio que uno de los emails sea principal",
   "msg.formly.validations.email-principal-unique": "Solo puede tener un email principal",
   "msg.formly.validations.field-array-max": "El número maximo de elementos es {max}",
+  "msg.formly.validations.i18n-max-length": "La longitud máxima es de {max} caracteres",
   "msg.formly.validations.multicheckbox-restricted": "Las respuestas {option1} y {option2} no son compatibles",
   "msg.formly.validations.oneRowRequired": "La tabla debe contener al menos una fila",
   "msg.formly.validations.required": "El campo es obligatorio",

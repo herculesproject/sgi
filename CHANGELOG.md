@@ -17,6 +17,7 @@
 ### Added
 
 - [CSP] Añadida la pantalla de facturas emitidas de ejecución económica a la vista del perfil de investigación. ([#134](https://github.com/herculesproject/sgi/issues/134)).
+- Los campos multiidioma de los formularios dinámicos (`i18n-input`, `i18n-textarea` e `i18n-ckeditor`) admiten declarar la longitud máxima del texto en la plantilla del formulario (`maxLength`): la validación se aplica a cada idioma de forma independiente y los campos de área de texto y de texto enriquecido muestran el contador de caracteres del idioma que se está editando. ([#144](https://github.com/herculesproject/sgi/issues/144)).
 
 ### Changed
 

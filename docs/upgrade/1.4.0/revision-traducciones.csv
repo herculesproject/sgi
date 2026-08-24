@@ -1,0 +1,2 @@
+Servicio,Fichero,Clave,ES,CA,EN,EU,Issue
+sgi-webapp,sgi-webapp/src/assets/i18n/es.json,msg.formly.validations.i18n-max-length,La longitud máxima es de {max} caracteres,La longitud màxima és de {max} caràcters,The maximum length is {max} characters,Gehieneko luzera {max} karaktere da,https://github.com/herculesproject/sgi/issues/144
