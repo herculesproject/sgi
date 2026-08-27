@@ -258,7 +258,7 @@ export class ProyectoConceptoGastoListadoExportService extends AbstractTableExpo
     const proyecto = proyectos[index];
 
     const elementsRow: any[] = [];
-    if (!this.isExcelOrCsv(reportConfig.outputType)) {
+    if (this.isExcelOrCsv(reportConfig.outputType)) {
       const maxNumConceptosGastosPermitidos = Math.max(...proyectos.map(p => p.conceptosGastos.filter(g => g.permitido)?.length));
 
       for (let i = 0; i < maxNumConceptosGastosPermitidos; i++) {
