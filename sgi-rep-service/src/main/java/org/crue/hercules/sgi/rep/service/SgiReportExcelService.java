@@ -3,8 +3,6 @@ package org.crue.hercules.sgi.rep.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -61,7 +59,6 @@ public class SgiReportExcelService {
   private static final String DATE_PATTERN_DEFAULT = "dd/MM/yyyy";
   private static final String ISO_LOCAL_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
   private static final String DEFAULT_TITLE_KEY_MSG = "excel.datos.informe";
-  private static final String NUMBER_PATTERN_DEFAULT = "0.00";
   private static final String DEFAULT_FORMAT_DOUBLE = "#.#,0";
   private static final String DEFAULT_FORMAT_INTEGER = "#";
 
@@ -201,12 +198,27 @@ public class SgiReportExcelService {
     int rowCount = 7;
     if (CollectionUtils.isNotEmpty(sgiReport.getRows())) {
       List<SgiRowReportDto> rowsReport = sgiReport.getRows();
+      List<SgiColumReportDto> columns = CollectionUtils.isNotEmpty(sgiReport.getColumns())
+          ? sgiReport.getColumns()
+          : new ArrayList<>();
+      logColumnsLayout(columns);
+
       for (int k = 0; k < rowsReport.size(); k++) {
         SXSSFRow row = sheet.createRow(rowCount++);
-        SgiRowReportDto rowReport = rowsReport.get(k);
-        for (int columnCount = 0; columnCount < rowReport.getElements().size(); columnCount++) {
-          createCell(workbook, row, columnCount, rowReport.getElements().get(columnCount),
-              sgiReport.getColumns().get(columnCount));
+        List<Object> elements = rowsReport.get(k).getElements();
+        if (elements == null) {
+          log.warn("writeDataLines - row: {}, elements: null", k);
+          continue;
+        }
+
+        logRowValues(k, elements, columns);
+
+        if (elements.size() != columns.size()) {
+          log.warn("writeDataLines - row: {}, elementCount: {}, columnCount: {}", k, elements.size(), columns.size());
+        }
+
+        for (int columnCount = 0; columnCount < elements.size() && columnCount < columns.size(); columnCount++) {
+          createCell(workbook, row, columnCount, elements.get(columnCount), columns.get(columnCount));
         }
       }
     }
@@ -241,68 +253,123 @@ public class SgiReportExcelService {
 
   private void createCellHeader(SXSSFRow row, int columnCount, Object value) {
     Cell cell = row.createCell(columnCount);
-    cell.setCellValue((String) value);
+    cell.setCellValue(value != null ? value.toString() : "");
     cell.setCellStyle(columnStyles.get(ColumnStyle.HEADER));
   }
 
   private void createCell(SXSSFWorkbook workbook, SXSSFRow row, int columnCount, Object value,
       SgiColumReportDto columnReportDto) {
     CellStyle defaultStyle = columnStyles.get(ColumnStyle.DEFAULT);
-    CellStyle dateStyle = columnStyles.get(ColumnStyle.DATE);
     Cell cell = row.createCell(columnCount);
     cell.setCellStyle(defaultStyle);
-    if (ObjectUtils.isNotEmpty(columnReportDto) && ObjectUtils.isNotEmpty(columnReportDto.getType())
-        && ObjectUtils.isNotEmpty(value)) {
-      switch (columnReportDto.getType()) {
-        case DATE:
-          if (StringUtils.hasText((String) value)) {
-            try {
-              Instant fechaInstant = Instant.parse((String) value);
-              cell.setCellValue(formatInstantToDate(fechaInstant));
-              cell.setCellStyle(dateStyle);
-            } catch (DateTimeParseException e) {
-              cell.setCellValue((String) value);
-            }
-          }
-          break;
-        case NUMBER:
-          CellStyle style = workbook.createCellStyle();
-          style.cloneStyleFrom(defaultStyle);
-          DataFormat format = workbook.createDataFormat();
-          String stringFormat = DEFAULT_FORMAT_DOUBLE;
-          if (!StringUtils.isEmpty(columnReportDto.getFormat())) {
-            stringFormat = columnReportDto.getFormat();
-          }
-          if (value instanceof Integer) {
-            String stringFormatInt = DEFAULT_FORMAT_INTEGER;
-            if (!StringUtils.isEmpty(columnReportDto.getFormat())) {
-              stringFormatInt = columnReportDto.getFormat();
-            }
-            style.setDataFormat(format.getFormat(stringFormatInt));
-            cell.setCellValue((Integer) value);
-          } else if (value instanceof Double) {
-            style.setDataFormat(format.getFormat(stringFormat));
-            cell.setCellValue((Double) value);
-          } else if (value instanceof String) {
-            style.setDataFormat(format.getFormat(stringFormat));
-            String numberString = formatNumberString((String) value, columnReportDto.getFormat());
-            cell.setCellValue(Double.parseDouble(numberString.replace(",", ".")));
-          }
-          cell.setCellStyle(style);
-          break;
-        default:
-          try {
-            cell.setCellValue((String) value);
-          } catch (Exception e) {
-            log.error(
-                "createCell() - columnReportDto: " + columnReportDto.getTitle(), e);
-            cell.setCellValue(value.toString());
-          }
-          break;
-      }
-    } else {
-      cell.setCellValue((String) value);
+
+    if (ObjectUtils.isEmpty(value)) {
+      return;
     }
+
+    if (ObjectUtils.isEmpty(columnReportDto) || ObjectUtils.isEmpty(columnReportDto.getType())) {
+      cell.setCellValue(value.toString());
+      return;
+    }
+
+    switch (columnReportDto.getType()) {
+      case DATE:
+        setDateCellValue(cell, columnCount, value, columnReportDto);
+        break;
+      case NUMBER:
+        setNumericCellValue(workbook, cell, defaultStyle, columnCount, value, columnReportDto);
+        break;
+      default:
+        if (value instanceof String text) {
+          cell.setCellValue(text);
+        } else {
+          logTypeMismatch(columnCount, columnReportDto, value);
+          cell.setCellValue(value.toString());
+        }
+        break;
+    }
+  }
+
+  /**
+   * Escribe una celda de una columna de tipo {@link ColumnType#DATE}.
+   * Se espera un instant en formato ISO-8601, si no lo es se escribe como texto.
+   *
+   * @param cell            celda destino.
+   * @param columnCount     posición de la celda en la fila.
+   * @param value           valor recibido.
+   * @param columnReportDto columna declarada para esa posición.
+   */
+  private void setDateCellValue(Cell cell, int columnCount, Object value, SgiColumReportDto columnReportDto) {
+    if (!(value instanceof String date)) {
+      logTypeMismatch(columnCount, columnReportDto, value);
+      cell.setCellValue(value.toString());
+      return;
+    }
+
+    if (!StringUtils.hasText(date)) {
+      return;
+    }
+
+    try {
+      cell.setCellValue(formatInstantToDate(Instant.parse(date)));
+      cell.setCellStyle(columnStyles.get(ColumnStyle.DATE));
+    } catch (DateTimeParseException e) {
+      logTypeMismatch(columnCount, columnReportDto, date);
+      cell.setCellValue(date);
+    }
+  }
+
+  /**
+   * Escribe una celda de una columna de tipo {@link ColumnType#NUMBER}.
+   * 
+   * La celda recibe el número sin formatear y el formato declarado en la columna
+   * se aplica como formato de celda.
+   * Un valor que no sea numérico se escribe como texto.
+   *
+   * @param workbook        libro del que se obtiene el formato de datos.
+   * @param cell            celda destino.
+   * @param defaultStyle    estilo base sobre el que se aplica el formato
+   *                        numérico.
+   * @param columnCount     posición de la celda en la fila.
+   * @param value           valor recibido.
+   * @param columnReportDto columna declarada para esa posición.
+   */
+  private void setNumericCellValue(SXSSFWorkbook workbook, Cell cell, CellStyle defaultStyle, int columnCount,
+      Object value, SgiColumReportDto columnReportDto) {
+    CellStyle style = workbook.createCellStyle();
+    style.cloneStyleFrom(defaultStyle);
+
+    DataFormat format = workbook.createDataFormat();
+    String columnFormat = columnReportDto.getFormat();
+    boolean hasColumnFormat = StringUtils.hasText(columnFormat);
+
+    switch (value) {
+      case Integer integerValue -> {
+        style.setDataFormat(format.getFormat(hasColumnFormat ? columnFormat : DEFAULT_FORMAT_INTEGER));
+        cell.setCellValue(integerValue.doubleValue());
+      }
+      case Number numberValue -> {
+        style.setDataFormat(format.getFormat(hasColumnFormat ? columnFormat : DEFAULT_FORMAT_DOUBLE));
+        cell.setCellValue(numberValue.doubleValue());
+      }
+      case String text -> {
+        String normalized = text.trim().replace(",", ".");
+        if (!NumberUtils.isParsable(normalized)) {
+          logTypeMismatch(columnCount, columnReportDto, text);
+          cell.setCellValue(text);
+          return;
+        }
+        style.setDataFormat(format.getFormat(hasColumnFormat ? columnFormat : DEFAULT_FORMAT_DOUBLE));
+        cell.setCellValue(Double.parseDouble(normalized));
+      }
+      default -> {
+        logTypeMismatch(columnCount, columnReportDto, value);
+        cell.setCellValue(value.toString());
+        return;
+      }
+    }
+
+    cell.setCellStyle(style);
   }
 
   private String returnValue(Object value, SgiColumReportDto columnReportDto) {
@@ -310,13 +377,12 @@ public class SgiReportExcelService {
 
     if (ObjectUtils.isNotEmpty(columnReportDto) && ObjectUtils.isNotEmpty(columnReportDto.getType())
         && ObjectUtils.isNotEmpty(value)) {
-      if (columnReportDto.getType().equals(ColumnType.DATE)) {
-        if (StringUtils.hasText((String) value)) {
+      if (columnReportDto.getType().equals(ColumnType.DATE) && value instanceof String date) {
+        if (StringUtils.hasText(date)) {
           try {
-            Instant fechaInstant = Instant.parse((String) value);
-            data = formatInstantToString(fechaInstant);
+            data = formatInstantToString(Instant.parse(date));
           } catch (DateTimeParseException e) {
-            data = (String) value;
+            data = date;
           }
         }
       } else {
@@ -365,19 +431,6 @@ public class SgiReportExcelService {
     return result;
   }
 
-  private String formatNumberString(String numberString, String pattern) {
-    String result = "";
-    numberString = numberString.replace(",", ".");
-    if (StringUtils.hasText(numberString) && NumberUtils.isParsable(numberString)) {
-      pattern = StringUtils.hasText(pattern) ? pattern : NUMBER_PATTERN_DEFAULT;
-      DecimalFormat decimalFormat = new DecimalFormat(pattern,
-          DecimalFormatSymbols.getInstance(LocaleContextHolder.getLocale()));
-      result = decimalFormat.format(Double.parseDouble(numberString));
-    }
-
-    return result;
-  }
-
   private String formatInstantToString(Instant instantDate) {
     return formatInstantToString(instantDate, DATE_PATTERN_DEFAULT);
   }
@@ -394,6 +447,65 @@ public class SgiReportExcelService {
       log.error(e.getMessage(), e);
       throw new GetDataReportException(e);
     }
+  }
+
+  /**
+   * Registra un valor que no corresponde al tipo declarado de su columna.
+   * Identifica la celda para poder localizar el dato de origen.
+   *
+   * @param columnCount     posición de la celda en la fila.
+   * @param columnReportDto columna declarada para esa posición.
+   * @param value           valor recibido.
+   */
+  private void logTypeMismatch(int columnCount, SgiColumReportDto columnReportDto, Object value) {
+    log.warn("logTypeMismatch - cellIndex: {}, column: {}, declaredType: {}, valueType: {}, value: {}", columnCount,
+        columnReportDto.getTitle(), columnReportDto.getType(), value.getClass().getSimpleName(), value);
+  }
+
+  /**
+   * Registra a nivel TRACE las columnas declaradas del informe, con su posición y
+   * tipo.
+   *
+   * @param columns columnas declaradas.
+   */
+  private void logColumnsLayout(List<SgiColumReportDto> columns) {
+    if (!log.isTraceEnabled()) {
+      return;
+    }
+
+    StringBuilder detail = new StringBuilder();
+    for (int i = 0; i < columns.size(); i++) {
+      SgiColumReportDto column = columns.get(i);
+      detail.append(i > 0 ? " | " : "").append('[').append(i).append("] ").append(column.getTitle()).append(" (")
+          .append(column.getType()).append(')');
+    }
+
+    log.trace("logColumnsLayout - columnCount: {}, layout: {}", columns.size(), detail);
+  }
+
+  /**
+   * Registra a nivel TRACE los valores de una fila, cada uno con la columna que
+   * le corresponde por posición y con su tipo real.
+   *
+   * @param rowIndex índice de la fila.
+   * @param elements valores recibidos.
+   * @param columns  columnas declaradas.
+   */
+  private void logRowValues(int rowIndex, List<Object> elements, List<SgiColumReportDto> columns) {
+    if (!log.isTraceEnabled()) {
+      return;
+    }
+
+    StringBuilder detail = new StringBuilder();
+    for (int i = 0; i < elements.size(); i++) {
+      Object element = elements.get(i);
+      detail.append(i > 0 ? " | " : "").append('[').append(i).append("] ")
+          .append(i < columns.size() ? columns.get(i).getTitle() : "-").append(" = ")
+          .append(element == null ? "null" : element.getClass().getSimpleName()).append('(').append(element)
+          .append(')');
+    }
+
+    log.trace("logRowValues - row: {}, elementCount: {}, values: {}", rowIndex, elements.size(), detail);
   }
 
 }
