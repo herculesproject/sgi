@@ -61,7 +61,7 @@ export abstract class SelectCommonComponent<T>
       this.matSelect.value = newValue;
 
       if (this.isInitialValue) {
-        this.addMissingOptionIfNeccesary();
+        this.addMissingOptionIfNecessary();
       }
     }
     else {
@@ -431,7 +431,7 @@ export abstract class SelectCommonComponent<T>
     this.selectionChange.next(null);
   }
 
-  private addMissingOptionIfNeccesary(): void {
+  private addMissingOptionIfNecessary(): void {
     if (this.showMissing) {
       const value = this.value;
       if (value) {
@@ -510,7 +510,7 @@ export abstract class SelectCommonComponent<T>
         this.selectValues = options;
         this.selectValues.sort(this.sortWith);
 
-        this.addMissingOptionIfNeccesary();
+        this.addMissingOptionIfNecessary();
 
         if (this.ready) {
           // Hack to trigger refresh

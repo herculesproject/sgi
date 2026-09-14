@@ -30,6 +30,7 @@
 - [CSP] Corregida la pantalla de clasificación de gastos de ejecución económica, que proponía una clasificación automática incorrecta cuando el gasto no tenía informado el código económico. ([#135](https://github.com/herculesproject/sgi/issues/135)).
 - [CSP] Corregido que los documentos de un proyecto (incluidos los de sus periodos de seguimiento, prórrogas y las justificaciones de los socios) marcados como no visibles se mostraban en el perfil de investigación. ([#142](https://github.com/herculesproject/sgi/issues/142)).
 - [CSP] Corregida la exportación del listado de proyectos, que al marcar la opción Elegibilidad situaba los valores en columnas que no les correspondían y, en función de los datos, generaba un fichero vacío. Además, un valor que no se corresponde con el tipo declarado de su columna ya no interrumpe la generación del fichero, ahora la celda se escribe y se registra la incidencia en el log. ([#146](https://github.com/herculesproject/sgi/issues/146)).
+- [ETI] Corregido el selector de miembros del equipo investigador de los formularios de memoria, que se mostraba vacío en lugar de con el miembro seleccionado. Cuando el SGP no devuelve los datos de alguna de las personas, la opción muestra ahora el mensaje de persona no encontrada con su identificador, y las personas que ya no forman parte del equipo se siguen mostrando, tachadas, para no perder el valor guardado. ([#162](https://github.com/herculesproject/sgi/issues/162)).
 
 ## 1.3.0 (2026-07-24)
 
