@@ -6,16 +6,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 import org.crue.hercules.sgi.csp.converter.ComConverter;
 import org.crue.hercules.sgi.csp.converter.ConvocatoriaFaseObservacionesConverter;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseAvisoInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
+import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.FaseWithSentAvisoNotDeletableException;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotDeletableException;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotUpdatableException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
@@ -39,7 +43,10 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ComGenericEmailTextHelper;
+import org.crue.hercules.sgi.csp.util.ComRecipientHelper;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.problem.exception.ProblemException;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -61,7 +68,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
-  private static final String MSG_AVISO_ENVIADO = "avisoEnviado.message";
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_KEY_MODELO = "modelo";
@@ -230,7 +236,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
         avisoInput.getAsunto(), avisoInput.getContenido(),
         avisoInput.getDestinatarios().stream()
             .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
-            .collect(Collectors.toList()));
+            .toList());
     Long taskId = null;
     try {
       taskId = this.sgiApiTaskService.createSendEmailTask(
@@ -247,6 +253,9 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     aviso.setTareaProgramadaRef(taskId.toString());
     aviso.setIncluirIpsProyecto(avisoInput.getIncluirIpsProyecto());
     aviso.setIncluirIpsSolicitud(avisoInput.getIncluirIpsSolicitud());
+    log.debug(
+        "createAviso - convocatoriaFaseId: {}, accion: CREADO, comunicadoRef: {}, tareaProgramadaRef: {}, fechaEnvio: {}",
+        convocatoriaFaseId, emailId, taskId, avisoInput.getFechaEnvio());
     return convocatoriaFaseAvisoRepository.save(aviso);
   }
 
@@ -344,7 +353,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
             convocatoriaFaseActualizar.getAviso1());
         convocatoriaFase.setConvocatoriaFaseAviso1(aviso1);
       } else if (this.deleteAvisoIfPossible(convocatoriaFaseActualizar.getAviso1(),
-          convocatoriaFase.getConvocatoriaFaseAviso1())) {
+          convocatoriaFase.getConvocatoriaFaseAviso1(), SentAvisoNotDeletableException::new)) {
         convocatoriaFase.setConvocatoriaFaseAviso1(null);
       } else {
         this.updateAvisoIfNeeded(convocatoriaFaseActualizar.getAviso1(), convocatoriaFase.getConvocatoriaFaseAviso1(),
@@ -356,7 +365,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
             convocatoriaFaseActualizar.getAviso2());
         convocatoriaFase.setConvocatoriaFaseAviso2(aviso2);
       } else if (this.deleteAvisoIfPossible(convocatoriaFaseActualizar.getAviso2(),
-          convocatoriaFase.getConvocatoriaFaseAviso2())) {
+          convocatoriaFase.getConvocatoriaFaseAviso2(), SentAvisoNotDeletableException::new)) {
         convocatoriaFase.setConvocatoriaFaseAviso2(null);
       } else {
         this.updateAvisoIfNeeded(convocatoriaFaseActualizar.getAviso2(), convocatoriaFase.getConvocatoriaFaseAviso2(),
@@ -400,12 +409,14 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
         .map(configuracionSolicitud -> {
           configuracionSolicitud.setFasePresentacionSolicitudes(null);
           return configuracionSolicitud;
-        }).collect(Collectors.toList());
+        }).toList();
 
     configuracionSolicitudRepository.saveAll(configuracionesSolicitudModificadas);
 
-    this.deleteAvisoIfPossible(null, fase.get().getConvocatoriaFaseAviso1());
-    this.deleteAvisoIfPossible(null, fase.get().getConvocatoriaFaseAviso2());
+    this.deleteAvisoIfPossible(null, fase.get().getConvocatoriaFaseAviso1(),
+        FaseWithSentAvisoNotDeletableException::new);
+    this.deleteAvisoIfPossible(null, fase.get().getConvocatoriaFaseAviso2(),
+        FaseWithSentAvisoNotDeletableException::new);
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
@@ -532,7 +543,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     solicitantes.addAll(getAditionalSolicitantesIfNeeded(fase.getConvocatoriaId(),
         fase.getConvocatoriaFaseAviso2()));
 
-    List<String> solicitantesDistinct = solicitantes.stream().distinct().collect(Collectors.toList());
+    List<String> solicitantesDistinct = solicitantes.stream().distinct().toList();
 
     if (!CollectionUtils.isEmpty(solicitantesDistinct)) {
       return ComConverter.toRecipients(personaService.findAllByIdIn(solicitantesDistinct));
@@ -546,69 +557,129 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     if (aviso != null) {
       if (Boolean.TRUE.equals(aviso.getIncluirIpsSolicitud())) {
         solicitantes.addAll(solicitudRepository.findByConvocatoriaIdAndActivoIsTrue(convocatoriaId).stream()
-            .map(Solicitud::getSolicitanteRef).collect(Collectors.toList()));
+            .map(Solicitud::getSolicitanteRef).toList());
       }
       if (Boolean.TRUE.equals(aviso.getIncluirIpsProyecto())) {
         solicitantes.addAll(proyectoEquipoRepository.findAll(
             ProyectoEquipoSpecifications
                 .byProyectoActivoAndProyectoConvocatoriaIdWithIpsActivos(convocatoriaId))
-            .stream().map(ProyectoEquipo::getPersonaRef).collect(Collectors.toList()));
+            .stream().map(ProyectoEquipo::getPersonaRef).toList());
       }
     }
     return solicitantes;
   }
 
   /**
-   * Comprueba si el aviso entrante es nulo y si existe en la base de datos, si
-   * existe, lo intenta borrar
-   * 
-   * @param aviso                 aviso entrante
+   * Elimina el aviso de una {@link ConvocatoriaFase}, su comunicado y su tarea
+   * programada si no ha sido enviado todavia.
+   *
+   * @param avisoInput            aviso entrante
    * @param convocatoriaFaseAviso aviso persistido
-   * @return boolean true if was deleted, false if not
+   * @param avisoEnviado          excepcion a lanzar si el aviso ya ha sido
+   *                              enviado
+   * @return <code>true</code> Si se puede eliminar, <code>false</code> en
+   *         cualquier otro caso
    */
   private boolean deleteAvisoIfPossible(ConvocatoriaFaseAvisoInput avisoInput,
-      ConvocatoriaFaseAviso convocatoriaFaseAviso) {
-    if (avisoInput == null && convocatoriaFaseAviso != null) {
-      // Comprobamos que se puede borrar el aviso.
-      SgiApiInstantTaskOutput task = sgiApiTaskService
-          .findInstantTaskById(Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()));
-
-      Assert.isTrue(task.getInstant().isAfter(Instant.now()),
-          ApplicationContextSupport.getMessage(MSG_AVISO_ENVIADO));
-
-      sgiApiTaskService
-          .deleteTask(Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()));
-      emailService.deleteEmail(Long.parseLong(convocatoriaFaseAviso.getComunicadoRef()));
-      convocatoriaFaseAvisoRepository.delete(convocatoriaFaseAviso);
-      return true;
+      ConvocatoriaFaseAviso convocatoriaFaseAviso, Supplier<ProblemException> avisoEnviado) {
+    if (avisoInput != null || convocatoriaFaseAviso == null) {
+      return false;
     }
-    return false;
+
+    // Comprobamos que se puede borrar el aviso.
+    SgiApiInstantTaskOutput task = sgiApiTaskService
+        .findInstantTaskById(Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()));
+    if (!task.getInstant().isAfter(Instant.now())) {
+      throw avisoEnviado.get();
+    }
+
+    sgiApiTaskService.deleteTask(Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()));
+    emailService.deleteEmail(Long.parseLong(convocatoriaFaseAviso.getComunicadoRef()));
+    convocatoriaFaseAvisoRepository.delete(convocatoriaFaseAviso);
+
+    log.debug("deleteAvisoIfPossible - avisoId: {}, accion: ELIMINADO, comunicadoRef: {}, tareaProgramadaRef: {}",
+        convocatoriaFaseAviso.getId(), convocatoriaFaseAviso.getComunicadoRef(),
+        convocatoriaFaseAviso.getTareaProgramadaRef());
+    return true;
   }
 
+  /**
+   * Actualiza el comunicado y la tarea programada del aviso de una
+   * {@link ConvocatoriaFase} si aun no se ha enviado. Si ya se ha enviado,
+   * sólo se permite guardar la fase si los datos del aviso no cambian.
+   *
+   * @param avisoInput            aviso entrante
+   * @param convocatoriaFaseAviso aviso persistido
+   * @param convocatoriaFaseId    identificador de la {@link ConvocatoriaFase} del
+   *                              aviso
+   * @throws SentAvisoNotUpdatableException si el aviso ya ha sido enviado y
+   *                                        alguno de sus datos ha cambiado
+   */
   private void updateAvisoIfNeeded(ConvocatoriaFaseAvisoInput avisoInput, ConvocatoriaFaseAviso convocatoriaFaseAviso,
       Long convocatoriaFaseId) {
-    if (avisoInput != null && convocatoriaFaseAviso != null) {
-      SgiApiInstantTaskOutput task = sgiApiTaskService
-          .findInstantTaskById(Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()));
-      // Solo actualizamos los datos el aviso si este aún no se ha enviado.
-      // generar error si no se puede editar
-      if (task.getInstant().isAfter(Instant.now())) {
-        this.emailService.updateConvocatoriaHitoEmail(
-            Long.parseLong(convocatoriaFaseAviso.getComunicadoRef()), convocatoriaFaseId,
-            avisoInput.getAsunto(), avisoInput.getContenido(),
-            avisoInput.getDestinatarios().stream()
-                .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
-                .collect(Collectors.toList()));
-
-        this.sgiApiTaskService.updateSendEmailTask(
-            Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()),
-            Long.parseLong(convocatoriaFaseAviso.getComunicadoRef()),
-            avisoInput.getFechaEnvio());
-
-        convocatoriaFaseAviso.setIncluirIpsProyecto(avisoInput.getIncluirIpsProyecto());
-        convocatoriaFaseAviso.setIncluirIpsSolicitud(avisoInput.getIncluirIpsSolicitud());
-        convocatoriaFaseAvisoRepository.save(convocatoriaFaseAviso);
-      }
+    if (avisoInput == null || convocatoriaFaseAviso == null) {
+      log.debug("updateAvisoIfNeeded - convocatoriaFaseId: {}, accion: SIN_AVISO", convocatoriaFaseId);
+      return;
     }
+
+    SgiApiInstantTaskOutput task = sgiApiTaskService
+        .findInstantTaskById(Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()));
+
+    List<Recipient> destinatarios = avisoInput.getDestinatarios().stream()
+        .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
+        .toList();
+
+    if (!task.getInstant().isAfter(Instant.now())) {
+      if (hasAvisoChanged(avisoInput, destinatarios, convocatoriaFaseAviso, task)) {
+        throw new SentAvisoNotUpdatableException();
+      }
+
+      log.debug(
+          "updateAvisoIfNeeded - convocatoriaFaseId: {}, accion: OMITIDO (aviso ya enviado, sin cambios), comunicadoRef: {}, fechaEnvio: {}",
+          convocatoriaFaseId, convocatoriaFaseAviso.getComunicadoRef(), task.getInstant());
+      return;
+    }
+
+    this.emailService.updateConvocatoriaFaseEmail(
+        Long.parseLong(convocatoriaFaseAviso.getComunicadoRef()), convocatoriaFaseId,
+        avisoInput.getAsunto(), avisoInput.getContenido(), destinatarios);
+
+    this.sgiApiTaskService.updateSendEmailTask(
+        Long.parseLong(convocatoriaFaseAviso.getTareaProgramadaRef()),
+        Long.parseLong(convocatoriaFaseAviso.getComunicadoRef()),
+        avisoInput.getFechaEnvio());
+
+    convocatoriaFaseAviso.setIncluirIpsProyecto(avisoInput.getIncluirIpsProyecto());
+    convocatoriaFaseAviso.setIncluirIpsSolicitud(avisoInput.getIncluirIpsSolicitud());
+    convocatoriaFaseAvisoRepository.save(convocatoriaFaseAviso);
+    log.debug("updateAvisoIfNeeded - convocatoriaFaseId: {}, accion: ACTUALIZADO, comunicadoRef: {}, fechaEnvio: {}",
+        convocatoriaFaseId, convocatoriaFaseAviso.getComunicadoRef(), avisoInput.getFechaEnvio());
   }
+
+  /**
+   * Comprueba si los datos del aviso son distintos de los que existian,
+   * tanto en CSP como en el comunicado almacenado en el modulo COM.
+   *
+   * @param avisoInput            aviso entrante
+   * @param destinatarios         destinatarios entrantes
+   * @param convocatoriaFaseAviso aviso persistido
+   * @param task                  tarea programada del aviso persistido
+   * @return <code>true</code> si alguno de los datos del aviso ha cambiado
+   */
+  private boolean hasAvisoChanged(ConvocatoriaFaseAvisoInput avisoInput, List<Recipient> destinatarios,
+      ConvocatoriaFaseAviso convocatoriaFaseAviso, SgiApiInstantTaskOutput task) {
+    if (!Objects.equals(avisoInput.getFechaEnvio(), task.getInstant())
+        || !Objects.equals(avisoInput.getIncluirIpsProyecto(), convocatoriaFaseAviso.getIncluirIpsProyecto())
+        || !Objects.equals(avisoInput.getIncluirIpsSolicitud(), convocatoriaFaseAviso.getIncluirIpsSolicitud())) {
+      return true;
+    }
+
+    EmailOutput comunicado = this.emailService
+        .findGenericEmailTextById(Long.parseLong(convocatoriaFaseAviso.getComunicadoRef()));
+
+    return !Objects.equals(avisoInput.getAsunto(), ComGenericEmailTextHelper.getSubject(comunicado))
+        || !Objects.equals(avisoInput.getContenido(), ComGenericEmailTextHelper.getContent(comunicado))
+        || !ComRecipientHelper.haveSameRecipients(destinatarios, comunicado.getRecipients());
+  }
+
 }

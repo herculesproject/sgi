@@ -3,14 +3,18 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.converter.ComConverter;
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoAvisoInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoInput;
+import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotDeletableException;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotUpdatableException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
@@ -29,6 +33,8 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ComGenericEmailTextHelper;
+import org.crue.hercules.sgi.csp.util.ComRecipientHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -61,7 +67,6 @@ public class SolicitudHitoService {
   private static final String MSG_ENTITY_MODIFICABLE = "org.springframework.util.Assert.entity.modificable.message";
   private static final String MSG_MODEL_FECHA_ENVIO = "org.crue.hercules.sgi.csp.model.FechaEnvio.message";
   private static final String MSG_ENTITY_FECHA_ANTERIOR = "org.springframework.util.Assert.entity.fecha.anterior.message";
-  private static final String MSG_AVISO_ENVIADO = "avisoEnviado.message";
 
   private final SolicitudHitoRepository repository;
 
@@ -172,7 +177,7 @@ public class SolicitudHitoService {
     repository
         .findBySolicitudIdAndFechaAndTipoHitoId(solicitudHitoInput.getSolicitudId(), solicitudHitoInput.getFecha(),
             solicitudHitoInput.getTipoHitoId())
-        .ifPresent((solicitudHitoExistente) -> Assert.isTrue(id.equals(solicitudHitoExistente.getId()),
+        .ifPresent(solicitudHitoExistente -> Assert.isTrue(id.equals(solicitudHitoExistente.getId()),
             () -> ProblemMessage.builder()
                 .key(MSG_ENTITY_IN_FECHA_EXISTS)
                 .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
@@ -190,7 +195,7 @@ public class SolicitudHitoService {
             .parameter(MSG_KEY_MSG, null)
             .build());
 
-    return repository.findById(id).map((solicitudHito) -> {
+    return repository.findById(id).map(solicitudHito -> {
 
       solicitudHito
           .setComentario(solicitudHitoInput.getComentario().stream()
@@ -211,8 +216,9 @@ public class SolicitudHitoService {
         SgiApiInstantTaskOutput task = sgiApiTaskService
             .findInstantTaskById(Long.parseLong(solicitudHito.getSolicitudHitoAviso().getTareaProgramadaRef()));
 
-        Assert.isTrue(task.getInstant().isAfter(Instant.now()),
-            ApplicationContextSupport.getMessage(MSG_AVISO_ENVIADO));
+        if (!task.getInstant().isAfter(Instant.now())) {
+          throw new SentAvisoNotDeletableException();
+        }
 
         sgiApiTaskService
             .deleteTask(Long.parseLong(solicitudHito.getSolicitudHitoAviso().getTareaProgramadaRef()));
@@ -222,32 +228,83 @@ public class SolicitudHitoService {
       }
       // Actualizamos el aviso
       else if (solicitudHitoInput.getAviso() != null && solicitudHito.getSolicitudHitoAviso() != null) {
-        SgiApiInstantTaskOutput task = sgiApiTaskService
-            .findInstantTaskById(Long.parseLong(solicitudHito.getSolicitudHitoAviso().getTareaProgramadaRef()));
-        // Solo actualizamos los datos el aviso si este aún no se ha enviado.
-        // TODO: Validar realmente el cambio de contenido, y si este ha cambiado,
-        // generar error si no se puede editar
-        if (task.getInstant().isAfter(Instant.now())) {
-          this.emailService.updateSolicitudHitoEmail(
-              Long.parseLong(solicitudHito.getSolicitudHitoAviso().getComunicadoRef()), solicitudHito.getId(),
-              solicitudHitoInput.getAviso().getAsunto(), solicitudHitoInput.getAviso().getContenido(),
-              solicitudHitoInput.getAviso().getDestinatarios().stream()
-                  .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
-                  .collect(Collectors.toList()));
-
-          this.sgiApiTaskService.updateSendEmailTask(
-              Long.parseLong(solicitudHito.getSolicitudHitoAviso().getTareaProgramadaRef()),
-              Long.parseLong(solicitudHito.getSolicitudHitoAviso().getComunicadoRef()),
-              solicitudHitoInput.getAviso().getFechaEnvio());
-
-          solicitudHito.getSolicitudHitoAviso()
-              .setIncluirIpsSolicitud(solicitudHitoInput.getAviso().getIncluirIpsSolicitud());
-          solicitudHitoAvisoRepository.save(solicitudHito.getSolicitudHitoAviso());
-        }
+        this.updateAvisoIfNeeded(solicitudHitoInput.getAviso(), solicitudHito.getSolicitudHitoAviso(),
+            solicitudHito.getId());
       }
       log.debug("update(SolicitudHito solicitudHito) - end");
       return repository.save(solicitudHito);
     }).orElseThrow(() -> new SolicitudHitoNotFoundException(id));
+  }
+
+  /**
+   * Actualiza el comunicado y la tarea programada del aviso de un
+   * {@link SolicitudHito} si aun no se ha enviado. Si ya se ha enviado, sólo
+   * se permite guardar el hito si los datos del aviso no cambian.
+   *
+   * @param avisoInput         aviso entrante
+   * @param solicitudHitoAviso aviso persistido
+   * @param solicitudHitoId    identificador del {@link SolicitudHito} del aviso
+   * @throws SentAvisoNotUpdatableException si el aviso ya ha sido enviado y
+   *                                        alguno de sus datos ha cambiado
+   */
+  private void updateAvisoIfNeeded(SolicitudHitoAvisoInput avisoInput, SolicitudHitoAviso solicitudHitoAviso,
+      Long solicitudHitoId) {
+    SgiApiInstantTaskOutput task = sgiApiTaskService
+        .findInstantTaskById(Long.parseLong(solicitudHitoAviso.getTareaProgramadaRef()));
+
+    List<Recipient> destinatarios = avisoInput.getDestinatarios().stream()
+        .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
+        .toList();
+
+    if (!task.getInstant().isAfter(Instant.now())) {
+      if (hasAvisoChanged(avisoInput, destinatarios, solicitudHitoAviso, task)) {
+        throw new SentAvisoNotUpdatableException();
+      }
+
+      log.debug(
+          "updateAvisoIfNeeded - solicitudHitoId: {}, accion: OMITIDO (aviso ya enviado, sin cambios), comunicadoRef: {}, fechaEnvio: {}",
+          solicitudHitoId, solicitudHitoAviso.getComunicadoRef(), task.getInstant());
+      return;
+    }
+
+    this.emailService.updateSolicitudHitoEmail(
+        Long.parseLong(solicitudHitoAviso.getComunicadoRef()), solicitudHitoId,
+        avisoInput.getAsunto(), avisoInput.getContenido(), destinatarios);
+
+    this.sgiApiTaskService.updateSendEmailTask(
+        Long.parseLong(solicitudHitoAviso.getTareaProgramadaRef()),
+        Long.parseLong(solicitudHitoAviso.getComunicadoRef()),
+        avisoInput.getFechaEnvio());
+
+    solicitudHitoAviso.setIncluirIpsSolicitud(avisoInput.getIncluirIpsSolicitud());
+    solicitudHitoAvisoRepository.save(solicitudHitoAviso);
+    log.debug("updateAvisoIfNeeded - solicitudHitoId: {}, accion: ACTUALIZADO, comunicadoRef: {}, fechaEnvio: {}",
+        solicitudHitoId, solicitudHitoAviso.getComunicadoRef(), avisoInput.getFechaEnvio());
+  }
+
+  /**
+   * Comprueba si los datos del aviso son distintos de los que existian,
+   * tanto en CSP como en el comunicado almacenado en el modulo COM.
+   *
+   * @param avisoInput         aviso entrante
+   * @param destinatarios      destinatarios entrantes
+   * @param solicitudHitoAviso aviso persistido
+   * @param task               tarea programada del aviso persistido
+   * @return <code>true</code> si alguno de los datos del aviso ha cambiado
+   */
+  private boolean hasAvisoChanged(SolicitudHitoAvisoInput avisoInput, List<Recipient> destinatarios,
+      SolicitudHitoAviso solicitudHitoAviso, SgiApiInstantTaskOutput task) {
+    if (!Objects.equals(avisoInput.getFechaEnvio(), task.getInstant())
+        || !Objects.equals(avisoInput.getIncluirIpsSolicitud(), solicitudHitoAviso.getIncluirIpsSolicitud())) {
+      return true;
+    }
+
+    EmailOutput comunicado = this.emailService
+        .findGenericEmailTextById(Long.parseLong(solicitudHitoAviso.getComunicadoRef()));
+
+    return !Objects.equals(avisoInput.getAsunto(), ComGenericEmailTextHelper.getSubject(comunicado))
+        || !Objects.equals(avisoInput.getContenido(), ComGenericEmailTextHelper.getContent(comunicado))
+        || !ComRecipientHelper.haveSameRecipients(destinatarios, comunicado.getRecipients());
   }
 
   private SolicitudHitoAviso createAviso(Long solicitudHitoId, SolicitudHitoAvisoInput avisoInput) {
@@ -264,7 +321,7 @@ public class SolicitudHitoService {
         avisoInput.getAsunto(), avisoInput.getContenido(),
         avisoInput.getDestinatarios().stream()
             .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
-            .collect(Collectors.toList()));
+            .toList());
     Long taskId = null;
     try {
       taskId = this.sgiApiTaskService.createSendEmailTask(

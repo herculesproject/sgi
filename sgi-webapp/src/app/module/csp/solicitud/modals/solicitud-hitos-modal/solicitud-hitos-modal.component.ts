@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -59,8 +59,17 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
   msgParamContenidoEntity = {};
   msgParamDestinatariosEntity = {};
 
-  get now(): DateTime {
-    return DateTime.now().plus({ minute: 15 });
+  /**
+   * La fecha minima de envio del aviso.
+   * Si el aviso ya tenia una fecha y no se ha modificado se mantiene esa fecha como minima
+   * para evitar que la marque como un error si no se modifica el aviso
+   */
+  get minFechaEnvioAviso(): DateTime {
+    const minFechaAviso: DateTime = DateTime.now().plus({ minute: 1 });
+    const fechaActualAviso: DateTime = this.data.hito?.aviso?.task?.instant;
+    const fgAviso: FormGroup = this.formGroup.get('aviso') as FormGroup;
+    return fgAviso?.pristine && fechaActualAviso && fechaActualAviso < minFechaAviso
+      ? fechaActualAviso : minFechaAviso;
   }
 
   get MSG_PARAMS() {
@@ -71,10 +80,10 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
     matDialogRef: MatDialogRef<SolicitudHitosModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudHitosModalComponentData,
     private readonly translate: TranslateService,
-    private configService: ConfigService,
-    private emailTplService: EmailTplService,
-    private emailSErvice: EmailService,
-    private sgiApiTaskService: SgiApiTaskService
+    private readonly configService: ConfigService,
+    private readonly emailTplService: EmailTplService,
+    private readonly emailSErvice: EmailService,
+    private readonly sgiApiTaskService: SgiApiTaskService
   ) {
     super(matDialogRef, !!data.hito?.id);
   }
@@ -95,19 +104,19 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
 
     this.textSaveOrUpdate = this.data.hito?.id ? MSG_ACEPTAR : MSG_ANADIR;
 
-    if (!!!this.data.hito?.aviso) {
+    if (!this.data.hito?.aviso) {
       this.validarFecha(this.data.hito?.fecha);
     }
 
     this.formGroup.get('generaAviso').valueChanges.pipe(startWith(!!this.data.hito?.aviso), pairwise()).subscribe(
       ([oldValue, newValue]: [boolean, boolean]) => {
-        if (!!oldValue && !!!newValue) {
+        if (!!oldValue && !newValue) {
           if (this.formGroup.get('aviso').enabled) {
             this.formGroup.get('aviso').disable();
           }
           this.clearAviso();
         }
-        else if (!!!oldValue && !!newValue) {
+        else if (!oldValue && !!newValue) {
           if (this.formGroup.get('aviso').disabled) {
             this.formGroup.get('aviso').enable();
           }
@@ -139,11 +148,26 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
     else {
       this.lockAviso(this.data.hito?.aviso?.task?.instant);
     }
+
+    this.showFechaEnvioErrorOnAvisoEdit(this.formGroup.get('aviso') as FormGroup);
+  }
+
+  /**
+   * Marca la fecha de envio como modificada cuando se modifica cualquier campo del aviso
+   *
+   * @param fgAviso formulario del aviso
+   */
+  private showFechaEnvioErrorOnAvisoEdit(fgAviso: FormGroup): void {
+    this.subscriptions.push(fgAviso.valueChanges.subscribe(() => {
+      if (fgAviso.dirty) {
+        fgAviso.get('fechaEnvio').markAsTouched();
+      }
+    }));
   }
 
   private lockAviso(dateRef: DateTime): void {
     // Si no hay fecha de referencia no hacemos nada
-    if (!!!dateRef) {
+    if (!dateRef) {
       return;
     }
     if (!!this.data.hito?.id && DateTime.now() >= dateRef) {
@@ -178,19 +202,19 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
   }
 
   private isLoadEmailRequired(comunicado: IGenericEmailText): boolean {
-    if (!!!comunicado?.id) {
+    if (!comunicado?.id) {
       return false;
     }
-    if (!!!comunicado.content && !!!comunicado.subject && !!!comunicado.recipients?.length) {
+    if (!comunicado.content && !comunicado.subject && !comunicado.recipients?.length) {
       return true;
     }
   }
 
   private isLoadTareaProgramadaRequired(tareaProgramada: ISendEmailTask): boolean {
-    if (!!!tareaProgramada?.id) {
+    if (!tareaProgramada?.id) {
       return false;
     }
-    if (!!!tareaProgramada.instant) {
+    if (!tareaProgramada.instant) {
       return true;
     }
   }
@@ -212,7 +236,9 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
     this.translate.get(
       SOLICITUD_HITO_FECHA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFechaInicioEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
 
     this.translate.get(
       SOLICITUD_HITO_TIPO_KEY,
@@ -302,7 +328,7 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
       }
     } else {
       if (control.disabled && !this.data.readonly &&
-        (!!!this.data.hito?.aviso?.task?.instant ||
+        (!this.data.hito?.aviso?.task?.instant ||
           (!!this.data.hito?.aviso?.task?.instant && DateTime.now() <= this.data.hito.aviso.task.instant))
       ) {
         control.enable();
@@ -315,7 +341,7 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
     this.data.hito.fecha = this.formGroup.get('fechaInicio').value;
     this.data.hito.tipoHito = this.formGroup.get('tipoHito').value;
 
-    if (!!!this.data.hito.aviso && this.formGroup.get('generaAviso').value) {
+    if (!this.data.hito.aviso && this.formGroup.get('generaAviso').value) {
       this.data.hito.aviso = {
         email: {} as IGenericEmailText,
         task: {} as ISendEmailTask,
@@ -353,7 +379,7 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
       })
     });
 
-    if (!!!this.data?.hito?.aviso) {
+    if (!this.data?.hito?.aviso) {
       formGroup.get('aviso').disable();
     }
     if (this.data.readonly) {

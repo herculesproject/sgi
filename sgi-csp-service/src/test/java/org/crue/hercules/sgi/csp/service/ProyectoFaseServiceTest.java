@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
 import java.time.Period;
@@ -778,6 +779,26 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
+  void delete_WithAvisos_DeletesAvisos() {
+    // given: una fase con los dos avisos generados
+    ProyectoFase proyectoFase = this.generarMockProyectoFase(1L);
+    proyectoFase.setProyectoFaseAviso1(this.buildMockProyectoFaseAviso(1L));
+    proyectoFase.setProyectoFaseAviso2(this.buildMockProyectoFaseAviso(2L));
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoFase));
+    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.<Long>any());
+
+    // when: se elimina la fase
+    service.delete(1L);
+
+    // then: los avisos se borran
+    verify(proyectoFaseAvisoService).deleteAvisoIfPossible(ArgumentMatchers.isNull(),
+        ArgumentMatchers.eq(proyectoFase.getProyectoFaseAviso1()), ArgumentMatchers.any());
+    verify(proyectoFaseAvisoService).deleteAvisoIfPossible(ArgumentMatchers.isNull(),
+        ArgumentMatchers.eq(proyectoFase.getProyectoFaseAviso2()), ArgumentMatchers.any());
+  }
+
+  @Test
   void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
@@ -912,7 +933,8 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
    */
   private EstadoProyecto generarMockEstadoProyecto(Long id) {
     Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
-    estadoProyectoComentario.add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", id)));
+    estadoProyectoComentario
+        .add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", id)));
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);
@@ -957,14 +979,12 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
    */
   private ModeloTipoFase generarMockModeloTipoFase(Long id, ProyectoFase proyectoFase, Boolean activo) {
 
-    // @formatter:off
     return ModeloTipoFase.builder()
         .id(id)
         .modeloEjecucion(generarMockProyecto(proyectoFase.getProyectoId()).getModeloEjecucion())
         .tipoFase(proyectoFase.getTipoFase())
         .activo(activo)
         .build();
-    // @formatter:on
   }
 
   /**
@@ -980,7 +1000,6 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         .add(new ProyectoFaseObservaciones(Language.ES,
             "observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id))));
 
-    // @formatter:off
     return ProyectoFase.builder()
         .id(id)
         .proyectoId(1L)
@@ -991,7 +1010,6 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         .proyectoFaseAviso2(buildMockProyectoFaseAviso(2L))
         .tipoFase(generarMockTipoFase(1L, Boolean.TRUE))
         .build();
-    // @formatter:on
   }
 
   private ProyectoFaseInput generarMockProyectoFaseInput(Long id) {

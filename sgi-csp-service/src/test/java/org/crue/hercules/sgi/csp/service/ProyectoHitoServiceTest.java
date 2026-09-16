@@ -1,10 +1,13 @@
 package org.crue.hercules.sgi.csp.service;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +16,10 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.ProyectoHitoAvisoInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoHitoInput;
+import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
+import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotUpdatableException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -42,6 +48,7 @@ import org.crue.hercules.sgi.csp.service.impl.ProyectoHitoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
+import org.crue.hercules.sgi.csp.util.ComGenericEmailTextHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -63,6 +70,8 @@ import org.springframework.data.jpa.domain.Specification;
  */
 
 class ProyectoHitoServiceTest extends BaseServiceTest {
+
+  private static final Instant AVISO_FECHA_ENVIO = Instant.parse("2020-10-18T00:00:00Z");
 
   @Mock
   private ProyectoHitoRepository repository;
@@ -414,6 +423,76 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
+  void update_WithFechaPasadaYAvisoEnviadoSinCambios_ConservaElAviso() {
+    // given: un hito con fecha pasada cuyo aviso ya se envió, y una modificación
+    // que no toca los datos del aviso
+    ProyectoHitoInput proyectoHitoActualizado = mockUpdateProyectoHitoConAviso(AVISO_FECHA_ENVIO);
+    BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoHito>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(emailService.findGenericEmailTextById(anyLong())).willReturn(buildMockEmailOutputAviso());
+
+    // when: se actualiza el hito
+    ProyectoHito updated = service.update(1L, proyectoHitoActualizado);
+
+    // then: la edición se permite, el aviso se conserva y no se toca el comunicado
+    Assertions.assertThat(updated.getProyectoHitoAviso()).isNotNull();
+    verify(emailService, never()).updateProyectoHitoEmail(anyLong(), anyLong(),
+        ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.<List<Recipient>>any());
+    verify(emailService, never()).deleteEmail(anyLong());
+  }
+
+  @Test
+  void update_WithFechaPasadaYAvisoEnviadoConCambios_ThrowsSentAvisoNotUpdatableException() {
+    // given: un hito con fecha pasada cuyo aviso ya se envió y cuyo asunto se
+    // modifica
+    ProyectoHitoInput proyectoHitoActualizado = mockUpdateProyectoHitoConAviso(AVISO_FECHA_ENVIO);
+    proyectoHitoActualizado.getAviso().setAsunto("Asunto modificado");
+    BDDMockito.given(emailService.findGenericEmailTextById(anyLong())).willReturn(buildMockEmailOutputAviso());
+
+    // when: se actualiza el hito
+    // then: se informa de que el aviso ya ha sido enviado
+    Assertions.assertThatThrownBy(() -> service.update(1L, proyectoHitoActualizado))
+        .isInstanceOf(SentAvisoNotUpdatableException.class);
+  }
+
+  @Test
+  void update_WithAvisoPendienteDeEnvio_UpdatesProyectoHitoEmail() {
+    // given: un hito de proyecto con un aviso cuya tarea aun no se ha enviado
+    Proyecto proyecto = generarMockProyecto(1L);
+    ProyectoHito proyectoHito = generarMockProyectoHito(1L);
+    proyectoHito.setProyectoHitoAviso(ProyectoHitoAviso.builder()
+        .comunicadoRef("10")
+        .tareaProgramadaRef("20").build());
+    ProyectoHitoInput proyectoHitoActualizado = generarMockProyectoHito();
+    proyectoHitoActualizado.setFecha(Instant.now().plus(Period.ofDays(3)));
+    proyectoHitoActualizado.getAviso().setAsunto("Asunto del aviso");
+    proyectoHitoActualizado.getAviso().setContenido("Contenido del aviso");
+    proyectoHitoActualizado.getAviso().setDestinatarios(Arrays.asList(
+        ProyectoHitoAvisoInput.Destinatario.builder().nombre("test").email("test@test.com").build()));
+    ModeloTipoHito modeloTipoHito = generarMockModeloTipoHito(1L, proyectoHito, Boolean.TRUE);
+    modeloTipoHito.getTipoHito().setActivo(Boolean.TRUE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHito));
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
+    BDDMockito.given(modeloTipoHitoRepository.findByModeloEjecucionIdAndTipoHitoId(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<Long>any())).willReturn(Optional.of(modeloTipoHito));
+    BDDMockito.given(tipoHitoRepository.findById(anyLong())).willReturn(Optional.of(modeloTipoHito.getTipoHito()));
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong())).willReturn(SgiApiInstantTaskOutput.builder()
+        .instant(Instant.now().plus(Period.ofDays(3))).id(1L).build());
+    BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoHito>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: se actualiza el hito de proyecto
+    service.update(1L, proyectoHitoActualizado);
+
+    // then: el email se actualiza usando el endpoint de hitos de proyecto
+    verify(emailService).updateProyectoHitoEmail(ArgumentMatchers.eq(10L), ArgumentMatchers.eq(1L),
+        ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.<List<Recipient>>any());
+  }
+
+  @Test
   void update_WithFechaAnterior_SaveGeneraAvisoFalse() {
     // given: Un nuevo ProyectoHito con el la fecha anterior
     Long proyectoId = 1L;
@@ -465,7 +544,10 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         .isEqualTo(proyectoHito.getTipoHito().getId());
     Assertions.assertThat(updated.getFecha()).as("getFecha()")
         .isEqualTo(proyectoHitoActualizado.getFecha());
-    Assertions.assertThat(updated.getProyectoHitoAviso()).as("getProyectoHitoAviso()").isNull();
+    // el aviso ya existente se conserva: la regla de la fecha pasada impide crear
+    // uno
+    // nuevo, no destruir el que el hito ya tuviera
+    Assertions.assertThat(updated.getProyectoHitoAviso()).as("getProyectoHitoAviso()").isNotNull();
   }
 
   @Test
@@ -909,32 +991,27 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
    * @return
    */
   private ModeloTipoHito generarMockModeloTipoHito(Long id, ProyectoHito proyectoHito, Boolean activo) {
-
-    // @formatter:off
     return ModeloTipoHito.builder()
         .id(id)
         .modeloEjecucion(generarMockProyecto(proyectoHito.getProyectoId()).getModeloEjecucion())
         .tipoHito(proyectoHito.getTipoHito())
         .activo(activo)
         .build();
-    // @formatter:on
   }
 
   private ModeloTipoHito generarMockModeloTipoHito(Long id, ProyectoHitoInput proyectoHito, Boolean activo) {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombreTipoHito"));
 
-    // @formatter:off
     return ModeloTipoHito.builder()
         .id(id)
         .modeloEjecucion(generarMockProyecto(proyectoHito.getProyectoId()).getModeloEjecucion())
         .tipoHito(TipoHito.builder()
-          .nombre(nombreTipoHito)
+            .nombre(nombreTipoHito)
             .id(proyectoHito.getTipoHitoId())
             .build())
         .activo(activo)
         .build();
-    // @formatter:on
   }
 
   /**
@@ -949,16 +1026,14 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     proyectoHitoComentario
         .add(new ProyectoHitoComentario(Language.ES, "comentario-proyecto-hito" + String.format("%03d", id)));
 
-    // @formatter:off
-        return ProyectoHito.builder()
-                .id(id)
-                .proyectoId(1L)
-                .fecha(Instant.parse("2020-10-19T00:00:00Z"))
-                .comentario(proyectoHitoComentario)
-                .proyectoHitoAviso(ProyectoHitoAviso.builder().build())
-                .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))
-                .build();
-        // @formatter:on
+    return ProyectoHito.builder()
+        .id(id)
+        .proyectoId(1L)
+        .fecha(Instant.parse("2020-10-19T00:00:00Z"))
+        .comentario(proyectoHitoComentario)
+        .proyectoHitoAviso(ProyectoHitoAviso.builder().build())
+        .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))
+        .build();
   }
 
   private ProyectoHitoInput generarMockProyectoHito() {
@@ -967,14 +1042,48 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     proyectoHitoComentario
         .add(new I18nFieldValueDto(Language.ES, "comentario-proyecto-hito" + String.format("%03d", 1)));
 
-    // @formatter:off
-        return ProyectoHitoInput.builder()
-                .proyectoId(1L)
-                .fecha(Instant.parse("2020-10-19T00:00:00Z"))
-                .comentario(proyectoHitoComentario)
-                .aviso(ProyectoHitoAvisoInput.builder().build())
-                .tipoHitoId(1L)
-                .build();
-        // @formatter:on
+    return ProyectoHitoInput.builder()
+        .proyectoId(1L)
+        .fecha(Instant.parse("2020-10-19T00:00:00Z"))
+        .comentario(proyectoHitoComentario)
+        .aviso(ProyectoHitoAvisoInput.builder()
+            .fechaEnvio(Instant.parse("2020-10-18T00:00:00Z"))
+            .asunto("Asunto del aviso")
+            .contenido("Contenido del aviso")
+            .destinatarios(Arrays.asList(
+                ProyectoHitoAvisoInput.Destinatario.builder().nombre("test").email("test@test.com").build()))
+            .incluirIpsProyecto(Boolean.FALSE)
+            .build())
+        .tipoHitoId(1L)
+        .build();
   }
+
+  private ProyectoHitoInput mockUpdateProyectoHitoConAviso(Instant fechaEnvioTarea) {
+    Proyecto proyecto = generarMockProyecto(1L);
+    ProyectoHito proyectoHito = generarMockProyectoHito(1L);
+    proyectoHito.setProyectoHitoAviso(ProyectoHitoAviso.builder()
+        .comunicadoRef("10").tareaProgramadaRef("20").incluirIpsProyecto(Boolean.FALSE).build());
+    ModeloTipoHito modeloTipoHito = generarMockModeloTipoHito(1L, proyectoHito, Boolean.TRUE);
+    modeloTipoHito.getTipoHito().setActivo(Boolean.TRUE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHito));
+    BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
+    BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(proyecto.getModeloEjecucion()));
+    BDDMockito.given(modeloTipoHitoRepository.findByModeloEjecucionIdAndTipoHitoId(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<Long>any())).willReturn(Optional.of(modeloTipoHito));
+    BDDMockito.given(tipoHitoRepository.findById(anyLong())).willReturn(Optional.of(modeloTipoHito.getTipoHito()));
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvioTarea).id(1L).build());
+
+    return generarMockProyectoHito();
+  }
+
+  private EmailOutput buildMockEmailOutputAviso() {
+    EmailOutput email = EmailOutput.builder().id(10L).build();
+    email.setRecipients(Arrays.asList(new Recipient("test", "test@test.com")));
+    email.setParams(ComGenericEmailTextHelper.buildParams("Asunto del aviso", "Contenido del aviso"));
+    return email;
+  }
+
 }

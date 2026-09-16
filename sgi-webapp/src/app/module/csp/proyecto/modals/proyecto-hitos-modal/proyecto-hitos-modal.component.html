@@ -52,7 +52,7 @@
       <div fxFlex>
         <mat-form-field color="primary" fxFlex="30">
           <mat-label>{{'label.aviso.fecha-envio' | translate: MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaEnvio" formControlName="fechaEnvio" required [min]="now">
+          <input matInput [ngxMatDatetimePicker]="pickerFechaEnvio" formControlName="fechaEnvio" required [min]="minFechaEnvioAviso">
           <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEnvio"></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #pickerFechaEnvio showSeconds="true" [defaultTime]="[0,0,0]">
           </ngx-mat-datetime-picker>
