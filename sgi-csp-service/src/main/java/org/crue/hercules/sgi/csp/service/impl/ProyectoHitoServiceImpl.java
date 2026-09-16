@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,14 +13,18 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.converter.ComConverter;
 import org.crue.hercules.sgi.csp.dto.ProyectoHitoAvisoInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoHitoInput;
+import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotDeletableException;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotUpdatableException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoComentario;
@@ -36,6 +41,8 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ComGenericEmailTextHelper;
+import org.crue.hercules.sgi.csp.util.ComRecipientHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
@@ -59,7 +66,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProyectoHitoServiceImpl implements ProyectoHitoService {
-  private static final String MSG_AVISO_ENVIADO = "avisoEnviado.message";
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_KEY_MODELO = "modelo";
@@ -146,10 +152,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
       List<I18nFieldValueDto> listaComentario = proyectoHitoActualizar.getComentario();
 
       Set<ProyectoHitoComentario> setComentario = listaComentario.stream()
-          .map(dto -> {
-            ProyectoHitoComentario comentario = new ProyectoHitoComentario(dto.getLang(), dto.getValue());
-            return comentario;
-          })
+          .map(dto -> new ProyectoHitoComentario(dto.getLang(), dto.getValue()))
           .collect(Collectors.toSet());
 
       proyectoHito.setFecha(proyectoHitoActualizar.getFecha());
@@ -280,7 +283,8 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
 
     // Si en el campo Fecha se ha indicado una fecha ya pasada, el campo "generar
     // aviso" tomará el valor false, y no será editable.
-    if (datosProyectoHito.getFecha().isBefore(Instant.now())) {
+    if (datosProyectoHito.getFecha().isBefore(Instant.now())
+        && (datosOriginales == null || datosOriginales.getProyectoHitoAviso() == null)) {
       datosProyectoHito.setAviso(null);
     }
 
@@ -331,7 +335,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
         avisoInput.getAsunto(), avisoInput.getContenido(),
         avisoInput.getDestinatarios().stream()
             .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
-            .collect(Collectors.toList()));
+            .toList());
     Long taskId = null;
     try {
       taskId = this.sgiApiTaskService.createSendEmailTask(
@@ -371,7 +375,7 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
 
         investigadores = this.proyectoEquipoReposiotry
             .findByProyectoIdAndRolProyectoRolPrincipalTrue(hito.getProyectoId()).stream()
-            .map(proyectoEquipo -> proyectoEquipo.getPersonaRef()).collect(Collectors.toList());
+            .map(ProyectoEquipo::getPersonaRef).toList();
 
       }
       if (!CollectionUtils.isEmpty(investigadores)) {
@@ -388,6 +392,9 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
       ProyectoHitoAviso aviso = this.createAviso(proyectoHito.getId(),
           proyectoHitoInput.getAviso());
       proyectoHito.setProyectoHitoAviso(aviso);
+      log.debug(
+          "resolveProyectoHitoAviso - proyectoHitoId: {}, accion: CREADO, comunicadoRef: {}, tareaProgramadaRef: {}",
+          proyectoHito.getId(), aviso.getComunicadoRef(), aviso.getTareaProgramadaRef());
     }
     // Borramos el aviso
     else if (proyectoHitoInput.getAviso() == null && proyectoHito.getProyectoHitoAviso() != null) {
@@ -395,39 +402,96 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
       SgiApiInstantTaskOutput task = sgiApiTaskService
           .findInstantTaskById(Long.parseLong(proyectoHito.getProyectoHitoAviso().getTareaProgramadaRef()));
 
-      Assert.isTrue(task.getInstant().isAfter(Instant.now()),
-          ApplicationContextSupport.getMessage(MSG_AVISO_ENVIADO));
+      if (!task.getInstant().isAfter(Instant.now())) {
+        throw new SentAvisoNotDeletableException();
+      }
 
       sgiApiTaskService
           .deleteTask(Long.parseLong(proyectoHito.getProyectoHitoAviso().getTareaProgramadaRef()));
       emailService.deleteEmail(Long.parseLong(proyectoHito.getProyectoHitoAviso().getComunicadoRef()));
+      log.debug(
+          "resolveProyectoHitoAviso - proyectoHitoId: {}, accion: ELIMINADO, comunicadoRef: {}, tareaProgramadaRef: {}",
+          proyectoHito.getId(), proyectoHito.getProyectoHitoAviso().getComunicadoRef(),
+          proyectoHito.getProyectoHitoAviso().getTareaProgramadaRef());
       proyectoHitoAvisoRepository.delete(proyectoHito.getProyectoHitoAviso());
       proyectoHito.setProyectoHitoAviso(null);
     }
     // Actualizamos el aviso
     else if (proyectoHitoInput.getAviso() != null && proyectoHito.getProyectoHitoAviso() != null) {
-      SgiApiInstantTaskOutput task = sgiApiTaskService
-          .findInstantTaskById(Long.parseLong(proyectoHito.getProyectoHitoAviso().getTareaProgramadaRef()));
-      // Solo actualizamos los datos el aviso si este aún no se ha enviado.
-      // TODO: Validar realmente el cambio de contenido, y si este ha cambiado,
-      // generar error si no se puede editar
-      if (task.getInstant().isAfter(Instant.now())) {
-        this.emailService.updateSolicitudHitoEmail(
-            Long.parseLong(proyectoHito.getProyectoHitoAviso().getComunicadoRef()), proyectoHito.getId(),
-            proyectoHitoInput.getAviso().getAsunto(), proyectoHitoInput.getAviso().getContenido(),
-            proyectoHitoInput.getAviso().getDestinatarios().stream()
-                .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
-                .collect(Collectors.toList()));
-
-        this.sgiApiTaskService.updateSendEmailTask(
-            Long.parseLong(proyectoHito.getProyectoHitoAviso().getTareaProgramadaRef()),
-            Long.parseLong(proyectoHito.getProyectoHitoAviso().getComunicadoRef()),
-            proyectoHitoInput.getAviso().getFechaEnvio());
-
-        proyectoHito.getProyectoHitoAviso()
-            .setIncluirIpsProyecto(proyectoHitoInput.getAviso().getIncluirIpsProyecto());
-        proyectoHitoAvisoRepository.save(proyectoHito.getProyectoHitoAviso());
-      }
+      this.updateAvisoIfNeeded(proyectoHitoInput.getAviso(), proyectoHito.getProyectoHitoAviso(),
+          proyectoHito.getId());
+    } else {
+      log.debug("resolveProyectoHitoAviso - proyectoHitoId: {}, accion: SIN_AVISO", proyectoHito.getId());
     }
+  }
+
+  /**
+   * Actualiza el comunicado y la tarea programada del aviso de un
+   * {@link ProyectoHito} si aun no se ha enviado. Si ya se ha enviado, sólo
+   * se permite guardar el hito si los datos del aviso no cambian.
+   *
+   * @param avisoInput        aviso entrante
+   * @param proyectoHitoAviso aviso persistido
+   * @param proyectoHitoId    identificador del {@link ProyectoHito} del aviso
+   * @throws SentAvisoNotUpdatableException si el aviso ya ha sido enviado y
+   *                                        alguno de sus datos ha cambiado
+   */
+  private void updateAvisoIfNeeded(ProyectoHitoAvisoInput avisoInput, ProyectoHitoAviso proyectoHitoAviso,
+      Long proyectoHitoId) {
+    SgiApiInstantTaskOutput task = sgiApiTaskService
+        .findInstantTaskById(Long.parseLong(proyectoHitoAviso.getTareaProgramadaRef()));
+
+    List<Recipient> destinatarios = avisoInput.getDestinatarios().stream()
+        .map(destinatario -> new Recipient(destinatario.getNombre(), destinatario.getEmail()))
+        .toList();
+
+    if (!task.getInstant().isAfter(Instant.now())) {
+      if (hasAvisoChanged(avisoInput, destinatarios, proyectoHitoAviso, task)) {
+        throw new SentAvisoNotUpdatableException();
+      }
+      log.debug(
+          "updateAvisoIfNeeded - proyectoHitoId: {}, accion: OMITIDO (aviso ya enviado, sin cambios), comunicadoRef: {}, fechaEnvio: {}",
+          proyectoHitoId, proyectoHitoAviso.getComunicadoRef(), task.getInstant());
+      return;
+    }
+
+    this.emailService.updateProyectoHitoEmail(
+        Long.parseLong(proyectoHitoAviso.getComunicadoRef()), proyectoHitoId,
+        avisoInput.getAsunto(), avisoInput.getContenido(), destinatarios);
+
+    this.sgiApiTaskService.updateSendEmailTask(
+        Long.parseLong(proyectoHitoAviso.getTareaProgramadaRef()),
+        Long.parseLong(proyectoHitoAviso.getComunicadoRef()),
+        avisoInput.getFechaEnvio());
+
+    proyectoHitoAviso.setIncluirIpsProyecto(avisoInput.getIncluirIpsProyecto());
+    proyectoHitoAvisoRepository.save(proyectoHitoAviso);
+    log.debug("updateAvisoIfNeeded - proyectoHitoId: {}, accion: ACTUALIZADO, comunicadoRef: {}, fechaEnvio: {}",
+        proyectoHitoId, proyectoHitoAviso.getComunicadoRef(), avisoInput.getFechaEnvio());
+  }
+
+  /**
+   * Comprueba si los datos del aviso son distintos de los que existian,
+   * tanto en CSP como en el comunicado almacenado en el modulo COM.
+   *
+   * @param avisoInput        aviso entrante
+   * @param destinatarios     destinatarios entrantes
+   * @param proyectoHitoAviso aviso persistido
+   * @param task              tarea programada del aviso persistido
+   * @return <code>true</code> si alguno de los datos del aviso ha cambiado
+   */
+  private boolean hasAvisoChanged(ProyectoHitoAvisoInput avisoInput, List<Recipient> destinatarios,
+      ProyectoHitoAviso proyectoHitoAviso, SgiApiInstantTaskOutput task) {
+    if (!Objects.equals(avisoInput.getFechaEnvio(), task.getInstant())
+        || !Objects.equals(avisoInput.getIncluirIpsProyecto(), proyectoHitoAviso.getIncluirIpsProyecto())) {
+      return true;
+    }
+
+    EmailOutput comunicado = this.emailService
+        .findGenericEmailTextById(Long.parseLong(proyectoHitoAviso.getComunicadoRef()));
+
+    return !Objects.equals(avisoInput.getAsunto(), ComGenericEmailTextHelper.getSubject(comunicado))
+        || !Objects.equals(avisoInput.getContenido(), ComGenericEmailTextHelper.getContent(comunicado))
+        || !ComRecipientHelper.haveSameRecipients(destinatarios, comunicado.getRecipients());
   }
 }

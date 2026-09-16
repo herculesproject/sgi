@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
@@ -35,6 +35,7 @@ const AVISO_FECHA_ENVIO_KEY = marker('label.aviso.fecha-envio.short');
 const AVISO_ASUNTO_KEY = marker('label.aviso.asunto');
 const AVISO_CONTENIDO_KEY = marker('label.aviso.contenido.short');
 const AVISO_DESTINATARIOS_KEY = marker('label.aviso.destinatarios');
+
 export interface ConvocatoriaPlazosFaseModalComponentData {
   plazos: IConvocatoriaFase[];
   plazo: IConvocatoriaFase;
@@ -44,6 +45,7 @@ export interface ConvocatoriaPlazosFaseModalComponentData {
   unidadGestionId: number;
   tituloConvocatoria: I18nFieldValue[];
 }
+
 @Component({
   templateUrl: './convocatoria-plazos-fase-modal.component.html',
   styleUrls: ['./convocatoria-plazos-fase-modal.component.scss']
@@ -58,11 +60,23 @@ export class ConvocatoriaPlazosFaseModalComponent
   }
 
   get minFechaPrimerAviso(): DateTime {
-    return DateTime.now().plus({ minute: 15 });
+    return this.minFechaEnvioAviso(
+      this.data.plazo?.aviso1?.task?.instant,
+      this.formGroup.get('aviso1') as FormGroup
+    );
   }
 
+  /**
+   * La fecha minima para el aviso obteniendo la fecha más alta entre la fecha del aviso1 más 1s
+   * y la fecha minima de envio, para que no devuelva fechas del pasado si se edita
+   */
   get minFechaSegundoAviso(): DateTime {
-    return this.formGroup.get('aviso1.fechaEnvio')?.value?.plus({ second: 1 });
+    const minFechaAviso: DateTime = this.minFechaEnvioAviso(
+      this.data.plazo?.aviso2?.task?.instant,
+      this.formGroup.get('aviso2') as FormGroup
+    );
+    const fechaPosteriorAlPrimerAviso: DateTime = this.formGroup.get('aviso1.fechaEnvio')?.value?.plus({ second: 1 });
+    return fechaPosteriorAlPrimerAviso > minFechaAviso ? fechaPosteriorAlPrimerAviso : minFechaAviso;
   }
 
   textSaveOrUpdate: string;
@@ -81,12 +95,12 @@ export class ConvocatoriaPlazosFaseModalComponent
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaPlazosFaseModalComponentData,
     matDialogRef: MatDialogRef<ConvocatoriaPlazosFaseModalComponent>,
     private readonly translate: TranslateService,
-    private configService: ConfigService,
-    private emailTplService: EmailTplService,
-    private emailService: EmailService,
-    private sgiApiTaskService: SgiApiTaskService
+    private readonly configService: ConfigService,
+    private readonly emailTplService: EmailTplService,
+    private readonly emailService: EmailService,
+    private readonly sgiApiTaskService: SgiApiTaskService
   ) {
-    super(matDialogRef, !data.plazo.fechaInicio);
+    super(matDialogRef, !!data.plazo.fechaInicio);
   }
 
   ngOnInit(): void {
@@ -105,12 +119,16 @@ export class ConvocatoriaPlazosFaseModalComponent
     this.translate.get(
       CONVOCATORIA_FASES_FECHA_FIN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFechaFinEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
 
     this.translate.get(
       CONVOCATORIA_FASES_FECHA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFechaInicioEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR
+    });
 
     this.translate.get(
       CONVOCATORIA_FASES_TIPO_KEY,
@@ -120,7 +138,9 @@ export class ConvocatoriaPlazosFaseModalComponent
     this.translate.get(
       CONVOCATORIA_FASES_OBSERVACIONES_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamObservacionesEntity = {
+      entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL
+    });
 
     if (this.data.plazo.tipoFase) {
       this.translate.get(
@@ -206,8 +226,16 @@ export class ConvocatoriaPlazosFaseModalComponent
     this.data.plazo.tipoFase = this.formGroup.controls.tipoFase.value;
     this.data.plazo.observaciones = this.formGroup.controls.observaciones.value;
 
-    this.data.plazo.aviso1 = this.buildAvisoFormGroup(this.formGroup.controls.generaAviso1 as FormControl, this.data.plazo.aviso1, this.formGroup.get('aviso1') as FormGroup);
-    this.data.plazo.aviso2 = this.buildAvisoFormGroup(this.formGroup.controls.generaAviso2 as FormControl, this.data.plazo.aviso2, this.formGroup.get('aviso2') as FormGroup);
+    this.data.plazo.aviso1 = this.buildAvisoFormGroup(
+      this.formGroup.controls.generaAviso1 as FormControl,
+      this.data.plazo.aviso1,
+      this.formGroup.get('aviso1') as FormGroup
+    );
+
+    this.data.plazo.aviso2 = this.buildAvisoFormGroup(
+      this.formGroup.controls.generaAviso2 as FormControl,
+      this.data.plazo.aviso2, this.formGroup.get('aviso2') as FormGroup
+    );
 
     return this.data;
   }
@@ -238,11 +266,11 @@ export class ConvocatoriaPlazosFaseModalComponent
       })
     });
 
-    if (!!!this.data?.plazo?.aviso1) {
+    if (!this.data?.plazo?.aviso1) {
       formGroup.get('aviso1').disable();
     }
 
-    if (!!!this.data?.plazo?.aviso2) {
+    if (!this.data?.plazo?.aviso2) {
       formGroup.get('aviso2').disable();
     }
 
@@ -253,8 +281,12 @@ export class ConvocatoriaPlazosFaseModalComponent
     return formGroup;
   }
 
-  private buildAvisoFormGroup(mandatoryControl: FormControl, faseAviso: IConvocatoriaFaseAviso, fgAviso: FormGroup): IConvocatoriaFaseAviso {
-    if (!!!faseAviso && mandatoryControl.value) {
+  private buildAvisoFormGroup(
+    mandatoryControl: FormControl,
+    faseAviso: IConvocatoriaFaseAviso,
+    fgAviso: FormGroup
+  ): IConvocatoriaFaseAviso {
+    if (!faseAviso && mandatoryControl.value) {
       faseAviso = {
         email: {} as IGenericEmailText,
         task: {} as ISendEmailTask,
@@ -279,29 +311,75 @@ export class ConvocatoriaPlazosFaseModalComponent
   }
 
   private initializeAvisos(): void {
-    if (!!!this.data.plazo?.aviso1) {
+    if (!this.data.plazo?.aviso1) {
       this.validarFecha(this.data.plazo?.fechaInicio, this.formGroup.controls?.generaAviso1 as FormControl, this.data.plazo.aviso1);
       this.validarFecha(this.data.plazo?.fechaFin, this.formGroup.controls?.generaAviso1 as FormControl, this.data.plazo.aviso1);
     }
 
-    if (!!!this.data.plazo?.aviso2) {
+    if (!this.data.plazo?.aviso2) {
       this.validarFecha(this.data.plazo?.fechaInicio, this.formGroup.controls?.generaAviso2 as FormControl, this.data.plazo.aviso2);
       this.validarFecha(this.data.plazo?.fechaFin, this.formGroup.controls?.generaAviso2 as FormControl, this.data.plazo.aviso2);
     }
 
-    this.checkAndFillDefaultAviso(this.formGroup.controls?.generaAviso1 as FormControl, this.formGroup.get("aviso1") as FormGroup, this.data.plazo?.aviso1);
-    this.checkAndFillDefaultAviso(this.formGroup.controls?.generaAviso2 as FormControl, this.formGroup.get("aviso2") as FormGroup, this.data.plazo?.aviso2);
+    this.checkAndFillDefaultAviso(this.formGroup.controls?.generaAviso1 as FormControl,
+      this.formGroup.get('aviso1') as FormGroup,
+      this.data.plazo?.aviso1
+    );
+
+    this.checkAndFillDefaultAviso(
+      this.formGroup.controls?.generaAviso2 as FormControl,
+      this.formGroup.get('aviso2') as FormGroup,
+      this.data.plazo?.aviso2);
 
     this.fillEmailData(this.formGroup.get('aviso1') as FormGroup, this.data.plazo?.aviso1);
     this.fillEmailData(this.formGroup.get('aviso2') as FormGroup, this.data.plazo?.aviso2);
 
-    this.checkAndSetFechaEnvio(this.data.plazo?.aviso1, this.formGroup.get('aviso1') as FormGroup, this.formGroup.controls?.generaAviso1 as FormControl);
-    this.checkAndSetFechaEnvio(this.data.plazo?.aviso2, this.formGroup.get('aviso2') as FormGroup, this.formGroup.controls?.generaAviso2 as FormControl);
+    this.checkAndSetFechaEnvio(
+      this.data.plazo?.aviso1,
+      this.formGroup.get('aviso1') as FormGroup,
+      this.formGroup.controls?.generaAviso1 as FormControl
+    );
+
+    this.checkAndSetFechaEnvio(
+      this.data.plazo?.aviso2,
+      this.formGroup.get('aviso2') as FormGroup,
+      this.formGroup.controls?.generaAviso2 as FormControl
+    );
+
+    this.showFechaEnvioErrorOnAvisoEdit(this.formGroup.get('aviso1') as FormGroup);
+    this.showFechaEnvioErrorOnAvisoEdit(this.formGroup.get('aviso2') as FormGroup);
+  }
+
+  /**
+   * La fecha minima de envio de un aviso.
+   * Si el aviso ya tenia una fecha y no se ha modificado se mantiene esa fecha como minima
+   * para evitar que la marque como un error si no se modifica el aviso
+   *
+   * @param fechaActualAviso fecha de envio que ya tuviera el aviso, si existe
+   * @param fgAviso          formulario del aviso, para saber si se ha modificado
+   */
+  private minFechaEnvioAviso(fechaActualAviso: DateTime, fgAviso: FormGroup): DateTime {
+    const minFechaAviso: DateTime = DateTime.now().plus({ minute: 1 });
+    return fgAviso?.pristine && fechaActualAviso && fechaActualAviso < minFechaAviso
+      ? fechaActualAviso : minFechaAviso;
+  }
+
+  /**
+   * Marca la fecha de envio como modificada cuando se modifica cualquier campo del aviso
+   *
+   * @param fgAviso formulario del aviso
+   */
+  private showFechaEnvioErrorOnAvisoEdit(fgAviso: FormGroup): void {
+    this.subscriptions.push(fgAviso.valueChanges.subscribe(() => {
+      if (fgAviso.dirty) {
+        fgAviso.get('fechaEnvio').markAsTouched();
+      }
+    }));
   }
 
   private lockAviso(dateRef: DateTime, fgAviso: FormGroup, generaAvisoCtrl: FormControl): void {
     // Si no hay fecha de referencia no hacemos nada
-    if (!!!dateRef) {
+    if (!dateRef) {
       return;
     }
     if (!!this.data.plazo.id && DateTime.now() >= dateRef) {
@@ -336,19 +414,19 @@ export class ConvocatoriaPlazosFaseModalComponent
   }
 
   private isLoadEmailRequired(comunicado: IGenericEmailText): boolean {
-    if (!!!comunicado?.id) {
+    if (!comunicado?.id) {
       return false;
     }
-    if (!!!comunicado.content && !!!comunicado.subject && !!!comunicado.recipients?.length) {
+    if (!comunicado.content && !comunicado.subject && !comunicado.recipients?.length) {
       return true;
     }
   }
 
   private isLoadTareaProgramadaRequired(tareaProgramada: ISendEmailTask): boolean {
-    if (!!!tareaProgramada?.id) {
+    if (!tareaProgramada?.id) {
       return false;
     }
-    if (!!!tareaProgramada.instant) {
+    if (!tareaProgramada.instant) {
       return true;
     }
   }
@@ -375,7 +453,7 @@ export class ConvocatoriaPlazosFaseModalComponent
       }
     } else {
       if (generaAvisoControl.disabled && this.data.canEdit &&
-        (!!!aviso?.task?.instant ||
+        (!aviso?.task?.instant ||
           (!!aviso.task?.instant && DateTime.now() <= aviso.task.instant))
       ) {
         generaAvisoControl.enable();
@@ -386,7 +464,7 @@ export class ConvocatoriaPlazosFaseModalComponent
   private checkAndFillDefaultAviso(generaAvisoCtrl: FormControl, fgAviso: FormGroup, dataAviso: IConvocatoriaFaseAviso): void {
     generaAvisoCtrl.valueChanges.pipe(startWith(!!dataAviso), pairwise()).subscribe(
       ([oldValue, newValue]: [boolean, boolean]) => {
-        if (!!oldValue && !!!newValue) {
+        if (!!oldValue && !newValue) {
           if (fgAviso.enabled) {
             fgAviso.disable();
             if (this.formGroup.get('aviso2').enabled && fgAviso === this.formGroup.get('aviso1')) {
@@ -395,7 +473,7 @@ export class ConvocatoriaPlazosFaseModalComponent
           }
           this.clearAviso(fgAviso);
         }
-        else if (!!!oldValue && !!newValue) {
+        else if (!oldValue && !!newValue) {
           if (fgAviso.disabled) {
             fgAviso.enable();
           }

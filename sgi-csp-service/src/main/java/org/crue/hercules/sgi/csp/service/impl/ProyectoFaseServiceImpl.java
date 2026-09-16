@@ -6,7 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoFaseInput;
+import org.crue.hercules.sgi.csp.exceptions.FaseWithSentAvisoNotDeletableException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoFaseNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotDeletableException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -160,7 +162,7 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
             proyectoFaseActualizar.getAviso1());
         proyectoFase.setProyectoFaseAviso1(aviso1);
       } else if (this.proyectoFaseAvisoService.deleteAvisoIfPossible(proyectoFaseActualizar.getAviso1(),
-          proyectoFase.getProyectoFaseAviso1())) {
+          proyectoFase.getProyectoFaseAviso1(), SentAvisoNotDeletableException::new)) {
         proyectoFase.setProyectoFaseAviso1(null);
       } else {
         this.proyectoFaseAvisoService.updateAvisoIfNeeded(proyectoFaseActualizar.getAviso1(),
@@ -173,7 +175,7 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
             proyectoFaseActualizar.getAviso2());
         proyectoFase.setProyectoFaseAviso2(aviso2);
       } else if (this.proyectoFaseAvisoService.deleteAvisoIfPossible(proyectoFaseActualizar.getAviso2(),
-          proyectoFase.getProyectoFaseAviso2())) {
+          proyectoFase.getProyectoFaseAviso2(), SentAvisoNotDeletableException::new)) {
         proyectoFase.setProyectoFaseAviso2(null);
       } else {
         this.proyectoFaseAvisoService.updateAvisoIfNeeded(proyectoFaseActualizar.getAviso2(),
@@ -202,10 +204,10 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
     if (!toDelete.isPresent()) {
       throw new ProyectoFaseNotFoundException(id);
     }
-    this.proyectoFaseAvisoService.deleteAvisoIfPossible(null,
-        toDelete.get().getProyectoFaseAviso1());
-    this.proyectoFaseAvisoService.deleteAvisoIfPossible(null,
-        toDelete.get().getProyectoFaseAviso2());
+    this.proyectoFaseAvisoService.deleteAvisoIfPossible(null, toDelete.get().getProyectoFaseAviso1(),
+        FaseWithSentAvisoNotDeletableException::new);
+    this.proyectoFaseAvisoService.deleteAvisoIfPossible(null, toDelete.get().getProyectoFaseAviso2(),
+        FaseWithSentAvisoNotDeletableException::new);
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");

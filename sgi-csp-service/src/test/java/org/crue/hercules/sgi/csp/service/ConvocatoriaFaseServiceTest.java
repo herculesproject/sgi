@@ -1,28 +1,37 @@
 package org.crue.hercules.sgi.csp.service;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.converter.ConvocatoriaFaseObservacionesConverter;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseAvisoInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
-import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
+import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
+import org.crue.hercules.sgi.csp.dto.com.EmailParam;
+import org.crue.hercules.sgi.csp.dto.com.Recipient;
+import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.FaseWithSentAvisoNotDeletableException;
+import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotUpdatableException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseAviso;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaObservaciones;
@@ -79,6 +88,11 @@ import liquibase.repackaged.org.apache.commons.lang3.ObjectUtils;
 @SpringBootTest(webEnvironment = WebEnvironment.NONE, classes = { ModelMapper.class })
 class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
+  private static final String AVISO_ASUNTO = "Asunto del aviso";
+  private static final String AVISO_CONTENIDO = "Contenido del aviso";
+  private static final String PARAM_SUBJECT = "GENERIC_SUBJECT";
+  private static final String PARAM_CONTENT = "GENERIC_CONTENT_TEXT";
+
   @Autowired
   private ModelMapper modelMapper;
 
@@ -111,7 +125,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   private ConvocatoriaFaseService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, configuracionSolicitudRepository,
         modeloTipoFaseRepository, convocatoriaService,
@@ -136,8 +150,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaFase> page = new PageImpl<>(new ArrayList<ConvocatoriaFase>(), pageable, 0);
-          return page;
+          return new PageImpl<>(new ArrayList<ConvocatoriaFase>(), pageable, 0);
         });
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito
@@ -178,9 +191,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
     convocatoriaFase.setConvocatoriaId(null);
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as ConvocatoriaId is null
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Identificador de Convocatoria no puede ser nulo");
@@ -193,9 +208,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as Convocatoria is not found
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
@@ -206,9 +223,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
     convocatoriaFase.getTipoFase().setId(null);
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as tipoFaseId is null
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Identificador de Tipo Fase no puede ser nulo");
@@ -224,9 +243,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
@@ -243,9 +264,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
@@ -265,9 +288,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.FALSE)));
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("%s de Modelo Tipo Fase no está activo",
@@ -287,9 +312,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(modeloTipoFase));
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("%s de Tipo Fase no está activo", modeloTipoFase.getTipoFase().getNombre());
@@ -312,14 +339,14 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaFase> page = new PageImpl<>(Arrays.asList(generarMockConvocatoriaFase(null)), pageable, 0);
-          return page;
-
+          return new PageImpl<>(Arrays.asList(generarMockConvocatoriaFase(null)), pageable, 0);
         });
+
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaFase
-        () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.create(input))
         // then: throw exception as TipoFase is not activo
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Convocatoria %s ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
@@ -346,9 +373,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaFase> page = new PageImpl<>(new ArrayList<ConvocatoriaFase>(), pageable, 0);
-          return page;
-
+          return new PageImpl<>(new ArrayList<ConvocatoriaFase>(), pageable, 0);
         });
 
     // when: Actualizamos el ConvocatoriaFase
@@ -375,8 +400,10 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
     // when: Actualizamos el ConvocatoriaFase
     // then: Lanza una excepcion porque el ConvocatoriaFase no existe
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions
-        .assertThatThrownBy(() -> service.update(1L, modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        .assertThatThrownBy(() -> service.update(1L, input))
         .isInstanceOf(ConvocatoriaFaseNotFoundException.class);
   }
 
@@ -393,9 +420,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
+        () -> service.update(1L, input))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
@@ -415,9 +444,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
+        () -> service.update(1L, input))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
@@ -441,9 +472,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         ArgumentMatchers.anyLong())).willReturn(
             Optional.of(modeloTipoFase));
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
+        () -> service.update(1L, input))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("%s de Modelo Tipo Fase no está activo para el modelo ejecución %s",
@@ -464,9 +497,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         ArgumentMatchers.anyLong())).willReturn(
             Optional.of(generarMockModeloTipoFase(2L, convocatoria, convocatoriaFaseActualizado, Boolean.TRUE)));
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
+        () -> service.update(1L, input))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("%s de Tipo Fase no está activo", convocatoriaFaseActualizado.getTipoFase().getNombre());
@@ -490,14 +525,14 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaFase> page = new PageImpl<>(Arrays.asList(generarMockConvocatoriaFase(1L)), pageable, 0);
-          return page;
-
+          return new PageImpl<>(Arrays.asList(generarMockConvocatoriaFase(1L)), pageable, 0);
         });
+
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class);
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
+        () -> service.update(1L, input))
         // then: throw exception as Programa is not activo
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Convocatoria %s ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
@@ -518,9 +553,11 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     BDDMockito.given(convocatoriaService.isRegistradaConSolicitudesOProyectos(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<String>any(), ArgumentMatchers.<String[]>any())).willReturn(Boolean.FALSE);
 
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaFase
-        () -> service.update(1L, modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
+        () -> service.update(1L, input))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "No se puede Crear Convocatoria Fase. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
@@ -606,16 +643,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
           toIndex = toIndex > convocatoriasEntidadesConvocantes.size() ? convocatoriasEntidadesConvocantes.size()
               : toIndex;
           List<ConvocatoriaFase> content = convocatoriasEntidadesConvocantes.subList(fromIndex, toIndex);
-          Page<ConvocatoriaFase> pageResponse = new PageImpl<>(content, pageable,
-              convocatoriasEntidadesConvocantes.size());
-          return pageResponse;
-
+          return new PageImpl<>(content, pageable, convocatoriasEntidadesConvocantes.size());
         });
-
-    List<ConvocatoriaFaseOutput> outputList = new LinkedList<>();
-    for (long i = 1; i <= 37; i++) {
-      outputList.add(modelMapper.map(generarMockConvocatoriaFase(Long.valueOf(i)), ConvocatoriaFaseOutput.class));
-    }
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
@@ -826,6 +855,242 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         .observaciones(obsConvocatoriaFase)
         .build();
     // @formatter:on
+  }
+
+  @Test
+  void update_WithAvisoPendienteDeEnvio_UpdatesConvocatoriaFaseEmail() {
+    // given: una fase con un aviso cuya tarea programada aun no se ha enviado
+    Instant fechaEnvio = Instant.now().plus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(fechaEnvio);
+    mockUpdateConvocatoriaFase(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+
+    // when: se actualiza la fase
+    service.update(1L, input);
+
+    // then: el email se actualiza usando el endpoint de fases de convocatoria
+    verify(emailService).updateConvocatoriaFaseEmail(ArgumentMatchers.eq(10L), ArgumentMatchers.eq(1L),
+        ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.<List<Recipient>>any());
+  }
+
+  @Test
+  void update_WithAvisoEnviadoSinCambios_DoesNotUpdateEmail() {
+    // given: una fase con un aviso ya enviado y sin cambios en sus datos
+    Instant fechaEnvio = Instant.now().minus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(fechaEnvio);
+    mockUpdateConvocatoriaFase(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+    BDDMockito.given(emailService.findGenericEmailTextById(anyLong())).willReturn(buildEmailOutputAviso());
+
+    // when: se actualiza la fase
+    service.update(1L, input);
+
+    // then: la fase se guarda sin tocar el aviso ya enviado
+    verify(emailService, never()).updateConvocatoriaFaseEmail(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
+        ArgumentMatchers.<List<Recipient>>any());
+  }
+
+  @Test
+  void update_WithAvisoEnviadoYFechaEnvioModificada_ThrowsSentAvisoNotUpdatableException() {
+    // given: una fase con un aviso ya enviado que se intenta reprogramar a otra
+    // fecha
+    Instant fechaEnvio = Instant.now().minus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(Instant.now().plus(1, ChronoUnit.DAYS));
+    mockUpdateConvocatoriaFaseWithoutSave(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+
+    // when: se actualiza la fase
+    // then: se informa de que el aviso ya ha sido enviado, sin llegar a consultar
+    // el comunicado en el modulo COM
+    Assertions.assertThatThrownBy(() -> service.update(1L, input))
+        .isInstanceOf(SentAvisoNotUpdatableException.class);
+    verify(emailService, never()).findGenericEmailTextById(anyLong());
+  }
+
+  @Test
+  void update_WithAvisoEnviadoYIncluirIpsProyectoModificado_ThrowsSentAvisoNotUpdatableException() {
+    // given: una fase con un aviso ya enviado en el que se marca incluir a los IP
+    // del proyecto, lo que cambia quién recibe el comunicado
+    Instant fechaEnvio = Instant.now().minus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(fechaEnvio);
+    input.getAviso1().setIncluirIpsProyecto(Boolean.TRUE);
+    mockUpdateConvocatoriaFaseWithoutSave(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+
+    // when: se actualiza la fase
+    // then: se informa de que el aviso ya ha sido enviado
+    Assertions.assertThatThrownBy(() -> service.update(1L, input))
+        .isInstanceOf(SentAvisoNotUpdatableException.class);
+  }
+
+  @Test
+  void update_WithAvisoEnviadoYIncluirIpsSolicitudModificado_ThrowsSentAvisoNotUpdatableException() {
+    // given: una fase con un aviso ya enviado en el que se marca incluir a los IP
+    // de la solicitud
+    Instant fechaEnvio = Instant.now().minus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(fechaEnvio);
+    input.getAviso1().setIncluirIpsSolicitud(Boolean.TRUE);
+    mockUpdateConvocatoriaFaseWithoutSave(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+
+    // when: se actualiza la fase
+    // then: se informa de que el aviso ya ha sido enviado
+    Assertions.assertThatThrownBy(() -> service.update(1L, input))
+        .isInstanceOf(SentAvisoNotUpdatableException.class);
+  }
+
+  @Test
+  void update_WithAvisoEnviadoYContenidoModificado_ThrowsSentAvisoNotUpdatableException() {
+    // given: una fase con un aviso ya enviado cuyo contenido se ha modificado
+    Instant fechaEnvio = Instant.now().minus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(fechaEnvio);
+    input.getAviso1().setContenido("Contenido modificado");
+    mockUpdateConvocatoriaFaseWithoutSave(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+    BDDMockito.given(emailService.findGenericEmailTextById(anyLong())).willReturn(buildEmailOutputAviso());
+
+    // when: se actualiza la fase
+    // then: se informa de que el aviso ya ha sido enviado
+    Assertions.assertThatThrownBy(() -> service.update(1L, input))
+        .isInstanceOf(SentAvisoNotUpdatableException.class);
+  }
+
+  @Test
+  void update_WithAvisoEnviadoYDestinatariosModificados_ThrowsSentAvisoNotUpdatableException() {
+    // given: una fase con un aviso ya enviado al que se le cambian los
+    // destinatarios
+    Instant fechaEnvio = Instant.now().minus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(fechaEnvio);
+    input.getAviso1().setDestinatarios(Arrays.asList(
+        ConvocatoriaFaseAvisoInput.Destinatario.builder().nombre("otro").email("otro@test.com").build()));
+    mockUpdateConvocatoriaFaseWithoutSave(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+    BDDMockito.given(emailService.findGenericEmailTextById(anyLong())).willReturn(buildEmailOutputAviso());
+
+    // when: se actualiza la fase
+    // then: se informa de que el aviso ya ha sido enviado
+    Assertions.assertThatThrownBy(() -> service.update(1L, input))
+        .isInstanceOf(SentAvisoNotUpdatableException.class);
+  }
+
+  @Test
+  void update_WithAvisoEnviadoConCambios_ThrowsSentAvisoNotUpdatableException() {
+    // given: una fase con un aviso ya enviado cuyo asunto se ha modificado
+    Instant fechaEnvio = Instant.now().minus(1, ChronoUnit.DAYS);
+    ConvocatoriaFaseInput input = buildConvocatoriaFaseInputConAviso(fechaEnvio);
+    input.getAviso1().setAsunto("Asunto modificado");
+    mockUpdateConvocatoriaFaseWithoutSave(buildConvocatoriaFaseConAviso());
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+    BDDMockito.given(emailService.findGenericEmailTextById(anyLong())).willReturn(buildEmailOutputAviso());
+
+    // when: se actualiza la fase
+    // then: se informa de que el aviso ya ha sido enviado
+    Assertions.assertThatThrownBy(() -> service.update(1L, input))
+        .isInstanceOf(SentAvisoNotUpdatableException.class);
+  }
+
+  @Test
+  void delete_WithAvisoPendienteDeEnvio_DeletesFaseYAviso() {
+    // given: una fase cuyo aviso aun no se ha enviado
+    ConvocatoriaFase convocatoriaFase = buildConvocatoriaFaseConAviso();
+    mockDeleteConvocatoriaFase(convocatoriaFase, Instant.now().plus(1, ChronoUnit.DAYS));
+
+    // when: se elimina la fase
+    service.delete(1L);
+
+    // then: la fase se elimina, y con ella el comunicado y la tarea programada de
+    // su aviso
+    verify(emailService).deleteEmail(10L);
+    verify(sgiApiTaskService).deleteTask(20L);
+    verify(convocatoriaFaseAvisoRepository).delete(convocatoriaFase.getConvocatoriaFaseAviso1());
+    verify(repository).deleteById(1L);
+  }
+
+  @Test
+  void delete_WithAvisoEnviado_ThrowsFaseWithSentAvisoNotDeletableException() {
+    // given: una fase cuyo aviso ya ha sido enviado
+    mockDeleteConvocatoriaFase(buildConvocatoriaFaseConAviso(), Instant.now().minus(1, ChronoUnit.DAYS));
+
+    // when: se elimina la fase
+    // then: se informa de que el aviso ya ha sido enviado y no se elimina nada
+    Assertions.assertThatThrownBy(() -> service.delete(1L))
+        .isInstanceOf(FaseWithSentAvisoNotDeletableException.class);
+    verify(emailService, never()).deleteEmail(anyLong());
+    verify(sgiApiTaskService, never()).deleteTask(anyLong());
+    verify(repository, never()).deleteById(anyLong());
+  }
+
+  private void mockDeleteConvocatoriaFase(ConvocatoriaFase convocatoriaFase, Instant fechaEnvio) {
+    BDDMockito.given(repository.findById(anyLong())).willReturn(Optional.of(convocatoriaFase));
+    BDDMockito.given(configuracionSolicitudRepository.findByFasePresentacionSolicitudesId(anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+    BDDMockito.given(sgiApiTaskService.findInstantTaskById(anyLong()))
+        .willReturn(SgiApiInstantTaskOutput.builder().instant(fechaEnvio).build());
+  }
+
+  private void mockUpdateConvocatoriaFase(ConvocatoriaFase convocatoriaFase) {
+    // el update devuelve lo guardado, asi que sin este stub el Optional queda vacio
+    BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaFase>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    mockUpdateConvocatoriaFaseWithoutSave(convocatoriaFase);
+  }
+
+  private void mockUpdateConvocatoriaFaseWithoutSave(ConvocatoriaFase convocatoriaFase) {
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+
+    BDDMockito.given(convocatoriaRepository.findById(anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
+    BDDMockito.given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(anyLong(), anyLong()))
+        .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.TRUE)));
+    BDDMockito.given(
+        repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaFase>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> new PageImpl<>(new ArrayList<ConvocatoriaFase>(),
+            invocation.getArgument(1, Pageable.class), 0));
+  }
+
+  private ConvocatoriaFase buildConvocatoriaFaseConAviso() {
+    ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
+    ConvocatoriaFaseAviso aviso = new ConvocatoriaFaseAviso();
+    aviso.setId(1L);
+    aviso.setComunicadoRef("10");
+    aviso.setTareaProgramadaRef("20");
+    aviso.setIncluirIpsProyecto(Boolean.FALSE);
+    aviso.setIncluirIpsSolicitud(Boolean.FALSE);
+    convocatoriaFase.setConvocatoriaFaseAviso1(aviso);
+    return convocatoriaFase;
+  }
+
+  private ConvocatoriaFaseInput buildConvocatoriaFaseInputConAviso(Instant fechaEnvio) {
+    ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
+    ConvocatoriaFaseInput input = modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class);
+    input.setAviso1(ConvocatoriaFaseAvisoInput.builder()
+        .fechaEnvio(fechaEnvio)
+        .asunto(AVISO_ASUNTO)
+        .contenido(AVISO_CONTENIDO)
+        .destinatarios(Arrays.asList(
+            ConvocatoriaFaseAvisoInput.Destinatario.builder().nombre("test").email("test@test.com").build()))
+        .incluirIpsProyecto(Boolean.FALSE)
+        .incluirIpsSolicitud(Boolean.FALSE)
+        .build());
+    return input;
+  }
+
+  private EmailOutput buildEmailOutputAviso() {
+    EmailOutput email = EmailOutput.builder().id(10L).build();
+    email.setRecipients(Arrays.asList(new Recipient("test", "test@test.com")));
+    email.setParams(Arrays.asList(
+        new EmailParam(PARAM_SUBJECT, AVISO_ASUNTO),
+        new EmailParam(PARAM_CONTENT, AVISO_CONTENIDO)));
+    return email;
   }
 
   private Convocatoria generarMockConvocatoria(Long convocatoriaId) {

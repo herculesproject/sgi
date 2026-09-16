@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.service.sgi;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +37,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.ComGenericEmailTextHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.core.ParameterizedTypeReference;
@@ -67,8 +67,6 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String PATH_PARAMETER_ID = PATH_SEPARATOR + "{id}";
 
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_NAME = "GENERIC_EMAIL_TEXT";
-  private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_CONTENT = "GENERIC_CONTENT_TEXT";
-  private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT = "GENERIC_SUBJECT";
 
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO = "CSP_COM_INICIO_PRESENTACION_GASTO";
   private static final String TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO_PARAM = TEMPLATE_CSP_COM_INICIO_PRESENTACION_GASTO
@@ -226,7 +224,8 @@ public class SgiApiComService extends SgiApiBaseService {
    */
   public EmailOutput createGenericEmailText(String subject, String content, List<Recipient> recipients,
       Deferrable deferrableRecipients) {
-    log.debug("createGenericEmailText({}, {}, {}, {}) - start", subject, content, recipients, deferrableRecipients);
+    log.debug("createGenericEmailText - subject: {}, content: {}, recipients: {}, deferrableRecipients: {}", subject,
+        content, recipients, deferrableRecipients);
 
     this.validateComunicados(subject, content, recipients);
 
@@ -237,17 +236,13 @@ public class SgiApiComService extends SgiApiBaseService {
 
     EmailInput emailRequest = EmailInput.builder().template(TEMPLATE_GENERIC_EMAIL_TEXT_NAME).recipients(recipients)
         .deferrableRecipients(deferrableRecipients).build();
-    emailRequest.setParams(new ArrayList<>());
-    emailRequest.getParams()
-        .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_CONTENT, content));
-    emailRequest.getParams()
-        .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT, subject));
+    emailRequest.setParams(ComGenericEmailTextHelper.buildParams(subject, content));
 
     final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, emailRequest,
         new ParameterizedTypeReference<EmailOutput>() {
         }).getBody();
 
-    log.debug("createGenericEmailText({}, {}, {}, {}) - end", subject, content, recipients, deferrableRecipients);
+    log.debug("createGenericEmailText - response: {}", response);
     return response;
   }
 
@@ -264,8 +259,8 @@ public class SgiApiComService extends SgiApiBaseService {
    */
   public EmailOutput updateGenericEmailText(Long id, String subject, String content, List<Recipient> recipients,
       Deferrable deferrableRecipients) {
-    log.debug("updateGenericEmailText({}, {}, {}, {}, {}) - start", id, subject, content, recipients,
-        deferrableRecipients);
+    log.debug("updateGenericEmailText - id: {}, subject: {}, content: {}, recipients: {}, deferrableRecipients: {}", id,
+        subject, content, recipients, deferrableRecipients);
 
     AssertHelper.idNotNull(id, EmailOutput.class);
     this.validateComunicados(subject, content, recipients);
@@ -277,27 +272,46 @@ public class SgiApiComService extends SgiApiBaseService {
 
     EmailInput emailRequest = EmailInput.builder().template(TEMPLATE_GENERIC_EMAIL_TEXT_NAME).recipients(recipients)
         .deferrableRecipients(deferrableRecipients).build();
-    emailRequest.setParams(new ArrayList<>());
-    emailRequest.getParams()
-        .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_CONTENT, content));
-    emailRequest.getParams()
-        .add(new EmailParam(TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_SUBJECT, subject));
+    emailRequest.setParams(ComGenericEmailTextHelper.buildParams(subject, content));
 
     final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL, httpMethod, emailRequest,
         new ParameterizedTypeReference<EmailOutput>() {
         }, id).getBody();
-    log.debug("updateGenericEmailText({}, {}, {}, {}, {}) - end", id, subject, content, recipients,
-        deferrableRecipients);
+    log.debug("updateGenericEmailText - response: {}", response);
+    return response;
+  }
+
+  /**
+   * Recupera un email genérico del modulo COM
+   *
+   * @param id Identificador del email
+   * @return Email recuperado
+   */
+  public EmailOutput findGenericEmailTextById(Long id) {
+    log.debug("findGenericEmailTextById - id: {}", id);
+
+    AssertHelper.idNotNull(id, EmailOutput.class);
+
+    ServiceType serviceType = ServiceType.COM;
+    String relativeUrl = PATH_EMAILS + PATH_PARAMETER_ID;
+    HttpMethod httpMethod = HttpMethod.GET;
+    String mergedURL = buildUri(serviceType, relativeUrl);
+
+    final EmailOutput response = super.<EmailOutput>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<EmailOutput>() {
+        }, id).getBody();
+
+    log.debug("findGenericEmailTextById - response: {}", response);
     return response;
   }
 
   /**
    * Elimina un email del modulo COM
-   * 
+   *
    * @param id Identificador del email
    */
   public void deleteEmail(Long id) {
-    log.debug("deleteEmail({}) - start", id);
+    log.debug("deleteEmail - id: {}", id);
 
     AssertHelper.idNotNull(id, EmailOutput.class);
 
@@ -308,8 +322,6 @@ public class SgiApiComService extends SgiApiBaseService {
 
     super.<Void>callEndpoint(mergedURL, httpMethod, new ParameterizedTypeReference<Void>() {
     }, id);
-
-    log.debug("deleteEmail({}) - end", id);
   }
 
   /**
@@ -710,9 +722,19 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_PARAM);
   }
 
+  /**
+   * Crea un email en el modulo COM para el aviso de un hito de proyecto
+   *
+   * @param proyectoHitoId Identificador del hito de proyecto
+   * @param subject        Asunto del email
+   * @param content        Contenido del email
+   * @param recipients     Destinatarios del email
+   * @return Identificador del email creado
+   */
   public Long createProyectoHitoEmail(Long proyectoHitoId, String subject, String content,
       List<Recipient> recipients) {
-    log.debug("createProyectoHitoEmail({}, {}, {}, {}) - start", proyectoHitoId, subject, content, recipients);
+    log.debug("createProyectoHitoEmail - proyectoHitoId: {}, subject: {}, content: {}, recipients: {}", proyectoHitoId,
+        subject, content, recipients);
 
     AssertHelper.idNotNull(proyectoHitoId, ProyectoHito.class);
     this.validateComunicados(subject, content, recipients);
@@ -724,8 +746,31 @@ public class SgiApiComService extends SgiApiBaseService {
             proyectoHitoId),
         HttpMethod.GET))
         .getId();
-    log.debug("createProyectoHitoEmail({}, {}, {}, {}) - end", proyectoHitoId, subject, content, recipients);
+    log.debug("createProyectoHitoEmail - response: {}", id);
     return id;
+  }
+
+  /**
+   * Actualiza un email en el modulo COM para el aviso de un hito de proyecto
+   *
+   * @param id             Identificador del email
+   * @param proyectoHitoId Identificador del hito de proyecto
+   * @param subject        Asunto del email
+   * @param content        Contenido del email
+   * @param recipients     Destinatarios del email
+   */
+  public void updateProyectoHitoEmail(Long id, Long proyectoHitoId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("updateProyectoHitoEmail - id: {}, proyectoHitoId: {}, subject: {}, content: {}, recipients: {}", id,
+        proyectoHitoId, subject, content, recipients);
+
+    AssertHelper.idNotNull(id, EmailOutput.class);
+    AssertHelper.idNotNull(proyectoHitoId, ProyectoHito.class);
+    this.validateComunicados(subject, content, recipients);
+
+    this.updateGenericEmailText(id, subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(PROYECTO_HITO_DEFERRABLE_RECIPIENTS_URI_FORMAT, proyectoHitoId), HttpMethod.GET));
   }
 
   public EmailOutput createComunicadoModificacionAutorizacionParticipacionProyectoExterno(
@@ -791,9 +836,19 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_CSP_COM_CAMBIO_ESTADO_RECHAZADA_SOL_TIPO_RRHH_PARAM);
   }
 
+  /**
+   * Crea un email en el modulo COM para el aviso de una fase de convocatoria
+   *
+   * @param convocatoriaFaseId Identificador de la fase de convocatoria
+   * @param subject            Asunto del email
+   * @param content            Contenido del email
+   * @param recipients         Destinatarios del email
+   * @return Identificador del email creado
+   */
   public Long createConvocatoriaFaseEmail(Long convocatoriaFaseId, String subject, String content,
       List<Recipient> recipients) {
-    log.debug("createConvocatoriaFaseEmail({}, {}, {}, {}) - start", convocatoriaFaseId, subject, content, recipients);
+    log.debug("createConvocatoriaFaseEmail - convocatoriaFaseId: {}, subject: {}, content: {}, recipients: {}",
+        convocatoriaFaseId, subject, content, recipients);
 
     AssertHelper.idNotNull(convocatoriaFaseId, ConvocatoriaFase.class);
     this.validateComunicados(subject, content, recipients);
@@ -802,13 +857,46 @@ public class SgiApiComService extends SgiApiBaseService {
         ServiceType.CSP,
         String.format(CONVOCATORIA_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT, convocatoriaFaseId), HttpMethod.GET))
         .getId();
-    log.debug("createConvocatoriaFaseEmail({}, {}, {}, {}) - end", convocatoriaFaseId, subject, content, recipients);
+    log.debug("createConvocatoriaFaseEmail - response: {}", id);
     return id;
   }
 
+  /**
+   * Actualiza un email en el modulo COM para el aviso de una fase de convocatoria
+   *
+   * @param id                 Identificador del email
+   * @param convocatoriaFaseId Identificador de la fase de convocatoria
+   * @param subject            Asunto del email
+   * @param content            Contenido del email
+   * @param recipients         Destinatarios del email
+   */
+  public void updateConvocatoriaFaseEmail(Long id, Long convocatoriaFaseId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("updateConvocatoriaFaseEmail - id: {}, convocatoriaFaseId: {}, subject: {}, content: {}, recipients: {}",
+        id, convocatoriaFaseId, subject, content, recipients);
+
+    AssertHelper.idNotNull(id, EmailOutput.class);
+    AssertHelper.idNotNull(convocatoriaFaseId, ConvocatoriaFase.class);
+    this.validateComunicados(subject, content, recipients);
+
+    this.updateGenericEmailText(id, subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(CONVOCATORIA_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT, convocatoriaFaseId), HttpMethod.GET));
+  }
+
+  /**
+   * Crea un email en el modulo COM para el aviso de una fase de proyecto
+   *
+   * @param proyectoFaseId Identificador de la fase de proyecto
+   * @param subject        Asunto del email
+   * @param content        Contenido del email
+   * @param recipients     Destinatarios del email
+   * @return Identificador del email creado
+   */
   public Long createProyectoFaseEmail(Long proyectoFaseId, String subject, String content,
       List<Recipient> recipients) {
-    log.debug("createConvocatoriaFaseEmail({}, {}, {}, {}) - start", proyectoFaseId, subject, content, recipients);
+    log.debug("createProyectoFaseEmail - proyectoFaseId: {}, subject: {}, content: {}, recipients: {}", proyectoFaseId,
+        subject, content, recipients);
 
     AssertHelper.idNotNull(proyectoFaseId, ProyectoFase.class);
     this.validateComunicados(subject, content, recipients);
@@ -817,8 +905,30 @@ public class SgiApiComService extends SgiApiBaseService {
         ServiceType.CSP,
         String.format(PROYECTO_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT, proyectoFaseId), HttpMethod.GET))
         .getId();
-    log.debug("createProyectoFaseEmail({}, {}, {}, {}) - end", proyectoFaseId, subject, content, recipients);
+    log.debug("createProyectoFaseEmail - response: {}", id);
     return id;
+  }
+
+  /**
+   * Actualiza un email en el modulo COM para el aviso de una fase de proyecto
+   *
+   * @param id             Identificador del email
+   * @param proyectoFaseId Identificador de la fase de proyecto
+   * @param subject        Asunto del email
+   * @param content        Contenido del email
+   * @param recipients     Destinatarios del email
+   */
+  public void updateProyectoFaseEmail(Long id, Long proyectoFaseId, String subject, String content,
+      List<Recipient> recipients) {
+    log.debug("updateProyectoFaseEmail - id: {}, proyectoFaseId: {}, subject: {}, content: {}, recipients: {}", id,
+        proyectoFaseId, subject, content, recipients);
+    AssertHelper.idNotNull(id, EmailOutput.class);
+    AssertHelper.idNotNull(proyectoFaseId, ProyectoFase.class);
+    this.validateComunicados(subject, content, recipients);
+
+    this.updateGenericEmailText(id, subject, content, recipients, new Deferrable(
+        ServiceType.CSP,
+        String.format(PROYECTO_FASE_DEFERRABLE_RECIPIENTS_URI_FORMAT, proyectoFaseId), HttpMethod.GET));
   }
 
   public EmailOutput createComunicadoSolicitudUsuarioExterno(
