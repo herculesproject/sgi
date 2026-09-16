@@ -91,10 +91,10 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private periodoSeguimientoService: ProyectoPeriodoSeguimientoService,
-    private periodoSeguimientoDocumentoService: ProyectoPeriodoSeguimientoDocumentoService,
-    private documentoService: DocumentoService,
-    public readonly
+    private readonly periodoSeguimientoService: ProyectoPeriodoSeguimientoService,
+    private readonly periodoSeguimientoDocumentoService: ProyectoPeriodoSeguimientoDocumentoService,
+    private readonly documentoService: DocumentoService,
+    public readonly: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -103,14 +103,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   protected onInitialize(): void {
     if (this.getKey()) {
       this.periodoSeguimientoService.findDocumentos(this.getKey() as number).pipe(
-        map(response => {
-          // TODO este filtro debería hacerse en el back
-          let items = response.items;
-          if (this.readonly) {
-            items = items.filter(documento => documento.visible);
-          }
-          return this.buildTree(items);
-        })
+        map(response => this.buildTree(response.items))
       ).subscribe(
         (documento) => {
           this.publishNodes(documento);
@@ -140,7 +133,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   }
 
   publishNodes(rootNodes?: NodeDocumento[]) {
-    let nodes = rootNodes ? rootNodes : this.documentos$.value;
+    let nodes = rootNodes ?? this.documentos$.value;
     nodes = sortByTitle(nodes);
     this.documentos$.next(nodes);
   }
@@ -257,7 +250,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   private getUpdated(documentos: NodeDocumento[]): NodeDocumento[] {
     const updated: NodeDocumento[] = [];
     documentos.forEach((node) => {
-      if (node.documento && node.documento.edited) {
+      if (node.documento?.edited) {
         updated.push(node);
       }
       if (node.childs.length) {
@@ -270,7 +263,7 @@ export class ProyectoPeriodoSeguimientoDocumentosFragment extends Fragment {
   private getCreated(programas: NodeDocumento[]): NodeDocumento[] {
     const updated: NodeDocumento[] = [];
     programas.forEach((node) => {
-      if (node.documento && node.documento.created) {
+      if (node.documento?.created) {
         updated.push(node);
       }
       if (node.childs.length) {

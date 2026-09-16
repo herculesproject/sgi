@@ -87,9 +87,9 @@ export class ProyectoProrrogaDocumentosFragment extends Fragment {
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private prorrogaService: ProyectoProrrogaService,
-    private prorrogaDocumentoService: ProyectoProrrogaDocumentoService,
-    private documentoService: DocumentoService,
+    private readonly prorrogaService: ProyectoProrrogaService,
+    private readonly prorrogaDocumentoService: ProyectoProrrogaDocumentoService,
+    private readonly documentoService: DocumentoService,
     public proyectoModeloEjecucionId: number,
     public readonly: boolean
   ) {
@@ -100,14 +100,7 @@ export class ProyectoProrrogaDocumentosFragment extends Fragment {
   protected onInitialize(): void {
     if (this.getKey()) {
       this.prorrogaService.findDocumentos(this.getKey() as number).pipe(
-        map(response => {
-          // TODO este filtro debería hacerse en el back
-          let items = response.items;
-          if (this.readonly) {
-            items = items.filter(documento => documento.visible);
-          }
-          return this.buildTree(items);
-        })
+        map(response => this.buildTree(response.items))
       ).subscribe(
         (documento) => {
           this.publishNodes(documento);
@@ -137,7 +130,7 @@ export class ProyectoProrrogaDocumentosFragment extends Fragment {
   }
 
   publishNodes(rootNodes?: NodeDocumento[]) {
-    let nodes = rootNodes ? rootNodes : this.documentos$.value;
+    let nodes = rootNodes ?? this.documentos$.value;
     nodes = sortByTitle(nodes);
     this.documentos$.next(nodes);
   }
@@ -280,7 +273,7 @@ export class ProyectoProrrogaDocumentosFragment extends Fragment {
   private getUpdated(documentos: NodeDocumento[]): NodeDocumento[] {
     const updated: NodeDocumento[] = [];
     documentos.forEach((node) => {
-      if (node.documento && node.documento.edited) {
+      if (node.documento?.edited) {
         updated.push(node);
       }
       if (node.childs.length) {
@@ -293,7 +286,7 @@ export class ProyectoProrrogaDocumentosFragment extends Fragment {
   private getCreated(programas: NodeDocumento[]): NodeDocumento[] {
     const updated: NodeDocumento[] = [];
     programas.forEach((node) => {
-      if (node.documento && node.documento.created) {
+      if (node.documento?.created) {
         updated.push(node);
       }
       if (node.childs.length) {

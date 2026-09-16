@@ -115,6 +115,10 @@ export class ProyectoPeriodoSeguimientoDatosGeneralesComponent extends FormFragm
   }
 
   private checkOverlapsPeriodosSeguimiento(): void {
+    if (this.formPart.readonly) {
+      return;
+    }
+
     const fechaInicioForm = this.formGroup.get('fechaInicio');
     const fechaFinForm = this.formGroup.get('fechaFin');
 
