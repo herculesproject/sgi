@@ -14,6 +14,11 @@
        ### Security         Correcciones de vulnerabilidades
 -->
 
+## 1.4.0 (2026-09-17)
+
+**Notas de actualización:** [1.4.0](/docs/upgrade/1.4.0.md)
+
+
 ### Added
 
 - [CSP] Añadida la pantalla de facturas emitidas de ejecución económica a la vista del perfil de investigación. ([#134](https://github.com/herculesproject/sgi/issues/134)).
