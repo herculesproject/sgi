@@ -6,6 +6,7 @@
 
 - [Guía de despliegue del SGI con Helm](upgrade/common/deployment.md)
 - Notas de actualización:
+  - [1.5.0-SNAPSHOT](upgrade/1.5.0-SNAPSHOT.md) *(versión en desarrollo)*
   - [1.4.0](upgrade/1.4.0.md)
   - [1.3.0](upgrade/1.3.0.md) *(actualización a Keycloak 26)*
   - [1.2.0](upgrade/1.2.0.md)
