@@ -12,7 +12,13 @@
        ### Removed          Funcionalidad eliminada
        ### Fixed            Corrección de errores
        ### Security         Correcciones de vulnerabilidades
+
+     La línea en cursiva de debajo avisa de que esta sección está vacía: no
+     borrarla, comentarla al añadir la primera entrada y descomentarla al
+     cerrar la versión.
 -->
+
+*Todavía no se ha registrado ningún cambio para la próxima versión.*
 
 ## 1.4.0 (2026-09-17)
 
