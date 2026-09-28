@@ -22,8 +22,10 @@ Las siguientes variables se configuran durante el despliegue. La columna *Por de
 |---|---|---|
 | `KC_BOOTSTRAP_ADMIN_USERNAME` / `KC_BOOTSTRAP_ADMIN_PASSWORD` | — | Usuario administrador inicial (solo se crea sobre una BD vacía) |
 | `KC_DB_SCHEMA` | — | Esquema de la BD |
-| `KC_DB_URL_PROPERTIES` | — | Propiedades adicionales del driver JDBC (opcional; p.ej. `?oracle.net.CONNECT_TIMEOUT=61000`) |
-| `KC_DB_URL` | — | URL JDBC de conexión a la BD |
+| `KC_DB_URL_HOST` / `KC_DB_URL_PORT` / `KC_DB_URL_DATABASE` | — | Conexión a la BD por campos, Keycloak construye la URL JDBC del vendor. Se ignoran si se define `KC_DB_URL` |
+| `KC_DB_URL` | — | URL JDBC completa de conexión a la BD (alternativa a la conexión por campos) |
+| `KC_DB_URL_PROPERTIES` | — | Propiedades adicionales del driver JDBC para la conexión por campos. Se ignora si se define `KC_DB_URL` |
+| `KC_DB_CONNECT_TIMEOUT` | `10s` | Timeout de conexión y login a la BD (p.ej. `60s`) |
 | `KC_DB_USERNAME` / `KC_DB_PASSWORD` | — | Credenciales de la BD |
 | `KC_DB` | — | Motor de BD: `oracle` \| `mssql` \| `postgres` |
 | `KC_HEALTH_ENABLED` | `true` | Expone los endpoints de health (puerto de management) |
