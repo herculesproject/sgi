@@ -28,6 +28,7 @@
 ### Fixed
 
 - [ETI] Corregido que no se guardaba el valor de días de aviso de retrospectiva al modificar la configuración de ética. ([#170](https://github.com/herculesproject/sgi/issues/170)).
+- [ETI] Corregido el filtro por estado de memoria del buscador de Solicitudes de evaluación del perfil de gestión, que no devolvía ninguna solicitud. ([#175](https://github.com/herculesproject/sgi/issues/175)).
 
 ## 1.4.0 (2026-09-17)
 

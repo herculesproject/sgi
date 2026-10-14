@@ -254,7 +254,7 @@ export class PeticionEvaluacionListadoGesComponent
     return new RSQLSgiRestFilter('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.referenciaMemoria.value)
       .and('peticionEvaluacion.titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
-      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.toString())
+      .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
       .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id)
       .and('unidadesVinculacion.unidadVinculacionRef', SgiRestFilterOperator.EQUALS, controls.unidadVinculacion.value?.id);
   }
