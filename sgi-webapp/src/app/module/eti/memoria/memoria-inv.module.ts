@@ -24,23 +24,24 @@ import { MemoriaGeneralListadoExportService } from './memoria-general-listado-ex
 import { MemoriaListadoExportService } from './memoria-listado-export.service';
 import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listado-inv.component';
 import { MemoriaRoutingInvModule } from './memoria-routing-inv.module';
+import { MemoriaUnidadVinculacionListadoExportService } from './memoria-unidad-vinculacion-listado-export.service';
 import { MemoriaResolver } from './memoria.resolver';
 import { MemoriaDocumentacionMemoriaModalComponent } from './modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
 
 @NgModule({
   declarations: [
-    MemoriaListadoInvComponent,
     MemoriaCrearComponent,
     MemoriaDatosGeneralesComponent,
-    MemoriaFormularioComponent,
-    MemoriaEditarComponent,
     MemoriaDocumentacionComponent,
     MemoriaDocumentacionMemoriaModalComponent,
+    MemoriaEditarComponent,
     MemoriaEvaluacionesComponent,
+    MemoriaFormularioComponent,
     MemoriaInformesComponent,
+    MemoriaListadoInvComponent,
+    MemoriaRetrospectivaComponent,
     MemoriaSeguimientoAnualComponent,
-    MemoriaSeguimientoFinalComponent,
-    MemoriaRetrospectivaComponent
+    MemoriaSeguimientoFinalComponent
   ],
   imports: [
     SharedModule,
@@ -56,11 +57,12 @@ import { MemoriaDocumentacionMemoriaModalComponent } from './modals/memoria-docu
     EtiSharedModule
   ],
   providers: [
-    MemoriaResolver,
     MemoriaCrearGuard,
-    MemoriaListadoExportService,
+    MemoriaEvaluacionesListadoExportService,
     MemoriaGeneralListadoExportService,
-    MemoriaEvaluacionesListadoExportService
+    MemoriaListadoExportService,
+    MemoriaResolver,
+    MemoriaUnidadVinculacionListadoExportService
   ]
 })
 export class MemoriaInvModule { }

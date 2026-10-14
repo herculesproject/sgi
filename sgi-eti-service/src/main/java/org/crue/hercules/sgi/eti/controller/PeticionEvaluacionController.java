@@ -4,8 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.converter.PeticionEvaluacionUnidadVinculacionConverter;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionInput;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionOutput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
@@ -13,11 +16,14 @@ import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionUnidadVinculacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
+import org.crue.hercules.sgi.eti.service.PeticionEvaluacionUnidadVinculacionService;
 import org.crue.hercules.sgi.eti.service.TareaService;
+import org.crue.hercules.sgi.eti.util.SgiLogUtils;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -27,8 +33,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,7 +54,12 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/peticionevaluaciones")
 @Slf4j
+@Validated
 public class PeticionEvaluacionController {
+
+  /** Path de las unidades de vinculación de una petición de evaluación */
+  public static final String PATH_UNIDADES_VINCULACION = "/{id}/unidades-vinculacion";
+
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_ANOTHER_ENTITY = "anotherEntity";
   private static final String MSG_MODEL_TAREA = "org.crue.hercules.sgi.eti.model.Tarea.message";
@@ -68,24 +81,32 @@ public class PeticionEvaluacionController {
   /** Tarea service */
   private final TareaService tareaService;
 
+  /** PeticionEvaluacionUnidadVinculacion service */
+  private final PeticionEvaluacionUnidadVinculacionService peticionEvaluacionUnidadVinculacionService;
+
+  /** PeticionEvaluacionUnidadVinculacion converter */
+  private final PeticionEvaluacionUnidadVinculacionConverter peticionEvaluacionUnidadVinculacionConverter;
+
   /**
    * Instancia un nuevo PeticionEvaluacionController.
    * 
-   * @param service              PeticionEvaluacionService
-   * @param equipoTrabajoService EquipoTrabajoService
-   * @param memoriaService       MemoriaService
-   * @param tareaService         TareaService
+   * @param service                                      PeticionEvaluacionService
+   * @param equipoTrabajoService                         EquipoTrabajoService
+   * @param memoriaService                               MemoriaService
+   * @param tareaService                                 TareaService
+   * @param peticionEvaluacionUnidadVinculacionService   PeticionEvaluacionUnidadVinculacionService
+   * @param peticionEvaluacionUnidadVinculacionConverter PeticionEvaluacionUnidadVinculacionConverter
    */
   public PeticionEvaluacionController(PeticionEvaluacionService service, EquipoTrabajoService equipoTrabajoService,
-      MemoriaService memoriaService, TareaService tareaService) {
-    log.debug(
-        "PeticionEvaluacionController(PeticionEvaluacionService service, EquipoTrabajoService equipoTrabajoService, MemoriaService memoriaService, TareaService tareaService) - start");
+      MemoriaService memoriaService, TareaService tareaService,
+      PeticionEvaluacionUnidadVinculacionService peticionEvaluacionUnidadVinculacionService,
+      PeticionEvaluacionUnidadVinculacionConverter peticionEvaluacionUnidadVinculacionConverter) {
     this.service = service;
     this.equipoTrabajoService = equipoTrabajoService;
     this.memoriaService = memoriaService;
     this.tareaService = tareaService;
-    log.debug(
-        "PeticionEvaluacionController(PeticionEvaluacionService service, EquipoTrabajoService equipoTrabajoService, MemoriaService memoriaService, TareaService tareaService)) - end");
+    this.peticionEvaluacionUnidadVinculacionService = peticionEvaluacionUnidadVinculacionService;
+    this.peticionEvaluacionUnidadVinculacionConverter = peticionEvaluacionUnidadVinculacionConverter;
   }
 
   /**
@@ -458,6 +479,47 @@ public class PeticionEvaluacionController {
     }
     log.debug("isResponsableOrCreador(Long id) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Actualiza la lista de {@link PeticionEvaluacionUnidadVinculacion} de la
+   * {@link PeticionEvaluacion} con el id indicado.
+   *
+   * @param id                  identificador de la {@link PeticionEvaluacion}.
+   * @param unidadesVinculacion nueva lista de unidades de vinculación de la
+   *                            {@link PeticionEvaluacion}.
+   * @return la nueva lista de {@link PeticionEvaluacionUnidadVinculacion} de la
+   *         {@link PeticionEvaluacion}.
+   */
+  @PatchMapping(PATH_UNIDADES_VINCULACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-E')")
+  public List<PeticionEvaluacionUnidadVinculacionOutput> updateUnidadesVinculacion(@PathVariable Long id,
+      @RequestBody List<@Valid PeticionEvaluacionUnidadVinculacionInput> unidadesVinculacion) {
+    log.debug("updateUnidadesVinculacion - id: {}, unidadesVinculacion: {}", id, unidadesVinculacion);
+    return peticionEvaluacionUnidadVinculacionConverter.convert(
+        peticionEvaluacionUnidadVinculacionService.updateUnidadesVinculacion(id,
+            peticionEvaluacionUnidadVinculacionConverter.convertInputs(unidadesVinculacion)));
+  }
+
+  /**
+   * Devuelve las {@link PeticionEvaluacionUnidadVinculacion} de la
+   * {@link PeticionEvaluacion} con el id indicado, paginadas y/o filtradas.
+   *
+   * @param id     identificador de la {@link PeticionEvaluacion}.
+   * @param query  filtro de búsqueda.
+   * @param paging información de la paginación.
+   * @return la página de {@link PeticionEvaluacionUnidadVinculacion} de la
+   *         {@link PeticionEvaluacion}.
+   */
+  @GetMapping(PATH_UNIDADES_VINCULACION)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-V', 'ETI-PEV-E', 'ETI-MEM-V')")
+  public Page<PeticionEvaluacionUnidadVinculacionOutput> findUnidadesVinculacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findUnidadesVinculacion - id: {}, query: {}, paging: {}", id, query, SgiLogUtils.pageable(paging));
+    Page<PeticionEvaluacionUnidadVinculacionOutput> page = peticionEvaluacionUnidadVinculacionConverter.convert(
+        peticionEvaluacionUnidadVinculacionService.findAllByPeticionEvaluacionId(id, query, paging));
+    log.debug("findUnidadesVinculacion - response: {}", SgiLogUtils.page(page));
+    return page;
   }
 
 }

@@ -22,6 +22,7 @@ import { PeticionEvaluacionInvRoutingModule } from './peticion-evaluacion-inv-ro
 import { PeticionEvaluacionListadoExportService } from './peticion-evaluacion-listado-export.service';
 import { PeticionEvaluacionListadoInvComponent } from './peticion-evaluacion-listado-inv/peticion-evaluacion-listado-inv.component';
 import { PeticionEvaluacionMemoriasListadoExportService } from './peticion-evaluacion-memorias-listado-export.service';
+import { PeticionEvaluacionUnidadVinculacionListadoExportService } from './peticion-evaluacion-unidad-vinculacion-listado-export.service';
 import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 
 @NgModule({
@@ -54,7 +55,8 @@ import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
     PeticionEvaluacionGeneralListadoExportService,
     PeticionEvaluacionAsignacionTareasListadoExportService,
     PeticionEvaluacionMemoriasListadoExportService,
-    PeticionEvaluacionEquipoInvestigadorListadoExportService
+    PeticionEvaluacionEquipoInvestigadorListadoExportService,
+    PeticionEvaluacionUnidadVinculacionListadoExportService
   ]
 })
 export class PeticionEvaluacionInvModule { }

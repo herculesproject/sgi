@@ -4,6 +4,7 @@ import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-ev
 import { ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
+import { IUnidadVinculacion } from '@core/models/sgo/unidad-vinculacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
@@ -14,14 +15,23 @@ import { concat, from, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { MemoriaEvaluacionesListadoExportService } from './memoria-evaluaciones-listado-export.service';
 import { MemoriaGeneralListadoExportService } from './memoria-general-listado-export.service';
+import { MemoriaUnidadVinculacionListadoExportService } from './memoria-unidad-vinculacion-listado-export.service';
+
+/** Unidad de vinculación de la petición de evaluación de una memoria, con su tipo de unidad */
+export interface IMemoriaUnidadVinculacionListado {
+  unidadVinculacion: IUnidadVinculacion;
+  tipoUnidad: IUnidadVinculacion;
+}
 
 export interface IMemoriaReportData extends IMemoriaPeticionEvaluacion {
   evaluaciones: IEvaluacion[];
   responsable: IPersona;
+  unidadesVinculacion?: IMemoriaUnidadVinculacionListado[];
 }
 
 export interface IMemoriaReportOptions extends IReportOptions {
   showEvaluaciones: boolean;
+  showUnidadesVinculacion?: boolean;
 }
 
 @Injectable()
@@ -38,6 +48,7 @@ export class MemoriaListadoExportService extends
     private readonly memoriaService: MemoriaService,
     private readonly memoriaGeneralListadoExportService: MemoriaGeneralListadoExportService,
     private readonly memoriaEvaluacionesListadoExportService: MemoriaEvaluacionesListadoExportService,
+    private readonly memoriaUnidadVinculacionListadoExportService: MemoriaUnidadVinculacionListadoExportService,
     protected reportService: ReportService
   ) {
     super(reportService);
@@ -71,6 +82,10 @@ export class MemoriaListadoExportService extends
           row.elements.push(...this.memoriaEvaluacionesListadoExportService.fillRows(memorias, index, reportConfig));
         }
 
+        if (reportConfig.reportOptions?.showUnidadesVinculacion) {
+          row.elements.push(...this.memoriaUnidadVinculacionListadoExportService.fillRows(memorias, index, reportConfig));
+        }
+
         return row;
       }), catchError(err => {
         this.logger.error(err);
@@ -83,6 +98,9 @@ export class MemoriaListadoExportService extends
     const findOptions = reportConfig.reportOptions?.findOptions;
     findOptions.page.index = 0;
     findOptions.page.size = undefined;
+
+    this.memoriaGeneralListadoExportService.clearCache();
+    this.memoriaUnidadVinculacionListadoExportService.clearCache();
 
     let memorias$: Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>>;
 
@@ -100,7 +118,7 @@ export class MemoriaListadoExportService extends
 
         return from(memoriasReportData).pipe(
           mergeMap((peticion) => {
-            return this.getDataReportInner(peticion, reportConfig.reportOptions)
+            return this.getDataReportInner(peticion, reportConfig.reportOptions);
           }, this.DEFAULT_CONCURRENT)
         ).pipe(
           map(r => {
@@ -108,7 +126,7 @@ export class MemoriaListadoExportService extends
             return requestsMemoria;
           }),
           takeLast(1)
-        )
+        );
       }),
       takeLast(1)
     );
@@ -119,6 +137,7 @@ export class MemoriaListadoExportService extends
     return concat(
       this.getDataReportListadoGeneral(peticionData),
       this.getDataReportEvaluaciones(peticionData, reportOptions),
+      this.getDataReportUnidadesVinculacion(peticionData, reportOptions)
     ).pipe(
       takeLast(1),
       catchError((err) => {
@@ -146,6 +165,18 @@ export class MemoriaListadoExportService extends
     }
   }
 
+  private getDataReportUnidadesVinculacion(
+    memoriaData: IMemoriaReportData,
+    reportOptions: IMemoriaReportOptions
+  ): Observable<IMemoriaReportData> {
+    if (reportOptions?.showUnidadesVinculacion) {
+      return this.memoriaUnidadVinculacionListadoExportService.getData(memoriaData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(memoriaData);
+    }
+  }
+
   protected getColumns(resultados: IMemoriaReportData[], reportConfig: IReportConfig<IMemoriaReportOptions>):
     Observable<ISgiColumnReport[]> {
     const columns: ISgiColumnReport[] = [];
@@ -154,6 +185,9 @@ export class MemoriaListadoExportService extends
 
     if (reportConfig.reportOptions?.showEvaluaciones) {
       columns.push(... this.memoriaEvaluacionesListadoExportService.fillColumns(resultados, reportConfig));
+    }
+    if (reportConfig.reportOptions?.showUnidadesVinculacion) {
+      columns.push(... this.memoriaUnidadVinculacionListadoExportService.fillColumns(resultados, reportConfig));
     }
     return of(columns);
   }

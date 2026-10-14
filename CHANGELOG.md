@@ -18,7 +18,16 @@
      cerrar la versión.
 -->
 
-*Todavía no se ha registrado ningún cambio para la próxima versión.*
+<!-- *Todavía no se ha registrado ningún cambio para la próxima versión.* -->
+
+### Added
+
+- [ETI] Añadido el departamento del solicitante en los listados y exportaciones de Solicitudes de evaluación y Memorias, el departamento de cada miembro en el Equipo de trabajo y la acción de ver detalle de persona en el Equipo de trabajo del perfil de gestión. ([#170](https://github.com/herculesproject/sgi/issues/170)).
+- [ETI] Añadido el apartado Unidades de vinculación en las Solicitudes de evaluación del perfil de gestión, con su inicialización opcional a partir del departamento del solicitante, filtro en los buscadores y bloque en las exportaciones de Solicitudes de evaluación y Memorias. ([#170](https://github.com/herculesproject/sgi/issues/170)).
+
+### Fixed
+
+- [ETI] Corregido que no se guardaba el valor de días de aviso de retrospectiva al modificar la configuración de ética. ([#170](https://github.com/herculesproject/sgi/issues/170)).
 
 ## 1.4.0 (2026-09-17)
 

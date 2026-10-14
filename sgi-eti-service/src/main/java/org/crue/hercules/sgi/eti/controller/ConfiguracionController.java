@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import javax.validation.Valid;
+
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -53,6 +55,12 @@ public class ConfiguracionController {
   /**
    * Actualiza {@link Configuracion}.
    * 
+   * Solo actualiza los parámetros que se gestionan desde la pantalla de
+   * configuración del módulo de ética (permiso <code>ETI-CNF-E</code>). Los
+   * parámetros que se gestionan por clave desde Administración (enum
+   * {@link Configuracion.Param}, endpoint <code>/config/{name}</code>) no se
+   * modifican con este método.
+   * 
    * @param updatedConfiguracion {@link Configuracion} a actualizar.
    * @param id                   id {@link Configuracion} a actualizar.
    * @return {@link Configuracion} actualizado.
@@ -61,10 +69,10 @@ public class ConfiguracionController {
   @PreAuthorize("hasAuthorityForAnyUO('ETI-CNF-E')")
   public Configuracion replaceConfiguracion(@Valid @RequestBody Configuracion updatedConfiguracion,
       @PathVariable Long id) {
-    log.debug("replaceConfiguracion(Configuracion updatedConfiguracion, Long id) - start");
+    log.debug("replaceConfiguracion - id: {}, updatedConfiguracion: {}", id, updatedConfiguracion);
     updatedConfiguracion.setId(id);
     Configuracion returnValue = service.update(updatedConfiguracion);
-    log.debug("replaceConfiguracion(Configuracion updatedConfiguracion, Long id) - end");
+    log.debug("replaceConfiguracion - response: {}", returnValue);
     return returnValue;
   }
 

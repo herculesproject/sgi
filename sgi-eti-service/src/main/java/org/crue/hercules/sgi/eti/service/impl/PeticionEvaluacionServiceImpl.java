@@ -2,23 +2,36 @@ package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.Instant;
 import java.time.temporal.ChronoField;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
+import org.crue.hercules.sgi.eti.dto.sgo.UnidadVinculacionOutput;
+import org.crue.hercules.sgi.eti.dto.sgp.VinculacionOutput;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Configuracion;
+import org.crue.hercules.sgi.eti.model.Configuracion.Param;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionUnidadVinculacion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionUnidadVinculacionRepository;
+import org.crue.hercules.sgi.eti.repository.predicate.MemoriaPredicateResolver;
 import org.crue.hercules.sgi.eti.repository.predicate.PeticionEvaluacionPredicateResolver;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.repository.specification.PeticionEvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiSgoService;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
@@ -45,12 +58,34 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
   private final SgiConfigProperties sgiConfigProperties;
   private final PeticionEvaluacionRepository peticionEvaluacionRepository;
   private final MemoriaService memoriaService;
+  private final ConfiguracionRepository configuracionRepository;
+  private final PeticionEvaluacionUnidadVinculacionRepository peticionEvaluacionUnidadVinculacionRepository;
+  private final SgiApiSgpService sgiApiSgpService;
+  private final SgiApiSgoService sgiApiSgoService;
 
+  /**
+   * Instancia un nuevo PeticionEvaluacionServiceImpl.
+   *
+   * @param sgiConfigProperties                           {@link SgiConfigProperties}
+   * @param peticionEvaluacionRepository                  {@link PeticionEvaluacionRepository}
+   * @param memoriaService                                {@link MemoriaService}
+   * @param configuracionRepository                       {@link ConfiguracionRepository}
+   * @param peticionEvaluacionUnidadVinculacionRepository {@link PeticionEvaluacionUnidadVinculacionRepository}
+   * @param sgiApiSgpService                              {@link SgiApiSgpService}
+   * @param sgiApiSgoService                              {@link SgiApiSgoService}
+   */
   public PeticionEvaluacionServiceImpl(SgiConfigProperties sgiConfigProperties,
-      PeticionEvaluacionRepository peticionEvaluacionRepository, MemoriaService memoriaService) {
+      PeticionEvaluacionRepository peticionEvaluacionRepository, MemoriaService memoriaService,
+      ConfiguracionRepository configuracionRepository,
+      PeticionEvaluacionUnidadVinculacionRepository peticionEvaluacionUnidadVinculacionRepository,
+      SgiApiSgpService sgiApiSgpService, SgiApiSgoService sgiApiSgoService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.peticionEvaluacionRepository = peticionEvaluacionRepository;
     this.memoriaService = memoriaService;
+    this.configuracionRepository = configuracionRepository;
+    this.peticionEvaluacionUnidadVinculacionRepository = peticionEvaluacionUnidadVinculacionRepository;
+    this.sgiApiSgpService = sgiApiSgpService;
+    this.sgiApiSgoService = sgiApiSgoService;
   }
 
   /**
@@ -104,7 +139,10 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
           MSG_FIELD_OTRO_VALOR_SOCIAL);
     }
 
-    return peticionEvaluacionRepository.save(peticionEvaluacion);
+    PeticionEvaluacion saved = peticionEvaluacionRepository.save(peticionEvaluacion);
+    initializeUnidadVinculacionFromDepartamento(saved);
+
+    return saved;
   }
 
   /**
@@ -179,13 +217,13 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
             TipoEstadoMemoria.Tipo.COMPLETADA.getId());
 
     if (!memoriasElaboracionDesactivar.isEmpty()) {
-      memoriasElaboracionDesactivar.stream().forEach(memoria -> {
+      memoriasElaboracionDesactivar.forEach(memoria -> {
         memoriaService.desactivar(memoria.getId());
       });
     }
 
     if (!memoriasCompletadasDesactivar.isEmpty()) {
-      memoriasCompletadasDesactivar.stream().forEach(memoria -> {
+      memoriasCompletadasDesactivar.forEach(memoria -> {
         memoriaService.desactivar(memoria.getId());
       });
     }
@@ -305,13 +343,11 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
   public Page<PeticionEvaluacionWithIsEliminable> findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
       String query, Pageable pageable, String personaRef) {
     log.debug("findAllPeticionEvaluacionMemoria(String query, Pageable pageable, String personaRef) - start");
-    // TODO: Eliminar esta comprobación cuando se controlen los Predicate == null
-    // dentro del custom repository
     Specification<Memoria> specsMem = null;
     Specification<PeticionEvaluacion> specsPet = null;
     if (StringUtils.isNotBlank(query)) {
       specsPet = SgiRSQLJPASupport.toSpecification(query, PeticionEvaluacionPredicateResolver.getInstance());
-      specsMem = SgiRSQLJPASupport.toSpecification(query);
+      specsMem = SgiRSQLJPASupport.toSpecification(query, MemoriaPredicateResolver.getInstance());
     }
 
     Page<PeticionEvaluacionWithIsEliminable> returnValue = peticionEvaluacionRepository
@@ -341,6 +377,120 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     log.debug(
         "isPeticionWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(String personaRef, Long idPeticionEvaluacion) - end");
     return returnValue.hasContent();
+  }
+
+  /**
+   * Vincula la {@link PeticionEvaluacion} a la unidad de vinculación que se
+   * corresponde con el departamento del solicitante, si así está configurado.
+   * 
+   * Si el solicitante no tiene departamento, no existe la unidad, el id no está
+   * dentro de la jerarquía esperada o falla la consulta a los sistemas externos,
+   * la petición se queda sin unidad de vinculación y sin dar error.
+   *
+   * @param peticionEvaluacion una {@link PeticionEvaluacion}.
+   */
+  private void initializeUnidadVinculacionFromDepartamento(PeticionEvaluacion peticionEvaluacion) {
+    Configuracion configuracion = configuracionRepository.findFirstByOrderByIdAsc().orElse(null);
+    if (configuracion == null
+        || !configuracion.isParamEnabled(Param.PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED)) {
+      return;
+    }
+
+    String tipoRef = configuracion.getTipoUnidadVinculacionDepartamentoRef();
+    if (tipoRef == null) {
+      log.warn(
+          "initializeUnidadVinculacionFromDepartamento - inicialización habilitada pero sin tipo de unidad de vinculación de departamento configurado");
+      return;
+    }
+
+    Long peticionEvaluacionId = peticionEvaluacion.getId();
+    String personaRef = peticionEvaluacion.getPersonaRef();
+    UnidadVinculacionOutput unidadVinculacion;
+    try {
+      String departamentoId = findDepartamentoId(personaRef).orElse(null);
+      if (departamentoId == null) {
+        log.debug(
+            "initializeUnidadVinculacionFromDepartamento - el solicitante no tiene departamento - peticionEvaluacionId: {}, personaRef: {}",
+            peticionEvaluacionId, personaRef);
+        return;
+      }
+
+      unidadVinculacion = findUnidadVinculacionActiva(departamentoId).orElse(null);
+      if (unidadVinculacion == null) {
+        log.warn(
+            "initializeUnidadVinculacionFromDepartamento - sin unidad de vinculación activa para el departamento - peticionEvaluacionId: {}, personaRef: {}, departamentoId: {}",
+            peticionEvaluacionId, personaRef, departamentoId);
+        return;
+      }
+
+      if (!isUnidadVinculacionOfTipo(unidadVinculacion, tipoRef)) {
+        log.warn(
+            "initializeUnidadVinculacionFromDepartamento - la unidad de vinculación no pertenece al tipo configurado - peticionEvaluacionId: {}, personaRef: {}, departamentoId: {}, tipoRef: {}",
+            peticionEvaluacionId, personaRef, departamentoId, tipoRef);
+        return;
+      }
+    } catch (RuntimeException e) {
+      log.warn(
+          "initializeUnidadVinculacionFromDepartamento - error consultando el departamento - peticionEvaluacionId: {}, personaRef: {}, tipoRef: {}",
+          peticionEvaluacionId, personaRef, tipoRef, e);
+      return;
+    }
+
+    PeticionEvaluacionUnidadVinculacion saved = peticionEvaluacionUnidadVinculacionRepository
+        .save(PeticionEvaluacionUnidadVinculacion.builder()
+            .peticionEvaluacionId(peticionEvaluacionId)
+            .unidadVinculacionRef(unidadVinculacion.getId())
+            .build());
+    log.debug("initializeUnidadVinculacionFromDepartamento - peticionEvaluacionId: {}, unidadVinculacionRef: {}",
+        peticionEvaluacionId, saved.getUnidadVinculacionRef());
+  }
+
+  /**
+   * Busca en el SGP el departamento de la persona.
+   *
+   * @param personaRef referencia de la persona.
+   * @return el id del departamento o vacío si la persona no tiene.
+   */
+  private Optional<String> findDepartamentoId(String personaRef) {
+    return sgiApiSgpService.findVinculacionByPersonaId(personaRef)
+        .map(VinculacionOutput::getDepartamento)
+        .map(VinculacionOutput.DepartamentoOutput::getId);
+  }
+
+  /**
+   * Busca en el SGO la unidad de vinculación activa con el mismo id que el
+   * departamento.
+   *
+   * @param departamentoId id del departamento.
+   * @return la unidad de vinculación o vacío si no existe o no está activa.
+   */
+  private Optional<UnidadVinculacionOutput> findUnidadVinculacionActiva(String departamentoId) {
+    return sgiApiSgoService.findUnidadVinculacionById(departamentoId)
+        .filter(unidad -> Boolean.TRUE.equals(unidad.getActivo()));
+  }
+
+  /**
+   * Comprueba si la unidad de vinculación pertenece al tipo indicado, es decir,
+   * si el tipo es alguno de sus predecesores.
+   *
+   * @param unidad  unidad de vinculación.
+   * @param tipoRef referencia del tipo de unidad de vinculación.
+   * @return true si la unidad pertenece al tipo de unidad de vinculación.
+   */
+  private boolean isUnidadVinculacionOfTipo(UnidadVinculacionOutput unidad, String tipoRef) {
+    Set<String> visitedPredecesorIds = new HashSet<>();
+    String predecesorId = unidad.getPredecesorId();
+    while (predecesorId != null && visitedPredecesorIds.add(predecesorId)) {
+      if (predecesorId.equals(tipoRef)) {
+        return true;
+      }
+
+      predecesorId = sgiApiSgoService.findUnidadVinculacionById(predecesorId)
+          .map(UnidadVinculacionOutput::getPredecesorId)
+          .orElse(null);
+    }
+
+    return false;
   }
 
 }

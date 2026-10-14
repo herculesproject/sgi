@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { UnidadVinculacionSelected } from '../../../shared/select-unidad-vinculacion/unidad-vinculacion-tree.component';
+import { UnidadVinculacionSelected } from 'src/app/esb/sgo/shared/select-unidad-vinculacion/unidad-vinculacion-tree.component';
 import {
   ISolicitudProyectoUnidadVinculacionListado
 } from '../../solicitud-formulario/solicitud-proyecto-unidades-vinculacion/solicitud-proyecto-unidades-vinculacion.fragment';

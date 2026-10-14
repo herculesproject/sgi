@@ -16,6 +16,11 @@
       [title]="'eti.memoria' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.MEMORIAS)">
     </sgi-action-fragment-menu-item>
+    <sgi-action-fragment-menu-item *ngIf="actionService.showUnidadesVinculacion"
+      [route]="[PETICION_EVALUACION_ROUTE_NAMES.UNIDADES_VINCULACION]"
+      [title]="'eti.peticion-evaluacion-unidad-vinculacion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL"
+      [fragment]="actionService.getFragment(actionService.FRAGMENT.UNIDADES_VINCULACION)">
+    </sgi-action-fragment-menu-item>
   </ng-container>
   <ng-container footer>
     <sgi-action-footer [texto]="textoCrear" [actionService]="actionService">

@@ -10,13 +10,17 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ESTADO_MEMORIA, ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
+import { IPersona } from '@core/models/sgp/persona';
+import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { DialogService } from '@core/services/dialog.service';
+import { ConfigService as EtiConfigService } from '@core/services/eti/config.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
@@ -62,6 +66,18 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
   private limiteRegistrosExportacionExcel: string;
 
+  busquedaAvanzada = false;
+
+  get MSG_PARAMS(): typeof MSG_PARAMS {
+    return MSG_PARAMS;
+  }
+
+  get isUnidadesVinculacionEnabled(): boolean {
+    return this._isUnidadesVinculacionEnabled ?? false;
+  }
+  // tslint:disable-next-line: variable-name
+  private _isUnidadesVinculacionEnabled: boolean;
+
   get tipoColectivoSolicitante() {
     return TipoColectivo.SOLICITANTE_ETICA;
   }
@@ -79,6 +95,8 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     private readonly personaService: PersonaService,
     private matDialog: MatDialog,
     private readonly cnfService: ConfigService,
+    private readonly vinculacionService: VinculacionService,
+    private readonly etiConfigService: EtiConfigService
   ) {
     super(translate);
 
@@ -110,7 +128,14 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
       tipoEstadoMemoria: new FormControl(null, []),
       solicitante: new FormControl('', []),
       texto: new FormControl(null, []),
+      unidadVinculacion: new FormControl(null, [])
     });
+
+    this.suscripciones.push(
+      this.etiConfigService.isPeticionEvaluacionUnidadesVinculacionEnabled().subscribe(
+        (value) => this._isUnidadesVinculacionEnabled = value,
+        (error) => this.logger.error(error)
+      ));
 
     this.suscripciones.push(
       this.cnfService.getLimiteRegistrosExportacionExcel('eti-exp-max-num-registros-excel-memoria-listado').subscribe(value => {
@@ -147,34 +172,63 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   }
 
   /**
-   * Devuelve los datos rellenos de los responsabes de las memorias
+   * Devuelve las memorias con los datos de sus solicitantes y la vinculación de estos, de la que se obtiene el
+   * departamento. Se hace una única consulta de personas y una consulta de vinculación por solicitante distinto.
+   *
    * @param memorias el listado de memorias
-   * returns los responsables de memorias con todos sus datos
+   * @returns las memorias con los datos de sus solicitantes
    */
   private getDatosResponsablesMemorias(memorias: IMemoriaPeticionEvaluacion[]): Observable<IMemoriaPeticionEvaluacion[]> {
-    return forkJoin(memorias.map(memoria => this.loadDatosResponsable(memoria)));
+    if (!memorias?.length) {
+      return of([]);
+    }
+
+    const personaIds = [...new Set(memorias.map(memoria => memoria.solicitante?.id).filter(id => !!id))];
+    return this.personaService.findAllByIdIn(personaIds).pipe(
+      map(result => new Map<string, IPersona>(result.items.map(persona => [persona.id, persona]))),
+      catchError(error => {
+        this.logger.error(error);
+        return of(new Map<string, IPersona>());
+      }),
+      switchMap(personas => this.findVinculaciones(personaIds).pipe(
+        map(vinculaciones => {
+          memorias.forEach(memoria => {
+            memoria.solicitante = personas.get(memoria.solicitante?.id) ?? memoria.solicitante;
+            if (memoria.solicitante?.id) {
+              memoria.solicitante.vinculacion = vinculaciones[personaIds.indexOf(memoria.solicitante.id)];
+            }
+          });
+
+          return memorias;
+        })
+      ))
+    );
   }
 
   /**
-   * Devuelve los datos de persona de la memoria
-   * @param memoria la memoria
-   * returns la memoria con los datos del responsable
+   * Devuelve la vinculación de cada persona, en el mismo orden, haciendo una petición por persona. Si la vinculación
+   * de una persona no se puede recuperar se devuelve null en su posición.
+   *
+   * @param personaIds identificadores de las personas
+   * @returns las vinculaciones de las personas
    */
-  private loadDatosResponsable(memoria: IMemoriaPeticionEvaluacion): Observable<IMemoriaPeticionEvaluacion> {
-    return this.personaService.findById(memoria.solicitante.id).pipe(
-      map(persona => {
-        memoria.solicitante = persona;
-        return memoria;
-      }),
+  private findVinculaciones(personaIds: string[]): Observable<IVinculacion[]> {
+    if (!personaIds.length) {
+      return of([]);
+    }
+
+    return forkJoin(personaIds.map(personaId => this.vinculacionService.findByPersonaId(personaId).pipe(
       catchError(error => {
         this.logger.error(error);
-        return of(memoria);
+        return of(null as IVinculacion);
       })
-    )
+    )));
   }
 
   protected initColumns(): void {
-    this.displayedColumns = ['nombre', 'numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
+    this.displayedColumns = [
+      'nombre', 'departamento', 'numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'
+    ];
   }
 
   protected createFilter(): SgiRestFilter {
@@ -184,7 +238,15 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
       .and('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.numReferencia.value)
       .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
       .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id)
-      .and('textoContenidoRespuestaFormulario', SgiRestFilterOperator.LIKE_ICASE, this.formGroup.controls.texto.value);
+      .and('textoContenidoRespuestaFormulario', SgiRestFilterOperator.LIKE_ICASE, this.formGroup.controls.texto.value)
+      .and('unidadesVinculacion.unidadVinculacionRef', SgiRestFilterOperator.EQUALS, controls.unidadVinculacion.value?.id);
+  }
+
+  /**
+   * Mostrar busqueda avanzada
+   */
+  toggleBusquedaAvanzada(): void {
+    this.busquedaAvanzada = !this.busquedaAvanzada;
   }
 
   protected loadTable(reset?: boolean): void {
@@ -245,6 +307,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     const data: IMemoriaListadoModalData = {
       findOptions: this.findOptions,
       isInvestigador: false,
+      isUnidadesVinculacionEnabled: this.isUnidadesVinculacionEnabled,
       totalRegistrosExportacionExcel: this.totalElementos,
       limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
     };

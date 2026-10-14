@@ -9,9 +9,9 @@ import TestUtils from '@core/utils/test-utils';
 import { SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-
 import { SharedModule } from '@shared/shared.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { CspSharedModule } from '../../shared/csp-shared.module';
 import { ProyectoListadoComponent } from './proyecto-listado.component';
 
@@ -36,7 +36,8 @@ describe('ProyectoListadoComponent', () => {
         ReactiveFormsModule,
         LoggerTestingModule,
         SharedModule,
-        CspSharedModule
+        CspSharedModule,
+        SgoSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

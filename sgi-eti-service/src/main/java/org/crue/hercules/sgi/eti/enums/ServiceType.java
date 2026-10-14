@@ -10,6 +10,7 @@ public enum ServiceType {
   ETI,
   REP,
   SGDOC,
+  SGO,
   SGP,
   TP
 }

@@ -11,6 +11,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../../shared/csp-shared.module';
 import { SolicitudActionService } from '../solicitud.action.service';
@@ -38,6 +39,7 @@ describe('SolicitudListadoComponent', () => {
         ReactiveFormsModule,
         SharedModule,
         CspSharedModule,
+        SgoSharedModule,
         SgpSharedModule
       ],
       providers: [

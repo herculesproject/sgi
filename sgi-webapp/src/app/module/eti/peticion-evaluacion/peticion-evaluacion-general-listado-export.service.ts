@@ -4,20 +4,23 @@ import { TIPO_ACTIVIDAD_MAP } from '@core/models/eti/tipo-actividad';
 import { TIPO_INVESTIGACION_TUTELADA_MAP } from '@core/models/eti/tipo-investigacion-tutelada';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { IPersona } from '@core/models/sgp/persona';
+import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { IPeticionEvaluacionReportData, IPeticionEvaluacionReportOptions } from './peticion-evaluacion-listado-export.service';
 
 const SOLICITANTE_NOMBRE_KEY = marker('eti.peticion-evaluacion.report.solicitante.nombre');
 const SOLICITANTE_APELLIDOS_KEY = marker('eti.peticion-evaluacion.report.solicitante.apellidos');
+const SOLICITANTE_DEPARTAMENTO_KEY = marker('eti.peticion-evaluacion.report.solicitante.departamento');
 const CODIGO_KEY = marker('eti.peticion-evaluacion.report.codigo');
 const CODIGO_SOLICITUD_CONVOCATORIA_KEY = marker('eti.peticion-evaluacion.report.codigo-solicitud-convocatoria');
 const TITULO_PROYECTO_KEY = marker('eti.peticion-evaluacion.proyecto-titulo');
@@ -32,14 +35,21 @@ const FECHA_FIN_KEY = marker('eti.peticion-evaluacion.fecha-fin');
 export class PeticionEvaluacionGeneralListadoExportService extends
   AbstractTableExportFillService<IPeticionEvaluacionReportData, IPeticionEvaluacionReportOptions> {
 
+  private readonly vinculacionesCache = new Map<string, Observable<IVinculacion>>();
+
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
     private readonly solicitudService: SolicitudService,
     private readonly personaService: PersonaService,
-    private readonly languageService: LanguageService
+    private readonly languageService: LanguageService,
+    private readonly vinculacionService: VinculacionService
   ) {
     super(translate);
+  }
+
+  public clearCache(): void {
+    this.vinculacionesCache.clear();
   }
 
   public getData(peticionEvaluacionData: IPeticionEvaluacionReportData): Observable<IPeticionEvaluacionReportData> {
@@ -70,8 +80,44 @@ export class PeticionEvaluacionGeneralListadoExportService extends
             return of(err);
           })
         );
+      }),
+      switchMap((data: IPeticionEvaluacionReportData) => this.getVinculacionSolicitanteData(data))
+    );
+  }
+
+  private getVinculacionSolicitanteData(data: IPeticionEvaluacionReportData): Observable<IPeticionEvaluacionReportData> {
+    if (!data.solicitante?.id) {
+      return of(data);
+    }
+    return this.findVinculacion(data.solicitante.id).pipe(
+      map((vinculacion: IVinculacion) => {
+        data.solicitante.vinculacion = vinculacion;
+        return data;
       })
     );
+  }
+
+  /**
+   * Devuelve la vinculación de la persona, reutilizando la petición si ya se ha hecho para la misma persona durante la
+   * exportación en curso. Si la vinculación no se puede recuperar se devuelve null.
+   *
+   * @param personaId identificador de la persona
+   * @returns vinculación de la persona o null
+   */
+  private findVinculacion(personaId: string): Observable<IVinculacion> {
+    let vinculacion$ = this.vinculacionesCache.get(personaId);
+    if (!vinculacion$) {
+      vinculacion$ = this.vinculacionService.findByPersonaId(personaId).pipe(
+        catchError(err => {
+          this.logger.error(err);
+          return of(null as IVinculacion);
+        }),
+        shareReplay(1)
+      );
+      this.vinculacionesCache.set(personaId, vinculacion$);
+    }
+
+    return vinculacion$;
   }
 
   public fillColumns(
@@ -79,9 +125,7 @@ export class PeticionEvaluacionGeneralListadoExportService extends
     reportConfig: IReportConfig<IPeticionEvaluacionReportOptions>
   ): ISgiColumnReport[] {
 
-    const columns: ISgiColumnReport[] = [];
-
-    return [
+    const columns: ISgiColumnReport[] = [
       {
         title: this.translate.instant(SOLICITANTE_NOMBRE_KEY),
         name: 'solicitanteNombre',
@@ -90,6 +134,10 @@ export class PeticionEvaluacionGeneralListadoExportService extends
         title: this.translate.instant(SOLICITANTE_APELLIDOS_KEY),
         name: 'solicitanteApellidos',
         type: ColumnType.STRING,
+      }, {
+        title: this.translate.instant(SOLICITANTE_DEPARTAMENTO_KEY),
+        name: 'solicitanteDepartamento',
+        type: ColumnType.STRING
       }, {
         title: this.translate.instant(CODIGO_KEY),
         name: 'codigo',
@@ -128,25 +176,35 @@ export class PeticionEvaluacionGeneralListadoExportService extends
         type: ColumnType.DATE
       }
     ] as ISgiColumnReport[];
+
+    return columns;
   }
 
-  public fillRows(peticiones: IPeticionEvaluacionReportData[],
-    index: number, reportConfig: IReportConfig<IPeticionEvaluacionReportOptions>): any[] {
+  public fillRows(
+    peticiones: IPeticionEvaluacionReportData[],
+    index: number,
+    reportConfig: IReportConfig<IPeticionEvaluacionReportOptions>
+  ): any[] {
 
     const peticionData = peticiones[index];
 
-    return [
+    const elementsRow: any[] = [
       peticionData.solicitante?.nombre ?? '',
       peticionData.solicitante?.apellidos ?? '',
+      peticionData.solicitante?.vinculacion?.departamento?.nombre ?? '',
       peticionData.codigo ?? '',
       peticionData.codigoSolicitudConvocatoria ?? '',
       this.languageService.getFieldValue(peticionData.titulo) ?? '',
       peticionData.tipoActividad?.id ? this.translate.instant(TIPO_ACTIVIDAD_MAP.get(peticionData.tipoActividad?.id)) : '',
-      peticionData.tipoInvestigacionTutelada?.id ? this.translate.instant(TIPO_INVESTIGACION_TUTELADA_MAP.get(peticionData.tipoInvestigacionTutelada?.id)) : '',
+      peticionData.tipoInvestigacionTutelada?.id
+        ? this.translate.instant(TIPO_INVESTIGACION_TUTELADA_MAP.get(peticionData.tipoInvestigacionTutelada?.id))
+        : '',
       this.languageService.getFieldValue(peticionData.fuenteFinanciacion) ?? '',
       peticionData.importeFinanciacion ?? '',
       LuxonUtils.toBackend(peticionData.fechaInicio) ?? '',
       LuxonUtils.toBackend(peticionData.fechaFin) ?? ''
     ];
+
+    return elementsRow;
   }
 }

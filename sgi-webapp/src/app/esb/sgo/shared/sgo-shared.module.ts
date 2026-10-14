@@ -10,14 +10,20 @@ import { ClasificacionModalComponent } from './clasificacion-modal/clasificacion
 import { SelectComunidadAutonomaComponent } from './select-comunidad-autonoma/select-comunidad-autonoma.component';
 import { SelectPaisComponent } from './select-pais/select-pais.component';
 import { SelecProvinciaComponent } from './select-provincia/select-provincia.component';
+import { SearchUnidadVinculacionModalComponent } from './select-unidad-vinculacion/dialog/search-unidad-vinculacion.component';
+import { SelectUnidadVinculacionComponent } from './select-unidad-vinculacion/select-unidad-vinculacion.component';
+import { UnidadVinculacionTreeComponent } from './select-unidad-vinculacion/unidad-vinculacion-tree.component';
 
 @NgModule({
   declarations: [
     AreaConocimientoModalComponent,
     ClasificacionModalComponent,
-    SelectComunidadAutonomaComponent,
+    SearchUnidadVinculacionModalComponent,
     SelecProvinciaComponent,
-    SelectPaisComponent
+    SelectComunidadAutonomaComponent,
+    SelectPaisComponent,
+    SelectUnidadVinculacionComponent,
+    UnidadVinculacionTreeComponent
   ],
   imports: [
     SharedModule,
@@ -31,9 +37,11 @@ import { SelecProvinciaComponent } from './select-provincia/select-provincia.com
   exports: [
     AreaConocimientoModalComponent,
     ClasificacionModalComponent,
-    SelectComunidadAutonomaComponent,
     SelecProvinciaComponent,
-    SelectPaisComponent
+    SelectComunidadAutonomaComponent,
+    SelectPaisComponent,
+    SelectUnidadVinculacionComponent,
+    UnidadVinculacionTreeComponent
   ]
 })
 export class SgoSharedModule { }

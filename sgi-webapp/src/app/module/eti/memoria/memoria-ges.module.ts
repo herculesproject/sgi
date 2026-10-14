@@ -6,6 +6,7 @@ import { SgiAuthModule } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { SharedFormlyFormsModule } from 'src/app/esb/shared/formly-forms/shared-formly-forms.module';
 import { EtiSharedModule } from '../shared/eti-shared.module';
@@ -15,6 +16,7 @@ import { MemoriaGeneralListadoExportService } from './memoria-general-listado-ex
 import { MemoriaListadoExportService } from './memoria-listado-export.service';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaRoutingGesModule } from './memoria-routing-ges.module';
+import { MemoriaUnidadVinculacionListadoExportService } from './memoria-unidad-vinculacion-listado-export.service';
 import { MemoriaResolver } from './memoria.resolver';
 import { IndicarSubsanacionModalComponent } from './modals/indicar-subsanacion-modal/indicar-subsanacion-modal.component';
 import { MemoriaListadoExportModalComponent } from './modals/memoria-listado-export-modal/memoria-listado-export-modal.component';
@@ -37,14 +39,16 @@ import { MemoriaListadoExportModalComponent } from './modals/memoria-listado-exp
     FormlyFormsModule,
     SharedFormlyFormsModule,
     EtiSharedModule,
+    SgoSharedModule,
     SgpSharedModule
   ],
   providers: [
-    MemoriaResolver,
     MemoriaCrearGuard,
-    MemoriaListadoExportService,
+    MemoriaEvaluacionesListadoExportService,
     MemoriaGeneralListadoExportService,
-    MemoriaEvaluacionesListadoExportService
+    MemoriaListadoExportService,
+    MemoriaResolver,
+    MemoriaUnidadVinculacionListadoExportService
   ],
   exports: [
     IndicarSubsanacionModalComponent

@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.model;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -18,6 +19,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -31,6 +33,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * PeticionEvaluacion
@@ -118,7 +121,7 @@ public class PeticionEvaluacion extends BaseEntity {
   @Column(name = "existe_financiacion", nullable = false)
   private Boolean existeFinanciacion;
 
-   /** Fuente financiacion */
+  /** Fuente financiacion */
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "peticion_evaluacion_fuente_financiacion", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
   @Valid
@@ -192,10 +195,22 @@ public class PeticionEvaluacion extends BaseEntity {
   private Boolean activo;
 
   // Relations mapping, only for JPA metamodel generation
+  /** Checklist (solo para JPA metamodel) */
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "checklistId", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PETICIONEVALUACION_CHECKLIST"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @SuppressWarnings("java:S1170")
   private final Checklist checklist = null;
+
+  /** Unidades de vinculación (solo para JPA metamodel) */
+  @OneToMany(mappedBy = "peticionEvaluacion")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @SuppressWarnings("java:S1170")
+  private final List<PeticionEvaluacionUnidadVinculacion> unidadesVinculacion = null;
 }

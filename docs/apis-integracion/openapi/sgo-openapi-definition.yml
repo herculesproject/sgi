@@ -1492,12 +1492,14 @@ paths:
 
         ### Módulos del SGI donde se utiliza
         - CSP: **Grupos investigación ➜ Unidades de vinculación**, **Proyecto ➜ Unidades de vinculación**, **Solicitud ➜ Datos proyecto ➜ Unidades de vinculación**
+        - ETI: **Solicitud evaluación proyecto ➜ Unidades de vinculación**, buscadores de **Solicitudes de evaluación** y **Memorias**, y creación de solicitudes de evaluación (inicialización de la unidad de vinculación con el departamento del solicitante).
 
         ### Consideraciones para la implementación
-        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP.
+        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP o en el módulo ETI.
         - Si no se especifica ordenación, los resultados se devuelven **ordenados alfabéticamente por nombre en orden ascendente**.
         - Si no se envían parámetros de paginación, el servicio devolverá **todas las unidades de vinculación ordenadas alfabéticamente por nombre**.
         - Este servicio permite construir estructuras jerárquicas mediante el campo `predecesorId`.
+        - Si en ETI se activa la inicialización de la unidad de vinculación con el departamento del solicitante, se busca por `id` la unidad con el identificador del departamento de la persona (`/vinculaciones/persona/{id}` del SGP) y se comprueba que esté activa y que la unidad configurada como tipo "Departamento" sea uno de sus predecesores (si no es su predecesor directo, se consultan por `id` los predecesores sucesivos). Para que funcione, el identificador de la unidad de vinculación de cada departamento debe coincidir con el identificador del departamento en el SGP. Si la unidad encontrada no pertenece al tipo configurado, no se asigna ninguna.
       operationId: findAllUnidadesVinculacion
       security:
         - bearerAuth: []
@@ -1592,7 +1594,7 @@ paths:
         Devuelve la unidad de vinculación correspondiente al `id`.
 
         ### Consideraciones para la implementación
-        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP.
+        - Su implementación es **opcional**, sólo es necesaria si se habilita la gestión de unidades de vinculación en el módulo CSP o en el módulo ETI.
       operationId: findUnidadVinculacionById
       security:
         - bearerAuth: []

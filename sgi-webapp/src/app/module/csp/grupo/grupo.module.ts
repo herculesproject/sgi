@@ -9,6 +9,7 @@ import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { SharedModule } from '@shared/shared.module';
 import { SgeSharedModule } from 'src/app/esb/sge/shared/sge-shared.module';
 import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../shared/csp-shared.module';
 import { GrupoCrearComponent } from './grupo-crear/grupo-crear.component';
@@ -86,6 +87,7 @@ import { GrupoUnidadVinculacionModalComponent } from './modals/grupo-unidad-vinc
     SgempSharedModule,
     SgeSharedModule,
     SgiAuthModule,
+    SgoSharedModule,
     SgpSharedModule,
     SharedModule,
     TranslateModule

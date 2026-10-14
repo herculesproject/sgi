@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -18,7 +18,9 @@ import { PeticionEvaluacionEquipoInvestigadorListadoExportService } from '../../
 import { PeticionEvaluacionGeneralListadoExportService } from '../../peticion-evaluacion-general-listado-export.service';
 import { PeticionEvaluacionListadoExportService } from '../../peticion-evaluacion-listado-export.service';
 import { PeticionEvaluacionMemoriasListadoExportService } from '../../peticion-evaluacion-memorias-listado-export.service';
+import { PeticionEvaluacionUnidadVinculacionListadoExportService } from '../../peticion-evaluacion-unidad-vinculacion-listado-export.service';
 import { PeticionEvaluacionListadoExportModalComponent } from './peticion-evaluacion-listado-export-modal.component';
+
 describe('PeticionEvaluacionListadoExportModalComponent', () => {
   let component: PeticionEvaluacionListadoExportModalComponent;
   let fixture: ComponentFixture<PeticionEvaluacionListadoExportModalComponent>;
@@ -50,6 +52,7 @@ describe('PeticionEvaluacionListadoExportModalComponent', () => {
         PeticionEvaluacionEquipoInvestigadorListadoExportService,
         PeticionEvaluacionAsignacionTareasListadoExportService,
         PeticionEvaluacionMemoriasListadoExportService,
+        PeticionEvaluacionUnidadVinculacionListadoExportService,
         LuxonDatePipe
       ]
     }).compileComponents();
