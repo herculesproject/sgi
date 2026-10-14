@@ -2014,6 +2014,14 @@
         "attributes": {}
       },
       {
+        "id": "7a983bf6-3fb3-4563-b49b-050ed0190e69",
+        "name": "ETI-PEV-E",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "sgi",
+        "attributes": {}
+      },
+      {
         "id": "72c2e0e2-447b-4546-9c8a-a3ee27a53304",
         "name": "CSP-THITO-R",
         "composite": false,
@@ -3766,6 +3774,7 @@
         "ETI-MEM-CEST",
         "ETI-MEM-EDOC",
         "ETI-MEM-V",
+        "ETI-PEV-E",
         "ETI-PEV-V",
         "ETI-CNF-E"
       ],
@@ -4122,6 +4131,7 @@
         "ETI-MEM-CEST",
         "ETI-MEM-EDOC",
         "ETI-MEM-V",
+        "ETI-PEV-E",
         "ETI-PEV-V"
       ],
       "clientRoles": {},
@@ -6657,6 +6667,7 @@
         "offline_access",
         "sgi-rep",
         "sgi-sgp",
+        "sgi-sgo",
         "microprofile-jwt"
       ]
     },

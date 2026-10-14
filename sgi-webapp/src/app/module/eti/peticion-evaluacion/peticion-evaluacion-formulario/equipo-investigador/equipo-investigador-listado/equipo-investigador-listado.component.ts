@@ -55,6 +55,14 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
   msgParamEntity = {};
   textoDelete: string;
 
+  get isModuleETI(): boolean {
+    return !this.actionService.isModuleInv;
+  }
+
+  get readonly(): boolean {
+    return this.actionService.readonly;
+  }
+
   constructor(
     protected matDialog: MatDialog,
     protected readonly dialogService: DialogService,
@@ -68,7 +76,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
     super(actionService.FRAGMENT.EQUIPO_INVESTIGADOR, actionService, translate);
     this.listadoFragment = this.fragment as EquipoInvestigadorListadoFragment;
 
-    this.displayedColumns = ['persona', 'nombreCompleto', 'vinculacion', 'nivelAcademico', 'acciones'];
+    this.displayedColumns = ['persona', 'nombreCompleto', 'vinculacion', 'departamento', 'nivelAcademico', 'acciones'];
   }
 
   ngOnInit(): void {
@@ -89,6 +97,8 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
           case 'nombreCompleto':
             return wrapper.value?.persona?.nombre
               + ' ' + wrapper.value?.persona?.apellidos;
+          case 'departamento':
+            return wrapper.value?.persona?.vinculacion?.departamento?.nombre;
           default:
             return wrapper.value[property];
         }

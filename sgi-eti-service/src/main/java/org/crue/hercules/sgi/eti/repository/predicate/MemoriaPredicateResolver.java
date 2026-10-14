@@ -14,6 +14,8 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionUnidadVinculacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionUnidadVinculacion_;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Respuesta_;
 import org.crue.hercules.sgi.eti.util.PredicateResolverUtil;
@@ -27,7 +29,11 @@ public class MemoriaPredicateResolver implements SgiRSQLPredicateResolver<Memori
 
   private enum Property {
     /* Contenido del texto de respuesta del formulario de memoria */
-    TEXTO_CONTENIDO_RESPUESTA_FORMULARIO("textoContenidoRespuestaFormulario");
+    TEXTO_CONTENIDO_RESPUESTA_FORMULARIO("textoContenidoRespuestaFormulario"),
+    /*
+     * Referencia de una de las unidades de vinculación de la petición de la memoria
+     */
+    UNIDAD_VINCULACION_REF("unidadesVinculacion.unidadVinculacionRef");
 
     private String code;
 
@@ -55,10 +61,7 @@ public class MemoriaPredicateResolver implements SgiRSQLPredicateResolver<Memori
     CriteriaQuery<MemoriaPeticionEvaluacion> cq = cb.createQuery(MemoriaPeticionEvaluacion.class);
     String texto = node.getArguments().get(0);
 
-    Predicate predicateTextoFormulario = cb.in(root.get(Memoria_.id))
-        .value(getIdsMemoriaRespuesta(cb, cq, texto));
-
-    return predicateTextoFormulario;
+    return cb.in(root.get(Memoria_.id)).value(getIdsMemoriaRespuesta(cb, cq, texto));
   }
 
   private Subquery<Long> getIdsMemoriaRespuesta(CriteriaBuilder cb,
@@ -85,6 +88,21 @@ public class MemoriaPredicateResolver implements SgiRSQLPredicateResolver<Memori
     return queryGetIdMemoria;
   }
 
+  private Predicate buildByUnidadVinculacionRef(ComparisonNode node, Root<Memoria> root, CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+    String unidadVinculacionRef = node.getArguments().get(0);
+
+    Subquery<Long> subquery = query.subquery(Long.class);
+    Root<PeticionEvaluacionUnidadVinculacion> rootSubquery = subquery.from(PeticionEvaluacionUnidadVinculacion.class);
+    subquery.select(rootSubquery.get(PeticionEvaluacionUnidadVinculacion_.peticionEvaluacionId))
+        .where(cb.equal(rootSubquery.get(PeticionEvaluacionUnidadVinculacion_.unidadVinculacionRef),
+            unidadVinculacionRef));
+
+    return root.get(Memoria_.peticionEvaluacionId).in(subquery);
+  }
+
   @Override
   public boolean isManaged(ComparisonNode node) {
     Property property = Property.fromCode(node.getSelector());
@@ -103,6 +121,8 @@ public class MemoriaPredicateResolver implements SgiRSQLPredicateResolver<Memori
     switch (property) {
       case TEXTO_CONTENIDO_RESPUESTA_FORMULARIO:
         return buildByTextoRespuesta(node, root, criteriaBuilder);
+      case UNIDAD_VINCULACION_REF:
+        return buildByUnidadVinculacionRef(node, root, query, criteriaBuilder);
       default:
         return null;
     }

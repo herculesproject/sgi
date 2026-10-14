@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.converter.PeticionEvaluacionUnidadVinculacionConverter;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
@@ -32,6 +33,7 @@ import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
+import org.crue.hercules.sgi.eti.service.PeticionEvaluacionUnidadVinculacionService;
 import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -60,7 +62,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * PeticionEvaluacionControllerTest
  */
 @WebMvcTest(PeticionEvaluacionController.class)
-public class PeticionEvaluacionControllerTest extends BaseControllerTest {
+class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @MockBean
   private PeticionEvaluacionService peticionEvaluacionService;
@@ -74,6 +76,12 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @MockBean
   private TareaService tareaService;
 
+  @MockBean
+  private PeticionEvaluacionUnidadVinculacionService peticionEvaluacionUnidadVinculacionService;
+
+  @MockBean
+  private PeticionEvaluacionUnidadVinculacionConverter peticionEvaluacionUnidadVinculacionConverter;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
   private static final String MEMORIAS_CONTROLLER_BASE_PATH = "/memorias";
@@ -81,7 +89,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER", "ETI-PEV-V" })
-  public void getPeticionEvaluacion_WithId_ReturnsPeticionEvaluagetPeticionEvaluacion_NotFound_Returns404cion()
+  void getPeticionEvaluacion_WithId_ReturnsPeticionEvaluagetPeticionEvaluacion_NotFound_Returns404cion()
       throws Exception {
     BDDMockito.given(peticionEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1")));
@@ -96,7 +104,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-INV-VR", "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void getPeticionEvaluacion_NotFound_Returns404() throws Exception {
+  void getPeticionEvaluacion_NotFound_Returns404() throws Exception {
     BDDMockito.given(peticionEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
           throw new PeticionEvaluacionNotFoundException(invocation.getArgument(0));
@@ -109,7 +117,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-MOD-C" })
-  public void newPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
+  void newPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
     // given: Un peticionEvaluacion nuevo
     String nuevoPeticionEvaluacionJson = "{\"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}], \"activo\": \"true\"}";
 
@@ -132,7 +140,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-MOD-C" })
-  public void newPeticionEvaluacion_Error_Returns400() throws Exception {
+  void newPeticionEvaluacion_Error_Returns400() throws Exception {
     // given: Un peticionEvaluacion nuevo que produce un error al crearse
     String nuevoPeticionEvaluacionJson = "{\"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}], \"activo\": \"true\"}";
 
@@ -152,7 +160,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER", "ETI-PEV-MOD-C" })
-  public void replacePeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
+  void replacePeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
     // given: Un peticionEvaluacion a modificar
     String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]}";
 
@@ -174,7 +182,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER", "ETI-PEV-MOD-C" })
-  public void replacePeticionEvaluacion_NotFound() throws Exception {
+  void replacePeticionEvaluacion_NotFound() throws Exception {
     // given: Un peticionEvaluacion a modificar
     String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}], \"activo\": \"true\"}";
 
@@ -192,7 +200,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-BR" })
-  public void removePeticionEvaluacion_ReturnsOk() throws Exception {
+  void removePeticionEvaluacion_ReturnsOk() throws Exception {
     BDDMockito.given(peticionEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
 
@@ -204,7 +212,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAll_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
+  void findAll_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacionWithIsEliminable> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -229,7 +237,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAll_ReturnsNoContent() throws Exception {
+  void findAll_ReturnsNoContent() throws Exception {
     // given: PeticionEvaluacion empty
     List<PeticionEvaluacionWithIsEliminable> peticionEvaluaciones = new ArrayList<>();
 
@@ -246,7 +254,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAll_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
+  void findAll_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -266,8 +274,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
             List<PeticionEvaluacion> content = peticionEvaluaciones.subList(fromIndex, toIndex);
-            Page<PeticionEvaluacion> page = new PageImpl<>(content, pageable, peticionEvaluaciones.size());
-            return page;
+            return new PageImpl<>(content, pageable, peticionEvaluaciones.size());
           }
         });
 
@@ -302,7 +309,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
+  void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion and a search query
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -325,8 +332,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                 content.add(peticionEvaluacion);
               }
             }
-            Page<PeticionEvaluacion> page = new PageImpl<>(content);
-            return page;
+            return new PageImpl<>(content);
           }
         });
 
@@ -343,7 +349,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-INV-ER", "ETI-PEV-INV-VR", "ETI-PEV-INV-C",
       "ETI-PEV-INV-ER" })
-  public void findEquipoInvestigador_ReturnsEquipoTrabajoSubList() throws Exception {
+  void findEquipoInvestigador_ReturnsEquipoTrabajoSubList() throws Exception {
     // given: 10 EquipoTrabajos por PeticionEvaluacion
     List<EquipoTrabajoWithIsEliminable> equipoTrabajos = new ArrayList<>();
     for (int i = 1, j = 1; i <= 10; i++, j++) {
@@ -373,7 +379,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     // containing peticionEvaluacion.titulo='PeticionEvaluacion006' to
     // 'PeticionEvaluacion010'
-    for (int i = 0, j = 1; i < 10 & j <= 10; i++, j++) {
+    for (int i = 0, j = 1; i < 10 && j <= 10; i++, j++) {
       EquipoTrabajo equipoTrabajo = actual.get(i);
       Assertions.assertThat(equipoTrabajo.getPeticionEvaluacionId())
           .isEqualTo(j);
@@ -383,7 +389,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-INV-ER", "ETI-PEV-INV-VR", "ETI-PEV-INV-C",
       "ETI-PEV-INV-ER" })
-  public void findEquipoInvestigador_ReturnsNoContent() throws Exception {
+  void findEquipoInvestigador_ReturnsNoContent() throws Exception {
     // given: EquipoTrabajos empty
     List<EquipoTrabajoWithIsEliminable> equipoTrabajos = new ArrayList<>();
 
@@ -399,7 +405,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void findTareas_ReturnsTareaSubList() throws Exception {
+  void findTareas_ReturnsTareaSubList() throws Exception {
     // given: One hundred tareas
     List<TareaWithIsEliminable> tareas = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
@@ -433,7 +439,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void findTareas_ReturnsNoContent() throws Exception {
+  void findTareas_ReturnsNoContent() throws Exception {
     // given: Tareas empty
     List<TareaWithIsEliminable> tareas = new ArrayList<>();
 
@@ -449,7 +455,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void findMemorias_NotFound_Returns404() throws Exception {
+  void findMemorias_NotFound_Returns404() throws Exception {
 
     BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -464,7 +470,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void findMemorias_listMemoriaPeticionEvaluacion_ReturnsOk() throws Exception {
+  void findMemorias_listMemoriaPeticionEvaluacion_ReturnsOk() throws Exception {
 
     List<MemoriaPeticionEvaluacion> listMemoriaPeticionEvaluacion = new ArrayList<MemoriaPeticionEvaluacion>();
 
@@ -483,7 +489,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void findMemorias_listMemoriaPeticionEvaluacion_ReturnsNoContent() throws Exception {
+  void findMemorias_listMemoriaPeticionEvaluacion_ReturnsNoContent() throws Exception {
 
     List<MemoriaPeticionEvaluacion> listMemoriaPeticionEvaluacion = new ArrayList<MemoriaPeticionEvaluacion>();
 
@@ -499,7 +505,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void newTarea_ReturnsTarea() throws Exception {
+  void newTarea_ReturnsTarea() throws Exception {
     // given: Una tarea nueva
     String nuevaTareaJson = "{\"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": [{\"lang\": \"es\", \"value\": \"Formacion1\"}], \"formacionEspecifica\": {\"id\": 300}, \"organismo\": [{\"lang\": \"es\", \"value\": \"Organismo1\"}], \"anio\": 2020}";
 
@@ -525,7 +531,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void newTarea_EquipoTrabajoIsNull_ReturnsNotFound() throws Exception {
+  void newTarea_EquipoTrabajoIsNull_ReturnsNotFound() throws Exception {
     // given: Una tarea con equipoTrabajo null
     String nuevaTareaJson = "{\"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": [{\"lang\": \"es\", \"value\": \"Formacion1\"}], \"formacionEspecifica\": {\"id\": 300}, \"organismo\": [{\"lang\": \"es\", \"value\": \"Organismo1\"}], \"anio\": 2020}";
 
@@ -548,7 +554,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
-  public void newTarea_Error_Returns400() throws Exception {
+  void newTarea_Error_Returns400() throws Exception {
     // given: Una tarea nueva que produce un error al crearse
     String nuevaTareaJson = "{\"id\": 1, \"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": [{\"lang\": \"es\", \"value\": \"Formacion1\"}], \"formacionEspecifica\": {\"id\": 300}, \"organismo\": [{\"lang\": \"es\", \"value\": \"Organismo1\"}], \"anio\": 2020}";
 
@@ -572,7 +578,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-INV-VR", "ETI-PEV-INV-C", "ETI-PEV-INV-ER",
       "ETI-PEV-MOD-C" })
-  public void newEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
+  void newEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
     // given: Un equipo de trabajo nuevo
     String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacionId\": 1}";
 
@@ -600,7 +606,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-INV-VR", "ETI-PEV-INV-C", "ETI-PEV-INV-ER",
       "ETI-PEV-MOD-C" })
-  public void newEquipoTrabajo_PeticionEvaluacionIsNull_ReturnsNotFound() throws Exception {
+  void newEquipoTrabajo_PeticionEvaluacionIsNull_ReturnsNotFound() throws Exception {
     // given: Un equipo de trabajo nuevo con peticionEvaluacion null
     String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacionId\": 1}";
 
@@ -621,7 +627,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-INV-VR", "ETI-PEV-INV-C", "ETI-PEV-INV-ER",
       "ETI-PEV-MOD-C" })
-  public void newEquipoTrabajo_Error_Returns400() throws Exception {
+  void newEquipoTrabajo_Error_Returns400() throws Exception {
     // given: Un equipo de trabajo nuevo que produce un error al crearse
     String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]}, \"activo\": \"true\"}}";
 
@@ -643,7 +649,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER" })
-  public void removeTarea_ReturnsOk() throws Exception {
+  void removeTarea_ReturnsOk() throws Exception {
 
     long idPeticionEvaluacion = 1L;
     long idEquipoTrabajo = 1L;
@@ -664,7 +670,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER" })
-  public void removeTarea_TareaIsNull_ReturnsNotFound() throws Exception {
+  void removeTarea_TareaIsNull_ReturnsNotFound() throws Exception {
     // given: Una tarea que es null
     long idPeticionEvaluacion = 1L;
     long idEquipoTrabajo = 1L;
@@ -686,7 +692,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER" })
-  public void removeEquipoTrabajo_ReturnsOk() throws Exception {
+  void removeEquipoTrabajo_ReturnsOk() throws Exception {
+    // given: Un equipo de trabajo de la petición de evaluación
     long idPeticionEvaluacion = 1L;
     long idEquipoTrabajo = 111L;
 
@@ -696,15 +703,19 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     BDDMockito.doNothing().when(tareaService).deleteByEquipoTrabajo(idEquipoTrabajo);
     BDDMockito.doNothing().when(equipoTrabajoService).delete(idEquipoTrabajo);
 
+    // when: Borramos el equipo de trabajo
     mockMvc.perform(MockMvcRequestBuilders
         .delete(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}",
             idPeticionEvaluacion, idEquipoTrabajo)
-        .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON));
+        .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        // then: Devuelve 200
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER" })
-  public void removeEquipoTrabajo_EquipoTrabajoIsNull_ReturnsNotFound() throws Exception {
+  void removeEquipoTrabajo_EquipoTrabajoIsNull_ReturnsNotFound() throws Exception {
     // given: Un equipo de trabajo que es null
     long idPeticionEvaluacion = 1L;
     long idEquipoTrabajo = 111L;
@@ -727,7 +738,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAllPeticionEvaluacionMemoria_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
+  void findAllPeticionEvaluacionMemoria_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacionWithIsEliminable> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -752,7 +763,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAllPeticionEvaluacionMemoria_ReturnsNoContent() throws Exception {
+  void findAllPeticionEvaluacionMemoria_ReturnsNoContent() throws Exception {
     List<PeticionEvaluacionWithIsEliminable> peticionEvaluaciones = new ArrayList<>();
 
     BDDMockito
@@ -768,7 +779,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAllByPersonaRef_ReturnOk() throws Exception {
+  void findAllByPersonaRef_ReturnOk() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -787,8 +798,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
             List<PeticionEvaluacion> content = peticionEvaluaciones.subList(fromIndex, toIndex);
-            Page<PeticionEvaluacion> page = new PageImpl<>(content, pageable, peticionEvaluaciones.size());
-            return page;
+            return new PageImpl<>(content, pageable, peticionEvaluaciones.size());
           }
         });
 
@@ -823,7 +833,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAllByPersonaRef_ReturnsNoContent() throws Exception {
+  void findAllByPersonaRef_ReturnsNoContent() throws Exception {
     // given: Peticion de evaluacion empty
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
 
@@ -840,7 +850,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAllPeticionEvaluacionMemoria_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
+  void findAllPeticionEvaluacionMemoria_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -860,8 +870,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
             List<PeticionEvaluacion> content = peticionEvaluaciones.subList(fromIndex, toIndex);
-            Page<PeticionEvaluacion> page = new PageImpl<>(content, pageable, peticionEvaluaciones.size());
-            return page;
+            return new PageImpl<>(content, pageable, peticionEvaluaciones.size());
           }
         });
 
@@ -896,7 +905,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-VR", "ETI-PEV-V" })
-  public void findAllPeticionEvaluacionMemoria_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList()
+  void findAllPeticionEvaluacionMemoria_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList()
       throws Exception {
     // given: One hundred PeticionEvaluacion and a search query
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
@@ -920,8 +929,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
                 content.add(peticionEvaluacion);
               }
             }
-            Page<PeticionEvaluacion> page = new PageImpl<>(content);
-            return page;
+            return new PageImpl<>(content);
           }
         });
 

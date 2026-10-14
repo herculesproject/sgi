@@ -17,6 +17,7 @@ const MEMORIA_KEY = marker('eti.memoria');
 
 export interface IMemoriaListadoModalData extends IBaseExportModalData {
   isInvestigador: boolean;
+  isUnidadesVinculacionEnabled?: boolean;
 }
 
 export const OUTPUT_REPORT_TYPE_EXCEL_CSV_MAP: Map<OutputReport, string> = new Map([
@@ -45,6 +46,10 @@ export class MemoriaListadoExportModalComponent extends
 
   get LIMITE_REG_EXP_EXCEL() {
     return this.modalData.limiteRegistrosExportacionExcel;
+  }
+
+  get isUnidadesVinculacionEnabled(): boolean {
+    return this.modalData.isUnidadesVinculacionEnabled ?? false;
   }
 
   constructor(
@@ -78,12 +83,18 @@ export class MemoriaListadoExportModalComponent extends
   }
 
   protected buildFormGroup(): FormGroup {
-    return new FormGroup({
+    const formGroup = new FormGroup({
       outputType: new FormControl(OutputReport.XLSX, Validators.required),
       hideBlocksIfNoData: new FormControl(true),
 
       showEvaluaciones: new FormControl(true),
     });
+
+    if (this.isUnidadesVinculacionEnabled) {
+      formGroup.addControl('showUnidadesVinculacion', new FormControl(true));
+    }
+
+    return formGroup;
   }
 
   protected getReportOptions(): IReportConfig<IMemoriaReportOptions> {
@@ -94,6 +105,7 @@ export class MemoriaListadoExportModalComponent extends
       reportOptions: {
         findOptions: this.modalData.findOptions,
         showEvaluaciones: this.formGroup.controls.showEvaluaciones.value,
+        showUnidadesVinculacion: this.formGroup.controls.showUnidadesVinculacion?.value ?? false,
         columnMinWidth: 200
       }
     };

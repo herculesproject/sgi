@@ -21,6 +21,7 @@ import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { TareaService } from '@core/services/eti/tarea.service';
 import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { LanguageService } from '@core/services/language.service';
+import { UnidadVinculacionService } from '@core/services/sgo/unidad-vinculacion.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
@@ -36,6 +37,8 @@ import { EquipoInvestigadorListadoFragment } from './peticion-evaluacion-formula
 import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
 import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
+import { PeticionEvaluacionUnidadesVinculacionFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-unidades-vinculacion/peticion-evaluacion-unidades-vinculacion.fragment';
+import { PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY } from './peticion-evaluacion-unidades-vinculacion-enabled.resolver';
 
 @Injectable()
 export class PeticionEvaluacionActionService extends ActionService {
@@ -43,7 +46,8 @@ export class PeticionEvaluacionActionService extends ActionService {
     DATOS_GENERALES: 'datosGenerales',
     EQUIPO_INVESTIGADOR: 'equipoInvestigador',
     TAREAS: 'tareas',
-    MEMORIAS: 'memorias'
+    MEMORIAS: 'memorias',
+    UNIDADES_VINCULACION: 'unidadesVinculacion'
   };
 
   public readonly: boolean;
@@ -53,12 +57,21 @@ export class PeticionEvaluacionActionService extends ActionService {
   private equipoInvestigadorListado: EquipoInvestigadorListadoFragment;
   private tareas: PeticionEvaluacionTareasFragment;
   private memoriasListado: MemoriasListadoFragment;
+  private unidadesVinculacion: PeticionEvaluacionUnidadesVinculacionFragment;
   private fragmentos: IFragment[] = [];
   private checklist: IChecklist;
 
   private formlyFormBuilder: FormlyFormBuilder;
 
   private isInvestigador: boolean;
+
+  get showUnidadesVinculacion(): boolean {
+    return !!this.unidadesVinculacion;
+  }
+
+  get isModuleInv(): boolean {
+    return this.isInvestigador;
+  }
 
 
   constructor(
@@ -88,7 +101,8 @@ export class PeticionEvaluacionActionService extends ActionService {
     protected readonly dialogService: DialogService,
     protected readonly router: Router,
     protected readonly languageService: LanguageService,
-    protected readonly tipoDocumentoService: TipoDocumentoService
+    protected readonly tipoDocumentoService: TipoDocumentoService,
+    protected readonly unidadVinculacionService: UnidadVinculacionService
   ) {
     super();
 
@@ -146,6 +160,18 @@ export class PeticionEvaluacionActionService extends ActionService {
     this.fragmentos.push(this.tareas);
     this.fragmentos.push(this.memoriasListado);
 
+    if (this.isUnidadesVinculacionVisible(sgiAuthService)) {
+      this.unidadesVinculacion = new PeticionEvaluacionUnidadesVinculacionFragment(
+        this.peticionEvaluacion.id,
+        peticionEvaluacionService,
+        unidadVinculacionService,
+        !this.isUnidadesVinculacionEditable(sgiAuthService)
+      );
+
+      this.addFragment(this.FRAGMENT.UNIDADES_VINCULACION, this.unidadesVinculacion);
+      this.fragmentos.push(this.unidadesVinculacion);
+    }
+
     this.datosGenerales.initialize();
 
     this.subscriptions.push(this.equipoInvestigadorListado.equiposTrabajo$.subscribe(list => {
@@ -199,7 +225,7 @@ export class PeticionEvaluacionActionService extends ActionService {
           tap(() => part.refreshInitialState(true)))
         ),
         takeLast(1),
-        switchMap(() => this.updateMemorias(this.datosGenerales.getKey() as number))
+        switchMap(() => this.readonly ? of(void 0) : this.updateMemorias(this.datosGenerales.getKey() as number))
       );
     }
     else {
@@ -215,6 +241,25 @@ export class PeticionEvaluacionActionService extends ActionService {
         takeLast(1)
       );
     }
+  }
+
+  /**
+   * El apartado de unidades de vinculación solo está disponible en el módulo de gestión, en la edición de una petición
+   * de evaluación, si está habilitado por configuración y el usuario puede consultar las unidades de vinculación.
+   */
+  private isUnidadesVinculacionVisible(sgiAuthService: SgiAuthService): boolean {
+    return !this.isInvestigador
+      && !!this.peticionEvaluacion?.id
+      && !!this.route.snapshot.data[PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY]
+      && sgiAuthService.hasAnyAuthorityForAnyUO(['ETI-PEV-V', 'ETI-PEV-E']);
+  }
+
+  /**
+   * Las unidades de vinculación se pueden modificar con independencia de que el resto de la petición de evaluación sea
+   * de solo lectura, siempre que el usuario tenga permiso de edición y la petición de evaluación esté activa.
+   */
+  private isUnidadesVinculacionEditable(sgiAuthService: SgiAuthService): boolean {
+    return sgiAuthService.hasAuthorityForAnyUO('ETI-PEV-E') && !!this.peticionEvaluacion?.activo;
   }
 
   private updateMemorias(peticionEvaluacionId: number): Observable<void> {

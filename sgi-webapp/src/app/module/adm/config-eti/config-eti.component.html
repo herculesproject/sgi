@@ -25,9 +25,21 @@
         </sgi-config-input-file>
       </ng-container>
       <ng-container *ngSwitchCase="ConfigType.SELECT">
-        <sgi-config-select-cnf [key]="config.key" [label]="config.value.label" [required]="config.value.required"
-          [options$]="config.value.options" (error)="handleErrors($event)">
-        </sgi-config-select-cnf>
+        <ng-container [ngSwitch]="config.value.module">
+          <ng-container *ngSwitchCase="ConfigModule.CNF">
+            <sgi-config-select-cnf [key]="config.key" [label]="config.value.label" [required]="config.value.required"
+              [options$]="config.value.options" (error)="handleErrors($event)">
+            </sgi-config-select-cnf>
+          </ng-container>
+          <ng-container *ngSwitchCase="ConfigModule.ETI">
+            <sgi-config-select-eti *ngIf="!config.value.disabled" [key]="config.key" [label]="config.value.label"
+              [description]="config.value.description" [required]="config.value.required"
+              [options$]="config.value.options" (error)="handleErrors($event)"
+              (valueChange)="onConfigValueChange(config.key, $event)">
+            </sgi-config-select-eti>
+          </ng-container>
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="ConfigType.SELECT_FILE">
         <sgi-config-select-file-eti [key]="config.key" [label]="config.value.label"

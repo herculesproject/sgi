@@ -37,6 +37,9 @@ public abstract class SgiApiBaseService {
       case SGP:
         serviceURL = restApiProperties.getSgpUrl();
         break;
+      case SGO:
+        serviceURL = restApiProperties.getSgoUrl();
+        break;
       case COM:
         serviceURL = restApiProperties.getComUrl();
         break;

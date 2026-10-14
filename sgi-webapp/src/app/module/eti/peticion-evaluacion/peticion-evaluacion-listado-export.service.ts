@@ -15,8 +15,12 @@ import { concat, from, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { PeticionEvaluacionAsignacionTareasListadoExportService } from './peticion-evaluacion-asignacion-tareas-listado-export.service';
 import { PeticionEvaluacionEquipoInvestigadorListadoExportService } from './peticion-evaluacion-equipo-investigador-listado-export.service';
+import {
+  IPeticionEvaluacionUnidadVinculacionListado
+} from './peticion-evaluacion-formulario/peticion-evaluacion-unidades-vinculacion/peticion-evaluacion-unidades-vinculacion.fragment';
 import { PeticionEvaluacionGeneralListadoExportService } from './peticion-evaluacion-general-listado-export.service';
 import { PeticionEvaluacionMemoriasListadoExportService } from './peticion-evaluacion-memorias-listado-export.service';
+import { PeticionEvaluacionUnidadVinculacionListadoExportService } from './peticion-evaluacion-unidad-vinculacion-listado-export.service';
 
 export interface IPeticionEvaluacionMiembroReportData {
   persona: IPersona;
@@ -43,12 +47,14 @@ export interface IPeticionEvaluacionReportData extends IPeticionEvaluacion {
   asignacionTareas: IPeticionEvaluacionAsignacionTareaReportData[];
   memorias: IPeticionEvaluacionMemoriaReportData[];
   codigoSolicitudConvocatoria: string;
+  unidadesVinculacion?: IPeticionEvaluacionUnidadVinculacionListado[];
 }
 
 export interface IPeticionEvaluacionReportOptions extends IReportOptions {
   showEquipoInvestigador: boolean;
   showAsignacionTareas: boolean;
   showMemorias: boolean;
+  showUnidadesVinculacion?: boolean;
 }
 
 @Injectable()
@@ -62,6 +68,7 @@ export class PeticionEvaluacionListadoExportService extends
     private readonly peticionEvaluacionEquipoInvestigadorListadoExportService: PeticionEvaluacionEquipoInvestigadorListadoExportService,
     private readonly peticionEvaluacionAsignacionTareasListadoExportService: PeticionEvaluacionAsignacionTareasListadoExportService,
     private readonly peticionEvaluacionMemoriasListadoExportService: PeticionEvaluacionMemoriasListadoExportService,
+    private readonly peticionEvaluacionUnidadVinculacionListadoExportService: PeticionEvaluacionUnidadVinculacionListadoExportService,
     protected reportService: ReportService
   ) {
     super(reportService);
@@ -103,6 +110,10 @@ export class PeticionEvaluacionListadoExportService extends
           row.elements.push(...this.peticionEvaluacionMemoriasListadoExportService.fillRows(peticiones, index, reportConfig));
         }
 
+        if (reportConfig.reportOptions?.showUnidadesVinculacion) {
+          row.elements.push(...this.peticionEvaluacionUnidadVinculacionListadoExportService.fillRows(peticiones, index, reportConfig));
+        }
+
         return row;
       }), catchError(err => {
         this.logger.error(err);
@@ -117,6 +128,10 @@ export class PeticionEvaluacionListadoExportService extends
     findOptions.page.index = 0;
     findOptions.page.size = undefined;
 
+    this.peticionEvaluacionGeneralListadoExportService.clearCache();
+    this.peticionEvaluacionEquipoInvestigadorListadoExportService.clearCache();
+    this.peticionEvaluacionUnidadVinculacionListadoExportService.clearCache();
+
     observable$ = this.peticionEvaluacionService.findAll(findOptions);
 
     return observable$.pipe(
@@ -128,7 +143,7 @@ export class PeticionEvaluacionListadoExportService extends
 
         return from(peticionesReportData).pipe(
           mergeMap((peticion) => {
-            return this.getDataReportInner(peticion, reportConfig.reportOptions)
+            return this.getDataReportInner(peticion, reportConfig.reportOptions);
           }, this.DEFAULT_CONCURRENT)
         ).pipe(
           map(r => {
@@ -136,7 +151,7 @@ export class PeticionEvaluacionListadoExportService extends
             return requestsPeticion;
           }),
           takeLast(1)
-        )
+        );
       }),
       takeLast(1)
     );
@@ -148,7 +163,8 @@ export class PeticionEvaluacionListadoExportService extends
       this.getDataReportListadoGeneral(peticionData),
       this.getDataReportEquipoInvestigador(peticionData, reportOptions),
       this.getDataReportAsignacionTareas(peticionData, reportOptions),
-      this.getDataReportMemorias(peticionData, reportOptions)
+      this.getDataReportMemorias(peticionData, reportOptions),
+      this.getDataReportUnidadesVinculacion(peticionData, reportOptions)
     ).pipe(
       takeLast(1),
       catchError((err) => {
@@ -200,6 +216,18 @@ export class PeticionEvaluacionListadoExportService extends
     }
   }
 
+  private getDataReportUnidadesVinculacion(
+    peticionData: IPeticionEvaluacionReportData,
+    reportOptions: IPeticionEvaluacionReportOptions
+  ): Observable<IPeticionEvaluacionReportData> {
+    if (reportOptions?.showUnidadesVinculacion) {
+      return this.peticionEvaluacionUnidadVinculacionListadoExportService.getData(peticionData)
+        .pipe(tap({ error: (err) => this.logger.error(err) }));
+    } else {
+      return of(peticionData);
+    }
+  }
+
   protected getColumns(resultados: IPeticionEvaluacionReportData[], reportConfig: IReportConfig<IPeticionEvaluacionReportOptions>):
     Observable<ISgiColumnReport[]> {
     const columns: ISgiColumnReport[] = [];
@@ -215,6 +243,10 @@ export class PeticionEvaluacionListadoExportService extends
     if (reportConfig.reportOptions?.showMemorias) {
       columns.push(... this.peticionEvaluacionMemoriasListadoExportService.fillColumns(resultados, reportConfig));
     }
+    if (reportConfig.reportOptions?.showUnidadesVinculacion) {
+      columns.push(... this.peticionEvaluacionUnidadVinculacionListadoExportService.fillColumns(resultados, reportConfig));
+    }
+
     return of(columns);
   }
 

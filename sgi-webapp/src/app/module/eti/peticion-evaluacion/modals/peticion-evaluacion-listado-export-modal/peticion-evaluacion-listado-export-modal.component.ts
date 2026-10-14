@@ -13,6 +13,10 @@ import { IPeticionEvaluacionReportOptions, PeticionEvaluacionListadoExportServic
 
 const REPORT_TITLE_KEY = marker('eti.peticion-evaluacion.report.title');
 
+export interface IPeticionEvaluacionListadoExportModalData extends IBaseExportModalData {
+  isUnidadesVinculacionEnabled: boolean;
+}
+
 export const OUTPUT_REPORT_TYPE_EXCEL_CSV_MAP: Map<OutputReport, string> = new Map([
   [OutputReport.XLSX, marker('export.type.xlsx')],
   [OutputReport.CSV, marker('export.type.csv')],
@@ -40,11 +44,15 @@ export class PeticionEvaluacionListadoExportModalComponent extends
     return this.modalData.limiteRegistrosExportacionExcel;
   }
 
+  get isUnidadesVinculacionEnabled(): boolean {
+    return this.modalData.isUnidadesVinculacionEnabled ?? false;
+  }
+
   constructor(
     matDialogRef: MatDialogRef<PeticionEvaluacionListadoExportModalComponent>,
     translate: TranslateService,
     invencionListadoExportService: PeticionEvaluacionListadoExportService,
-    @Inject(MAT_DIALOG_DATA) private modalData: IBaseExportModalData
+    @Inject(MAT_DIALOG_DATA) private modalData: IPeticionEvaluacionListadoExportModalData
   ) {
     super(invencionListadoExportService, translate, matDialogRef);
   }
@@ -74,6 +82,10 @@ export class PeticionEvaluacionListadoExportModalComponent extends
       showMemorias: new FormControl(true)
     });
 
+    if (this.isUnidadesVinculacionEnabled) {
+      formGroup.addControl('showUnidadesVinculacion', new FormControl(true));
+    }
+
     Object.keys(formGroup.controls).forEach(key => {
       if (key.startsWith('show')) {
         this.subscriptions.push(formGroup.get(key).valueChanges.subscribe(() => {
@@ -86,7 +98,7 @@ export class PeticionEvaluacionListadoExportModalComponent extends
               formGroup.controls.showTodos.setValue(true, { emitEvent: false });
             }
           });
-        }))
+        }));
       }
     });
 
@@ -103,6 +115,7 @@ export class PeticionEvaluacionListadoExportModalComponent extends
         showEquipoInvestigador: this.formGroup.controls.showEquipoInvestigador.value,
         showAsignacionTareas: this.formGroup.controls.showAsignacionTareas.value,
         showMemorias: this.formGroup.controls.showMemorias.value,
+        showUnidadesVinculacion: this.formGroup.controls.showUnidadesVinculacion?.value ?? false,
         columnMinWidth: 200
       }
     };

@@ -23,6 +23,10 @@ public class RestApiProperties {
    */
   private String sgpUrl;
   /**
+   * URL base de los end-points del módulo de SGO.
+   */
+  private String sgoUrl;
+  /**
    * URL base de los end-points del módulo de COM.
    */
   private String comUrl;

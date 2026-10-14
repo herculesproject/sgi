@@ -5,34 +5,39 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
+import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { ComiteService } from '@core/services/eti/comite.service';
+import { ConfigService as EtiConfigService } from '@core/services/eti/config.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
-import { PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
+import {
+  IPeticionEvaluacionListadoExportModalData,
+  PeticionEvaluacionListadoExportModalComponent
+} from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
 
 export interface IPeticionEvaluacionWithMemorias extends IPeticionEvaluacion {
-  memorias: IMemoriaPeticionEvaluacion[],
+  memorias: IMemoriaPeticionEvaluacion[];
   memoriasAsignables: IMemoria[];
 }
 
@@ -41,7 +46,9 @@ export interface IPeticionEvaluacionWithMemorias extends IPeticionEvaluacion {
   templateUrl: './peticion-evaluacion-listado-ges.component.html',
   styleUrls: ['./peticion-evaluacion-listado-ges.component.scss']
 })
-export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginationComponent<IPeticionEvaluacionWithMemorias> implements OnInit {
+export class PeticionEvaluacionListadoGesComponent
+  extends AbstractTablePaginationComponent<IPeticionEvaluacionWithMemorias>
+  implements OnInit {
 
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -62,9 +69,21 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   public comites: IComite[];
 
+  busquedaAvanzada = false;
+
   get tipoColectivoSolicitante() {
     return TipoColectivo.SOLICITANTE_ETICA;
   }
+
+  get MSG_PARAMS(): typeof MSG_PARAMS {
+    return MSG_PARAMS;
+  }
+
+  get isUnidadesVinculacionEnabled(): boolean {
+    return this._isUnidadesVinculacionEnabled ?? false;
+  }
+  // tslint:disable-next-line: variable-name
+  private _isUnidadesVinculacionEnabled: boolean;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -74,7 +93,9 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     private matDialog: MatDialog,
     private readonly cnfService: ConfigService,
     private readonly comiteService: ComiteService,
-    private readonly memoriaService: MemoriaService
+    private readonly memoriaService: MemoriaService,
+    private readonly vinculacionService: VinculacionService,
+    private readonly etiConfigService: EtiConfigService
   ) {
     super(translate);
 
@@ -92,11 +113,11 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     this.fxLayoutProperties.xs = 'column';
 
     this.resolveSortProperty = (column: string) => {
-      if (column == 'titulo') {
+      if (column === 'titulo') {
         return 'titulo.value';
       }
       return column;
-    }
+    };
   }
 
   ngOnInit(): void {
@@ -113,7 +134,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
         this.comites = comites.items;
         this.updateDisplayedColumns(this.comites);
       })
-    )
+    );
 
 
     this.formGroup = new FormGroup({
@@ -121,8 +142,15 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
       titulo: new FormControl('', []),
       referenciaMemoria: new FormControl('', []),
       tipoEstadoMemoria: new FormControl(null, []),
-      solicitante: new FormControl('', [])
+      solicitante: new FormControl('', []),
+      unidadVinculacion: new FormControl(null, [])
     });
+
+    this.suscripciones.push(
+      this.etiConfigService.isPeticionEvaluacionUnidadesVinculacionEnabled().subscribe(
+        (value) => this._isUnidadesVinculacionEnabled = value,
+        (error) => this.logger.error(error)
+      ));
 
     this.suscripciones.push(
       this.cnfService.getLimiteRegistrosExportacionExcel('eti-exp-max-num-registros-excel-peticion-evaluacion-listado').subscribe(value => {
@@ -201,7 +229,10 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
                   total: response.total,
                   items: peticionesConMemorias
                 });
-              })
+              }),
+              switchMap((result) => this.populateVinculacionesSolicitantes(result.items).pipe(
+                map(() => result)
+              ))
             );
           })
         );
@@ -215,7 +246,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
   }
 
   protected initColumns(): void {
-    this.displayedColumns = ['helpIcon', 'solicitante', 'titulo', 'acciones'];
+    this.displayedColumns = ['helpIcon', 'solicitante', 'departamento', 'titulo', 'acciones'];
   }
 
   protected createFilter(): SgiRestFilter {
@@ -224,7 +255,15 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
       .and('peticionEvaluacion.titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
       .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.toString())
-      .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id);
+      .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id)
+      .and('unidadesVinculacion.unidadVinculacionRef', SgiRestFilterOperator.EQUALS, controls.unidadVinculacion.value?.id);
+  }
+
+  /**
+   * Mostrar busqueda avanzada
+   */
+  toggleBusquedaAvanzada(): void {
+    this.busquedaAvanzada = !this.busquedaAvanzada;
   }
 
   protected loadTable(reset?: boolean) {
@@ -232,10 +271,11 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
   }
 
   public openExportModal() {
-    const data: IBaseExportModalData = {
+    const data: IPeticionEvaluacionListadoExportModalData = {
       findOptions: this.findOptions,
       totalRegistrosExportacionExcel: this.totalElementos,
-      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel),
+      isUnidadesVinculacionEnabled: this.isUnidadesVinculacionEnabled
     };
 
     const config = {
@@ -269,9 +309,42 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     }
   }
 
+  /**
+   * Asigna a cada solicitante su vinculación, de la que se obtiene el departamento. Se hace una petición por
+   * solicitante distinto.
+   *
+   * @param peticiones el listado de peticiones de evaluación.
+   * @returns las peticiones de evaluación con la vinculación de sus solicitantes.
+   */
+  private populateVinculacionesSolicitantes(
+    peticiones: IPeticionEvaluacionWithMemorias[]
+  ): Observable<IPeticionEvaluacionWithMemorias[]> {
+    const personaIds = [...new Set(peticiones.map(peticion => peticion.solicitante?.id).filter(id => !!id))];
+    if (!personaIds.length) {
+      return of(peticiones);
+    }
+
+    return forkJoin(personaIds.map(personaId => this.vinculacionService.findByPersonaId(personaId).pipe(
+      catchError(error => {
+        this.logger.error(error);
+        return of(null as IVinculacion);
+      })
+    ))).pipe(
+      map(vinculaciones => {
+        peticiones.forEach(peticion => {
+          if (peticion.solicitante?.id) {
+            peticion.solicitante.vinculacion = vinculaciones[personaIds.indexOf(peticion.solicitante.id)];
+          }
+        });
+
+        return peticiones;
+      })
+    );
+  }
+
   private updateDisplayedColumns(comites: IComite[]): void {
     const comitesColumns = comites.map(comite => `memoriaComite${comite.id}`);
-    this.displayedColumns = ['helpIcon', 'solicitante', 'titulo', ...comitesColumns, 'acciones'];
+    this.displayedColumns = ['helpIcon', 'solicitante', 'departamento', 'titulo', ...comitesColumns, 'acciones'];
   }
 
 }

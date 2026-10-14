@@ -4,6 +4,7 @@ import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPeticionEvaluacionUnidadVinculacion } from '@core/models/eti/peticion-evaluacion-unidad-vinculacion';
 import { IPeticionEvaluacionWithIsEliminable } from '@core/models/eti/peticion-evaluacion-with-is-eliminable';
 import { ITarea } from '@core/models/eti/tarea';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
@@ -22,6 +23,9 @@ import { IEquipoTrabajoWithIsEliminableResponse } from './equipo-trabajo/equipo-
 import { EQUIPO_TRABAJO_WITH_IS_ELIMINABLE_RESPONSE_CONVERTER } from './equipo-trabajo/equipo-trabajo-with-is-eliminable-response.converter';
 import { IMemoriaPeticionEvaluacionResponse } from './memoria/memoria-peticion-evaluacion-response';
 import { MEMORIA_PETICION_EVALUACION_RESPONSE_CONVERTER } from './memoria/memoria-peticion-evaluacion-response.converter';
+import { PETICION_EVALUACION_UNIDAD_VINCULACION_REQUEST_CONVERTER } from './peticion-evaluacion-unidad-vinculacion/peticion-evaluacion-unidad-vinculacion-request.converter';
+import { IPeticionEvaluacionUnidadVinculacionResponse } from './peticion-evaluacion-unidad-vinculacion/peticion-evaluacion-unidad-vinculacion-response';
+import { PETICION_EVALUACION_UNIDAD_VINCULACION_RESPONSE_CONVERTER } from './peticion-evaluacion-unidad-vinculacion/peticion-evaluacion-unidad-vinculacion-response.converter';
 import { ITareaResponse } from './tarea/tarea-response';
 import { TAREA_RESPONSE_CONVERTER } from './tarea/tarea-response.converter';
 import { ITareaWithIsEliminableResponse } from './tarea/tarea-with-is-eliminable-response';
@@ -60,10 +64,10 @@ export class PeticionEvaluacionService extends _PeticionEvaluacionServiceMixinBa
   }
 
   /**
-  * Elimina la petición de evaluación
-  *
-  * @param idPeticionEvaluacion Identifiacdor de la petición de evaluación.
-  */
+   * Elimina la petición de evaluación
+   *
+   * @param idPeticionEvaluacion Identifiacdor de la petición de evaluación.
+   */
   deleteById(idPeticionEvaluacion: number): Observable<void> {
     return this.http.delete<void>(`${this.endpointUrl}/${idPeticionEvaluacion}`);
   }
@@ -209,4 +213,38 @@ export class PeticionEvaluacionService extends _PeticionEvaluacionServiceMixinBa
       map(x => x.status === 200)
     );
   }
+
+  /**
+   * Devuelve las unidades de vinculación de la petición de evaluación.
+   *
+   * @param id identificador de la petición de evaluación.
+   * @param options opciones de búsqueda.
+   * @returns las unidades de vinculación de la petición de evaluación.
+   */
+  findUnidadesVinculacion(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IPeticionEvaluacionUnidadVinculacion>> {
+    return this.find<IPeticionEvaluacionUnidadVinculacionResponse, IPeticionEvaluacionUnidadVinculacion>(
+      `${this.endpointUrl}/${id}/unidades-vinculacion`,
+      options,
+      PETICION_EVALUACION_UNIDAD_VINCULACION_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Actualiza las unidades de vinculación de la petición de evaluación con el id indicado.
+   *
+   * @param id identificador de la petición de evaluación.
+   * @param unidadesVinculacion lista completa de unidades a establecer.
+   * @returns la lista de unidades de vinculación actualizada.
+   */
+  updateUnidadesVinculacion(id: number, unidadesVinculacion: IPeticionEvaluacionUnidadVinculacion[]):
+    Observable<IPeticionEvaluacionUnidadVinculacion[]> {
+    return this.http.patch<IPeticionEvaluacionUnidadVinculacionResponse[]>(
+      `${this.endpointUrl}/${id}/unidades-vinculacion`,
+      PETICION_EVALUACION_UNIDAD_VINCULACION_REQUEST_CONVERTER.fromTargetArray(unidadesVinculacion)
+    ).pipe(
+      map(response => PETICION_EVALUACION_UNIDAD_VINCULACION_RESPONSE_CONVERTER.toTargetArray(response))
+    );
+  }
+
 }

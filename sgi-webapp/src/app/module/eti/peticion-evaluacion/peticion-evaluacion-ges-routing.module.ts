@@ -12,8 +12,13 @@ import { EquipoInvestigadorListadoComponent } from './peticion-evaluacion-formul
 import { MemoriasListadoComponent } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.component';
 import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.component';
 import { PeticionEvaluacionTareasListadoComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.component';
+import { PeticionEvaluacionUnidadesVinculacionComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-unidades-vinculacion/peticion-evaluacion-unidades-vinculacion.component';
 import { PeticionEvaluacionListadoGesComponent } from './peticion-evaluacion-listado-ges/peticion-evaluacion-listado-ges.component';
 import { PETICION_EVALUACION_ROUTE_NAMES } from './peticion-evaluacion-route-names';
+import {
+  PeticionEvaluacionUnidadesVinculacionEnabledResolver,
+  PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY
+} from './peticion-evaluacion-unidades-vinculacion-enabled.resolver';
 import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 
 const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
@@ -36,7 +41,8 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     resolve: {
-      peticionEvaluacion: PeticionEvaluacionResolver
+      peticionEvaluacion: PeticionEvaluacionResolver,
+      [PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY]: PeticionEvaluacionUnidadesVinculacionEnabledResolver
     },
     data: {
       title: PETICION_EVALUACION_KEY,
@@ -67,6 +73,11 @@ const routes: SgiRoutes = [
       {
         path: PETICION_EVALUACION_ROUTE_NAMES.MEMORIAS,
         component: MemoriasListadoComponent
+      },
+      {
+        path: PETICION_EVALUACION_ROUTE_NAMES.UNIDADES_VINCULACION,
+        component: PeticionEvaluacionUnidadesVinculacionComponent,
+        canDeactivate: [FragmentGuard]
       }
     ]
   }

@@ -53,9 +53,6 @@ import { SelectTipoOrigenFuenteFinanciacionComponent } from './select-tipo-orige
 import { SelectTipoRegimenConcurrenciaComponent } from './select-tipo-regimen-concurrencia/select-tipo-regimen-concurrencia.component';
 import { SelectTipoRequerimientoComponent } from './select-tipo-requerimiento/select-tipo-requerimiento.component';
 import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-unidad-gestion.component';
-import { SearchUnidadVinculacionModalComponent } from './select-unidad-vinculacion/dialog/search-unidad-vinculacion.component';
-import { SelectUnidadVinculacionComponent } from './select-unidad-vinculacion/select-unidad-vinculacion.component';
-import { UnidadVinculacionTreeComponent } from './select-unidad-vinculacion/unidad-vinculacion-tree.component';
 import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-modal/solicitud-presupuesto-modal.component';
 
 @NgModule({
@@ -104,10 +101,7 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectTipoRegimenConcurrenciaComponent,
     SelectTipoRequerimientoComponent,
     SelectUnidadGestionComponent,
-    SearchUnidadVinculacionModalComponent,
-    SelectUnidadVinculacionComponent,
-    SolicitiudPresupuestoModalComponent,
-    UnidadVinculacionTreeComponent
+    SolicitiudPresupuestoModalComponent
   ],
   imports: [
     CommonModule,
@@ -162,9 +156,7 @@ import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-mod
     SelectTipoRegimenConcurrenciaComponent,
     SelectTipoRequerimientoComponent,
     SelectUnidadGestionComponent,
-    SelectUnidadVinculacionComponent,
-    SolicitiudPresupuestoModalComponent,
-    UnidadVinculacionTreeComponent
+    SolicitiudPresupuestoModalComponent
   ]
 })
 export class CspSharedModule { }

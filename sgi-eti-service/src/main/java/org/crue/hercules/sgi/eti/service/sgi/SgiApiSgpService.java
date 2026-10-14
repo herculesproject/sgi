@@ -1,21 +1,24 @@
 package org.crue.hercules.sgi.eti.service.sgi;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
+import org.crue.hercules.sgi.eti.dto.sgp.VinculacionOutput;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
+import org.crue.hercules.sgi.eti.exceptions.rep.MicroserviceCallException;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Service
 @Slf4j
 public class SgiApiSgpService extends SgiApiBaseService {
 
@@ -72,6 +75,29 @@ public class SgiApiSgpService extends SgiApiBaseService {
 
     log.debug("findAllByIdIn({}) - end", ids);
     return response;
+  }
+
+  /**
+   * Obtiene la vinculación de una persona en el SGP.
+   * 
+   * @param personaId Identificador de la persona
+   * @return la {@link VinculacionOutput} de la persona
+   * @throws MicroserviceCallException si se produce un error en la llamada
+   */
+  public Optional<VinculacionOutput> findVinculacionByPersonaId(String personaId) {
+    log.debug("findVinculacionByPersonaId - personaId: {}", personaId);
+    AssertHelper.idNotNull(personaId, PersonaOutput.class);
+
+    try {
+      String mergedURL = buildUri(ServiceType.SGP, "/vinculaciones/persona/{id}");
+      VinculacionOutput response = super.<VinculacionOutput>callEndpoint(mergedURL, HttpMethod.GET,
+          new ParameterizedTypeReference<VinculacionOutput>() {
+          }, personaId).getBody();
+      return Optional.ofNullable(response);
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new MicroserviceCallException();
+    }
   }
 
 }

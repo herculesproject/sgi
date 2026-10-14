@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
@@ -15,6 +15,7 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MemoriaEvaluacionesListadoExportService } from '../../memoria-evaluaciones-listado-export.service';
 import { MemoriaGeneralListadoExportService } from '../../memoria-general-listado-export.service';
 import { MemoriaListadoExportService } from '../../memoria-listado-export.service';
+import { MemoriaUnidadVinculacionListadoExportService } from '../../memoria-unidad-vinculacion-listado-export.service';
 import { IMemoriaListadoModalData, MemoriaListadoExportModalComponent } from './memoria-listado-export-modal.component';
 
 describe('MemoriaListadoExportModalComponent', () => {
@@ -46,6 +47,7 @@ describe('MemoriaListadoExportModalComponent', () => {
         MemoriaListadoExportService,
         MemoriaGeneralListadoExportService,
         MemoriaEvaluacionesListadoExportService,
+        MemoriaUnidadVinculacionListadoExportService,
         LuxonDatePipe
       ]
     }).compileComponents();

@@ -3,14 +3,18 @@ package org.crue.hercules.sgi.eti.integration;
 import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionInput;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionOutput;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
@@ -21,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionUnidadVinculacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
@@ -65,20 +70,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 })
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 @SqlMergeMode(MergeMode.MERGE)
-public class PeticionEvaluacionIT extends BaseIT {
+class PeticionEvaluacionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
+  private static final String PATH_UNIDADES_VINCULACION = "/{id}/unidades-vinculacion";
 
   private HttpEntity<PeticionEvaluacion> buildRequest(HttpHeaders headers, PeticionEvaluacion entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-ER",
-        "ETI-PEV-V", "ETI-PEV-CR", "ETI-MEM-CR", "ETI-PEV-INV-BR", "ETI-PEV-INV-C", "ETI-PEV-V")));
+    headers.set("Authorization", "bearer " + tokenBuilder.buildToken("user", "ETI-PEV-INV-ER",
+        "ETI-PEV-V", "ETI-PEV-CR", "ETI-MEM-CR", "ETI-PEV-INV-BR", "ETI-PEV-INV-C", "ETI-PEV-V"));
 
-    HttpEntity<PeticionEvaluacion> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   private HttpEntity<EquipoTrabajo> buildRequestEquipoTrabajo(HttpHeaders headers, EquipoTrabajo entity)
@@ -86,11 +91,10 @@ public class PeticionEvaluacionIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-PEV-INV-C", "ETI-PEV-INV-ER", "ETI-PEV-INV-VR")));
+    headers.set("Authorization",
+        "bearer " + tokenBuilder.buildToken("user", "ETI-PEV-INV-C", "ETI-PEV-INV-ER", "ETI-PEV-INV-VR"));
 
-    HttpEntity<EquipoTrabajo> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   private HttpEntity<Tarea> buildRequestTarea(HttpHeaders headers, Tarea entity) throws Exception {
@@ -98,10 +102,9 @@ public class PeticionEvaluacionIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-C", "ETI-PEV-INV-ER")));
+        "bearer " + tokenBuilder.buildToken("user", "ETI-PEV-INV-C", "ETI-PEV-INV-ER"));
 
-    HttpEntity<Tarea> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   private HttpEntity<EquipoTrabajo> buildRequestMemoriaPeticionEvaluacion(HttpHeaders headers, EquipoTrabajo entity)
@@ -109,15 +112,14 @@ public class PeticionEvaluacionIT extends BaseIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-PEV-CR", "ETI-PEV-INV-ER", "ETI-EVR-V", "ETI-PEV-INV-C")));
+    headers.set("Authorization",
+        "bearer " + tokenBuilder.buildToken("user", "ETI-PEV-CR", "ETI-PEV-INV-ER", "ETI-EVR-V", "ETI-PEV-INV-C"));
 
-    HttpEntity<EquipoTrabajo> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Test
-  public void getPeticionEvaluacion_WithId_ReturnsPeticionEvaluacion() throws Exception {
+  void getPeticionEvaluacion_WithId_ReturnsPeticionEvaluacion() throws Exception {
     final ResponseEntity<PeticionEvaluacion> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
         PeticionEvaluacion.class, 2L);
@@ -132,10 +134,9 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void addPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
+  void addPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
 
     PeticionEvaluacion nuevoPeticionEvaluacion = generarMockPeticionEvaluacion(null, "titulo");
-    // nuevoPeticionEvaluacion.setId(null);
 
     final ResponseEntity<PeticionEvaluacion> response = restTemplate.exchange(PETICION_EVALUACION_CONTROLLER_BASE_PATH,
         HttpMethod.POST, buildRequest(null, nuevoPeticionEvaluacion), PeticionEvaluacion.class);
@@ -145,7 +146,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void removePeticionEvaluacion_Success() throws Exception {
+  void removePeticionEvaluacion_Success() throws Exception {
 
     // when: Delete con id existente
     long id = 2L;
@@ -159,7 +160,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void removePeticionEvaluacion_DoNotGetPeticionEvaluacion() throws Exception {
+  void removePeticionEvaluacion_DoNotGetPeticionEvaluacion() throws Exception {
     restTemplate.exchange(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
         buildRequest(null, null), PeticionEvaluacion.class, 1L);
 
@@ -172,7 +173,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void replacePeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
+  void replacePeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
 
     PeticionEvaluacion replacePeticionEvaluacion = generarMockPeticionEvaluacion(2L, "PeticionEvaluacion2");
 
@@ -190,7 +191,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
+  void findAll_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
@@ -209,7 +210,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PeticionEvaluacion> peticionEvaluaciones = response.getBody();
-    Assertions.assertThat(peticionEvaluaciones.size()).isEqualTo(2);
+    Assertions.assertThat(peticionEvaluaciones).hasSize(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");
@@ -223,7 +224,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
+  void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 2L;
     String query = "peticionEvaluacion.titulo.value=ke=PeticionEvaluacion2";
@@ -240,7 +241,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PeticionEvaluacion> peticionEvaluaciones = response.getBody();
-    Assertions.assertThat(peticionEvaluaciones.size()).isEqualTo(1);
+    Assertions.assertThat(peticionEvaluaciones).hasSize(1);
     Assertions.assertThat(peticionEvaluaciones.get(0).getId()).isEqualTo(id);
     Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluaciones.get(0).getTitulo(), Language.ES))
         .startsWith(
@@ -248,7 +249,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithSortQuery_ReturnsOrderedPeticionEvaluacionList() throws Exception {
+  void findAll_WithSortQuery_ReturnsOrderedPeticionEvaluacionList() throws Exception {
     // when: Ordenación por titulo desc
     String query = "titulo.value,desc";
 
@@ -264,7 +265,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PeticionEvaluacion> peticionEvaluaciones = response.getBody();
-    Assertions.assertThat(peticionEvaluaciones.size()).isEqualTo(7);
+    Assertions.assertThat(peticionEvaluaciones).hasSize(7);
     for (int i = 0; i < 7; i++) {
       PeticionEvaluacion peticionEvaluacion = peticionEvaluaciones.get(i);
       Assertions.assertThat(peticionEvaluacion.getId()).isEqualTo(8 - i);
@@ -274,7 +275,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsPeticionEvaluacionSubList() throws Exception {
+  void findAll_WithPagingSortingAndFiltering_ReturnsPeticionEvaluacionSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
@@ -295,7 +296,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PeticionEvaluacion> peticionEvaluaciones = response.getBody();
-    Assertions.assertThat(peticionEvaluaciones.size()).isEqualTo(1);
+    Assertions.assertThat(peticionEvaluaciones).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
@@ -308,7 +309,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void findEquipoInvestigador_WithPaging_ReturnsEquipoInvestigadorSubList() throws Exception {
+  void findEquipoInvestigador_WithPaging_ReturnsEquipoInvestigadorSubList() throws Exception {
 
     final ResponseEntity<List<EquipoTrabajoWithIsEliminable>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/equipo-investigador", HttpMethod.GET,
@@ -319,11 +320,11 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<EquipoTrabajoWithIsEliminable> equiposTrabajo = response.getBody();
-    Assertions.assertThat(equiposTrabajo.size()).isEqualTo(1);
+    Assertions.assertThat(equiposTrabajo).hasSize(1);
   }
 
   @Test
-  public void findTareas_WithPaging_ReturnsTareasSubList() throws Exception {
+  void findTareas_WithPaging_ReturnsTareasSubList() throws Exception {
 
     final ResponseEntity<List<TareaWithIsEliminable>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tareas", HttpMethod.GET,
@@ -334,11 +335,11 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TareaWithIsEliminable> tareas = response.getBody();
-    Assertions.assertThat(tareas.size()).isEqualTo(7);
+    Assertions.assertThat(tareas).hasSize(7);
   }
 
   @Test
-  public void findMemorias_WithPaging_ReturnsMemoriaPeticionEvaluacionSubList() throws Exception {
+  void findMemorias_WithPaging_ReturnsMemoriaPeticionEvaluacionSubList() throws Exception {
 
     final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", HttpMethod.GET,
@@ -350,19 +351,18 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = response.getBody();
-    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(16);
+    Assertions.assertThat(memoriasPeticionEvaluacion).hasSize(16);
 
     // Contiene de id='7' a '8'
     List<Long> ids = new ArrayList<>();
     for (MemoriaPeticionEvaluacion memoria : memoriasPeticionEvaluacion) {
       ids.add(memoria.getId());
     }
-    Assertions.assertThat(ids.contains(7L)).isTrue();
-    Assertions.assertThat(ids.contains(8L)).isTrue();
+    Assertions.assertThat(ids).contains(7L, 8L);
   }
 
   @Test
-  public void addTarea_ReturnsTarea() throws Exception {
+  void addTarea_ReturnsTarea() throws Exception {
 
     Tarea nuevaTarea = generarMockTarea(null, "Tarea");
 
@@ -391,7 +391,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void addEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
+  void addEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
 
     EquipoTrabajo nuevoEquipoTrabajo = generarMockEquipoTrabajo(null,
         generarMockPeticionEvaluacion(2L, "PeticionEvaluacion2"));
@@ -410,7 +410,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void removeEquipoTrabajo_Success() throws Exception {
+  void removeEquipoTrabajo_Success() throws Exception {
 
     // when: Delete con id existente
     long idPeticionEvaluacion = 2L;
@@ -425,7 +425,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void removeEquipoTrabajo_DoNotGetEquipoTrabajo() throws Exception {
+  void removeEquipoTrabajo_DoNotGetEquipoTrabajo() throws Exception {
 
     // when: Delete con id no existente
     long idPeticionEvaluacion = 1L;
@@ -439,7 +439,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void removeTarea_Success() throws Exception {
+  void removeTarea_Success() throws Exception {
 
     // when: Delete con id existente
     long idPeticionEvaluacion = 2L;
@@ -456,7 +456,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void removeTarea_DoNotGetTarea() throws Exception {
+  void removeTarea_DoNotGetTarea() throws Exception {
 
     // when: Delete con id no existente
     long idPeticionEvaluacion = 1L;
@@ -470,12 +470,12 @@ public class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
-  public void findAllPeticionEvaluacionMemoria_WithPagingSortingAndFiltering_ReturnsPeticionEvaluacionSubList()
+  void findAllPeticionEvaluacionMemoria_WithPagingSortingAndFiltering_ReturnsPeticionEvaluacionSubList()
       throws Exception {
     // when: Obtiene page=1 con pagesize=3
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V", "ETI-MEM-INV-CR")));
+        "bearer " + tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V", "ETI-MEM-INV-CR"));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por id desc
@@ -494,7 +494,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<PeticionEvaluacion> peticionesEvaluacion = response.getBody();
-    Assertions.assertThat(peticionesEvaluacion.size()).isEqualTo(1);
+    Assertions.assertThat(peticionesEvaluacion).hasSize(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
@@ -503,6 +503,36 @@ public class PeticionEvaluacionIT extends BaseIT {
     // Contiene titulo='PeticionEvaluacion1'
     Assertions.assertThat(I18nHelper.getValueForLanguage(peticionesEvaluacion.get(0).getTitulo(), Language.ES))
         .isEqualTo("PeticionEvaluacion2");
+  }
+
+  @Test
+  void findAllPeticionEvaluacionMemoria_WithPagingSortingAndWithoutFiltering_ReturnsPeticionEvaluacionSubList()
+      throws Exception {
+    // given: 7 peticiones de evaluación activas creadas por el usuario
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        "bearer " + tokenBuilder.buildToken("user", "ETI-PEV-INV-VR", "ETI-PEV-V", "ETI-MEM-INV-CR"));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "id,desc";
+
+    // when: se obtiene la primera página sin query de filtrado
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/memorias")
+        .queryParam("s", sort).build(false).toUri();
+
+    final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<PeticionEvaluacion>>() {
+        });
+
+    // then: se devuelven las 3 peticiones de evaluación de mayor id de un total
+    // de 7
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<PeticionEvaluacion> peticionesEvaluacion = response.getBody();
+    Assertions.assertThat(peticionesEvaluacion).extracting(PeticionEvaluacion::getId).containsExactly(8L, 7L, 6L);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("7");
   }
 
   /**
@@ -603,6 +633,211 @@ public class PeticionEvaluacionIT extends BaseIT {
     tarea.setTipoTarea(tipoTarea);
 
     return tarea;
+  }
+
+  private <T> HttpEntity<T> buildRequestUnidadesVinculacion(T entity, String... roles) throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", "bearer " + tokenBuilder.buildToken("user", roles));
+    return new HttpEntity<>(entity, headers);
+  }
+
+  @Test
+  @Sql("classpath:scripts/peticion_evaluacion_unidad_vinculacion.sql")
+  void findUnidadesVinculacion_ReturnsPeticionEvaluacionUnidadVinculacionOutputList() throws Exception {
+    // given: una petición con dos unidades de vinculación
+    Long peticionEvaluacionId = 2L;
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION)
+        .queryParam("s", "id,desc").buildAndExpand(peticionEvaluacionId).toUri();
+
+    // when: se obtienen sus unidades con autoridad de visualización
+    final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildRequestUnidadesVinculacion(null, "ETI-PEV-V"),
+        new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
+        });
+
+    // then: se devuelven las dos unidades ordenadas por id descendente
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).extracting(PeticionEvaluacionUnidadVinculacionOutput::getId)
+        .containsExactly(2L, 1L);
+    Assertions.assertThat(response.getBody())
+        .extracting(PeticionEvaluacionUnidadVinculacionOutput::getUnidadVinculacionRef)
+        .containsExactly("UV-2", "UV-1");
+    Assertions.assertThat(response.getBody())
+        .extracting(PeticionEvaluacionUnidadVinculacionOutput::getPeticionEvaluacionId)
+        .containsOnly(peticionEvaluacionId);
+  }
+
+  @Test
+  @Sql("classpath:scripts/peticion_evaluacion_unidad_vinculacion.sql")
+  void findUnidadesVinculacion_WithMemoriaAuthority_ReturnsFilteredList() throws Exception {
+    // given: una petición con dos unidades y un filtro por referencia
+    Long peticionEvaluacionId = 3L;
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION)
+        .queryParam("s", "id,desc").queryParam("q", "unidadVinculacionRef==UV-3").buildAndExpand(peticionEvaluacionId)
+        .toUri();
+
+    // when: se obtienen sus unidades con autoridad de memorias
+    final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildRequestUnidadesVinculacion(null, "ETI-MEM-V"),
+        new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
+        });
+
+    // then: se devuelve solo la unidad filtrada
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).extracting(PeticionEvaluacionUnidadVinculacionOutput::getId)
+        .containsExactly(4L);
+  }
+
+  @Test
+  void findUnidadesVinculacion_WithoutUnidades_ReturnsOkEmptyList() throws Exception {
+    // given: una petición sin unidades de vinculación
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION)
+        .queryParam("s", "id,desc").buildAndExpand(4L).toUri();
+
+    // when: se obtienen sus unidades
+    final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildRequestUnidadesVinculacion(null, "ETI-PEV-E"),
+        new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
+        });
+
+    // then: se devuelve 200 con la lista vacía
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEmpty();
+  }
+
+  @Test
+  void findUnidadesVinculacion_WithNoExistingPeticion_Returns404() throws Exception {
+    // given: una petición que no existe
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION)
+        .queryParam("s", "id,desc").buildAndExpand(999L).toUri();
+
+    // when: se obtienen sus unidades
+    final ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequestUnidadesVinculacion(null, "ETI-PEV-V"), String.class);
+
+    // then: se devuelve 404
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  @Sql("classpath:scripts/peticion_evaluacion_unidad_vinculacion.sql")
+  void updateUnidadesVinculacion_WithNewRefs_ReplacesAll() throws Exception {
+    // given: una petición con UV-1 y UV-2 y una lista nueva con UV-4 repetida y
+    // UV-5
+    Long peticionEvaluacionId = 2L;
+    List<PeticionEvaluacionUnidadVinculacionInput> input = Arrays.asList(
+        PeticionEvaluacionUnidadVinculacionInput.builder().unidadVinculacionRef("UV-4").build(),
+        PeticionEvaluacionUnidadVinculacionInput.builder().unidadVinculacionRef("UV-4").build(),
+        PeticionEvaluacionUnidadVinculacionInput.builder().unidadVinculacionRef("UV-5").build());
+
+    // when: se actualizan las unidades
+    final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
+        buildRequestUnidadesVinculacion(input, "ETI-PEV-E"),
+        new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
+        }, peticionEvaluacionId);
+
+    // then: se sustituyen por las nuevas sin duplicados
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody())
+        .extracting(PeticionEvaluacionUnidadVinculacionOutput::getUnidadVinculacionRef)
+        .containsExactly("UV-4", "UV-5");
+    Assertions.assertThat(response.getBody()).extracting(PeticionEvaluacionUnidadVinculacionOutput::getId)
+        .doesNotContain(1L, 2L);
+  }
+
+  @Test
+  @Sql("classpath:scripts/peticion_evaluacion_unidad_vinculacion.sql")
+  void updateUnidadesVinculacion_WithSameRefs_PreservesIds() throws Exception {
+    // given: una petición con UV-1 y UV-2 y una lista con las mismas referencias
+    Long peticionEvaluacionId = 2L;
+    List<PeticionEvaluacionUnidadVinculacionInput> input = Arrays.asList(
+        PeticionEvaluacionUnidadVinculacionInput.builder().unidadVinculacionRef("UV-1").build(),
+        PeticionEvaluacionUnidadVinculacionInput.builder().unidadVinculacionRef("UV-2").build());
+
+    // when: se actualizan las unidades
+    final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
+        buildRequestUnidadesVinculacion(input, "ETI-PEV-E"),
+        new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
+        }, peticionEvaluacionId);
+
+    // then: se conservan los ids existentes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).extracting(PeticionEvaluacionUnidadVinculacionOutput::getId)
+        .containsExactlyInAnyOrder(1L, 2L);
+  }
+
+  @Test
+  void updateUnidadesVinculacion_WithoutEditAuthority_Returns403() throws Exception {
+    // given: un usuario solo con autoridad de visualización
+    List<PeticionEvaluacionUnidadVinculacionInput> input = Arrays.asList(
+        PeticionEvaluacionUnidadVinculacionInput.builder().unidadVinculacionRef("UV-1").build());
+
+    // when: se intentan actualizar las unidades
+    final ResponseEntity<String> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
+        buildRequestUnidadesVinculacion(input, "ETI-PEV-V"), String.class, 2L);
+
+    // then: se deniega el acceso
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void updateUnidadesVinculacion_WithRefTooLong_Returns400() throws Exception {
+    // given: una referencia que supera la longitud máxima
+    List<PeticionEvaluacionUnidadVinculacionInput> input = Arrays.asList(
+        PeticionEvaluacionUnidadVinculacionInput.builder()
+            .unidadVinculacionRef(
+                StringUtils.repeat("X", PeticionEvaluacionUnidadVinculacion.UNIDAD_VINCULACION_REF_LENGTH + 1))
+            .build());
+
+    // when: se intentan actualizar las unidades
+    final ResponseEntity<String> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
+        buildRequestUnidadesVinculacion(input, "ETI-PEV-E"), String.class, 2L);
+
+    // then: se devuelve error de validación
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @Test
+  @Sql("classpath:scripts/peticion_evaluacion_unidad_vinculacion.sql")
+  void findAll_WithUnidadVinculacionRef_ReturnsFilteredPeticionEvaluacionList() throws Exception {
+    // given: dos peticiones vinculadas a UV-1
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
+        .queryParam("s", "id,desc").queryParam("q", "unidadesVinculacion.unidadVinculacionRef==UV-1")
+        .build(false).toUri();
+
+    // when: se buscan las peticiones por la unidad
+    final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<PeticionEvaluacion>>() {
+        });
+
+    // then: se devuelven las dos peticiones
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).extracting(PeticionEvaluacion::getId).containsExactly(3L, 2L);
+  }
+
+  @Test
+  @Sql("classpath:scripts/peticion_evaluacion_unidad_vinculacion.sql")
+  void findAll_WithComiteAndUnidadVinculacionRef_ReturnsPeticionesFromMemorias() throws Exception {
+    // given: el filtro por comité solo se resuelve sobre las memorias; solo la
+    // petición 2 tiene memorias y está vinculada a UV-1
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH)
+        .queryParam("s", "id,desc").queryParam("q", "comite.id==1;unidadesVinculacion.unidadVinculacionRef==UV-1")
+        .build(false).toUri();
+
+    // when: se buscan las peticiones por comité y unidad
+    final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<PeticionEvaluacion>>() {
+        });
+
+    // then: se devuelve solo la petición con memorias
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).extracting(PeticionEvaluacion::getId).containsExactly(2L);
   }
 
 }

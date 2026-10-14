@@ -12,7 +12,10 @@ import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo_;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionUnidadVinculacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionUnidadVinculacion_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
+import org.crue.hercules.sgi.eti.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
@@ -31,7 +34,9 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
     PERSONA("peticionEvaluacion.personaRef"),
     ESTADO("estadoActual.id"),
     CODIGO("peticionEvaluacion.codigo"),
-    NUM_REFERENCIA("numReferencia");
+    NUM_REFERENCIA("numReferencia"),
+    /* Referencia de una de las unidades de vinculación de la petición */
+    UNIDAD_VINCULACION_REF("unidadesVinculacion.unidadVinculacionRef");
 
     private String code;
 
@@ -150,6 +155,21 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
     return root.get(PeticionEvaluacion_.id).in(subquery);
   }
 
+  private static Predicate buildFilterUnidadVinculacionRef(ComparisonNode node, Root<PeticionEvaluacion> root,
+      CriteriaQuery<?> query, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+    String unidadVinculacionRef = node.getArguments().get(0);
+
+    Subquery<Long> subquery = query.subquery(Long.class);
+    Root<PeticionEvaluacionUnidadVinculacion> rootSubquery = subquery.from(PeticionEvaluacionUnidadVinculacion.class);
+    subquery.select(rootSubquery.get(PeticionEvaluacionUnidadVinculacion_.peticionEvaluacionId))
+        .where(cb.equal(rootSubquery.get(PeticionEvaluacionUnidadVinculacion_.unidadVinculacionRef),
+            unidadVinculacionRef));
+
+    return root.get(PeticionEvaluacion_.id).in(subquery);
+  }
+
   @Override
   public boolean isManaged(ComparisonNode node) {
     Property property = Property.fromCode(node.getSelector());
@@ -179,6 +199,8 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
         return buildNonFilter(criteriaBuilder);
       case NUM_REFERENCIA:
         return buildFilterNumReferencia(node, root, query, criteriaBuilder);
+      case UNIDAD_VINCULACION_REF:
+        return buildFilterUnidadVinculacionRef(node, root, query, criteriaBuilder);
       default:
         return null;
     }

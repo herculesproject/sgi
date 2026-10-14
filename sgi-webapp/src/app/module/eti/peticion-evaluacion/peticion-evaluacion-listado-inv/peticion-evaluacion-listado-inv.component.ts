@@ -5,7 +5,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { MSG_PARAMS } from '@core/i18n';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacionWithIsEliminable } from '@core/models/eti/peticion-evaluacion-with-is-eliminable';
@@ -20,7 +19,10 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
+import {
+  IPeticionEvaluacionListadoExportModalData,
+  PeticionEvaluacionListadoExportModalComponent
+} from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
 
 const MSG_FOOTER = marker('btn.add.entity');
 const MSG_DELETE = marker('msg.delete.entity');
@@ -78,11 +80,11 @@ export class PeticionEvaluacionListadoInvComponent
     this.fxLayoutProperties.xs = 'column';
 
     this.resolveSortProperty = (column: string) => {
-      if (column == 'titulo') {
+      if (column === 'titulo') {
         return 'titulo.value';
       }
       return column;
-    }
+    };
   }
 
 
@@ -188,10 +190,11 @@ export class PeticionEvaluacionListadoInvComponent
   }
 
   public openExportModal() {
-    const data: IBaseExportModalData = {
+    const data: IPeticionEvaluacionListadoExportModalData = {
       findOptions: this.findOptions,
       totalRegistrosExportacionExcel: this.totalElementos,
-      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel),
+      isUnidadesVinculacionEnabled: false
     };
 
     const config = {

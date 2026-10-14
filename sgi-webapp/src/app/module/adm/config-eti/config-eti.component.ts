@@ -5,11 +5,15 @@ import { AbstractMenuContentComponent } from '@core/component/abstract-menu-cont
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { UnidadVinculacionService } from '@core/services/sgo/unidad-vinculacion.service';
 import { Observable, of } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 
 export enum ConfigEti {
   ETI_BLOCKCHAIN_ENABLE = 'eti-blockchain-enable',
+  ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED = 'peticionEvaluacionUnidadesVinculacionEnabled',
+  ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED = 'peticionEvaluacionInicializarUnidadVinculacionEnabled',
+  ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF = 'tipoUnidadVinculacionDepartamentoRef',
   ETI_REP_ACTA_DOCX = 'rep-eti-acta-docx',
   ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX = 'rep-eti-evaluacion-favorable-memoria-modificacion-docx',
   ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX = 'rep-eti-evaluacion-favorable-memoria-nueva-docx',
@@ -44,6 +48,9 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
 
   private readonly _CONFIG_MAP: Map<ConfigEti, IConfigOptions> = new Map([
     [ConfigEti.ETI_BLOCKCHAIN_ENABLE, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_BLOCKCHAIN_ENABLE`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED.description`) }],
+    [ConfigEti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED.description`), disabled: true }],
+    [ConfigEti.ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF`), options: this.getTiposUnidadVinculacion(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF.description`), disabled: true }],
     [ConfigEti.ETI_REP_ACTA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_ACTA_DOCX`), module: ConfigModule.CNF }],
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX`), module: ConfigModule.CNF }],
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX`), module: ConfigModule.CNF }],
@@ -68,8 +75,26 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO`), required: false, module: ConfigModule.CNF }],
   ]);
 
+  /**
+   *  Parámetros que quedan deshabilitados mientras el parámetro del que dependen no esté habilitado
+   */
+  private readonly DEPENDENT_CONFIGS: Map<ConfigEti, ConfigEti[]> = new Map([
+    [
+      ConfigEti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED,
+      [ConfigEti.ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF]
+    ],
+    [
+      ConfigEti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED,
+      [ConfigEti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED]
+    ],
+  ]);
+
   get ConfigType() {
     return ConfigType;
+  }
+
+  get ConfigModule(): typeof ConfigModule {
+    return ConfigModule;
   }
 
   get CONFIG_MAP() {
@@ -88,7 +113,8 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
   }
 
   constructor(
-    readonly unidadGestionService: UnidadGestionService
+    readonly unidadGestionService: UnidadGestionService,
+    private readonly unidadVinculacionService: UnidadVinculacionService
   ) {
     super();
     this._unidadesGestion$ = unidadGestionService.findAll().pipe(
@@ -104,6 +130,39 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     } else {
       this.clearProblems();
     }
+  }
+
+  /**
+   * Habilita o deshabilita los parámetros que dependen del parámetro indicado según su valor persistido. Los
+   * parámetros deshabilitados no se muestran: el back los reinicia al deshabilitar el parámetro del que dependen y,
+   * al volver a mostrarse, se recargan con su valor real.
+   *
+   * @param key clave del parámetro de configuración.
+   * @param value valor persistido del parámetro.
+   */
+  onConfigValueChange(key: ConfigEti, value: string): void {
+    this.DEPENDENT_CONFIGS.get(key)?.forEach(dependent => this.setConfigDisabled(dependent, value !== 'true'));
+  }
+
+  /**
+   * Deshabilita o habilita el parámetro indicado. Al deshabilitarlo se deshabilitan también sus dependientes; al
+   * habilitarlo, estos se habilitan cuando el parámetro cargue y emita su valor.
+   *
+   * @param key clave del parámetro de configuración.
+   * @param disabled true para deshabilitarlo.
+   */
+  private setConfigDisabled(key: ConfigEti, disabled: boolean): void {
+    this.CONFIG_MAP.get(key).disabled = disabled;
+    if (disabled) {
+      this.DEPENDENT_CONFIGS.get(key)?.forEach(dependent => this.setConfigDisabled(dependent, true));
+    }
+  }
+
+  private getTiposUnidadVinculacion(): Observable<KeyValue<string, string>[]> {
+    return this.unidadVinculacionService.findAllPadres().pipe(
+      map(response => response.items.map(tipoUnidad => ({ key: tipoUnidad.id, value: tipoUnidad.nombre }))),
+      share()
+    );
   }
 
   private getBooleanValues(): Observable<KeyValue<string, string>[]> {

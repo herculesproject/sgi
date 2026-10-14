@@ -1942,7 +1942,7 @@ paths:
       
         ### Módulos del SGI donde se utiliza
         - CSP: **Convocatoria ➜ Listado - investigador**, **Solicitud ➜ Datos proyecto ➜ Equipo**, **Solicitud ➜ Datos solicitud RRHH ➜ Tutor**, **Solicitud ➜ Datos solicitud RRHH ➜ Requisitos convocatoria**, **Proyecto ➜ Equipo**, **Grupo investigación ➜ Datos generales**
-        - ETI: **Solicitud evaluación proyecto ➜ Equipo investigador**, **Memoria ➜ Formulario**
+        - ETI: **Solicitud evaluación proyecto ➜ Equipo investigador**, **Memoria ➜ Formulario**, listados y exportaciones de **Solicitudes de evaluación** y **Memorias** (departamento del solicitante), creación de solicitudes de evaluación (inicialización de la unidad de vinculación con el departamento del solicitante)
 
         ### Consideraciones para la implementación
         - Es un servicio candidato a ser utilizado en el formulario dinámico de personas (formly). Respecto a su uso en este formulario sería **opcional** si el  alta/modificación de personas no están habilitadas y no se requiere este dato para ver el detalle de una persona o realizar el alta/modificación de sus datos. Su utilización o no, depende de la definición de requisitos para la gestión de personas propia de cada implantación.

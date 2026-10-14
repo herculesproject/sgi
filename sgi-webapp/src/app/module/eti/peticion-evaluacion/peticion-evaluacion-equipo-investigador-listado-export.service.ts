@@ -3,6 +3,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { IPersona } from '@core/models/sgp/persona';
+import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
@@ -11,23 +12,27 @@ import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.s
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { forkJoin, from, Observable, of } from 'rxjs';
-import { catchError, concatMap, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, mergeMap, shareReplay, switchMap } from 'rxjs/operators';
 import { IPeticionEvaluacionMiembroReportData, IPeticionEvaluacionReportData, IPeticionEvaluacionReportOptions } from './peticion-evaluacion-listado-export.service';
 
 const EQUIPO_INVESTIGADOR_EMAIL_FIELD = 'Email';
 const EQUIPO_INVESTIGADOR_NOMBRE_FIELD = 'Nombre';
 const EQUIPO_INVESTIGADOR_APELLIDOS_FIELD = 'Apellidos';
 const EQUIPO_INVESTIGADOR_VINCULACION_FIELD = 'Vinculacion';
+const EQUIPO_INVESTIGADOR_DEPARTAMENTO_FIELD = 'Departamento';
 
 const EQUIPO_INVESTIGADOR_MIEMBRO_KEY = marker('eti.peticion-evaluacion.equipo-investigador.prefix');
 const EQUIPO_INVESTIGADOR_EMAIL_KEY = marker('eti.peticion-evaluacion.equipo-investigador.email');
 const EQUIPO_INVESTIGADOR_NOMBRE_KEY = marker('eti.peticion-evaluacion.equipo-investigador.nombre');
 const EQUIPO_INVESTIGADOR_APELLIDOS_KEY = marker('eti.peticion-evaluacion.equipo-investigador.apellidos');
 const EQUIPO_INVESTIGADOR_VINCULACION_KEY = marker('eti.peticion-evaluacion.equipo-investigador.vinculacion');
+const EQUIPO_INVESTIGADOR_DEPARTAMENTO_KEY = marker('eti.peticion-evaluacion.equipo-investigador.departamento');
 
 @Injectable()
 export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
   AbstractTableExportFillService<IPeticionEvaluacionReportData, IPeticionEvaluacionReportOptions> {
+
+  private readonly vinculacionesCache = new Map<string, Observable<IVinculacion>>();
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -37,6 +42,10 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
     private readonly vinculacionService: VinculacionService
   ) {
     super(translate);
+  }
+
+  public clearCache(): void {
+    this.vinculacionesCache.clear();
   }
 
   public getData(peticionData: IPeticionEvaluacionReportData): Observable<IPeticionEvaluacionReportData> {
@@ -67,7 +76,7 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
     Observable<IPeticionEvaluacionReportData> {
     return forkJoin({
       persona: this.personaService.findById(investigador.persona.id),
-      vinculacion: this.vinculacionService.findByPersonaId(investigador.persona.id)
+      vinculacion: this.findVinculacion(investigador.persona.id)
     }).pipe(
       concatMap(investigadorMiembro => {
         if (peticionData.equipoInvestigador === undefined || peticionData.equipoInvestigador === null) {
@@ -77,6 +86,29 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
         return of(peticionData);
       })
     );
+  }
+
+  /**
+   * Devuelve la vinculación de la persona, reutilizando la petición si ya se ha hecho para la misma persona durante la
+   * exportación en curso. Si la vinculación no se puede recuperar se devuelve null.
+   *
+   * @param personaId identificador de la persona
+   * @returns vinculación de la persona o null
+   */
+  private findVinculacion(personaId: string): Observable<IVinculacion> {
+    let vinculacion$ = this.vinculacionesCache.get(personaId);
+    if (!vinculacion$) {
+      vinculacion$ = this.vinculacionService.findByPersonaId(personaId).pipe(
+        catchError(err => {
+          this.logger.error(err);
+          return of(null as IVinculacion);
+        }),
+        shareReplay(1)
+      );
+      this.vinculacionesCache.set(personaId, vinculacion$);
+    }
+
+    return vinculacion$;
   }
 
   public fillColumns(
@@ -121,9 +153,16 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
       };
       columns.push(columnApellidos);
 
-      const columnDepartamento: ISgiColumnReport = {
+      const columnVinculacion: ISgiColumnReport = {
         name: EQUIPO_INVESTIGADOR_VINCULACION_FIELD + idPeticion,
         title: prefixTitleColumn + idPeticion + ': ' + this.translate.instant(EQUIPO_INVESTIGADOR_VINCULACION_KEY),
+        type: ColumnType.STRING,
+      };
+      columns.push(columnVinculacion);
+
+      const columnDepartamento: ISgiColumnReport = {
+        name: EQUIPO_INVESTIGADOR_DEPARTAMENTO_FIELD + idPeticion,
+        title: prefixTitleColumn + idPeticion + ': ' + this.translate.instant(EQUIPO_INVESTIGADOR_DEPARTAMENTO_KEY),
         type: ColumnType.STRING,
       };
       columns.push(columnDepartamento);
@@ -132,8 +171,11 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
     return columns;
   }
 
-  public fillRows(peticiones: IPeticionEvaluacionReportData[],
-    index: number, reportConfig: IReportConfig<IPeticionEvaluacionReportOptions>): any[] {
+  public fillRows(
+    peticiones: IPeticionEvaluacionReportData[],
+    index: number,
+    reportConfig: IReportConfig<IPeticionEvaluacionReportOptions>
+  ): any[] {
 
     const invencion = peticiones[index];
     const elementsRow: any[] = [];
@@ -154,7 +196,9 @@ export class PeticionEvaluacionEquipoInvestigadorListadoExportService extends
       elementsRow.push(investigador.persona?.nombre ?? '');
       elementsRow.push(investigador.persona?.apellidos ?? '');
       elementsRow.push(investigador.vinculacion?.categoriaProfesional?.nombre ?? '');
+      elementsRow.push(investigador.vinculacion?.departamento?.nombre ?? '');
     } else {
+      elementsRow.push('');
       elementsRow.push('');
       elementsRow.push('');
       elementsRow.push('');

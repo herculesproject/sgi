@@ -7,7 +7,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { CspSharedModule } from '../../../shared/csp-shared.module';
+import { SgoSharedModule } from 'src/app/esb/sgo/shared/sgo-shared.module';
 import { GrupoUnidadVinculacionModalComponent, GrupoUnidadVinculacionModalData } from './grupo-unidad-vinculacion-modal.component';
 
 describe('GrupoUnidadVinculacionModalComponent', () => {
@@ -31,7 +31,7 @@ describe('GrupoUnidadVinculacionModalComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         SharedModule,
-        CspSharedModule
+        SgoSharedModule
       ],
       providers: [
         { provide: MatDialogRef, useValue: TestUtils.buildDialogCommonMatDialogRef() },
