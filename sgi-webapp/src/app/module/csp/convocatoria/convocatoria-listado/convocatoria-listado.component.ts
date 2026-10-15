@@ -10,13 +10,12 @@ import { MSG_PARAMS } from '@core/i18n';
 import { Estado, ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoriaFasePresentacionSolicitudesFechas } from '@core/models/csp/convocatoria-fase-presentacion-solicitudes-fechas';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
-import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
@@ -44,7 +43,7 @@ const CONVOCATORIA_KEY = marker('csp.convocatoria');
 
 export interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
-  fase: IConvocatoriaFase;
+  fase: IConvocatoriaFasePresentacionSolicitudesFechas;
   entidadConvocante: IConvocatoriaEntidadConvocante;
   entidadConvocanteEmpresa: IEmpresa;
   entidadFinanciadora: IConvocatoriaEntidadFinanciadora;
@@ -98,7 +97,6 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     protected snackBarService: SnackBarService,
     private convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
-    private readonly configuracionSolicitudService: ConfiguracionSolicitudService,
     private dialogService: DialogService,
     public authService: SgiAuthService,
     private readonly translate: TranslateService,
@@ -281,7 +279,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             entidadConvocanteEmpresa: {} as IEmpresa,
             entidadFinanciadora: {} as IConvocatoriaEntidadFinanciadora,
             entidadFinanciadoraEmpresa: {} as IEmpresa,
-            fase: {} as IConvocatoriaFase
+            fase: {} as IConvocatoriaFasePresentacionSolicitudesFechas
           } as IConvocatoriaListado;
         });
         return {
@@ -332,7 +330,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                     }),
                     catchError((error) => {
                       this.logger.error(error);
-                      convocatoriaListado.entidadFinanciadoraEmpresa = { id: convocatoriaListado.entidadFinanciadora?.empresa?.id } as IEmpresa;
+                      convocatoriaListado.entidadFinanciadoraEmpresa = {
+                        id: convocatoriaListado.entidadFinanciadora?.empresa?.id
+                      } as IEmpresa;
                       return of(convocatoriaListado);
                     })
                   );
@@ -340,9 +340,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                 return of(convocatoriaListado);
               }),
               switchMap(() => {
-                return this.configuracionSolicitudService.findByConvocatoriaId(convocatoriaListado.convocatoria.id).pipe(
-                  map(configuracionSolicitud => {
-                    convocatoriaListado.fase = configuracionSolicitud?.fasePresentacionSolicitudes;
+                return this.convocatoriaService.findFasePresentacionSolicitudesFechas(convocatoriaListado.convocatoria.id).pipe(
+                  map(fase => {
+                    convocatoriaListado.fase = fase;
                     return convocatoriaListado;
                   })
                 );
@@ -370,7 +370,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                         }),
                         catchError((error) => {
                           this.logger.error(error);
-                          convocatoriaListado.entidadConvocanteEmpresa = { id: convocatoriaListado.entidadConvocante?.entidad?.id } as IEmpresa;
+                          convocatoriaListado.entidadConvocanteEmpresa = {
+                            id: convocatoriaListado.entidadConvocante?.entidad?.id
+                          } as IEmpresa;
                           return of(convocatoriaListado);
                         })
                       );

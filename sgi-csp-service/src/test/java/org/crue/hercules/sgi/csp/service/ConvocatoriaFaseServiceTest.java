@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
@@ -28,6 +29,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.FaseWithSentAvisoNotDeletableException;
 import org.crue.hercules.sgi.csp.exceptions.SentAvisoNotUpdatableException;
+import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessConvocatoriaException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
@@ -659,6 +661,128 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
       ConvocatoriaFase convocatoriaFase = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(convocatoriaFase.getId()).isEqualTo(Long.valueOf(i));
     }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
+  void findFasePresentacionSolicitudes_WithFase_ReturnsConvocatoriaFase() {
+    // given: una convocatoria visible cuya configuración de solicitud tiene fase de presentación
+    Long convocatoriaId = 1L;
+    ConvocatoriaFase fasePresentacionSolicitudes = generarMockConvocatoriaFase(2L);
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(1L)
+        .convocatoriaId(convocatoriaId)
+        .fasePresentacionSolicitudes(fasePresentacionSolicitudes)
+        .build();
+    BDDMockito.given(convocatoriaRepository.findById(convocatoriaId))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(convocatoriaId))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: se busca la fase de presentación de solicitudes de la convocatoria
+    ConvocatoriaFase fase = service.findFasePresentacionSolicitudes(convocatoriaId);
+
+    // then: devuelve la fase configurada tras comprobar la visibilidad de la convocatoria
+    Assertions.assertThat(fase).isSameAs(fasePresentacionSolicitudes);
+    verify(convocatoriaRepository, times(1)).findById(convocatoriaId);
+    verify(configuracionSolicitudRepository, times(1)).findByConvocatoriaId(convocatoriaId);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
+  void findFasePresentacionSolicitudes_WithoutFase_ReturnsNull() {
+    // given: una convocatoria visible cuya configuración de solicitud no tiene fase de presentación
+    Long convocatoriaId = 1L;
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(1L)
+        .convocatoriaId(convocatoriaId)
+        .build();
+    BDDMockito.given(convocatoriaRepository.findById(convocatoriaId))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(convocatoriaId))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: se busca la fase de presentación de solicitudes de la convocatoria
+    ConvocatoriaFase fase = service.findFasePresentacionSolicitudes(convocatoriaId);
+
+    // then: devuelve null
+    Assertions.assertThat(fase).isNull();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-E" })
+  void findFasePresentacionSolicitudes_WithoutConfiguracionSolicitud_ReturnsNull() {
+    // given: una convocatoria visible sin configuración de solicitud
+    Long convocatoriaId = 1L;
+    BDDMockito.given(convocatoriaRepository.findById(convocatoriaId))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(convocatoriaId))
+        .willReturn(Optional.empty());
+
+    // when: se busca la fase de presentación de solicitudes de la convocatoria
+    ConvocatoriaFase fase = service.findFasePresentacionSolicitudes(convocatoriaId);
+
+    // then: devuelve null
+    Assertions.assertThat(fase).isNull();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  void findFasePresentacionSolicitudes_WithoutAuthorityViewConvocatoria_ThrowsUserNotAuthorizedToAccessConvocatoriaException() {
+    // given: una convocatoria que el usuario no puede ver
+    Long convocatoriaId = 1L;
+    BDDMockito.given(convocatoriaRepository.findById(convocatoriaId))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(convocatoriaId))
+        .willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: se busca la fase de presentación de solicitudes de la convocatoria
+        () -> service.findFasePresentacionSolicitudes(convocatoriaId))
+        // then: lanza UserNotAuthorizedToAccessConvocatoriaException
+        .isInstanceOf(UserNotAuthorizedToAccessConvocatoriaException.class);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  void findFasePresentacionSolicitudes_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
+    // given: una convocatoria que no existe
+    Long convocatoriaId = 1L;
+    BDDMockito.given(convocatoriaRepository.findById(convocatoriaId)).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: se busca la fase de presentación de solicitudes de la convocatoria
+        () -> service.findFasePresentacionSolicitudes(convocatoriaId))
+        // then: lanza ConvocatoriaNotFoundException sin consultar la configuración
+        .isInstanceOf(ConvocatoriaNotFoundException.class);
+    verify(configuracionSolicitudRepository, never()).findByConvocatoriaId(anyLong());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-INV-V" })
+  void findFasePresentacionSolicitudes_WithInvestigador_ConsultaConfiguracionUnaVez() {
+    // given: un investigador y una convocatoria registrada con tramitación SGI y fase de presentación
+    Long convocatoriaId = 1L;
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    convocatoria.setEstado(Convocatoria.Estado.REGISTRADA);
+    ConvocatoriaFase fasePresentacionSolicitudes = generarMockConvocatoriaFase(2L);
+    ConfiguracionSolicitud configuracionSolicitud = ConfiguracionSolicitud.builder()
+        .id(1L)
+        .convocatoriaId(convocatoriaId)
+        .tramitacionSGI(Boolean.TRUE)
+        .fasePresentacionSolicitudes(fasePresentacionSolicitudes)
+        .build();
+    BDDMockito.given(convocatoriaRepository.findById(convocatoriaId)).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(configuracionSolicitudRepository.findByConvocatoriaId(convocatoriaId))
+        .willReturn(Optional.of(configuracionSolicitud));
+
+    // when: se busca la fase de presentación de solicitudes de la convocatoria
+    ConvocatoriaFase fase = service.findFasePresentacionSolicitudes(convocatoriaId);
+
+    // then: devuelve la fase configurada consultando la convocatoria y la configuración una sola vez
+    Assertions.assertThat(fase).isSameAs(fasePresentacionSolicitudes);
+    verify(convocatoriaRepository, times(1)).findById(convocatoriaId);
+    verify(configuracionSolicitudRepository, times(1)).findByConvocatoriaId(convocatoriaId);
   }
 
   @Test

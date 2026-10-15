@@ -10,7 +10,9 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.ConvocatoriaController;
+import org.crue.hercules.sgi.csp.controller.publico.ConvocatoriaPublicController;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFasePresentacionSolicitudesFechasOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoCategoriaProfesionalOutput;
@@ -953,6 +955,210 @@ class ConvocatoriaIT extends BaseIT {
         .as("get(2).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 1));
 
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/configuracion_solicitud.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFasePresentacionSolicitudesFechas_WithFase_Returns200() throws Exception {
+    // given: la convocatoria 1 tiene configurada la fase 2 como fase de presentación de solicitudes
+    Long convocatoriaId = 1L;
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + ConvocatoriaController.PATH_FASE_PRESENTACION_SOLICITUDES)
+        .buildAndExpand(convocatoriaId).toUri();
+
+    // when: se piden las fechas de la fase de presentación de solicitudes
+    final ResponseEntity<ConvocatoriaFasePresentacionSolicitudesFechasOutput> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildGenericRequest(null, null, "CSP-CON-V"),
+        ConvocatoriaFasePresentacionSolicitudesFechasOutput.class);
+
+    // then: devuelve 200 con las fechas de la fase 2
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    ConvocatoriaFasePresentacionSolicitudesFechasOutput fechas = response.getBody();
+    Assertions.assertThat(fechas).isNotNull();
+    Assertions.assertThat(fechas.getFechaInicio()).isEqualTo(Instant.parse("2021-01-31T23:00:00Z"));
+    Assertions.assertThat(fechas.getFechaFin()).isEqualTo(Instant.parse("2021-02-20T22:59:59Z"));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/configuracion_solicitud.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFasePresentacionSolicitudesFechas_WithoutFase_Returns204() throws Exception {
+    // given: la convocatoria 2 tiene configuración de solicitud sin fase de presentación de solicitudes
+    Long convocatoriaId = 2L;
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + ConvocatoriaController.PATH_FASE_PRESENTACION_SOLICITUDES)
+        .buildAndExpand(convocatoriaId).toUri();
+
+    // when: se piden las fechas de la fase de presentación de solicitudes
+    final ResponseEntity<ConvocatoriaFasePresentacionSolicitudesFechasOutput> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildGenericRequest(null, null, "CSP-CON-V"),
+        ConvocatoriaFasePresentacionSolicitudesFechasOutput.class);
+
+    // then: devuelve 204
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/configuracion_solicitud.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFasePresentacionSolicitudesFechas_WithoutConfiguracionSolicitud_Returns204() throws Exception {
+    // given: la convocatoria 5 no tiene configuración de solicitud
+    Long convocatoriaId = 5L;
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + ConvocatoriaController.PATH_FASE_PRESENTACION_SOLICITUDES)
+        .buildAndExpand(convocatoriaId).toUri();
+
+    // when: se piden las fechas de la fase de presentación de solicitudes
+    final ResponseEntity<ConvocatoriaFasePresentacionSolicitudesFechasOutput> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildGenericRequest(null, null, "CSP-CON-V"),
+        ConvocatoriaFasePresentacionSolicitudesFechasOutput.class);
+
+    // then: devuelve 204
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/configuracion_solicitud.sql"
+    // @formatter:on
+  })
+  @Sql(statements = "UPDATE test.convocatoria SET formulario_solicitud = 'RRHH' WHERE id = 1")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFasePresentacionSolicitudesFechasPublic_WithFase_Returns200() throws Exception {
+    // given: la convocatoria 1 es pública (RRHH, registrada y con tramitación SGI) y tiene la fase 2
+    // como fase de presentación de solicitudes
+    Long convocatoriaId = 1L;
+    URI uri = UriComponentsBuilder
+        .fromUriString(ConvocatoriaPublicController.REQUEST_MAPPING
+            + ConvocatoriaPublicController.PATH_FASE_PRESENTACION_SOLICITUDES)
+        .buildAndExpand(convocatoriaId).toUri();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    // when: se piden sin autenticar las fechas de la fase de presentación de solicitudes
+    final ResponseEntity<ConvocatoriaFasePresentacionSolicitudesFechasOutput> response = restTemplate.exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), ConvocatoriaFasePresentacionSolicitudesFechasOutput.class);
+
+    // then: devuelve 200 con las fechas de la fase 2
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    ConvocatoriaFasePresentacionSolicitudesFechasOutput fechas = response.getBody();
+    Assertions.assertThat(fechas).isNotNull();
+    Assertions.assertThat(fechas.getFechaInicio()).isEqualTo(Instant.parse("2021-01-31T23:00:00Z"));
+    Assertions.assertThat(fechas.getFechaFin()).isEqualTo(Instant.parse("2021-02-20T22:59:59Z"));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/configuracion_solicitud.sql"
+    // @formatter:on
+  })
+  @Sql(statements = {
+    // @formatter:off
+    "UPDATE test.convocatoria SET formulario_solicitud = 'RRHH' WHERE id = 1",
+    "UPDATE test.configuracion_solicitud SET convocatoria_fase_id = NULL WHERE id = 1"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFasePresentacionSolicitudesFechasPublic_WithoutFase_Returns204() throws Exception {
+    // given: la convocatoria 1 es pública (RRHH, registrada y con tramitación SGI) y no tiene fase de
+    // presentación de solicitudes configurada
+    Long convocatoriaId = 1L;
+    URI uri = UriComponentsBuilder
+        .fromUriString(ConvocatoriaPublicController.REQUEST_MAPPING
+            + ConvocatoriaPublicController.PATH_FASE_PRESENTACION_SOLICITUDES)
+        .buildAndExpand(convocatoriaId).toUri();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    // when: se piden sin autenticar las fechas de la fase de presentación de solicitudes
+    final ResponseEntity<ConvocatoriaFasePresentacionSolicitudesFechasOutput> response = restTemplate.exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), ConvocatoriaFasePresentacionSolicitudesFechasOutput.class);
+
+    // then: devuelve 204
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/configuracion_solicitud.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findFasePresentacionSolicitudesFechasPublic_WithConvocatoriaNoPublica_Returns403() throws Exception {
+    // given: la convocatoria 1 no es pública (formulario PROYECTO) aunque tiene fase de presentación de
+    // solicitudes configurada
+    Long convocatoriaId = 1L;
+    URI uri = UriComponentsBuilder
+        .fromUriString(ConvocatoriaPublicController.REQUEST_MAPPING
+            + ConvocatoriaPublicController.PATH_FASE_PRESENTACION_SOLICITUDES)
+        .buildAndExpand(convocatoriaId).toUri();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    // when: se piden sin autenticar las fechas de la fase de presentación de solicitudes
+    final ResponseEntity<ConvocatoriaFasePresentacionSolicitudesFechasOutput> response = restTemplate.exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), ConvocatoriaFasePresentacionSolicitudesFechasOutput.class);
+
+    // then: devuelve 403
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   /*

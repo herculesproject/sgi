@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.converter.ConvocatoriaFaseConverter;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFasePresentacionSolicitudesFechasOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaHitoOutput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaPalabraClaveOutput;
@@ -115,6 +116,8 @@ public class ConvocatoriaController {
       + "convocatoriaentidadfinanciadoras";
   public static final String PATH_ENTIDADES_GESTORAS = PATH_ID + PATH_DELIMITER + "convocatoriaentidadgestoras";
   public static final String PATH_FASES = PATH_ID + PATH_DELIMITER + "convocatoriafases";
+  public static final String PATH_FASE_PRESENTACION_SOLICITUDES = PATH_ID + PATH_DELIMITER
+      + "fase-presentacion-solicitudes";
   public static final String PATH_GASTOS = PATH_ID + PATH_DELIMITER + "convocatoriagastos";
   public static final String PATH_GASTOS_NO_PERMITIDOS = PATH_GASTOS + PATH_DELIMITER + "nopermitidos";
   public static final String PATH_GASTOS_PERMITIDOS = PATH_GASTOS + PATH_DELIMITER + "permitidos";
@@ -657,6 +660,31 @@ public class ConvocatoriaController {
 
     log.debug("findAllConvocatoriaFase(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve las fechas de la {@link ConvocatoriaFase} configurada como fase de
+   * presentación de solicitudes de la {@link Convocatoria}.
+   *
+   * @param id Identificador de {@link Convocatoria}.
+   * @return {@link HttpStatus#OK} con las fechas de la fase de presentación de
+   *         solicitudes o {@link HttpStatus#NO_CONTENT} si la {@link Convocatoria}
+   *         no tiene fase de presentación de solicitudes configurada.
+   */
+  @GetMapping(PATH_FASE_PRESENTACION_SOLICITUDES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-V', 'CSP-CON-INV-V', 'CSP-CON-E', 'CSP-SOL-C', 'CSP-PRO-C', 'CSP-CON-B', 'CSP-CON-R', 'CSP-CON-C')")
+  public ResponseEntity<ConvocatoriaFasePresentacionSolicitudesFechasOutput> findFasePresentacionSolicitudesFechas(
+      @PathVariable Long id) {
+    log.debug("findFasePresentacionSolicitudesFechas - id: {}", id);
+    ConvocatoriaFase fasePresentacionSolicitudes = convocatoriaFaseService.findFasePresentacionSolicitudes(id);
+
+    if (fasePresentacionSolicitudes == null) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    return new ResponseEntity<>(
+        convocatoriaFaseConverter.convertToFasePresentacionSolicitudesFechas(fasePresentacionSolicitudes),
+        HttpStatus.OK);
   }
 
   /**

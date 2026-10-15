@@ -459,6 +459,21 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     return returnValue;
   }
 
+  @Override
+  public ConvocatoriaFase findFasePresentacionSolicitudes(Long convocatoriaId) {
+    log.debug("findFasePresentacionSolicitudes - convocatoriaId: {}", convocatoriaId);
+
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
+    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
+        .findByConvocatoriaId(convocatoriaId)
+        .orElse(null);
+
+    authorityHelper.checkUserHasAuthorityViewConvocatoria(convocatoria, configuracionSolicitud);
+
+    return configuracionSolicitud != null ? configuracionSolicitud.getFasePresentacionSolicitudes() : null;
+  }
+
   /**
    * Comprueba que existen {@link ConvocatoriaFase} para una {@link Convocatoria}
    * con el mismo {@link TipoFase} y con las fechas solapadas

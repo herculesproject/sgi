@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.springframework.data.domain.Page;
@@ -61,6 +62,18 @@ public interface ConvocatoriaFaseService {
    *         {@link Convocatoria} paginadas.
    */
   Page<ConvocatoriaFase> findAllByConvocatoria(Long convocatoriaId, String query, Pageable pageable);
+
+  /**
+   * Obtiene la {@link ConvocatoriaFase} configurada como fase de presentación de
+   * solicitudes en la {@link ConfiguracionSolicitud} de la {@link Convocatoria}.
+   *
+   * @param convocatoriaId el id de la {@link Convocatoria}.
+   * @return la {@link ConvocatoriaFase} de presentación de solicitudes o
+   *         {@code null} si la {@link Convocatoria} no tiene
+   *         {@link ConfiguracionSolicitud} o esta no tiene fase de presentación de
+   *         solicitudes.
+   */
+  ConvocatoriaFase findFasePresentacionSolicitudes(Long convocatoriaId);
 
   /**
    * Comprueba si existe algún {@link ConvocatoriaFase} relacionado con el Id de
