@@ -17,6 +17,7 @@ import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-en
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoriaFasePresentacionSolicitudesFechas } from '@core/models/csp/convocatoria-fase-presentacion-solicitudes-fechas';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaPalabraClave } from '@core/models/csp/convocatoria-palabra-clave';
 import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
@@ -36,6 +37,8 @@ import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convo
 import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
 import { IConvocatoriaPeriodoJustificacionResponse } from '@core/services/csp/convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response';
 import { IConvocatoriaPeriodoSeguimientoCientificoResponse } from '@core/services/csp/convocatoria-periodo-seguimiento-cientifico/convocatoria-periodo-seguimiento-cientifico-response';
+import { IConvocatoriaFasePresentacionSolicitudesFechasResponse } from '@core/services/csp/convocatoria/convocatoria-fase-presentacion-solicitudes-fechas-response';
+import { CONVOCATORIA_FASE_PRESENTACION_SOLICITUDES_FECHAS_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria/convocatoria-fase-presentacion-solicitudes-fechas-response.converter';
 import { IConvocatoriaResponse } from '@core/services/csp/convocatoria/convocatoria-response';
 import { CONVOCATORIA_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria/convocatoria-response.converter';
 import { environment } from '@env';
@@ -229,6 +232,21 @@ export class ConvocatoriaService extends _ConvocatoriaServiceMixinBase {
       `${this.endpointUrl}/${id}/convocatoriafases`,
       options,
       CONVOCATORIA_FASE_RESPONSE_CONVERTER
+    );
+  }
+
+  /**
+   * Obtiene las fechas de inicio y fin de la fase de presentación de solicitudes
+   * configurada en la configuración de solicitud de la convocatoria
+   *
+   * @param id Id de la convocatoria
+   * @returns las fechas de la fase de presentación de solicitudes o **null** si no tiene
+   */
+  findFasePresentacionSolicitudesFechas(id: number): Observable<IConvocatoriaFasePresentacionSolicitudesFechas> {
+    return this.http.get<IConvocatoriaFasePresentacionSolicitudesFechasResponse>(
+      `${this.endpointUrl}/${id}/fase-presentacion-solicitudes`
+    ).pipe(
+      map(response => CONVOCATORIA_FASE_PRESENTACION_SOLICITUDES_FECHAS_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

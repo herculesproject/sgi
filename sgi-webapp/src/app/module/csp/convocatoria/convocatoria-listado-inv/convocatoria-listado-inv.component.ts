@@ -6,7 +6,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoriaFasePresentacionSolicitudesFechas } from '@core/models/csp/convocatoria-fase-presentacion-solicitudes-fechas';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IDatosAcademicos } from '@core/models/sgp/datos-academicos';
 import { IDatosPersonales } from '@core/models/sgp/datos-personales';
@@ -42,7 +42,7 @@ interface DatosPersona {
 }
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
-  fase: IConvocatoriaFase;
+  fase: IConvocatoriaFasePresentacionSolicitudesFechas;
   entidadConvocante: IConvocatoriaEntidadConvocante;
   entidadConvocanteEmpresa: IEmpresa;
   entidadFinanciadora: IConvocatoriaEntidadFinanciadora;
@@ -139,7 +139,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
                 entidadConvocanteEmpresa: {} as IEmpresa,
                 entidadFinanciadora: {} as IConvocatoriaEntidadFinanciadora,
                 entidadFinanciadoraEmpresa: {} as IEmpresa,
-                fase: {} as IConvocatoriaFase
+                fase: {} as IConvocatoriaFasePresentacionSolicitudesFechas
               } as IConvocatoriaListado;
             });
             return {
@@ -186,11 +186,9 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
                     return of(convocatoriaListado);
                   }),
                   switchMap(() => {
-                    return this.convocatoriaService.findAllConvocatoriaFases(convocatoriaListado.convocatoria.id).pipe(
-                      map(convocatoriaFase => {
-                        if (convocatoriaFase.items.length > 0) {
-                          convocatoriaListado.fase = convocatoriaFase.items[0];
-                        }
+                    return this.convocatoriaService.findFasePresentacionSolicitudesFechas(convocatoriaListado.convocatoria.id).pipe(
+                      map(fase => {
+                        convocatoriaListado.fase = fase;
                         return convocatoriaListado;
                       })
                     );

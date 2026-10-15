@@ -161,12 +161,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   private create(configuracion: IConfiguracionSolicitud): Observable<IConfiguracionSolicitud> {
     configuracion.convocatoriaId = this.getKey() as number;
 
-    if (configuracion.fasePresentacionSolicitudes != null && !configuracion.fasePresentacionSolicitudes.id) {
-      const fasePresentacionSolicitudes = this.convocatoriaFases$.value.find(plazoFase =>
-        plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
-      configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
-      this.getFormGroup().controls.fasePresentacionSolicitudes.setValue(fasePresentacionSolicitudes, { onlySelf: true, emitEvent: false });
-    }
+    this.resolveFasePresentacionSolicitudes(configuracion);
 
     return this.configuracionSolicitudService.create(configuracion).pipe(
       tap(result => this.configuracionSolicitud = result),
@@ -179,17 +174,33 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       configuracion.fasePresentacionSolicitudes = null;
     }
 
-    if (configuracion.fasePresentacionSolicitudes != null && !configuracion.fasePresentacionSolicitudes.id) {
-      const fasePresentacionSolicitudes = this.convocatoriaFases$.value.find(plazoFase =>
-        plazoFase.tipoFase.id === configuracion.fasePresentacionSolicitudes.tipoFase.id);
-      configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
-      this.getFormGroup().controls.fasePresentacionSolicitudes.setValue(fasePresentacionSolicitudes, { onlySelf: true, emitEvent: false });
-    }
+    this.resolveFasePresentacionSolicitudes(configuracion);
 
     return this.configuracionSolicitudService.update(Number(this.getKey()), configuracion).pipe(
       tap(result => this.configuracionSolicitud = result),
       switchMap(result => this.saveOrUpdateDocumentoRequeridos(result))
     );
+  }
+
+  /**
+   * Si la fase de presentación de solicitudes seleccionada se ha creado en este mismo guardado (todavía sin id),
+   * la sustituye por la fase ya guardada que le corresponde. Se identifica por tipo y fechas, ya que no puede
+   * haber dos fases del mismo tipo con fechas solapadas.
+   *
+   * @param configuracion la configuración de solicitud que se va a guardar.
+   */
+  private resolveFasePresentacionSolicitudes(configuracion: IConfiguracionSolicitud): void {
+    const fase = configuracion.fasePresentacionSolicitudes;
+    if (fase == null || fase.id) {
+      return;
+    }
+
+    const fasePresentacionSolicitudes = this.convocatoriaFases$.value.find(plazoFase =>
+      plazoFase.tipoFase.id === fase.tipoFase.id
+      && plazoFase.fechaInicio?.toMillis() === fase.fechaInicio?.toMillis()
+      && plazoFase.fechaFin?.toMillis() === fase.fechaFin?.toMillis());
+    configuracion.fasePresentacionSolicitudes = { id: fasePresentacionSolicitudes.id } as IConvocatoriaFase;
+    this.getFormGroup().controls.fasePresentacionSolicitudes.setValue(fasePresentacionSolicitudes, { onlySelf: true, emitEvent: false });
   }
 
   private saveOrUpdateDocumentoRequeridos(result: IConfiguracionSolicitud) {

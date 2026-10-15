@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.converter;
 
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFasePresentacionSolicitudesFechasOutput;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -28,5 +29,18 @@ public class ConvocatoriaFaseConverter {
 
   public Page<ConvocatoriaFaseOutput> convert(Page<ConvocatoriaFase> page) {
     return page.map(this::convert);
+  }
+
+  /**
+   * Convierte una {@link ConvocatoriaFase} en un
+   * {@link ConvocatoriaFasePresentacionSolicitudesFechasOutput} con sus fechas de
+   * inicio y fin.
+   *
+   * @param entity la {@link ConvocatoriaFase} a convertir (no nula).
+   * @return el {@link ConvocatoriaFasePresentacionSolicitudesFechasOutput}.
+   */
+  public ConvocatoriaFasePresentacionSolicitudesFechasOutput convertToFasePresentacionSolicitudesFechas(
+      ConvocatoriaFase entity) {
+    return modelMapper.map(entity, ConvocatoriaFasePresentacionSolicitudesFechasOutput.class);
   }
 }

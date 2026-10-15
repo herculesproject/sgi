@@ -5,6 +5,7 @@ import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-en
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoriaFasePresentacionSolicitudesFechas } from '@core/models/csp/convocatoria-fase-presentacion-solicitudes-fechas';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
@@ -196,7 +197,7 @@ export class ConvocatoriaListadoExportService extends AbstractTableExportService
             entidadConvocanteEmpresa: {} as IEmpresa,
             entidadFinanciadora: {} as IConvocatoriaEntidadFinanciadora,
             entidadFinanciadoraEmpresa: {} as IEmpresa,
-            fase: {} as IConvocatoriaFase
+            fase: {} as IConvocatoriaFasePresentacionSolicitudesFechas
           } as IConvocatoriaReportData;
         });
       }),
@@ -204,7 +205,7 @@ export class ConvocatoriaListadoExportService extends AbstractTableExportService
         const requestsConvocatoria: IConvocatoriaReportData[] = [];
         return from(convocatoriasReportData).pipe(
           mergeMap((convocatoria) => {
-            return this.getDataReportInner(convocatoria, reportConfig.reportOptions, reportConfig.outputType)
+            return this.getDataReportInner(convocatoria, reportConfig.reportOptions, reportConfig.outputType);
           }, this.DEFAULT_CONCURRENT)
         ).pipe(
           map(r => {
@@ -212,7 +213,7 @@ export class ConvocatoriaListadoExportService extends AbstractTableExportService
             return requestsConvocatoria;
           }),
           takeLast(1)
-        )
+        );
       }),
       takeLast(1)
     );
@@ -407,7 +408,8 @@ export class ConvocatoriaListadoExportService extends AbstractTableExportService
     }
   }
 
-  private getDataReportFooter(convocatoriaData: IConvocatoriaReportData,
+  private getDataReportFooter(
+    convocatoriaData: IConvocatoriaReportData,
     output: OutputReport
   ): Observable<IConvocatoriaReportData> {
     if (output === OutputReport.PDF || output === OutputReport.RTF) {

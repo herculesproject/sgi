@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoriaFasePresentacionSolicitudesFechas } from '@core/models/csp/convocatoria-fase-presentacion-solicitudes-fechas';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { Module } from '@core/module';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -37,7 +37,7 @@ export interface SearchConvocatoriaModalData extends SearchModalData {
 
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
-  fase: IConvocatoriaFase;
+  fase: IConvocatoriaFasePresentacionSolicitudesFechas;
   entidadConvocante: IConvocatoriaEntidadConvocante;
   entidadConvocanteEmpresa: IEmpresa;
   entidadFinanciadora: IConvocatoriaEntidadFinanciadora;
@@ -141,7 +141,7 @@ export class SearchConvocatoriaModalComponent extends DialogCommonComponent impl
               entidadConvocanteEmpresa: {} as IEmpresa,
               entidadFinanciadora: {} as IConvocatoriaEntidadFinanciadora,
               entidadFinanciadoraEmpresa: {} as IEmpresa,
-              fase: {} as IConvocatoriaFase
+              fase: {} as IConvocatoriaFasePresentacionSolicitudesFechas
             } as IConvocatoriaListado;
           });
           return {
@@ -176,11 +176,9 @@ export class SearchConvocatoriaModalComponent extends DialogCommonComponent impl
                   return of(convocatoriaListado);
                 }),
                 switchMap(() => {
-                  return this.convocatoriaService.findAllConvocatoriaFases(convocatoriaListado.convocatoria.id).pipe(
-                    map(convocatoriaFase => {
-                      if (convocatoriaFase.items.length > 0) {
-                        convocatoriaListado.fase = convocatoriaFase.items[0];
-                      }
+                  return this.convocatoriaService.findFasePresentacionSolicitudesFechas(convocatoriaListado.convocatoria.id).pipe(
+                    map(fase => {
+                      convocatoriaListado.fase = fase;
                       return convocatoriaListado;
                     })
                   );
@@ -237,10 +235,10 @@ export class SearchConvocatoriaModalComponent extends DialogCommonComponent impl
       .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.abiertoPlazoPresentacionSolicitud.value?.toString());
 
     if (controls.fechaPublicacionDesde.value) {
-      filter.and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
+      filter.and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value));
     }
     if (controls.fechaPublicacionHasta.value) {
-      filter.and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value))
+      filter.and('fechaPublicacion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionHasta.value));
     }
     if (this.data.unidadesGestion?.length) {
       filter.and('unidadGestionRef', SgiRestFilterOperator.IN, this.data.unidadesGestion);
@@ -265,7 +263,7 @@ export class SearchConvocatoriaModalComponent extends DialogCommonComponent impl
   }
 
   private resolveSortProperty(column: string): string {
-    if (column == 'titulo') {
+    if (column === 'titulo') {
       return 'titulo.value';
     }
     return column;

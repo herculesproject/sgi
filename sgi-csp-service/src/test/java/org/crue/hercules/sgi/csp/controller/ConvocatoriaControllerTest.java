@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.converter.ConvocatoriaFaseConverter;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaFasePresentacionSolicitudesFechasOutput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -908,6 +909,55 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-INV-V" })
+  void findFasePresentacionSolicitudesFechas_WithFase_Returns200() throws Exception {
+    // given: una convocatoria con fase de presentación de solicitudes configurada
+    Long convocatoriaId = 1L;
+    ConvocatoriaFase fasePresentacionSolicitudes = generarMockConvocatoriaFase(2L);
+    ConvocatoriaFasePresentacionSolicitudesFechasOutput fechas = ConvocatoriaFasePresentacionSolicitudesFechasOutput
+        .builder()
+        .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
+        .fechaFin(Instant.parse("2020-10-28T00:00:00Z"))
+        .build();
+    BDDMockito.given(convocatoriaFaseService.findFasePresentacionSolicitudes(convocatoriaId))
+        .willReturn(fasePresentacionSolicitudes);
+    BDDMockito.given(convocatoriaFaseConverter.convertToFasePresentacionSolicitudesFechas(fasePresentacionSolicitudes))
+        .willReturn(fechas);
+
+    // when: se piden las fechas de la fase de presentación de solicitudes
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + ConvocatoriaController.PATH_FASE_PRESENTACION_SOLICITUDES, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 200 con las fechas de la fase
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-10-19T00:00:00Z"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-10-28T00:00:00Z"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CON-INV-V" })
+  void findFasePresentacionSolicitudesFechas_WithoutFase_Returns204() throws Exception {
+    // given: una convocatoria sin fase de presentación de solicitudes configurada
+    Long convocatoriaId = 1L;
+    BDDMockito.given(convocatoriaFaseService.findFasePresentacionSolicitudes(convocatoriaId))
+        .willReturn(null);
+
+    // when: se piden las fechas de la fase de presentación de solicitudes
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + ConvocatoriaController.PATH_FASE_PRESENTACION_SOLICITUDES, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 204 sin convertir nada
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+    BDDMockito.then(convocatoriaFaseConverter).shouldHaveNoInteractions();
   }
 
   /**

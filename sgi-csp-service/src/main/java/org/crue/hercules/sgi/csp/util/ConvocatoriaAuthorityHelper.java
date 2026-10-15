@@ -63,9 +63,39 @@ public class ConvocatoriaAuthorityHelper extends AuthorityHelper {
    */
   public void checkUserHasAuthorityViewConvocatoria(Convocatoria convocatoria)
       throws UserNotAuthorizedToAccessConvocatoriaException {
-    if (!(hasPublicAccess(convocatoria)
-        || hasAuthorityViewUnidadGestion(convocatoria)
+    if (!(hasAuthorityViewUnidadGestion(convocatoria)
+        || hasPublicAccess(convocatoria)
         || hasAuthorityViewInvestigador(convocatoria))) {
+      throw new UserNotAuthorizedToAccessConvocatoriaException();
+    }
+  }
+
+  /**
+   * Comprueba si el usuario logueado tiene permiso para ver la
+   * {@link Convocatoria} usando la {@link ConfiguracionSolicitud} recibida en
+   * lugar de consultarla. Aplica las mismas reglas que
+   * {@link #checkUserHasAuthorityViewConvocatoria(Convocatoria)}.
+   * 
+   * @param convocatoria           la {@link Convocatoria}
+   * @param configuracionSolicitud la {@link ConfiguracionSolicitud} de la
+   *                               {@link Convocatoria} o <code>null</code> si
+   *                               no tiene
+   * 
+   * @throws UserNotAuthorizedToAccessConvocatoriaException si el usuario no esta
+   *                                                        autorizado para ver la
+   *                                                        {@link Convocatoria}
+   * @throws ConfiguracionSolicitudNotFoundException        si hay que comprobar
+   *                                                        el permiso de
+   *                                                        investigador y la
+   *                                                        {@link Convocatoria}
+   *                                                        no tiene
+   *                                                        {@link ConfiguracionSolicitud}
+   */
+  public void checkUserHasAuthorityViewConvocatoria(Convocatoria convocatoria,
+      ConfiguracionSolicitud configuracionSolicitud) throws UserNotAuthorizedToAccessConvocatoriaException {
+    if (!(hasAuthorityViewUnidadGestion(convocatoria)
+        || hasPublicAccess(convocatoria, configuracionSolicitud)
+        || hasAuthorityViewInvestigador(convocatoria, configuracionSolicitud))) {
       throw new UserNotAuthorizedToAccessConvocatoriaException();
     }
   }
@@ -131,13 +161,37 @@ public class ConvocatoriaAuthorityHelper extends AuthorityHelper {
    * @return <code>true</code> si tiene permiso, <code>false</code> si no lo tiene
    */
   private boolean hasAuthorityViewInvestigador(Convocatoria convocatoria) {
+    return SgiSecurityContextHolder.hasAuthorityForAnyUO(CSP_CON_INV_V)
+        && hasAuthorityViewInvestigador(convocatoria,
+            configuracionSolicitudRepository.findByConvocatoriaId(convocatoria.getId()).orElse(null));
+  }
+
+  /**
+   * Comprueba si el usuario tiene el permiso para ver la {@link Convocatoria} y
+   * si esta {@link Estado#REGISTRADA} y
+   * {@link ConfiguracionSolicitud#tramitacionSGI} es <code>true</code>, usando
+   * la {@link ConfiguracionSolicitud} recibida.
+   * 
+   * @param convocatoria           la {@link Convocatoria}
+   * @param configuracionSolicitud la {@link ConfiguracionSolicitud} de la
+   *                               {@link Convocatoria} o <code>null</code> si
+   *                               no tiene
+   * @return <code>true</code> si tiene permiso, <code>false</code> si no lo tiene
+   * @throws ConfiguracionSolicitudNotFoundException si el usuario tiene el
+   *                                                 permiso y la
+   *                                                 {@link Convocatoria} no
+   *                                                 tiene
+   *                                                 {@link ConfiguracionSolicitud}
+   */
+  private boolean hasAuthorityViewInvestigador(Convocatoria convocatoria,
+      ConfiguracionSolicitud configuracionSolicitud) {
     if (!SgiSecurityContextHolder.hasAuthorityForAnyUO(CSP_CON_INV_V)) {
       return false;
     }
 
-    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
-        .findByConvocatoriaId(convocatoria.getId())
-        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(convocatoria.getId()));
+    if (configuracionSolicitud == null) {
+      throw new ConfiguracionSolicitudNotFoundException(convocatoria.getId());
+    }
 
     return convocatoria.getEstado().equals(Estado.REGISTRADA)
         && Boolean.TRUE.equals(configuracionSolicitud.getTramitacionSGI());
@@ -172,18 +226,40 @@ public class ConvocatoriaAuthorityHelper extends AuthorityHelper {
    *         no lo es
    */
   private boolean hasPublicAccess(Convocatoria convocatoria) {
-    if (!convocatoria.getActivo().booleanValue()
-        || !convocatoria.getFormularioSolicitud().equals(FormularioSolicitud.RRHH)) {
-      return false;
-    }
+    return isActivaConFormularioRrhh(convocatoria)
+        && hasPublicAccess(convocatoria,
+            configuracionSolicitudRepository.findByConvocatoriaId(convocatoria.getId()).orElse(null));
+  }
 
-    ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
-        .findByConvocatoriaId(convocatoria.getId())
-        .orElse(null);
-
-    return configuracionSolicitud != null
+  /**
+   * Comprueba si es una {@link Convocatoria} acesible publicamente usando la
+   * {@link ConfiguracionSolicitud} recibida.
+   * 
+   * @param convocatoria           la {@link Convocatoria}
+   * @param configuracionSolicitud la {@link ConfiguracionSolicitud} de la
+   *                               {@link Convocatoria} o <code>null</code> si
+   *                               no tiene
+   * @return <code>true</code> si es acesible publicamente, <code>false</code> si
+   *         no lo es
+   */
+  private boolean hasPublicAccess(Convocatoria convocatoria, ConfiguracionSolicitud configuracionSolicitud) {
+    return isActivaConFormularioRrhh(convocatoria)
+        && configuracionSolicitud != null
         && convocatoria.getEstado().equals(Estado.REGISTRADA)
         && Boolean.TRUE.equals(configuracionSolicitud.getTramitacionSGI());
+  }
+
+  /**
+   * Comprueba si la {@link Convocatoria} esta activa y su formulario de solicitud
+   * es {@link FormularioSolicitud#RRHH}.
+   * 
+   * @param convocatoria la {@link Convocatoria}
+   * @return <code>true</code> si cumple ambas condiciones, <code>false</code> en
+   *         otro caso
+   */
+  private boolean isActivaConFormularioRrhh(Convocatoria convocatoria) {
+    return convocatoria.getActivo().booleanValue()
+        && FormularioSolicitud.RRHH.equals(convocatoria.getFormularioSolicitud());
   }
 
 }
