@@ -166,6 +166,7 @@
   "adm.config.global.SGEMP_ALTA": "Enpresei alta ematea",
   "adm.config.global.SGEMP_MODIFICACION": "Enpresak aldatzea",
   "adm.config.global.SGP_ALTA": "Pertsonei alta ematea",
+  "adm.config.global.SGP_ALTA_PERFIL_INV": "Ikerketa profilerako pertsonei alta ematea gaitzea",
   "adm.config.global.SGP_MODIFICACION": "Pertsonak aldatzea",
   "adm.config.global.WEB_HEADER_LOGO_1": "Webguneko goiburuko 1. logoa",
   "adm.config.global.WEB_HEADER_LOGO_1_2X": "Webguneko goiburuko 1. logoa (2x bereizmena)",

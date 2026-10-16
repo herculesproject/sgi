@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -28,7 +29,7 @@ export enum TipoColectivo {
   MIEMBRO_EQUIPO_EMPRESA_EXPLOTACION_RESULTADOS = 'MIEMBRO_EQUIPO_EMPRESA_EXPLOTACION_RESULTADOS'
 }
 
-const SGP_NOT_FOUND = marker("error.sgp.not-found");
+const SGP_NOT_FOUND = marker('error.sgp.not-found');
 
 @Component({
   selector: 'sgi-select-persona',
@@ -76,6 +77,16 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
   // tslint:disable-next-line: variable-name
   private _colectivos: string[] = [];
 
+  @Input()
+  get hideCreate(): boolean {
+    return this._hideCreate;
+  }
+  set hideCreate(value: boolean) {
+    this._hideCreate = coerceBooleanProperty(value);
+  }
+  // tslint:disable-next-line: variable-name
+  private _hideCreate = false;
+
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     elementRef: ElementRef,
@@ -94,7 +105,8 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
     return {
       ...super.getDialogData(),
       tipoColectivo: this.tipoColectivo,
-      colectivos: this._colectivos
+      colectivos: this._colectivos,
+      hideCreate: this.hideCreate
     };
   }
 
@@ -116,7 +128,7 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
   }
 
   private getDisplayValue(persona: IPersona): string {
-    const notFoundSelectedValue = !!persona && Object.keys(persona).length == 1 && !!persona.id;
+    const notFoundSelectedValue = !!persona && Object.keys(persona).length === 1 && !!persona.id;
     setTimeout(() => this.setNotFoundSelectedValue(notFoundSelectedValue));
 
     if (notFoundSelectedValue) {
@@ -127,7 +139,7 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
   }
 
   private getErrorMsg(id: string): string {
-    return this.translate.instant(SGP_NOT_FOUND, { ids: id, ...MSG_PARAMS.CARDINALIRY.SINGULAR })
+    return this.translate.instant(SGP_NOT_FOUND, { ids: id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   private getEmailPrincipal({ emails }: IPersona): string {

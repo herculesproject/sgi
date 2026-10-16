@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -8,15 +8,16 @@ import { DialogCommonComponent } from '@core/component/dialog-common.component';
 import { SearchModalData } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IPersona } from '@core/models/sgp/persona';
+import { Module } from '@core/module';
 import { ConfigService } from '@core/services/cnf/config.service';
+import { LayoutService } from '@core/services/layout.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@herculesproject/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, from, merge, of } from 'rxjs';
+import { EMPTY, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { ACTION_MODAL_MODE } from 'src/app/esb/shared/formly-forms/core/base-formly-modal.component';
 import { IPersonaFormlyData, PersonaFormlyModalComponent } from '../../../formly-forms/persona-formly-modal/persona-formly-modal.component';
@@ -29,6 +30,7 @@ export interface SearchPersonaModalData extends SearchModalData {
   tipoColectivo: string;
   colectivos: string[];
   selectionDisableWith?: (persona: IPersona) => boolean;
+  hideCreate?: boolean;
 }
 
 @Component({
@@ -47,33 +49,37 @@ export class SearchPersonaModalComponent extends DialogCommonComponent implement
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   personas$: Observable<IPersona[]> = of();
-  isInvestigador: boolean;
   msgParamEntity: {};
   private textoCrearSuccess: string;
   private textoUpdateSuccess: string;
-  private sgpAlta: boolean = true;
+  private sgpAlta = true;
+  private sgpAltaPerfilInv = false;
 
   get selectionDisableWith() {
     return this._selectionDisableWith;
   }
 
   get sgpAltaDisabled(): boolean {
-    return !this.sgpAlta;
+    return !this.sgpAlta || (this.isModuleINV && !this.sgpAltaPerfilInv);
+  }
+
+  get isModuleINV(): boolean {
+    return this.layoutService.activeModule$.value === Module.INV;
   }
   // tslint:disable-next-line: variable-name
-  private _selectionDisableWith: (persona: IPersona) => boolean = () => false;
+  private readonly _selectionDisableWith: (persona: IPersona) => boolean = () => false;
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     public dialogRef: MatDialogRef<SearchPersonaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SearchPersonaModalData,
-    private personaService: PersonaService,
-    private empresaService: EmpresaService,
+    private readonly personaService: PersonaService,
+    private readonly empresaService: EmpresaService,
     private readonly translate: TranslateService,
-    private readonly authService: SgiAuthService,
-    private personaCreateMatDialog: MatDialog,
-    private configService: ConfigService
+    private readonly personaCreateMatDialog: MatDialog,
+    private readonly configService: ConfigService,
+    private readonly layoutService: LayoutService
   ) {
     super(dialogRef);
     if (!!data.selectionDisableWith) {
@@ -83,6 +89,12 @@ export class SearchPersonaModalComponent extends DialogCommonComponent implement
     this.subscriptions.push(this.configService.isAltaSgpEnabled().subscribe(value => {
       this.sgpAlta = value;
     }));
+
+    if (this.isModuleINV) {
+      this.subscriptions.push(this.configService.isAltaSgpPerfilInvEnabled().subscribe(value => {
+        this.sgpAltaPerfilInv = value;
+      }));
+    }
   }
 
   ngOnInit(): void {
@@ -90,7 +102,6 @@ export class SearchPersonaModalComponent extends DialogCommonComponent implement
     this.formGroup = new FormGroup({
       datosPersona: new FormControl(this.data.searchTerm)
     });
-    this.isInvestigador = this.authService.hasAuthority('CSP-SOL-INV-ER');
     this.setupI18N();
   }
 

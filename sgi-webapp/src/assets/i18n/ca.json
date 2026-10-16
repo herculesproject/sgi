@@ -166,6 +166,7 @@
   "adm.config.global.SGEMP_ALTA": "Alta d'empreses",
   "adm.config.global.SGEMP_MODIFICACION": "Modificació d'empreses",
   "adm.config.global.SGP_ALTA": "Alta de persones",
+  "adm.config.global.SGP_ALTA_PERFIL_INV": "Habilitar alta de persona per a perfil de recerca",
   "adm.config.global.SGP_MODIFICACION": "Modificació de persones",
   "adm.config.global.WEB_HEADER_LOGO_1": "Logo 1 capçalera web",
   "adm.config.global.WEB_HEADER_LOGO_1_2X": "Logo 1 capçalera web (resolució 2x)",

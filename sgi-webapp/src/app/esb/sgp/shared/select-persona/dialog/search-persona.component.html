@@ -91,7 +91,7 @@
   </div>
 
   <ng-container *sgiHasAuthority="'ESB-PER-C'">
-    <div class="separation-button">
+    <div class="separation-button" *ngIf="!data.hideCreate">
       <button color="three" mat-raised-button (click)="openPersonaCreateModal()" [disabled]="sgpAltaDisabled">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.request.add.entity' | translate:msgParamEntity }}
