@@ -24,6 +24,11 @@
 
 - [ETI] Añadido el departamento del solicitante en los listados y exportaciones de Solicitudes de evaluación y Memorias, el departamento de cada miembro en el Equipo de trabajo y la acción de ver detalle de persona en el Equipo de trabajo del perfil de gestión. ([#170](https://github.com/herculesproject/sgi/issues/170)).
 - [ETI] Añadido el apartado Unidades de vinculación en las Solicitudes de evaluación del perfil de gestión, con su inicialización opcional a partir del departamento del solicitante, filtro en los buscadores y bloque en las exportaciones de Solicitudes de evaluación y Memorias. ([#170](https://github.com/herculesproject/sgi/issues/170)).
+- Añadida la variable de configuración global *Habilitar alta de persona para perfil de investigación*, que permite habilitar el botón Solicitar alta de Persona en el buscador de personas del perfil de investigación. ([#169](https://github.com/herculesproject/sgi/issues/169)).
+
+### Changed
+
+- [ADM] En la Configuración global, los logos 2 y 3 de la cabecera se ocultan en función del número de logos seleccionado, en lugar de deshabilitarse. ([#169](https://github.com/herculesproject/sgi/issues/169)).
 
 ### Fixed
 

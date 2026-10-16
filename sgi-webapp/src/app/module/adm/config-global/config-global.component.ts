@@ -28,6 +28,7 @@ export enum ConfigGlobal {
   WEB_NUM_LOGOS_HEADER = 'web-numero-logos-header',
   EXP_MAX_NUM_REGISTROS_EXCEL = 'exp-max-num-registros-excel',
   SGP_ALTA = 'sgp-alta',
+  SGP_ALTA_PERFIL_INV = 'sgp-alta-perfil-inv',
   SGP_MODIFICACION = 'sgp-modificacion',
   SGEMP_ALTA = 'sgemp-alta',
   SGEMP_MODIFICACION = 'sgemp-modificacion',
@@ -38,6 +39,13 @@ export enum ConfigGlobal {
   REP_FONT_EN = 'rep-font-en',
   // TITLES
   TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS = 'title-integracion-sistemas-corporativos'
+}
+
+interface IDependentConfigs {
+  /** Parámetros dependientes */
+  keys: ConfigGlobal[];
+  /** Indica si los parámetros dependientes se deshabilitan para el valor del parámetro del que dependen */
+  disabled: (value: string) => boolean;
 }
 
 @Component({
@@ -57,12 +65,12 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.WEB_HEADER_LOGO_1, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_1`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_1_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_1_2X`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_1_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_1_3X`), module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_HEADER_LOGO_2, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_2`), module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_HEADER_LOGO_2_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_2_2X`), module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_HEADER_LOGO_2_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_2_3X`), module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_HEADER_LOGO_3, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_3`), module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_HEADER_LOGO_3_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_3_2X`), module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_HEADER_LOGO_3_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_3_3X`), module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_HEADER_LOGO_2, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_2`), module: ConfigModule.CNF, disabled: true }],
+    [ConfigGlobal.WEB_HEADER_LOGO_2_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_2_2X`), module: ConfigModule.CNF, disabled: true }],
+    [ConfigGlobal.WEB_HEADER_LOGO_2_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_2_3X`), module: ConfigModule.CNF, disabled: true }],
+    [ConfigGlobal.WEB_HEADER_LOGO_3, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_3`), module: ConfigModule.CNF, disabled: true }],
+    [ConfigGlobal.WEB_HEADER_LOGO_3_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_3_2X`), module: ConfigModule.CNF, disabled: true }],
+    [ConfigGlobal.WEB_HEADER_LOGO_3_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_3_3X`), module: ConfigModule.CNF, disabled: true }],
     [ConfigGlobal.REP_COMMON_HEADER_LOGO, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_HEADER_LOGO`), module: ConfigModule.CNF }],
     [ConfigGlobal.REP_FONT_ES, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_FONT_ES`), module: ConfigModule.CNF }],
     [ConfigGlobal.REP_FONT_EU, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_FONT_EU`), module: ConfigModule.CNF }],
@@ -72,22 +80,39 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.WEB_I18N_EN, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_EN`), module: ConfigModule.CNF }],
     [ConfigGlobal.TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.integracion-sistemas-corporativos`), module: ConfigModule.NONE }],
     [ConfigGlobal.SGP_ALTA, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGP_ALTA`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
+    [ConfigGlobal.SGP_ALTA_PERFIL_INV, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGP_ALTA_PERFIL_INV`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF, disabled: true }],
     [ConfigGlobal.SGP_MODIFICACION, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGP_MODIFICACION`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.SGEMP_ALTA, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGEMP_ALTA`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.SGEMP_MODIFICACION, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGEMP_MODIFICACION`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }]
   ]);
 
-  private readonly WEB_HEADER_LOGO_2_KEYS: ConfigGlobal[] = [
-    ConfigGlobal.WEB_HEADER_LOGO_2,
-    ConfigGlobal.WEB_HEADER_LOGO_2_2X,
-    ConfigGlobal.WEB_HEADER_LOGO_2_3X
-  ];
-
-  private readonly WEB_HEADER_LOGO_3_KEYS: ConfigGlobal[] = [
-    ConfigGlobal.WEB_HEADER_LOGO_3,
-    ConfigGlobal.WEB_HEADER_LOGO_3_2X,
-    ConfigGlobal.WEB_HEADER_LOGO_3_3X
-  ];
+  /**
+   * Parámetros que no se muestran mientras el valor del parámetro del que dependen no los habilite
+   */
+  private readonly DEPENDENT_CONFIGS: Map<ConfigGlobal, IDependentConfigs[]> = new Map([
+    [
+      ConfigGlobal.WEB_NUM_LOGOS_HEADER,
+      [
+        {
+          keys: [ConfigGlobal.WEB_HEADER_LOGO_2, ConfigGlobal.WEB_HEADER_LOGO_2_2X, ConfigGlobal.WEB_HEADER_LOGO_2_3X],
+          disabled: (value: string) => Number(value) < 2
+        },
+        {
+          keys: [ConfigGlobal.WEB_HEADER_LOGO_3, ConfigGlobal.WEB_HEADER_LOGO_3_2X, ConfigGlobal.WEB_HEADER_LOGO_3_3X],
+          disabled: (value: string) => Number(value) < 3
+        }
+      ]
+    ],
+    [
+      ConfigGlobal.SGP_ALTA,
+      [
+        {
+          keys: [ConfigGlobal.SGP_ALTA_PERFIL_INV],
+          disabled: (value: string) => value !== 'true'
+        }
+      ]
+    ]
+  ]);
 
   get ConfigType() {
     return ConfigType;
@@ -127,12 +152,16 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     }
   }
 
-  selectChange(key: string, value: string) {
-    if (key === ConfigGlobal.WEB_NUM_LOGOS_HEADER) {
-      const numLogos = Number(value);
-      this.setConfigOptionsDisabledValue(this.WEB_HEADER_LOGO_2_KEYS, numLogos < 2);
-      this.setConfigOptionsDisabledValue(this.WEB_HEADER_LOGO_3_KEYS, numLogos < 3);
-    }
+  /**
+   * Muestra u oculta los parámetros que dependen del parámetro indicado según su valor persistido.
+   *
+   * @param key clave del parámetro de configuración.
+   * @param value valor persistido del parámetro.
+   */
+  onConfigValueChange(key: ConfigGlobal, value: string): void {
+    this.DEPENDENT_CONFIGS.get(key)?.forEach(
+      dependentConfigs => this.setConfigOptionsDisabledValue(dependentConfigs.keys, dependentConfigs.disabled(value))
+    );
   }
 
   private setConfigOptionsDisabledValue(configKeys: ConfigGlobal[], disabled: boolean): void {

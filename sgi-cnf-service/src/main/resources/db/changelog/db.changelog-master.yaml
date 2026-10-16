@@ -32,3 +32,6 @@ databaseChangeLog:
   # 1.4.0
   - include:
       file: classpath*:db/changelog/changes/1.4.0/db.changelog-1.4.0.yaml
+  # 1.5.0
+  - include:
+      file: classpath*:db/changelog/changes/1.5.0/db.changelog-1.5.0.yaml

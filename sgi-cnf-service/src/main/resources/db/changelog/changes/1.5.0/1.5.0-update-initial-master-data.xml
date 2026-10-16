@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="!test" author="master" id="1.5.0-config-sgp-alta-perfil-inv">
+    <insert tableName="config">
+      <column name="name" value="sgp-alta-perfil-inv" />
+      <column name="description"
+        value="Habilita/deshabilita la solicitud de alta de personas en el buscador de personas del perfil de investigación según su valor" />
+      <column name="value" value="false" />
+      <column name="default_value" value="false" />
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

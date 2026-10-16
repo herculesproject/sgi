@@ -128,6 +128,12 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isAltaSgpPerfilInvEnabled(): Observable<boolean> {
+    return this.findById(ConfigGlobal.SGP_ALTA_PERFIL_INV).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
   isModificacionSgpEnabled(): Observable<boolean> {
     return this.findById(ConfigGlobal.SGP_MODIFICACION).pipe(
       map(configValue => configValue?.value && configValue.value === 'true')

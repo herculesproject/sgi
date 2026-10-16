@@ -166,6 +166,7 @@
   "adm.config.global.SGEMP_ALTA": "Company registration",
   "adm.config.global.SGEMP_MODIFICACION": "Company modification",
   "adm.config.global.SGP_ALTA": "Individual registration",
+  "adm.config.global.SGP_ALTA_PERFIL_INV": "Enable individual registration for research profile",
   "adm.config.global.SGP_MODIFICACION": "Individual modification",
   "adm.config.global.WEB_HEADER_LOGO_1": "Logo 1 web header",
   "adm.config.global.WEB_HEADER_LOGO_1_2X": "Logo 1 web header (2x resolution)",
