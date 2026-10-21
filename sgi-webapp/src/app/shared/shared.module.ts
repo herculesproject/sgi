@@ -21,10 +21,12 @@ import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
 import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
 import { FormAutocompleteOffDirective } from './directives/form-autocomplete-off.directive';
 import { NotFoundErrorDirective } from './directives/not-found-error.directive';
+import { SgiHtmlTooltipDirective } from './directives/sgi-html-tooltip.directive';
 import { SgiInputWithThousandSeparator } from './directives/sgi-input-number-separator.directive';
 import { SgiTooltipDirective } from './directives/sgi-tooltip.directive';
 import { ErrorMessageComponent } from './error-message/error-message.component';
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
+import { FieldInfoHtmlComponent } from './field-info-html/field-info-html.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
 import { SgiFileUploadComponent } from './file-upload/file-upload.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
@@ -73,6 +75,7 @@ import { TypeOfPipe } from './typeof-pipe';
     ErrorMessageComponent,
     ExportDialogComponent,
     FieldInfoComponent,
+    FieldInfoHtmlComponent,
     FooterCrearComponent,
     FormAutocompleteOffDirective,
     FragmentComponent,
@@ -103,6 +106,7 @@ import { TypeOfPipe } from './typeof-pipe';
     SelectEnumComponent,
     SelectMultipleComponent,
     SgiFileUploadComponent,
+    SgiHtmlTooltipDirective,
     SgiInputWithThousandSeparator,
     SgiTooltipDirective,
     TypeOfPipe
@@ -132,6 +136,7 @@ import { TypeOfPipe } from './typeof-pipe';
     ErrorMessageComponent,
     ExportDialogComponent,
     FieldInfoComponent,
+    FieldInfoHtmlComponent,
     FooterCrearComponent,
     FormAutocompleteOffDirective,
     FragmentComponent,
@@ -162,6 +167,7 @@ import { TypeOfPipe } from './typeof-pipe';
     SelectMultipleComponent,
     SelectMultipleComponent,
     SgiFileUploadComponent,
+    SgiHtmlTooltipDirective,
     SgiInputWithThousandSeparator,
     SgiTooltipDirective,
     TypeOfPipe

@@ -17,5 +17,16 @@ export class InfoMessageComponent {
   // tslint:disable-next-line: variable-name
   private _message = '';
 
+  /** Contenido HTML del mensaje. Si se indica, se muestra en lugar de message */
+  @Input()
+  get html(): string {
+    return this._html;
+  }
+  set html(value: string) {
+    this._html = value;
+  }
+  // tslint:disable-next-line: variable-name
+  private _html = '';
+
   constructor() { }
 }

@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { ConfigI18nCkeditorEtiComponent } from './config-i18n-ckeditor-eti/config-i18n-ckeditor-eti.component';
 import { ConfigI18nInputTextCnfComponent } from './config-i18n-input-text-cnf/config-i18n-input-text-cnf.component';
 import { ConfigInputEmailsComponent } from './config-input-emails /config-input-emails.component';
 import { ConfigInputFileComponent } from './config-input-file /config-input-file.component';
@@ -19,6 +20,7 @@ import { ResourceUploadComponent } from './resource-upload/resource-upload.compo
 
 @NgModule({
   declarations: [
+    ConfigI18nCkeditorEtiComponent,
     ConfigI18nInputTextCnfComponent,
     ConfigInputEmailsComponent,
     ConfigInputFileComponent,
@@ -41,6 +43,7 @@ import { ResourceUploadComponent } from './resource-upload/resource-upload.compo
     ReactiveFormsModule,
   ],
   exports: [
+    ConfigI18nCkeditorEtiComponent,
     ConfigI18nInputTextCnfComponent,
     ConfigInputEmailsComponent,
     ConfigInputFileComponent,

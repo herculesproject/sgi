@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.dto.ConfigParamOutput;
+import org.crue.hercules.sgi.eti.exceptions.UnknownConfiguracionParamException;
+import org.crue.hercules.sgi.eti.exceptions.UserNotAuthorizedToReadConfiguracionParamException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 
 /**
@@ -33,8 +35,19 @@ public interface ConfiguracionService {
    * Devuelve el valor del parámetro de {@link Configuracion} con la clave
    * indicada.
    *
+   * Con solo autoridades de investigador únicamente se pueden consultar los
+   * parámetros legibles desde el perfil de investigación
+   * ({@link Configuracion.Param#isReadableByInvestigador()}).
+   *
    * @param name clave del parámetro ({@link Configuracion.Param}).
    * @return el {@link ConfigParamOutput} con la clave y el valor del parámetro.
+   * @throws UnknownConfiguracionParamException                 si la clave no
+   *                                                            corresponde a
+   *                                                            ningún
+   *                                                            parámetro.
+   * @throws UserNotAuthorizedToReadConfiguracionParamException si el usuario no
+   *                                                            puede consultar
+   *                                                            el parámetro.
    */
   ConfigParamOutput get(String name);
 

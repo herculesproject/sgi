@@ -147,6 +147,38 @@ mat-form-field {
   white-space: pre-line;
 }
 
+.field-info-html-tooltip {
+  // Contenido HTML del ckeditor (clase ck-content): sin la altura mínima del área del editor
+  &.ck-content {
+    min-height: 0;
+  }
+
+  // Solo crece por encima del ancho de los tooltips si el contenido no cabe (p. ej. una tabla), sin salirse de
+  // la ventana; el texto mantiene el ancho habitual
+  &.mat-tooltip {
+    max-width: calc(100vw - 32px);
+  }
+
+  > :not(figure) {
+    max-width: 250px;
+  }
+
+  p,
+  ul,
+  ol {
+    margin: 0 0 .5em;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5em;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
 .mat-tooltip {
   // Los tooltips respetan los saltos de linea
   white-space: pre-line;

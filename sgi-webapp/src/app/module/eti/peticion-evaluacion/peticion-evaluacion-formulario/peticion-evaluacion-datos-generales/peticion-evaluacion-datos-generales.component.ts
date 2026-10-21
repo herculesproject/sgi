@@ -4,16 +4,19 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { ESTADO_FINANCIACION_MAP, IPeticionEvaluacion, TIPO_VALOR_SOCIAL_MAP } from '@core/models/eti/peticion-evaluacion';
+import { IPeticionEvaluacionAyudas } from '@core/models/eti/peticion-evaluacion-ayudas';
 import { ITipoActividad, TIPO_ACTIVIDAD_MAP } from '@core/models/eti/tipo-actividad';
 import { ITipoInvestigacionTutelada, TIPO_INVESTIGACION_TUTELADA_MAP } from '@core/models/eti/tipo-investigacion-tutelada';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoActividadService } from '@core/services/eti/tipo-actividad.service';
 import { TipoInvestigacionTuteladaService } from '@core/services/eti/tipo-investigacion-tutelada.service';
+import { LanguageService } from '@core/services/language.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
@@ -51,9 +54,13 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  private suscripciones: Subscription[] = [];
+  private readonly suscripciones: Subscription[] = [];
   tipoInvestigacionTuteladas$: Observable<ITipoInvestigacionTutelada[]>;
   tipoActividades$: Observable<ITipoActividad[]>;
+
+  ayudaFechaInicio$: Observable<string>;
+  ayudaResumen$: Observable<string>;
+  ayudaDisenioMetodologico$: Observable<string>;
 
   isInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   peticionEvaluacionFragment: PeticionEvaluacionDatosGeneralesFragment;
@@ -108,8 +115,9 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   constructor(
     private readonly tipoActividadService: TipoActividadService,
     private readonly tipoInvestigacionTuteladaService: TipoInvestigacionTuteladaService,
-    private actionService: PeticionEvaluacionActionService,
-    private readonly translate: TranslateService
+    private readonly actionService: PeticionEvaluacionActionService,
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -136,6 +144,10 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
 
     this.tipoInvestigacionTuteladas$ = this.tipoInvestigacionTuteladaService.findAll().pipe(
       map(response => response.items));
+
+    this.ayudaFechaInicio$ = this.getAyuda(ayudas => ayudas.fechaInicio);
+    this.ayudaResumen$ = this.getAyuda(ayudas => ayudas.resumen);
+    this.ayudaDisenioMetodologico$ = this.getAyuda(ayudas => ayudas.disenioMetodologico);
   }
 
   ngOnInit(): void {
@@ -250,6 +262,18 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
 
   ngOnDestroy(): void {
     this.suscripciones?.forEach(x => x.unsubscribe());
+  }
+
+  /**
+   * Obtiene el texto de una ayuda.
+   *
+   * @param ayudaSelector función que obtiene la ayuda de los textos de ayuda de la solicitud de evaluación.
+   * @returns el texto de la ayuda o null si no se muestra.
+   */
+  private getAyuda(ayudaSelector: (ayudas: IPeticionEvaluacionAyudas) => I18nFieldValue[]): Observable<string> {
+    return combineLatest([this.actionService.ayudas$, this.languageService.languageChange$]).pipe(
+      map(([ayudas]) => this.languageService.getField(ayudaSelector(ayudas))?.value ?? null)
+    );
   }
 
 }

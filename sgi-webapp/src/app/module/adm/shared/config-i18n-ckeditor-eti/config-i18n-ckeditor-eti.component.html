@@ -1,0 +1,19 @@
+<form [formGroup]="formGroup" fxLayout="column">
+
+  <div fxFlex fxLayout="row" fxLayoutGap="10px">
+    <div class="field" fxFlex fxLayout="column">
+      <span class="ckeditor-label">{{label | translate:labelParams}}<span *ngIf="required"
+          [class]="formGroup.controls.configValue.errors?.required ? 'warn' : ''"> *</span></span>
+      <sgi-i18n-ckeditor formControlName="configValue" [required]="required"></sgi-i18n-ckeditor>
+      <span class="ckeditor-error" *ngIf="formGroup.controls.configValue.errors?.required">
+        {{ 'error.required.field' | translate:msgParamLabel }}
+      </span>
+      <span class="description" *ngIf="description">{{description | translate}}</span>
+    </div>
+    <button [disabled]="!formGroup.valid || !hasChanges()" color="primary" mat-icon-button (click)="save()"
+      matTooltip="{{'btn.save' | translate}}">
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
+
+</form>

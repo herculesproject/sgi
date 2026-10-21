@@ -21,4 +21,39 @@
     </update>
   </changeSet>
 
+  <changeSet author="master" id="1.5.0-fix-configuracion-ayudas-defaults-null">
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_fecha_inicio_enabled" valueBoolean="false" />
+      <where>peticion_evaluacion_ayuda_fecha_inicio_enabled IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_fecha_inicio" value="[]" />
+      <where>peticion_evaluacion_ayuda_fecha_inicio IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_resumen_enabled" valueBoolean="false" />
+      <where>peticion_evaluacion_ayuda_resumen_enabled IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_resumen" value="[]" />
+      <where>peticion_evaluacion_ayuda_resumen IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_disenio_metodologico_enabled" valueBoolean="false" />
+      <where>peticion_evaluacion_ayuda_disenio_metodologico_enabled IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_disenio_metodologico" value="[]" />
+      <where>peticion_evaluacion_ayuda_disenio_metodologico IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_tareas_enabled" valueBoolean="false" />
+      <where>peticion_evaluacion_ayuda_tareas_enabled IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_tareas" value="[]" />
+      <where>peticion_evaluacion_ayuda_tareas IS NULL</where>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>

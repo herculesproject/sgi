@@ -1,12 +1,16 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.Arrays;
+
 import org.crue.hercules.sgi.eti.dto.ConfigParamOutput;
-import org.crue.hercules.sgi.eti.exceptions.ConfiguracionParamDependencyException;
 import org.crue.hercules.sgi.eti.exceptions.ConfiguracionNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.ConfiguracionParamDependencyException;
 import org.crue.hercules.sgi.eti.exceptions.UnknownConfiguracionParamException;
+import org.crue.hercules.sgi.eti.exceptions.UserNotAuthorizedToReadConfiguracionParamException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ConfiguracionServiceImpl implements ConfiguracionService {
+
+  private static final String CLIENT_SCOPE_CNF = "SCOPE_sgi-cnf";
+  private static final String[] AUTHORITIES_READ_ALL_PARAMS = {
+      "ADM-CNF-E",
+      "ETI-PEV-V",
+      "ETI-PEV-E",
+      "ETI-MEM-V"
+  };
 
   private final ConfiguracionRepository configuracionRepository;
 
@@ -55,6 +67,7 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
   public ConfigParamOutput get(String name) {
     log.debug("get - name: {}", name);
     Configuracion.Param param = findParam(name);
+    assertUserCanReadParam(param);
 
     return ConfigParamOutput.builder()
         .name(param.getKey())
@@ -95,6 +108,27 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
     }
 
     return param;
+  }
+
+  /**
+   * Comprueba que el usuario puede consultar el parámetro. Los parámetros
+   * legibles desde el perfil de investigación los puede consultar cualquier
+   * usuario con acceso al endpoint y el resto solo los clientes con scope
+   * <code>sgi-cnf</code> o los usuarios con alguna autoridad de gestión.
+   *
+   * @param param el {@link Configuracion.Param} a consultar.
+   * @throws UserNotAuthorizedToReadConfiguracionParamException si el usuario no
+   *                                                            puede consultar
+   *                                                            el parámetro.
+   */
+  private void assertUserCanReadParam(Configuracion.Param param) {
+    boolean canRead = param.isReadableByInvestigador()
+        || SgiSecurityContextHolder.hasAuthority(CLIENT_SCOPE_CNF)
+        || Arrays.stream(AUTHORITIES_READ_ALL_PARAMS).anyMatch(SgiSecurityContextHolder::hasAuthorityForAnyUO);
+
+    if (!canRead) {
+      throw new UserNotAuthorizedToReadConfiguracionParamException(param.getKey());
+    }
   }
 
   /**

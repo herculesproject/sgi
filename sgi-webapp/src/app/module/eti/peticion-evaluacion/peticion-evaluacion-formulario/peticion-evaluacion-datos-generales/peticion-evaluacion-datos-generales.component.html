@@ -134,6 +134,7 @@
       <mat-form-field fxFlex="28%">
         <mat-label>{{'eti.peticion-evaluacion.fecha-inicio'| translate}}</mat-label>
         <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+        <sgi-field-info-html matSuffix [html]="ayudaFechaInicio$ | async"></sgi-field-info-html>
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaInicio>
         </mat-datepicker>
@@ -188,7 +189,9 @@
     <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.resumen' | translate}}<span
           [class]="(formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.required) ? 'warn' : ''">
-          *</span></span>
+          *</span>
+        <sgi-field-info-html [html]="ayudaResumen$ | async"></sgi-field-info-html>
+      </span>
       <sgi-i18n-ckeditor #resumen
         [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''"
         formControlName="resumen" required>
@@ -229,7 +232,9 @@
     <div fxLayout="column" fxFlex="99" fxLayoutGap="10px">
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}<span
           [class]="(formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.required) ? 'warn' : ''">
-          *</span></span>
+          *</span>
+        <sgi-field-info-html [html]="ayudaDisenioMetodologico$ | async"></sgi-field-info-html>
+      </span>
       <sgi-i18n-ckeditor #disenioMetodologico
         [class]="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors ? 'ck-editor-border-warn' : ''"
         formControlName="disenioMetodologico" required>

@@ -51,4 +51,29 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="1.5.0-4">
+    <addColumn tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_fecha_inicio_enabled" type="boolean"
+        defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="peticion_evaluacion_ayuda_fecha_inicio" type="CLOB" defaultValue="[]" />
+      <column name="peticion_evaluacion_ayuda_resumen_enabled" type="boolean"
+        defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="peticion_evaluacion_ayuda_resumen" type="CLOB" defaultValue="[]" />
+      <column name="peticion_evaluacion_ayuda_disenio_metodologico_enabled" type="boolean"
+        defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="peticion_evaluacion_ayuda_disenio_metodologico" type="CLOB" defaultValue="[]" />
+      <column name="peticion_evaluacion_ayuda_tareas_enabled" type="boolean"
+        defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="peticion_evaluacion_ayuda_tareas" type="CLOB" defaultValue="[]" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

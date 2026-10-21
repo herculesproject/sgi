@@ -7,5 +7,22 @@
     .info-icon {
       margin-right: 1rem;
     }
+
+    // Contenido HTML del ckeditor (clase ck-content): sin la altura mínima del área del editor
+    .info-message-html.ck-content {
+      min-height: 0;
+    }
+
+    .info-message-html ::ng-deep {
+      p,
+      ul,
+      ol {
+        margin: 0 0 .5em;
+      }
+
+      > :last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 }

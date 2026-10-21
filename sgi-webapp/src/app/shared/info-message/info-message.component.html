@@ -1,4 +1,5 @@
 <div class="info-message">
   <mat-icon class="info-icon">info</mat-icon>
-  {{ message }}
+  <div *ngIf="html; else plainMessage" class="info-message-html ck-content" [innerHTML]="html"></div>
+  <ng-template #plainMessage>{{ message }}</ng-template>
 </div>

@@ -19,8 +19,8 @@ import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionTareasModalComponent, PeticionEvaluacionTareasModalComponentData } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-tareas-listado.fragment';
@@ -41,8 +41,8 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
   displayedColumns: string[];
 
   tareas$: BehaviorSubject<StatusWrapper<ITareaWithIsEliminable>[]>;
-  private listadoFragment: PeticionEvaluacionTareasFragment;
-  private subscriptions: Subscription[] = [];
+  private readonly listadoFragment: PeticionEvaluacionTareasFragment;
+  private readonly subscriptions: Subscription[] = [];
   elementosPagina: number[] = [5, 10, 25, 100];
   datasource: MatTableDataSource<StatusWrapper<ITareaWithIsEliminable>> = new MatTableDataSource<StatusWrapper<ITareaWithIsEliminable>>();
 
@@ -51,6 +51,8 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
   msgParamEntity = {};
   textoDelete: string;
+
+  ayudaTareas$: Observable<string>;
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -61,7 +63,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
     protected matDialog: MatDialog,
     protected readonly snackBarService: SnackBarService,
-    actionService: PeticionEvaluacionActionService,
+    private readonly actionService: PeticionEvaluacionActionService,
     private readonly translate: TranslateService,
     private readonly languageService: LanguageService
   ) {
@@ -71,6 +73,10 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
     this.displayedColumns = ['nombreCompleto', 'numReferencia', 'tarea',
       'formacionEspecifica', 'organismo', 'anio', 'acciones'];
+
+    this.ayudaTareas$ = combineLatest([this.actionService.ayudas$, this.languageService.languageChange$]).pipe(
+      map(([ayudas]) => this.languageService.getField(ayudas.tareas)?.value ?? null)
+    );
 
   }
 
@@ -92,9 +98,13 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
           case 'numReferencia':
             return wrapper.value.memoria?.numReferencia;
           case 'tarea':
-            return wrapper.value.tipoTarea ? this.languageService.getFieldValue(wrapper.value.tipoTarea.nombre) : this.languageService.getFieldValue(wrapper.value.nombre);
+            return wrapper.value.tipoTarea
+              ? this.languageService.getFieldValue(wrapper.value.tipoTarea.nombre)
+              : this.languageService.getFieldValue(wrapper.value.nombre);
           case 'formacionEspecifica':
-            return wrapper.value.formacionEspecifica ? this.languageService.getFieldValue(wrapper.value.formacionEspecifica.nombre) : this.languageService.getFieldValue(wrapper.value.formacion);
+            return wrapper.value.formacionEspecifica
+              ? this.languageService.getFieldValue(wrapper.value.formacionEspecifica.nombre)
+              : this.languageService.getFieldValue(wrapper.value.formacion);
           case 'organismo':
             return this.languageService.getFieldValue(wrapper.value.organismo);
           default:
@@ -145,7 +155,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
     dialogRef.afterClosed().subscribe(
       (modalData: PeticionEvaluacionTareasModalComponentData) => {
-        if (modalData && modalData.tarea) {
+        if (modalData?.tarea) {
           this.listadoFragment.addTarea(modalData.tarea);
         }
       });
@@ -170,7 +180,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     const dialogRef = this.matDialog.open(PeticionEvaluacionTareasModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (modalData: PeticionEvaluacionTareasModalComponentData) => {
-        if (modalData && modalData.tarea) {
+        if (modalData?.tarea) {
           if (modalData.tarea.id) {
             tarea.setEdited();
           }

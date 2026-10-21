@@ -31,6 +31,8 @@ class ConfigIT extends BaseIT {
 
   private static final String CONFIG_CONTROLLER_BASE_PATH = "/config";
   private static final String PATH_NAME = "/{name}";
+  private static final String EMPTY_LIST_VALUE = "[]";
+  private static final String TEXTO_AYUDA = "[{\"lang\":\"es\",\"value\":\"<p><strong>Ayuda</strong></p>\"}]";
 
   private HttpEntity<String> buildRequest(String value, String... roles) throws Exception {
     HttpHeaders headers = new HttpHeaders();
@@ -101,6 +103,137 @@ class ConfigIT extends BaseIT {
 
     // then: se deniega el acceso
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void timeZone_ReturnsConfiguredTimeZone() throws Exception {
+    // given: la zona horaria configurada en la aplicación
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.TEXT_PLAIN));
+    headers.set("Authorization", "bearer " + tokenBuilder.buildToken("user", "ETI-PEV-INV-C"));
+
+    // when: se consulta la zona horaria
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + "/time-zone",
+        HttpMethod.GET, new HttpEntity<>(headers), String.class);
+
+    // then: se devuelve el identificador de la zona horaria
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEqualTo("Europe/Madrid");
+  }
+
+  @Test
+  void get_WithParamAyudaAndInvAuthority_Returns200() throws Exception {
+    // given: la configuración inicial y un usuario con solo autoridades de
+    // investigador
+
+    // when: se consultan el flag y el texto de una ayuda
+    final ResponseEntity<ConfigParamOutput> responseFlag = restTemplate.exchange(
+        CONFIG_CONTROLLER_BASE_PATH + PATH_NAME, HttpMethod.GET, buildRequest(null, "ETI-PEV-INV-C"),
+        ConfigParamOutput.class, "peticionEvaluacionAyudaFechaInicioEnabled");
+    final ResponseEntity<ConfigParamOutput> responseTexto = restTemplate.exchange(
+        CONFIG_CONTROLLER_BASE_PATH + PATH_NAME, HttpMethod.GET, buildRequest(null, "ETI-PEV-INV-ER"),
+        ConfigParamOutput.class, "peticionEvaluacionAyudaFechaInicio");
+
+    // then: se devuelven los valores por defecto
+    Assertions.assertThat(responseFlag.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(responseFlag.getBody().getName()).isEqualTo("peticionEvaluacionAyudaFechaInicioEnabled");
+    Assertions.assertThat(responseFlag.getBody().getValue()).isEqualTo("false");
+    Assertions.assertThat(responseTexto.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(responseTexto.getBody().getName()).isEqualTo("peticionEvaluacionAyudaFechaInicio");
+    Assertions.assertThat(responseTexto.getBody().getValue()).isEqualTo(EMPTY_LIST_VALUE);
+  }
+
+  @Test
+  void get_WithParamNoAyudaAndInvAuthority_Returns403() throws Exception {
+    // given: un usuario con solo autoridades de investigador
+
+    // when: se consulta un parámetro no legible desde el perfil de investigación
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + PATH_NAME,
+        HttpMethod.GET, buildRequest(null, "ETI-PEV-INV-ER"), String.class,
+        "peticionEvaluacionUnidadesVinculacionEnabled");
+
+    // then: se deniega el acceso con el problema de acceso denegado
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    Assertions.assertThat(response.getBody()).contains("urn:problem-type:access-denied")
+        .contains("peticionEvaluacionUnidadesVinculacionEnabled");
+  }
+
+  @Test
+  void get_WithUnknownKeyAndInvAuthority_Returns400() throws Exception {
+    // given: una clave inexistente y un usuario con solo autoridad de investigador
+
+    // when: se consulta la clave
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + PATH_NAME,
+        HttpMethod.GET, buildRequest(null, "ETI-PEV-INV-C"), String.class, "unknown");
+
+    // then: se devuelve error de petición antes que el de acceso
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @Test
+  void updateValue_WithAyudaTexto_PersistsJsonValue() throws Exception {
+    // given: la ayuda del resumen habilitada
+    updateValue("peticionEvaluacionAyudaResumenEnabled", "true");
+
+    // when: se guarda el texto de ayuda del resumen
+    final ResponseEntity<ConfigParamOutput> response = updateValue("peticionEvaluacionAyudaResumen", TEXTO_AYUDA);
+
+    // then: se devuelve el texto y un investigador lo puede consultar
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getValue()).isEqualTo(TEXTO_AYUDA);
+    final ResponseEntity<ConfigParamOutput> responseInv = restTemplate.exchange(
+        CONFIG_CONTROLLER_BASE_PATH + PATH_NAME, HttpMethod.GET, buildRequest(null, "ETI-PEV-INV-C"),
+        ConfigParamOutput.class, "peticionEvaluacionAyudaResumen");
+    Assertions.assertThat(responseInv.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(responseInv.getBody().getValue()).isEqualTo(TEXTO_AYUDA);
+  }
+
+  @Test
+  void updateValue_WithAyudaFlagDisabled_ClearsTexto() throws Exception {
+    // given: la ayuda de Asignación de tareas habilitada y con texto
+    updateValue("peticionEvaluacionAyudaTareasEnabled", "true");
+    updateValue("peticionEvaluacionAyudaTareas", TEXTO_AYUDA);
+
+    // when: se deshabilita la ayuda
+    final ResponseEntity<ConfigParamOutput> response = updateValue("peticionEvaluacionAyudaTareasEnabled", "false");
+
+    // then: el texto queda vacío
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getValue()).isEqualTo("false");
+    Assertions.assertThat(getValue("peticionEvaluacionAyudaTareas")).isEqualTo(EMPTY_LIST_VALUE);
+  }
+
+  @Test
+  void updateValue_WithAyudaTextoAndFlagDisabled_Returns400() throws Exception {
+    // given: la configuración inicial con la ayuda del diseño metodológico
+    // deshabilitada
+
+    // when: se intenta guardar el texto de ayuda
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + PATH_NAME,
+        HttpMethod.PATCH, buildRequest(TEXTO_AYUDA, "ADM-CNF-E"), String.class,
+        "peticionEvaluacionAyudaDisenioMetodologico");
+
+    // then: se devuelve error de petición y el texto no cambia
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(getValue("peticionEvaluacionAyudaDisenioMetodologico")).isEqualTo(EMPTY_LIST_VALUE);
+  }
+
+  @Test
+  void updateValue_WithAyudaTextoVacio_ReturnsEmptyI18nValue() throws Exception {
+    // given: la ayuda de la fecha de inicio habilitada
+    updateValue("peticionEvaluacionAyudaFechaInicioEnabled", "true");
+
+    // when: se guarda un texto vacío y se envía la petición sin cuerpo
+    final ResponseEntity<ConfigParamOutput> responseVacio = updateValue("peticionEvaluacionAyudaFechaInicio",
+        EMPTY_LIST_VALUE);
+    final ResponseEntity<ConfigParamOutput> responseSinCuerpo = updateValue("peticionEvaluacionAyudaFechaInicio",
+        null);
+
+    // then: se guarda como texto multi-idioma vacío
+    Assertions.assertThat(responseVacio.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(responseVacio.getBody().getValue()).isEqualTo(EMPTY_LIST_VALUE);
+    Assertions.assertThat(responseSinCuerpo.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(responseSinCuerpo.getBody().getValue()).isEqualTo(EMPTY_LIST_VALUE);
   }
 
   @Test

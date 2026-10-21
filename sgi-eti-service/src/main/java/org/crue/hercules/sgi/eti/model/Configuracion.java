@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.eti.model;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +40,9 @@ public class Configuracion extends BaseEntity {
   /** Longitud máxima de la referencia al tipo de unidad de vinculación */
   public static final int TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF_LENGTH = 50;
 
+  /** Valor de un parámetro de tipo lista sin elementos */
+  public static final String EMPTY_LIST_VALUE = "[]";
+
   /**
    * Parámetros de configuración consultables y modificables de forma individual
    * por su clave.
@@ -48,6 +50,9 @@ public class Configuracion extends BaseEntity {
    * Un parámetro puede depender de otro: solo puede habilitarse si el parámetro
    * del que depende está habilitado, y se deshabilita automáticamente cuando se
    * deshabilita ese.
+   *
+   * Un parámetro puede ser legible desde el perfil de investigación: lo pueden
+   * consultar los usuarios que solo tienen autoridades de investigador.
    */
   public enum Param {
     /**
@@ -67,18 +72,69 @@ public class Configuracion extends BaseEntity {
      * los departamentos <code>tipoUnidadVinculacionDepartamentoRef</code>
      */
     TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF("tipoUnidadVinculacionDepartamentoRef",
-        PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED);
+        PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED),
+    /**
+     * Habilitar ayuda para el campo Fecha inicio de las solicitudes de
+     * evaluación <code>peticionEvaluacionAyudaFechaInicioEnabled</code>
+     */
+    PETICION_EVALUACION_AYUDA_FECHA_INICIO_ENABLED("peticionEvaluacionAyudaFechaInicioEnabled", null, true),
+    /**
+     * Texto de ayuda a mostrar sobre el campo Fecha inicio de las
+     * solicitudes de evaluación <code>peticionEvaluacionAyudaFechaInicio</code>
+     */
+    PETICION_EVALUACION_AYUDA_FECHA_INICIO("peticionEvaluacionAyudaFechaInicio",
+        PETICION_EVALUACION_AYUDA_FECHA_INICIO_ENABLED, true),
+    /**
+     * Habilitar ayuda para el campo Resumen de las solicitudes de evaluación
+     * <code>peticionEvaluacionAyudaResumenEnabled</code>
+     */
+    PETICION_EVALUACION_AYUDA_RESUMEN_ENABLED("peticionEvaluacionAyudaResumenEnabled", null, true),
+    /**
+     * Texto de ayuda a mostrar sobre el campo Resumen de las solicitudes de
+     * evaluación <code>peticionEvaluacionAyudaResumen</code>
+     */
+    PETICION_EVALUACION_AYUDA_RESUMEN("peticionEvaluacionAyudaResumen", PETICION_EVALUACION_AYUDA_RESUMEN_ENABLED,
+        true),
+    /**
+     * Habilitar ayuda para el campo Diseño metodológico de las solicitudes de
+     * evaluación <code>peticionEvaluacionAyudaDisenioMetodologicoEnabled</code>
+     */
+    PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED("peticionEvaluacionAyudaDisenioMetodologicoEnabled", null,
+        true),
+    /**
+     * Texto de ayuda a mostrar sobre el campo Diseño metodológico de las
+     * solicitudes de evaluación
+     * <code>peticionEvaluacionAyudaDisenioMetodologico</code>
+     */
+    PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO("peticionEvaluacionAyudaDisenioMetodologico",
+        PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED, true),
+    /**
+     * Habilitar ayuda en Asignación de tareas de las solicitudes de evaluación
+     * <code>peticionEvaluacionAyudaTareasEnabled</code>
+     */
+    PETICION_EVALUACION_AYUDA_TAREAS_ENABLED("peticionEvaluacionAyudaTareasEnabled", null, true),
+    /**
+     * Texto de ayuda a mostrar en Asignación de tareas de las solicitudes de
+     * evaluación <code>peticionEvaluacionAyudaTareas</code>
+     */
+    PETICION_EVALUACION_AYUDA_TAREAS("peticionEvaluacionAyudaTareas", PETICION_EVALUACION_AYUDA_TAREAS_ENABLED, true);
 
     private final String key;
     private final Param dependsOn;
+    private final boolean readableByInvestigador;
 
     private Param(String key) {
-      this(key, null);
+      this(key, null, false);
     }
 
     private Param(String key, Param dependsOn) {
+      this(key, dependsOn, false);
+    }
+
+    private Param(String key, Param dependsOn, boolean readableByInvestigador) {
       this.key = key;
       this.dependsOn = dependsOn;
+      this.readableByInvestigador = readableByInvestigador;
     }
 
     /**
@@ -101,6 +157,16 @@ public class Configuracion extends BaseEntity {
     }
 
     /**
+     * Indica si el parámetro es legible desde el perfil de investigación.
+     *
+     * @return {@code true} si el parámetro lo pueden consultar los usuarios con
+     *         autoridades de investigador.
+     */
+    public boolean isReadableByInvestigador() {
+      return this.readableByInvestigador;
+    }
+
+    /**
      * Parámetros que dependen directamente de este parámetro.
      *
      * @return la lista de {@link Param} que dependen de este parámetro.
@@ -108,7 +174,7 @@ public class Configuracion extends BaseEntity {
     public List<Param> getDependents() {
       return Arrays.stream(Param.values())
           .filter(param -> param.dependsOn == this)
-          .collect(Collectors.toList());
+          .toList();
     }
 
     /**
@@ -179,6 +245,38 @@ public class Configuracion extends BaseEntity {
   @Size(max = TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF_LENGTH)
   private String tipoUnidadVinculacionDepartamentoRef;
 
+  /** Habilitar ayuda para el campo Fecha inicio prevista de las solicitudes */
+  @Column(name = "peticion_evaluacion_ayuda_fecha_inicio_enabled", columnDefinition = "boolean default false", nullable = false)
+  private Boolean peticionEvaluacionAyudaFechaInicioEnabled;
+
+  /** Texto de ayuda multi-idioma del campo Fecha inicio prevista (JSON) */
+  @Column(name = "peticion_evaluacion_ayuda_fecha_inicio", columnDefinition = "clob")
+  private String peticionEvaluacionAyudaFechaInicio;
+
+  /** Habilitar ayuda para el campo Resumen de las solicitudes */
+  @Column(name = "peticion_evaluacion_ayuda_resumen_enabled", columnDefinition = "boolean default false", nullable = false)
+  private Boolean peticionEvaluacionAyudaResumenEnabled;
+
+  /** Texto de ayuda multi-idioma del campo Resumen (JSON) */
+  @Column(name = "peticion_evaluacion_ayuda_resumen", columnDefinition = "clob")
+  private String peticionEvaluacionAyudaResumen;
+
+  /** Habilitar ayuda para el campo Diseño metodológico de las solicitudes */
+  @Column(name = "peticion_evaluacion_ayuda_disenio_metodologico_enabled", columnDefinition = "boolean default false", nullable = false)
+  private Boolean peticionEvaluacionAyudaDisenioMetodologicoEnabled;
+
+  /** Texto de ayuda multi-idioma del campo Diseño metodológico (JSON) */
+  @Column(name = "peticion_evaluacion_ayuda_disenio_metodologico", columnDefinition = "clob")
+  private String peticionEvaluacionAyudaDisenioMetodologico;
+
+  /** Habilitar ayuda en Asignación de tareas de las solicitudes */
+  @Column(name = "peticion_evaluacion_ayuda_tareas_enabled", columnDefinition = "boolean default false", nullable = false)
+  private Boolean peticionEvaluacionAyudaTareasEnabled;
+
+  /** Texto de ayuda multi-idioma de Asignación de tareas (JSON) */
+  @Column(name = "peticion_evaluacion_ayuda_tareas", columnDefinition = "clob")
+  private String peticionEvaluacionAyudaTareas;
+
   /**
    * Devuelve el valor del parámetro indicado.
    *
@@ -193,6 +291,22 @@ public class Configuracion extends BaseEntity {
         return this.getPeticionEvaluacionInicializarUnidadVinculacionEnabled();
       case TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF:
         return this.getTipoUnidadVinculacionDepartamentoRef();
+      case PETICION_EVALUACION_AYUDA_FECHA_INICIO_ENABLED:
+        return this.getPeticionEvaluacionAyudaFechaInicioEnabled();
+      case PETICION_EVALUACION_AYUDA_FECHA_INICIO:
+        return this.getPeticionEvaluacionAyudaFechaInicio();
+      case PETICION_EVALUACION_AYUDA_RESUMEN_ENABLED:
+        return this.getPeticionEvaluacionAyudaResumenEnabled();
+      case PETICION_EVALUACION_AYUDA_RESUMEN:
+        return this.getPeticionEvaluacionAyudaResumen();
+      case PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED:
+        return this.getPeticionEvaluacionAyudaDisenioMetodologicoEnabled();
+      case PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO:
+        return this.getPeticionEvaluacionAyudaDisenioMetodologico();
+      case PETICION_EVALUACION_AYUDA_TAREAS_ENABLED:
+        return this.getPeticionEvaluacionAyudaTareasEnabled();
+      case PETICION_EVALUACION_AYUDA_TAREAS:
+        return this.getPeticionEvaluacionAyudaTareas();
       default:
         return null;
     }
@@ -232,6 +346,30 @@ public class Configuracion extends BaseEntity {
       case TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF:
         this.setTipoUnidadVinculacionDepartamentoRef(StringUtils.isBlank(newValue) ? null : newValue);
         break;
+      case PETICION_EVALUACION_AYUDA_FECHA_INICIO_ENABLED:
+        this.setPeticionEvaluacionAyudaFechaInicioEnabled(Boolean.valueOf(newValue));
+        break;
+      case PETICION_EVALUACION_AYUDA_FECHA_INICIO:
+        this.setPeticionEvaluacionAyudaFechaInicio(emptyListIfBlank(newValue));
+        break;
+      case PETICION_EVALUACION_AYUDA_RESUMEN_ENABLED:
+        this.setPeticionEvaluacionAyudaResumenEnabled(Boolean.valueOf(newValue));
+        break;
+      case PETICION_EVALUACION_AYUDA_RESUMEN:
+        this.setPeticionEvaluacionAyudaResumen(emptyListIfBlank(newValue));
+        break;
+      case PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED:
+        this.setPeticionEvaluacionAyudaDisenioMetodologicoEnabled(Boolean.valueOf(newValue));
+        break;
+      case PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO:
+        this.setPeticionEvaluacionAyudaDisenioMetodologico(emptyListIfBlank(newValue));
+        break;
+      case PETICION_EVALUACION_AYUDA_TAREAS_ENABLED:
+        this.setPeticionEvaluacionAyudaTareasEnabled(Boolean.valueOf(newValue));
+        break;
+      case PETICION_EVALUACION_AYUDA_TAREAS:
+        this.setPeticionEvaluacionAyudaTareas(emptyListIfBlank(newValue));
+        break;
       default:
         break;
     }
@@ -239,6 +377,18 @@ public class Configuracion extends BaseEntity {
     if (!isParamEnabled(key)) {
       key.getDependents().forEach(dependent -> updateParamValue(dependent, null));
     }
+  }
+
+  /**
+   * Devuelve el valor de un parámetro de tipo lista, o una lista vacía si no
+   * tiene valor.
+   *
+   * @param value el valor recibido.
+   * @return el valor recibido o {@link #EMPTY_LIST_VALUE} si es nulo o está en
+   *         blanco.
+   */
+  private static String emptyListIfBlank(String value) {
+    return StringUtils.isBlank(value) ? EMPTY_LIST_VALUE : value;
   }
 
 }

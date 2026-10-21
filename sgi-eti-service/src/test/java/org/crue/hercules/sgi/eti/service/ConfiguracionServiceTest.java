@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.eti.dto.ConfigParamOutput;
 import org.crue.hercules.sgi.eti.exceptions.ConfiguracionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.ConfiguracionParamDependencyException;
 import org.crue.hercules.sgi.eti.exceptions.UnknownConfiguracionParamException;
+import org.crue.hercules.sgi.eti.exceptions.UserNotAuthorizedToReadConfiguracionParamException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConfiguracionServiceImpl;
@@ -17,11 +18,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * ConfiguracionServiceTest
  */
 public class ConfiguracionServiceTest extends BaseServiceTest {
+
+  private static final String TEXTO_AYUDA = "[{\"lang\":\"es\",\"value\":\"<p>Ayuda</p>\"}]";
 
   @Mock
   private ConfiguracionRepository configuracionRepository;
@@ -128,6 +132,7 @@ public class ConfiguracionServiceTest extends BaseServiceTest {
   @CsvSource({ "peticionEvaluacionUnidadesVinculacionEnabled,true",
       "peticionEvaluacionInicializarUnidadVinculacionEnabled,false",
       "tipoUnidadVinculacionDepartamentoRef,TIPO-DEP" })
+  @WithMockUser(authorities = "ETI-MEM-V")
   void get_WithParamKey_ReturnsConfigParamOutput(String name, String value) {
     // given: una configuración con los parámetros de unidades informados
     Configuracion configuracion = generarMockConfiguracion();
@@ -145,6 +150,7 @@ public class ConfiguracionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(authorities = "ETI-MEM-V")
   void get_WithParamNull_ReturnsEmptyValue() {
     // given: una configuración sin tipo de unidad configurado
     Configuracion configuracion = generarMockConfiguracion();
@@ -291,6 +297,234 @@ public class ConfiguracionServiceTest extends BaseServiceTest {
     BDDMockito.then(configuracionRepository).should(BDDMockito.never()).save(ArgumentMatchers.any());
   }
 
+  @ParameterizedTest
+  @CsvSource({ "peticionEvaluacionAyudaFechaInicioEnabled,true",
+      "peticionEvaluacionAyudaFechaInicio,'[{\"lang\":\"es\",\"value\":\"<p>Fecha</p>\"}]'",
+      "peticionEvaluacionAyudaResumenEnabled,false",
+      "peticionEvaluacionAyudaResumen,'[{\"lang\":\"es\",\"value\":\"<p>Resumen</p>\"}]'",
+      "peticionEvaluacionAyudaDisenioMetodologicoEnabled,true",
+      "peticionEvaluacionAyudaDisenioMetodologico,'[{\"lang\":\"es\",\"value\":\"<p>Diseño</p>\"}]'",
+      "peticionEvaluacionAyudaTareasEnabled,false",
+      "peticionEvaluacionAyudaTareas,'[{\"lang\":\"es\",\"value\":\"<p>Tareas</p>\"}]'" })
+  @WithMockUser(authorities = "ETI-PEV-INV-C")
+  void get_WithParamInvestigadorAndInvAuthority_ReturnsConfigParamOutput(String name, String value) {
+    // given: una configuración con las ayudas informadas y un usuario con
+    // autoridad de investigador
+    Configuracion configuracion = generarMockConfiguracion();
+    configuracion.setPeticionEvaluacionAyudaFechaInicioEnabled(Boolean.TRUE);
+    configuracion.setPeticionEvaluacionAyudaFechaInicio("[{\"lang\":\"es\",\"value\":\"<p>Fecha</p>\"}]");
+    configuracion.setPeticionEvaluacionAyudaResumenEnabled(Boolean.FALSE);
+    configuracion.setPeticionEvaluacionAyudaResumen("[{\"lang\":\"es\",\"value\":\"<p>Resumen</p>\"}]");
+    configuracion.setPeticionEvaluacionAyudaDisenioMetodologicoEnabled(Boolean.TRUE);
+    configuracion
+        .setPeticionEvaluacionAyudaDisenioMetodologico("[{\"lang\":\"es\",\"value\":\"<p>Diseño</p>\"}]");
+    configuracion.setPeticionEvaluacionAyudaTareasEnabled(Boolean.FALSE);
+    configuracion.setPeticionEvaluacionAyudaTareas("[{\"lang\":\"es\",\"value\":\"<p>Tareas</p>\"}]");
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+
+    // when: se consulta el parámetro de ayuda por su clave
+    ConfigParamOutput output = configuracionService.get(name);
+
+    // then: se devuelve la clave y su valor como texto
+    Assertions.assertThat(output.getName()).isEqualTo(name);
+    Assertions.assertThat(output.getValue()).isEqualTo(value);
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "peticionEvaluacionUnidadesVinculacionEnabled", "peticionEvaluacionInicializarUnidadVinculacionEnabled",
+      "tipoUnidadVinculacionDepartamentoRef" })
+  @WithMockUser(authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
+  void get_WithParamNoInvestigadorAndInvAuthority_ThrowsUserNotAuthorizedToReadConfiguracionParamException(
+      String name) {
+    // given: un parámetro no legible desde el perfil de investigación y un
+    // usuario con solo autoridades de investigador
+
+    Assertions.assertThatThrownBy(
+        // when: se consulta el parámetro
+        () -> configuracionService.get(name))
+        // then: se lanza la excepción de acceso no autorizado y no se consulta la
+        // configuración
+        .isInstanceOf(UserNotAuthorizedToReadConfiguracionParamException.class);
+    BDDMockito.then(configuracionRepository).should(BDDMockito.never()).findFirstByOrderByIdAsc();
+  }
+
+  @Test
+  @WithMockUser(authorities = "SCOPE_sgi-cnf")
+  void get_WithParamNoInvestigadorAndClientScope_ReturnsConfigParamOutput() {
+    // given: un cliente con scope de configuración y un parámetro no legible desde
+    // el perfil de investigación
+    Configuracion configuracion = generarMockConfiguracion();
+    configuracion.setPeticionEvaluacionUnidadesVinculacionEnabled(Boolean.TRUE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+
+    // when: se consulta el parámetro
+    ConfigParamOutput output = configuracionService.get("peticionEvaluacionUnidadesVinculacionEnabled");
+
+    // then: se devuelve el valor del parámetro
+    Assertions.assertThat(output.getValue()).isEqualTo("true");
+  }
+
+  @Test
+  @WithMockUser(authorities = { "ETI-PEV-INV-ER", "ETI-PEV-V_2" })
+  void get_WithParamNoInvestigadorAndInvAndGestionAuthority_ReturnsConfigParamOutput() {
+    // given: un usuario con autoridades de investigador y de gestión para una UO
+    // y un parámetro no legible desde el perfil de investigación
+    Configuracion configuracion = generarMockConfiguracion();
+    configuracion.setTipoUnidadVinculacionDepartamentoRef("TIPO-DEP");
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+
+    // when: se consulta el parámetro
+    ConfigParamOutput output = configuracionService.get("tipoUnidadVinculacionDepartamentoRef");
+
+    // then: se devuelve el valor del parámetro
+    Assertions.assertThat(output.getValue()).isEqualTo("TIPO-DEP");
+  }
+
+  @Test
+  @WithMockUser(authorities = "ETI-PEV-INV-C")
+  void get_WithUnknownKeyAndInvAuthority_ThrowsUnknownConfiguracionParamException() {
+    // given: una clave que no existe y un usuario con solo autoridad de
+    // investigador
+    String name = "unknown";
+
+    Assertions.assertThatThrownBy(
+        // when: se consulta la clave
+        () -> configuracionService.get(name))
+        // then: se lanza la excepción de parámetro desconocido antes que la de acceso
+        // y no se llega a consultar la configuración
+        .isInstanceOf(UnknownConfiguracionParamException.class);
+    BDDMockito.then(configuracionRepository).shouldHaveNoInteractions();
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "peticionEvaluacionAyudaFechaInicio", "peticionEvaluacionAyudaResumen",
+      "peticionEvaluacionAyudaDisenioMetodologico", "peticionEvaluacionAyudaTareas" })
+  void updateValue_WithAyudaTextoAndFlagDisabled_ThrowsConfiguracionParamDependencyException(String name) {
+    // given: una configuración con las ayudas deshabilitadas
+    Configuracion configuracion = generarMockConfiguracionAyudas(Boolean.FALSE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+
+    Assertions.assertThatThrownBy(
+        // when: se intenta guardar un texto de ayuda
+        () -> configuracionService.updateValue(name, TEXTO_AYUDA))
+        // then: se lanza la excepción de dependencia deshabilitada y no se guarda
+        .isInstanceOf(ConfiguracionParamDependencyException.class);
+    BDDMockito.then(configuracionRepository).should(BDDMockito.never()).save(ArgumentMatchers.any());
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "peticionEvaluacionAyudaFechaInicio,'[]'", "peticionEvaluacionAyudaResumen,''",
+      "peticionEvaluacionAyudaDisenioMetodologico,' '", "peticionEvaluacionAyudaTareas,'[]'" })
+  void updateValue_WithAyudaTextoVacioAndFlagDisabled_ThrowsConfiguracionParamDependencyException(String name,
+      String value) {
+    // given: una configuración con las ayudas deshabilitadas
+    Configuracion configuracion = generarMockConfiguracionAyudas(Boolean.FALSE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+
+    Assertions.assertThatThrownBy(
+        // when: se intenta guardar un texto de ayuda vacío
+        () -> configuracionService.updateValue(name, value))
+        // then: se lanza la excepción de dependencia deshabilitada y no se guarda
+        .isInstanceOf(ConfiguracionParamDependencyException.class);
+    BDDMockito.then(configuracionRepository).should(BDDMockito.never()).save(ArgumentMatchers.any());
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "peticionEvaluacionAyudaFechaInicio,'[]'", "peticionEvaluacionAyudaResumen,''",
+      "peticionEvaluacionAyudaDisenioMetodologico,' '", "peticionEvaluacionAyudaTareas,'[]'" })
+  void updateValue_WithAyudaTextoVacio_ReturnsEmptyI18nValue(String name, String value) {
+    // given: una configuración con las ayudas habilitadas
+    Configuracion configuracion = generarMockConfiguracionAyudas(Boolean.TRUE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+    BDDMockito.given(configuracionRepository.save(ArgumentMatchers.<Configuracion>any()))
+        .willAnswer(invocation -> invocation.getArgument(0, Configuracion.class));
+
+    // when: se guarda un texto de ayuda vacío
+    ConfigParamOutput output = configuracionService.updateValue(name, value);
+
+    // then: se guarda sin error como texto multi-idioma vacío
+    Assertions.assertThat(output.getName()).isEqualTo(name);
+    Assertions.assertThat(output.getValue()).isEqualTo(Configuracion.EMPTY_LIST_VALUE);
+  }
+
+  @Test
+  void updateValue_WithAyudaTextoNull_ReturnsEmptyI18nValue() {
+    // given: una configuración con las ayudas habilitadas
+    Configuracion configuracion = generarMockConfiguracionAyudas(Boolean.TRUE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+    BDDMockito.given(configuracionRepository.save(ArgumentMatchers.<Configuracion>any()))
+        .willAnswer(invocation -> invocation.getArgument(0, Configuracion.class));
+
+    // when: se guarda un texto de ayuda nulo
+    ConfigParamOutput output = configuracionService.updateValue("peticionEvaluacionAyudaResumen", null);
+
+    // then: se guarda como texto multi-idioma vacío
+    Assertions.assertThat(output.getValue()).isEqualTo(Configuracion.EMPTY_LIST_VALUE);
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaResumen()).isEqualTo(Configuracion.EMPTY_LIST_VALUE);
+  }
+
+  @Test
+  void updateValue_WithAyudaFlagDisabled_ClearsTexto() {
+    // given: una configuración con las ayudas habilitadas y con texto
+    Configuracion configuracion = generarMockConfiguracionAyudas(Boolean.TRUE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+    BDDMockito.given(configuracionRepository.save(ArgumentMatchers.<Configuracion>any()))
+        .willAnswer(invocation -> invocation.getArgument(0, Configuracion.class));
+
+    // when: se deshabilitan todas las ayudas
+    configuracionService.updateValue("peticionEvaluacionAyudaFechaInicioEnabled", "false");
+    configuracionService.updateValue("peticionEvaluacionAyudaResumenEnabled", "false");
+    configuracionService.updateValue("peticionEvaluacionAyudaDisenioMetodologicoEnabled", "false");
+    configuracionService.updateValue("peticionEvaluacionAyudaTareasEnabled", "false");
+
+    // then: los flags quedan deshabilitados y los textos vacíos
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaFechaInicioEnabled()).isFalse();
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaResumenEnabled()).isFalse();
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaDisenioMetodologicoEnabled()).isFalse();
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaTareasEnabled()).isFalse();
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaFechaInicio())
+        .isEqualTo(Configuracion.EMPTY_LIST_VALUE);
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaResumen()).isEqualTo(Configuracion.EMPTY_LIST_VALUE);
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaDisenioMetodologico())
+        .isEqualTo(Configuracion.EMPTY_LIST_VALUE);
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaTareas()).isEqualTo(Configuracion.EMPTY_LIST_VALUE);
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "peticionEvaluacionAyudaFechaInicio", "peticionEvaluacionAyudaResumen",
+      "peticionEvaluacionAyudaDisenioMetodologico", "peticionEvaluacionAyudaTareas" })
+  void updateValue_WithAyudaTextoAndFlagEnabled_ReturnsUpdatedValue(String name) {
+    // given: una configuración con las ayudas habilitadas
+    Configuracion configuracion = generarMockConfiguracionAyudas(Boolean.TRUE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+    BDDMockito.given(configuracionRepository.save(ArgumentMatchers.<Configuracion>any()))
+        .willAnswer(invocation -> invocation.getArgument(0, Configuracion.class));
+    String texto = "[{\"lang\":\"es\",\"value\":\"<p><strong>Nuevo</strong></p>\"}]";
+
+    // when: se guarda un texto de ayuda
+    ConfigParamOutput output = configuracionService.updateValue(name, texto);
+
+    // then: se devuelve el texto tal cual
+    Assertions.assertThat(output.getName()).isEqualTo(name);
+    Assertions.assertThat(output.getValue()).isEqualTo(texto);
+  }
+
+  @Test
+  void updateValue_WithAyudaFlagEnabled_KeepsTexto() {
+    // given: una configuración con las ayudas habilitadas y con texto
+    Configuracion configuracion = generarMockConfiguracionAyudas(Boolean.TRUE);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+    BDDMockito.given(configuracionRepository.save(ArgumentMatchers.<Configuracion>any()))
+        .willAnswer(invocation -> invocation.getArgument(0, Configuracion.class));
+
+    // when: se vuelve a habilitar la ayuda de Asignación de tareas
+    ConfigParamOutput output = configuracionService.updateValue("peticionEvaluacionAyudaTareasEnabled", "true");
+
+    // then: el flag sigue habilitado y el texto se conserva
+    Assertions.assertThat(output.getValue()).isEqualTo("true");
+    Assertions.assertThat(configuracion.getPeticionEvaluacionAyudaTareas()).isEqualTo(TEXTO_AYUDA);
+  }
+
   @Test
   void updateValue_WithoutConfiguracion_ThrowsConfiguracionNotFoundException() {
     // given: no existe configuración
@@ -318,6 +552,27 @@ public class ConfiguracionServiceTest extends BaseServiceTest {
     configuracion.setDiasLimiteEvaluador(3);
     configuracion.setDiasArchivadaInactivo(2);
 
+    return configuracion;
+  }
+
+  /**
+   * Devuelve una {@link Configuracion} con todas las ayudas de la solicitud de
+   * evaluación en el estado indicado y, si están habilitadas, con texto.
+   *
+   * @param enabled estado de los flags de las ayudas.
+   * @return la {@link Configuracion}.
+   */
+  private Configuracion generarMockConfiguracionAyudas(Boolean enabled) {
+    Configuracion configuracion = generarMockConfiguracion();
+    String texto = Boolean.TRUE.equals(enabled) ? TEXTO_AYUDA : Configuracion.EMPTY_LIST_VALUE;
+    configuracion.setPeticionEvaluacionAyudaFechaInicioEnabled(enabled);
+    configuracion.setPeticionEvaluacionAyudaFechaInicio(texto);
+    configuracion.setPeticionEvaluacionAyudaResumenEnabled(enabled);
+    configuracion.setPeticionEvaluacionAyudaResumen(texto);
+    configuracion.setPeticionEvaluacionAyudaDisenioMetodologicoEnabled(enabled);
+    configuracion.setPeticionEvaluacionAyudaDisenioMetodologico(texto);
+    configuracion.setPeticionEvaluacionAyudaTareasEnabled(enabled);
+    configuracion.setPeticionEvaluacionAyudaTareas(texto);
     return configuracion;
   }
 
