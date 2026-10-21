@@ -1,5 +1,5 @@
-import { KeyValue } from "@angular/common";
-import { Observable } from "rxjs";
+import { KeyValue } from '@angular/common';
+import { Observable } from 'rxjs';
 
 export enum ConfigType {
   TEXT = 'text',
@@ -10,7 +10,8 @@ export enum ConfigType {
   SELECT_MULTIPLE = 'select-multiple',
   CONFIG_GROUP_TITLE = 'config-group-title',
   SELECT_FILE = 'select-file',
-  I18N_TEXT = 'i18n-text'
+  I18N_TEXT = 'i18n-text',
+  I18N_HTML = 'i18n-html'
 }
 
 export enum ConfigModule {
@@ -21,14 +22,14 @@ export enum ConfigModule {
 }
 
 export interface IConfigOptions {
-  type: ConfigType,
-  label: string,
-  module: ConfigModule,
-  options?: Observable<KeyValue<string, string>[]>,
-  disabled?: boolean,
-  info?: string,
-  description?: string,
-  required?: boolean,
-  labelParamas?: any,
-  filterLanguage?: boolean
+  type: ConfigType;
+  label: string;
+  module: ConfigModule;
+  options?: Observable<KeyValue<string, string>[]>;
+  disabled?: boolean;
+  info?: string;
+  description?: string;
+  required?: boolean;
+  labelParamas?: any;
+  filterLanguage?: boolean;
 }

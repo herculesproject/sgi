@@ -1,13 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConfigValue } from '@core/models/cnf/config-value';
+import { II18nConfigValue } from '@core/models/cnf/i18n-config-value';
+import { IPeticionEvaluacionAyudas } from '@core/models/eti/peticion-evaluacion-ayudas';
 import { environment } from '@env';
 import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { ConfigEti } from 'src/app/module/adm/config-eti/config-eti.component';
 import { IConfigValueResponse } from '../cnf/config-value-response';
 import { CONFIG_VALUE_RESPONSE_CONVERTER } from '../cnf/config-value-response.converter';
+import { I18N_CONFIG_VALUE_REQUEST_CONVERTER } from '../cnf/i18n-config-value-request.converter';
+import { I18N_CONFIG_VALUE_RESPONSE_CONVERTER } from '../cnf/i18n-config-value-response.converter';
 import { TimeZoneConfigService } from '../timezone.service';
 
 // tslint:disable-next-line: variable-name
@@ -24,7 +30,10 @@ const _ConfigServiceMixinBase:
 export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneConfigService {
   private static readonly MAPPING = '/config';
 
-  constructor(protected http: HttpClient) {
+  constructor(
+    protected http: HttpClient,
+    private readonly logger: NGXLogger
+  ) {
     super(
       `${environment.serviceServers.eti}${ConfigService.MAPPING}`,
       http
@@ -44,13 +53,102 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  /**
+   * Obtiene el valor multi-idioma de un parámetro de configuración.
+   *
+   * @param key clave del parámetro de configuración.
+   * @returns el valor multi-idioma del parámetro.
+   */
+  findI18nById(key: string): Observable<II18nConfigValue> {
+    return this.http.get<IConfigValueResponse>(
+      `${this.endpointUrl}/${key}`
+    ).pipe(
+      map(response => I18N_CONFIG_VALUE_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
+   * Actualiza el valor multi-idioma de un parámetro de configuración.
+   *
+   * @param key clave del parámetro de configuración.
+   * @param value valor multi-idioma del parámetro.
+   * @returns el valor multi-idioma persistido.
+   */
+  updateI18nValue(key: string, value: II18nConfigValue): Observable<II18nConfigValue> {
+    return this.http.patch<IConfigValueResponse>(
+      `${this.endpointUrl}/${key}`,
+      I18N_CONFIG_VALUE_REQUEST_CONVERTER.fromTarget(value).value
+    ).pipe(
+      map(response => I18N_CONFIG_VALUE_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
   isPeticionEvaluacionUnidadesVinculacionEnabled(): Observable<boolean> {
     return this.getValueAsBooleanByConfigKey(ConfigEti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED);
+  }
+
+  /**
+   * Obtiene los textos de ayuda de la solicitud de evaluación. Una ayuda que no esté habilitada, que no tenga texto en
+   * ningún idioma o cuya consulta falle se devuelve a null.
+   *
+   * @returns los textos de ayuda de la solicitud de evaluación.
+   */
+  getPeticionEvaluacionAyudas(): Observable<IPeticionEvaluacionAyudas> {
+    return forkJoin({
+      fechaInicio: this.getAyuda(
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_FECHA_INICIO_ENABLED,
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_FECHA_INICIO
+      ),
+      resumen: this.getAyuda(
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_RESUMEN_ENABLED,
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_RESUMEN
+      ),
+      disenioMetodologico: this.getAyuda(
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED,
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO
+      ),
+      tareas: this.getAyuda(
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_TAREAS_ENABLED,
+        ConfigEti.ETI_PETICION_EVALUACION_AYUDA_TAREAS
+      )
+    });
   }
 
   private getValueAsBooleanByConfigKey(configKey: ConfigEti): Observable<boolean> {
     return this.findById(configKey).pipe(
       map(configValue => configValue?.value === 'true')
+    );
+  }
+
+  /**
+   * Obtiene el texto de una ayuda si está habilitada, sin los idiomas que no tienen texto.
+   * Así, si el idioma activo no tiene texto se muestra el del idioma priorizado y, si ninguno
+   * lo tiene, no se muestra la ayuda.
+   *
+   * @param enabledKey clave del parámetro que habilita la ayuda.
+   * @param textKey clave del parámetro con el texto de la ayuda.
+   * @returns el texto de la ayuda o null si no se muestra.
+   */
+  private getAyuda(enabledKey: ConfigEti, textKey: ConfigEti): Observable<I18nFieldValue[]> {
+    return forkJoin({
+      enabled: this.getValueAsBooleanByConfigKey(enabledKey).pipe(
+        catchError(error => {
+          this.logger.error(error);
+          return of(false);
+        })
+      ),
+      text: this.findI18nById(textKey).pipe(
+        map(configValue => configValue?.value ?? []),
+        catchError(error => {
+          this.logger.error(error);
+          return of([] as I18nFieldValue[]);
+        })
+      )
+    }).pipe(
+      map(({ enabled, text }) => {
+        const values = text.filter(field => !!field?.value?.trim());
+        return enabled && values.length ? values : null;
+      })
     );
   }
 

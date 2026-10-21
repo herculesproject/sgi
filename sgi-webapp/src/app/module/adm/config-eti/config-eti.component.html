@@ -46,6 +46,11 @@
           [description]="config.value.description" [required]="config.value.required" (error)="handleErrors($event)">
         </sgi-config-select-file-eti>
       </ng-container>
+      <ng-container *ngSwitchCase="ConfigType.I18N_HTML">
+        <sgi-config-i18n-ckeditor-eti *ngIf="!config.value.disabled" [key]="config.key" [label]="config.value.label"
+          [description]="config.value.description" [required]="config.value.required" (error)="handleErrors($event)">
+        </sgi-config-i18n-ckeditor-eti>
+      </ng-container>
       <ng-container *ngSwitchCase="ConfigType.CONFIG_GROUP_TITLE">
         <h3 class="config-group-title">
           {{config.value.label | translate:config.value.labelParams}}

@@ -67,11 +67,14 @@ public class ConfigController {
    * Devuelve el valor del parámetro de {@link Configuracion} con la clave
    * indicada.
    *
+   * Con solo autoridades de investigador únicamente se pueden consultar los
+   * parámetros legibles desde el perfil de investigación.
+   *
    * @param name clave del parámetro ({@link Configuracion.Param}).
    * @return el {@link ConfigParamOutput} con la clave y el valor del parámetro.
    */
   @GetMapping(PATH_NAME)
-  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-cnf')) or hasAnyAuthorityForAnyUO('ADM-CNF-E', 'ETI-PEV-V', 'ETI-PEV-E', 'ETI-MEM-V')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-cnf')) or hasAnyAuthorityForAnyUO('ADM-CNF-E', 'ETI-PEV-V', 'ETI-PEV-E', 'ETI-MEM-V', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER')")
   public ConfigParamOutput get(@PathVariable String name) {
     log.debug("get - name: {}", name);
     return configuracionService.get(name);

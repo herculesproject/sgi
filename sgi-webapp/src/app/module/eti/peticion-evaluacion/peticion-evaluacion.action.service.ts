@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IChecklist } from '@core/models/eti/checklist';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPeticionEvaluacionAyudas } from '@core/models/eti/peticion-evaluacion-ayudas';
 import { Module } from '@core/module';
 import { ActionService, IFragment } from '@core/services/action-service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -11,6 +12,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
 import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
+import { ConfigService } from '@core/services/eti/config.service';
 import { ConfiguracionService } from '@core/services/eti/configuracion.service';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
@@ -31,7 +33,7 @@ import { FormlyConfig, FormlyFormBuilder } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of, throwError } from 'rxjs';
-import { concatMap, filter, map, mergeMap, switchMap, take, takeLast, tap } from 'rxjs/operators';
+import { concatMap, filter, map, mergeMap, shareReplay, switchMap, take, takeLast, tap } from 'rxjs/operators';
 import { MemoriaFormularioFragment } from '../memoria/memoria-formulario/memoria-formulario/memoria-formulario.fragment';
 import { EquipoInvestigadorListadoFragment } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.fragment';
 import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
@@ -52,18 +54,21 @@ export class PeticionEvaluacionActionService extends ActionService {
 
   public readonly: boolean;
 
-  private peticionEvaluacion: IPeticionEvaluacion;
-  private datosGenerales: PeticionEvaluacionDatosGeneralesFragment;
-  private equipoInvestigadorListado: EquipoInvestigadorListadoFragment;
-  private tareas: PeticionEvaluacionTareasFragment;
-  private memoriasListado: MemoriasListadoFragment;
-  private unidadesVinculacion: PeticionEvaluacionUnidadesVinculacionFragment;
-  private fragmentos: IFragment[] = [];
+  /** Textos de ayuda de la solicitud de evaluación */
+  public readonly ayudas$: Observable<IPeticionEvaluacionAyudas>;
+
+  private readonly peticionEvaluacion: IPeticionEvaluacion;
+  private readonly datosGenerales: PeticionEvaluacionDatosGeneralesFragment;
+  private readonly equipoInvestigadorListado: EquipoInvestigadorListadoFragment;
+  private readonly tareas: PeticionEvaluacionTareasFragment;
+  private readonly memoriasListado: MemoriasListadoFragment;
+  private readonly unidadesVinculacion: PeticionEvaluacionUnidadesVinculacionFragment;
+  private readonly fragmentos: IFragment[] = [];
   private checklist: IChecklist;
 
-  private formlyFormBuilder: FormlyFormBuilder;
+  private readonly formlyFormBuilder: FormlyFormBuilder;
 
-  private isInvestigador: boolean;
+  private readonly isInvestigador: boolean;
 
   get showUnidadesVinculacion(): boolean {
     return !!this.unidadesVinculacion;
@@ -102,9 +107,12 @@ export class PeticionEvaluacionActionService extends ActionService {
     protected readonly router: Router,
     protected readonly languageService: LanguageService,
     protected readonly tipoDocumentoService: TipoDocumentoService,
-    protected readonly unidadVinculacionService: UnidadVinculacionService
+    protected readonly unidadVinculacionService: UnidadVinculacionService,
+    configService: ConfigService
   ) {
     super();
+
+    this.ayudas$ = configService.getPeticionEvaluacionAyudas().pipe(shareReplay(1));
 
     this.formlyFormBuilder = new FormlyFormBuilder(formlyConfig, componentFactoryResolver, injector);
 
