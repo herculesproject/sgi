@@ -2943,6 +2943,7 @@
   "msg.csp.solicitud.documentos-requeridos": "The application does not have all the required documentation",
   "msg.csp.solicitud.modelo-ejecucion.no-editable.documentos-hitos": "The application already has information associated with it in the Documents and/or Milestones sections. You must delete this information in order to change the implementation model",
   "msg.csp.solicitud.modelo-ejecucion.no-editable.origen-convocatoria": "The implementation model is the one corresponding to the call. Cannot be modified",
+  "msg.csp.solicitud.peticion-evaluacion-etica.titulo-requerido": "The application must have a title to create its ethical evaluation request, since the Ethical Self-Assessment has affirmative answers",
   "msg.csp.solicitud.solicitante-miembro-equipo": "The application applicant must be a member of the team",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.categorias-exigidas": "Required professional categories",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.niveles-exigidos": "Required academic levels",
