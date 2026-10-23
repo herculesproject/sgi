@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -17,8 +18,9 @@ import org.crue.hercules.sgi.csp.converter.SolicitudProyectoResultadosPrevistosC
 import org.crue.hercules.sgi.csp.converter.SolicitudTituloConverter;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
-import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
-import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
+import org.crue.hercules.sgi.csp.dto.eti.EstadoFinanciacionDto;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacionOutput;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacionSolicitudCspInput;
 import org.crue.hercules.sgi.csp.dto.sgemp.EmpresaOutput;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
@@ -31,6 +33,7 @@ import org.crue.hercules.sgi.csp.exceptions.RolSocioNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoWithoutSocioCoordinadorException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudTituloRequiredForPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudWithoutRequeridedDocumentationException;
 import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -762,11 +765,17 @@ public class SolicitudService {
   /**
    * Crea o actualiza la peticion de evaluacion si se ha respondido
    * afirmativamente a alguna pregunta en el checklist.
+   * Para crearla, la solicitud debe tener título.
    * 
    * @param solicitud         la {@link Solicitud} para la que se crea o actualiza
    *                          la peticion evaluacion
    * @param solicitudProyecto {@link SolicitudProyecto} asociado a la solicitud
    * @param estadoSolicitud   {@link EstadoSolicitud} actualizado
+   * @throws SolicitudTituloRequiredForPeticionEvaluacionException si hay que
+   *                                                               crear la
+   *                                                               petición y la
+   *                                                               solicitud no
+   *                                                               tiene título
    */
   private void createOrUpdatePeticionEvaluacionEtica(Solicitud solicitud, SolicitudProyecto solicitudProyecto,
       EstadoSolicitud estadoSolicitud) {
@@ -775,6 +784,10 @@ public class SolicitudService {
       // No se ha creado aún la petición de evaluación: se valida el checklist
       ChecklistOutput checklistOutput = sgiApiEtiService.getCheckList(solicitudProyecto.getChecklistRef());
       if (isChecklistAutoevaluacionAfirmativa(checklistOutput)) {
+        if (CollectionUtils.isEmpty(solicitud.getTitulo())) {
+          throw new SolicitudTituloRequiredForPeticionEvaluacionException();
+        }
+
         createPeticionEvaluacion(solicitud, solicitudProyecto, checklistOutput);
       }
     } else {
@@ -796,23 +809,20 @@ public class SolicitudService {
 
     boolean existeFinanciacion = solicitudProyectoPresupuestoRepository
         .existsBySolicitudProyectoSolicitudId(solicitud.getId());
-    PeticionEvaluacion peticionEvaluacionRequest = PeticionEvaluacion.builder()
+    PeticionEvaluacionSolicitudCspInput peticionEvaluacionRequest = PeticionEvaluacionSolicitudCspInput.builder()
         .solicitudConvocatoriaRef(solicitud.getId().toString())
         .checklistId(checklistOutput.getId())
         .personaRef(solicitud.getSolicitanteRef())
         .titulo(solicitudTituloConverter.convertAll(solicitud.getTitulo()))
         .existeFinanciacion(existeFinanciacion)
         .fuenteFinanciacion(existeFinanciacion ? getNombresEntidadesFinanciadoras(solicitud.getId()) : null)
-        .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacion.SOLICITADO : null)
+        .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacionDto.SOLICITADO : null)
         .importeFinanciacion(existeFinanciacion ? getImporteFinanciacion(solicitud.getId()) : null)
-        .resumen(solicitudProyectoResultadosPrevistosConverter
-            .convertAll(solicitudProyecto
-                .getResultadosPrevistos()))
-        .objetivos(solicitudProyectoObjetivosConverter.convertAll(solicitudProyecto
-            .getObjetivos()))
+        .resumen(solicitudProyectoResultadosPrevistosConverter.convertAll(solicitudProyecto.getResultadosPrevistos()))
+        .objetivos(solicitudProyectoObjetivosConverter.convertAll(solicitudProyecto.getObjetivos()))
         .build();
 
-    PeticionEvaluacion peticionEvaluacion = sgiApiEtiService.newPeticionEvaluacion(peticionEvaluacionRequest);
+    PeticionEvaluacionOutput peticionEvaluacion = sgiApiEtiService.newPeticionEvaluacion(peticionEvaluacionRequest);
     if (peticionEvaluacion == null) {
       throw new GetPeticionEvaluacionException();
     }
@@ -822,7 +832,7 @@ public class SolicitudService {
     solicitudProyectoRepository.save(solicitudProyecto);
 
     // Copiar el equipo de trabajo de la solicitud a la petición de evaluación
-    copyMiembrosEquipoSolicitudToPeticionEvaluacion(peticionEvaluacion, solicitudProyecto.getId());
+    copyMiembrosEquipoSolicitudToPeticionEvaluacion(peticionEvaluacion.getId(), solicitudProyecto.getId());
 
     // Enviar comunicado de alta de la petición de evaluación en ética
     try {
@@ -847,17 +857,17 @@ public class SolicitudService {
    * @param peticionEvaluacionRef Identificador de la peticion evaluacion
    */
   private void updateEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) {
-    EstadoFinanciacion nuevoEstado = null;
+    EstadoFinanciacionDto nuevoEstado = null;
 
     switch (estadoSolicitud.getEstado()) {
       case DENEGADA:
-        nuevoEstado = EstadoFinanciacion.DENEGADO;
+        nuevoEstado = EstadoFinanciacionDto.DENEGADO;
         break;
       case CONCEDIDA_PROVISIONAL,
           CONCEDIDA_PROVISIONAL_ALEGADA,
           CONCEDIDA_PROVISIONAL_NO_ALEGADA,
           CONCEDIDA:
-        nuevoEstado = EstadoFinanciacion.CONCEDIDO;
+        nuevoEstado = EstadoFinanciacionDto.CONCEDIDO;
         break;
       default:
         // Para otros estados, no se realiza ninguna acción
@@ -866,55 +876,35 @@ public class SolicitudService {
 
     if (nuevoEstado == null) {
       log.debug(
-          "actualizarEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) - No se actualiza el estado de la peticion evaluacion");
+          "updateEstadoPeticionEvaluacion - estadoSolicitud: {}, peticionEvaluacionRef: {} - No se actualiza el estado de la peticion evaluacion",
+          estadoSolicitud, peticionEvaluacionRef);
       return;
     }
 
-    PeticionEvaluacion peticionEvaluacion = sgiApiEtiService.getPeticionEvaluacion(peticionEvaluacionRef);
-    if (peticionEvaluacion == null) {
-      throw new GetPeticionEvaluacionException();
-    }
-
-    if (Boolean.FALSE.equals(peticionEvaluacion.getExisteFinanciacion())) {
-      log.debug(
-          "actualizarEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) - No se actualiza porque la peticion evaluacion no tiene financiacion");
-      return;
-    }
-
-    if (peticionEvaluacion.getEstadoFinanciacion().equals(nuevoEstado)) {
-      log.debug(
-          "actualizarEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) - La peticion evaluacion ya esta en ese estado");
-      return;
-    }
-
-    peticionEvaluacion.setEstadoFinanciacion(nuevoEstado);
-    sgiApiEtiService.updatePeticionEvaluacion(peticionEvaluacionRef, peticionEvaluacion);
+    sgiApiEtiService.updateEstadoFinanciacionPeticionEvaluacion(peticionEvaluacionRef, nuevoEstado);
   }
 
   /**
-   * Copia todos los miembros del equipo de una {@link Solicitud} a un Equipo d
-   * Trabajo de una Petición de Evaluación Ética
+   * Copia todos los miembros del equipo de una {@link Solicitud} al equipo de
+   * trabajo de una petición de evaluación ética.
    *
-   * @param proyecto entidad {@link Proyecto}
+   * @param peticionEvaluacionId identificador de la petición de evaluación.
+   * @param solicitudProyectoId  identificador del {@link SolicitudProyecto}.
    */
-  private void copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion,
-      Long solicitudProyectoId) {
-
-    log.debug(
-        "copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion, Long solicitudProyectoId) - start");
+  private void copyMiembrosEquipoSolicitudToPeticionEvaluacion(Long peticionEvaluacionId, Long solicitudProyectoId) {
+    log.debug("copyMiembrosEquipoSolicitudToPeticionEvaluacion - peticionEvaluacionId: {}, solicitudProyectoId: {}",
+        peticionEvaluacionId, solicitudProyectoId);
 
     solicitudProyectoEquipoRepository.findAllBySolicitudProyectoId(solicitudProyectoId).stream()
         .map(solicitudProyectoEquipo -> {
           log.debug("Copy SolicitudProyectoEquipo with id: {}", solicitudProyectoEquipo.getId());
           EquipoTrabajo.EquipoTrabajoBuilder equipoTrabajo = EquipoTrabajo.builder();
-          equipoTrabajo.peticionEvaluacionId(peticionEvaluacion.getId());
+          equipoTrabajo.peticionEvaluacionId(peticionEvaluacionId);
           equipoTrabajo.personaRef(solicitudProyectoEquipo.getPersonaRef());
           return equipoTrabajo.build();
         })
         .distinct()
-        .forEach(equipoTrabajo -> sgiApiEtiService.newEquipoTrabajo(peticionEvaluacion.getId(), equipoTrabajo));
-    log.debug(
-        "copyMiembrosEquipoSolicitudToPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion, Long solicitudProyectoId) - end");
+        .forEach(equipoTrabajo -> sgiApiEtiService.newEquipoTrabajo(peticionEvaluacionId, equipoTrabajo));
   }
 
   /**
@@ -1492,7 +1482,10 @@ public class SolicitudService {
 
   private BigDecimal getImporteFinanciacion(Long solicitudId) {
     return solicitudProyectoPresupuestoRepository.findBySolicitudProyectoId(solicitudId).stream()
-        .map(SolicitudProyectoPresupuesto::getImporteSolicitado).reduce(BigDecimal::add).orElse(null);
+        .map(SolicitudProyectoPresupuesto::getImporteSolicitado)
+        .filter(Objects::nonNull)
+        .reduce(BigDecimal::add)
+        .orElse(null);
   }
 
   private void enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) {

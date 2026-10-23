@@ -3,16 +3,19 @@ package org.crue.hercules.sgi.csp.service.sgi;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
-import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
+import org.crue.hercules.sgi.csp.dto.eti.EstadoFinanciacionDto;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacionEstadoFinanciacionInput;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacionOutput;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacionSolicitudCspInput;
 import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Service
 @Slf4j
 public class SgiApiEtiService extends SgiApiBaseService {
 
@@ -35,50 +38,46 @@ public class SgiApiEtiService extends SgiApiBaseService {
     return response;
   }
 
-  public PeticionEvaluacion newPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion) {
-    log.debug("newPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion) - start");
+  /**
+   * Crea en ETI la petición de evaluación ética de una solicitud.
+   *
+   * @param peticionEvaluacion datos de la petición de evaluación a crear.
+   * @return la {@link PeticionEvaluacionOutput} creada.
+   */
+  public PeticionEvaluacionOutput newPeticionEvaluacion(PeticionEvaluacionSolicitudCspInput peticionEvaluacion) {
+    log.debug("newPeticionEvaluacion - peticionEvaluacion: {}", peticionEvaluacion);
     ServiceType serviceType = ServiceType.ETI;
-    String relativeUrl = "/peticionevaluaciones";
+    String relativeUrl = "/peticionevaluaciones/solicitud-csp";
     HttpMethod httpMethod = HttpMethod.POST;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final PeticionEvaluacion response = super.<PeticionEvaluacion, PeticionEvaluacion>callEndpoint(mergedURL,
-        httpMethod, peticionEvaluacion, new ParameterizedTypeReference<PeticionEvaluacion>() {
+    final PeticionEvaluacionOutput response = super.<PeticionEvaluacionSolicitudCspInput, PeticionEvaluacionOutput>callEndpoint(
+        mergedURL, httpMethod,
+        peticionEvaluacion, new ParameterizedTypeReference<PeticionEvaluacionOutput>() {
         }).getBody();
 
-    log.debug("newPeticionEvaluacion(PeticionEvaluacion peticionEvaluacion) - end");
+    log.debug("newPeticionEvaluacion - response: {}", response);
     return response;
   }
 
-  public PeticionEvaluacion getPeticionEvaluacion(String peticionEvaluacionRef) {
-    log.debug("getPeticionEvaluacion(String peticionEvaluacionRef) - start");
+  /**
+   * Actualiza el estado de financiación de una petición de evaluación de ETI.
+   *
+   * @param peticionEvaluacionRef identificador de la petición de evaluación.
+   * @param estadoFinanciacion    nuevo {@link EstadoFinanciacionDto}.
+   */
+  public void updateEstadoFinanciacionPeticionEvaluacion(String peticionEvaluacionRef,
+      EstadoFinanciacionDto estadoFinanciacion) {
+    log.debug("updateEstadoFinanciacionPeticionEvaluacion - peticionEvaluacionRef: {}, estadoFinanciacion: {}",
+        peticionEvaluacionRef, estadoFinanciacion);
     ServiceType serviceType = ServiceType.ETI;
-    String relativeUrl = "/peticionevaluaciones/{peticionEvaluacionRef}";
-    HttpMethod httpMethod = HttpMethod.GET;
+    String relativeUrl = "/peticionevaluaciones/{peticionEvaluacionRef}/estado-financiacion";
+    HttpMethod httpMethod = HttpMethod.PATCH;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
-    final PeticionEvaluacion response = super.<PeticionEvaluacion>callEndpoint(mergedURL, httpMethod,
-        new ParameterizedTypeReference<PeticionEvaluacion>() {
-        }, peticionEvaluacionRef).getBody();
-
-    log.debug("getPeticionEvaluacion(String peticionEvaluacionRef) - end");
-    return response;
-  }
-
-  public PeticionEvaluacion updatePeticionEvaluacion(String peticionEvaluacionRef,
-      PeticionEvaluacion peticionEvaluacion) {
-    log.debug("updatePeticionEvaluacion(String peticionEvaluacionRef, PeticionEvaluacion peticionEvaluacion) - start");
-    ServiceType serviceType = ServiceType.ETI;
-    String relativeUrl = "/peticionevaluaciones/{peticionEvaluacionRef}";
-    HttpMethod httpMethod = HttpMethod.PUT;
-    String mergedURL = buildUri(serviceType, relativeUrl);
-
-    final PeticionEvaluacion response = super.<PeticionEvaluacion, PeticionEvaluacion>callEndpoint(mergedURL,
-        httpMethod, peticionEvaluacion, new ParameterizedTypeReference<PeticionEvaluacion>() {
-        }, peticionEvaluacionRef).getBody();
-
-    log.debug("updatePeticionEvaluacion(String peticionEvaluacionRef, PeticionEvaluacion peticionEvaluacion) - end");
-    return response;
+    super.<PeticionEvaluacionEstadoFinanciacionInput, Void>callEndpoint(mergedURL, httpMethod,
+        new PeticionEvaluacionEstadoFinanciacionInput(estadoFinanciacion), new ParameterizedTypeReference<Void>() {
+        }, peticionEvaluacionRef);
   }
 
   public EquipoTrabajo newEquipoTrabajo(Long id,

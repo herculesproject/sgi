@@ -1,16 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { SgiError, ValidationError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
-import { ESTADO_MAP, Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { Estado, ESTADO_MAP, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
+import { IChecklist } from '@core/models/eti/checklist';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
+import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { ErrorUtils } from '@core/utils/error-utils';
 import { I18nValidators } from '@core/validators/i18n-validator';
@@ -29,6 +31,7 @@ const SOLICITUD_PROYECTO_ROL_UNIVERSIDAD = marker('csp.solicitud.rol-participaci
 const MSG_SOLICITUD_EQUIPO_SOLICITANTE_REQUIRED = marker('msg.csp.solicitud.solicitante-miembro-equipo');
 const MSG_CAMBIO_ESTADO_CONFIRMACION = marker('confirmacion.csp.solicitud.cambio-estado');
 const MSG_CAMBIO_ESTADO_ERROR = marker('msg.csp.solicitud.cambio-estado.error');
+const MSG_PETICION_EVALUACION_ETICA_TITULO_REQUIRED = marker('msg.csp.solicitud.peticion-evaluacion-etica.titulo-requerido');
 
 export interface SolicitudCambioEstadoModalComponentData {
   estadoActual: Estado;
@@ -87,6 +90,7 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
   msgSolicitudProyectoRolUniversidadRequired: string;
   msgSolicitudEquipoSolicitanteRequired: string;
   msgCambioEstadoError: string;
+  msgPeticionEvaluacionEticaTituloRequired: string;
 
   readonly estadosNuevos: Map<string, string>;
 
@@ -98,8 +102,9 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
     matDialogRef: MatDialogRef<CambioEstadoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SolicitudCambioEstadoModalComponentData,
     protected snackBarService: SnackBarService,
-    private solicitudService: SolicitudService,
-    private confirmDialogService: DialogService,
+    private readonly checklistService: ChecklistService,
+    private readonly solicitudService: SolicitudService,
+    private readonly confirmDialogService: DialogService,
     private readonly translate: TranslateService
   ) {
     super(matDialogRef, true);
@@ -152,6 +157,7 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
     );
     this.msgSolicitudEquipoSolicitanteRequired = this.translate.instant(MSG_SOLICITUD_EQUIPO_SOLICITANTE_REQUIRED);
     this.msgCambioEstadoError = this.translate.instant(MSG_CAMBIO_ESTADO_ERROR);
+    this.msgPeticionEvaluacionEticaTituloRequired = this.translate.instant(MSG_PETICION_EVALUACION_ETICA_TITULO_REQUIRED);
   }
 
   protected getValue(): IEstadoSolicitud {
@@ -191,7 +197,7 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
     );
   }
 
-  private validateCambioEstado(estado: Estado): Observable<never | void> {
+  private validateCambioEstado(estado: Estado): Observable<void> {
     const validationErrors: ValidationError[] = [];
 
     if (![Estado.DESISTIDA, Estado.RENUNCIADA].includes(estado)) {
@@ -201,11 +207,43 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
       }
     }
 
-    if (validationErrors.length > 0) {
-      return throwError(ErrorUtils.toValidationProblem(this.msgCambioEstadoError, validationErrors));
+    return this.validatePeticionEvaluacionEticaTitulo(estado).pipe(
+      switchMap((peticionEvaluacionEticaErrors: ValidationError[]) => {
+        validationErrors.push(...peticionEvaluacionEticaErrors);
+        if (validationErrors.length > 0) {
+          return throwError(ErrorUtils.toValidationProblem(this.msgCambioEstadoError, validationErrors));
+        }
+
+        return of(void 0);
+      })
+    );
+  }
+
+  /**
+   * Comprueba que la solicitud tenga título si con el cambio de estado se va a crear la petición de evaluación ética
+   * derivada (formulario PROYECTO, con autoevaluación ética afirmativa y sin petición de evaluación creada).
+   *
+   * @param estado el estado nuevo de la solicitud
+   * @returns la lista de errores de validación (vacía si no hay errores)
+   */
+  private validatePeticionEvaluacionEticaTitulo(estado: Estado): Observable<ValidationError[]> {
+    const checklistRef = this.data.solicitudProyecto?.checklistRef;
+    if ([Estado.DESISTIDA, Estado.RENUNCIADA].includes(estado)
+      || this.data.solicitud.formularioSolicitud !== FormularioSolicitud.PROYECTO
+      || !checklistRef
+      || !!this.data.solicitudProyecto.peticionEvaluacionRef
+      || !!this.data.solicitud.titulo?.length) {
+      return of([]);
     }
 
-    return of(void 0);
+    return this.checklistService.findById(Number.parseInt(checklistRef, 10)).pipe(
+      map((checklist: IChecklist) => {
+        if (Object.values(checklist?.respuesta ?? {}).includes(true)) {
+          return [this.buildValidationError(this.msgPeticionEvaluacionEticaTituloRequired)];
+        }
+        return [];
+      })
+    );
   }
 
   private validateRequiredDocumentos(): ValidationError[] {

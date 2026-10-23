@@ -13,6 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.EstadoFinanciacionDto;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionEstadoFinanciacionInput;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionSolicitudCspInput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionInput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionOutput;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
@@ -32,6 +35,7 @@ import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TareaOrganismo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -75,6 +79,8 @@ class PeticionEvaluacionIT extends BaseIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
   private static final String PATH_UNIDADES_VINCULACION = "/{id}/unidades-vinculacion";
+  private static final String PATH_SOLICITUD_CSP = "/solicitud-csp";
+  private static final String PATH_ESTADO_FINANCIACION = "/{id}/estado-financiacion";
 
   private HttpEntity<PeticionEvaluacion> buildRequest(HttpHeaders headers, PeticionEvaluacion entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -635,7 +641,7 @@ class PeticionEvaluacionIT extends BaseIT {
     return tarea;
   }
 
-  private <T> HttpEntity<T> buildRequestUnidadesVinculacion(T entity, String... roles) throws Exception {
+  private <T> HttpEntity<T> buildRequestWithRoles(T entity, String... roles) throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -653,7 +659,7 @@ class PeticionEvaluacionIT extends BaseIT {
 
     // when: se obtienen sus unidades con autoridad de visualización
     final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(uri,
-        HttpMethod.GET, buildRequestUnidadesVinculacion(null, "ETI-PEV-V"),
+        HttpMethod.GET, buildRequestWithRoles(null, "ETI-PEV-V"),
         new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
         });
 
@@ -680,7 +686,7 @@ class PeticionEvaluacionIT extends BaseIT {
 
     // when: se obtienen sus unidades con autoridad de memorias
     final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(uri,
-        HttpMethod.GET, buildRequestUnidadesVinculacion(null, "ETI-MEM-V"),
+        HttpMethod.GET, buildRequestWithRoles(null, "ETI-MEM-V"),
         new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
         });
 
@@ -698,7 +704,7 @@ class PeticionEvaluacionIT extends BaseIT {
 
     // when: se obtienen sus unidades
     final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(uri,
-        HttpMethod.GET, buildRequestUnidadesVinculacion(null, "ETI-PEV-E"),
+        HttpMethod.GET, buildRequestWithRoles(null, "ETI-PEV-E"),
         new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
         });
 
@@ -715,7 +721,7 @@ class PeticionEvaluacionIT extends BaseIT {
 
     // when: se obtienen sus unidades
     final ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequestUnidadesVinculacion(null, "ETI-PEV-V"), String.class);
+        buildRequestWithRoles(null, "ETI-PEV-V"), String.class);
 
     // then: se devuelve 404
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -735,7 +741,7 @@ class PeticionEvaluacionIT extends BaseIT {
     // when: se actualizan las unidades
     final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
-        buildRequestUnidadesVinculacion(input, "ETI-PEV-E"),
+        buildRequestWithRoles(input, "ETI-PEV-E"),
         new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
         }, peticionEvaluacionId);
 
@@ -760,7 +766,7 @@ class PeticionEvaluacionIT extends BaseIT {
     // when: se actualizan las unidades
     final ResponseEntity<List<PeticionEvaluacionUnidadVinculacionOutput>> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
-        buildRequestUnidadesVinculacion(input, "ETI-PEV-E"),
+        buildRequestWithRoles(input, "ETI-PEV-E"),
         new ParameterizedTypeReference<List<PeticionEvaluacionUnidadVinculacionOutput>>() {
         }, peticionEvaluacionId);
 
@@ -779,7 +785,7 @@ class PeticionEvaluacionIT extends BaseIT {
     // when: se intentan actualizar las unidades
     final ResponseEntity<String> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
-        buildRequestUnidadesVinculacion(input, "ETI-PEV-V"), String.class, 2L);
+        buildRequestWithRoles(input, "ETI-PEV-V"), String.class, 2L);
 
     // then: se deniega el acceso
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -797,10 +803,46 @@ class PeticionEvaluacionIT extends BaseIT {
     // when: se intentan actualizar las unidades
     final ResponseEntity<String> response = restTemplate.exchange(
         PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_UNIDADES_VINCULACION, HttpMethod.PATCH,
-        buildRequestUnidadesVinculacion(input, "ETI-PEV-E"), String.class, 2L);
+        buildRequestWithRoles(input, "ETI-PEV-E"), String.class, 2L);
 
     // then: se devuelve error de validación
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @Test
+  void newPeticionEvaluacionFromSolicitudCsp_WithUserToken_Returns403() throws Exception {
+    // given: un input válido y un token de usuario (no de cliente de servicio)
+    PeticionEvaluacionSolicitudCspInput input = PeticionEvaluacionSolicitudCspInput.builder()
+        .titulo(Arrays.asList(new I18nFieldValueDto(Language.ES, "PeticionEvaluacionCsp")))
+        .personaRef("user-001")
+        .existeFinanciacion(Boolean.FALSE)
+        .solicitudConvocatoriaRef("1")
+        .checklistId(1L)
+        .build();
+
+    // when: se intenta crear la petición desde CSP
+    final ResponseEntity<String> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_SOLICITUD_CSP, HttpMethod.POST,
+        buildRequestWithRoles(input, "ETI-PEV-INV-C", "ETI-PEV-MOD-C"), String.class);
+
+    // then: se deniega el acceso
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void updateEstadoFinanciacion_WithUserToken_Returns403() throws Exception {
+    // given: un nuevo estado de financiación y un token de usuario (no de cliente
+    // de servicio)
+    PeticionEvaluacionEstadoFinanciacionInput input = new PeticionEvaluacionEstadoFinanciacionInput(
+        EstadoFinanciacionDto.CONCEDIDO);
+
+    // when: se intenta actualizar el estado de financiación
+    final ResponseEntity<String> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_ESTADO_FINANCIACION, HttpMethod.PATCH,
+        buildRequestWithRoles(input, "ETI-PEV-E", "ETI-PEV-INV-ER", "ETI-PEV-MOD-C"), String.class, 2L);
+
+    // then: se deniega el acceso
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Test

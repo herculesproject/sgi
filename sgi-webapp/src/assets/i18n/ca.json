@@ -2943,6 +2943,7 @@
   "msg.csp.solicitud.documentos-requeridos": "La sol·licitud no té tota la documentació requerida",
   "msg.csp.solicitud.modelo-ejecucion.no-editable.documentos-hitos": "La sol·licitud ja té informació associada als apartats de Documents i/o Fites. Heu d'eliminar aquesta informació per poder canviar el model d'execució",
   "msg.csp.solicitud.modelo-ejecucion.no-editable.origen-convocatoria": "El model dexecució és el corresponent a la convocatòria. No es pot modificar",
+  "msg.csp.solicitud.peticion-evaluacion-etica.titulo-requerido": "La sol·licitud ha de tenir títol per crear la seva sol·licitud d'avaluació ètica, ja que l'Autoavaluació Ètica té respostes afirmatives",
   "msg.csp.solicitud.solicitante-miembro-equipo": "El sol·licitant de la sol·licitud ha de ser membre de l'equip",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.categorias-exigidas": "Categories professionals exigides",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.niveles-exigidos": "Nivells acadèmics exigits",

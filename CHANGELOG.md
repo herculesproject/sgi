@@ -37,6 +37,8 @@
 - [ETI] Corregido el filtro por estado de memoria del buscador de Solicitudes de evaluación del perfil de gestión, que no devolvía ninguna solicitud. ([#175](https://github.com/herculesproject/sgi/issues/175)).
 - [CSP] Corregidas las fechas de presentación de solicitudes del listado de convocatorias del perfil de investigación, del buscador de convocatorias y del listado público, que mostraban las de la primera fase en lugar de las de la fase configurada. ([#178](https://github.com/herculesproject/sgi/issues/178)).
 - [CSP] Corregido que, al guardar la configuración de solicitud con una fase de presentación de solicitudes recién creada, se guardaba la primera fase de ese tipo en lugar de la seleccionada. ([#178](https://github.com/herculesproject/sgi/issues/178)).
+- [CSP] Corregido el error al conceder o denegar una solicitud cuya solicitud de evaluación ética asociada no tenía título, ahora se exige el título de la solicitud antes de crear la solicitud de evaluación ética. ([#184](https://github.com/herculesproject/sgi/issues/184)).
+- [CSP] Corregido que, al cambiar el estado de una solicitud, se borraba el tutor de su solicitud de evaluación ética. ([#184](https://github.com/herculesproject/sgi/issues/184)).
 
 ## 1.4.0 (2026-09-17)
 

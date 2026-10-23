@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.service;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.EstadoFinanciacion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,12 +20,36 @@ public interface PeticionEvaluacionService {
   PeticionEvaluacion create(PeticionEvaluacion peticionEvaluacion);
 
   /**
+   * Crea una {@link PeticionEvaluacion} a partir de una solicitud de CSP.
+   *
+   * @param peticionEvaluacion la entidad {@link PeticionEvaluacion} a guardar.
+   * @return la entidad {@link PeticionEvaluacion} persistida.
+   * @throws IllegalArgumentException si la {@link PeticionEvaluacion} tiene
+   *                                  financiación y no tiene estado de
+   *                                  financiación.
+   */
+  PeticionEvaluacion createFromSolicitudCsp(PeticionEvaluacion peticionEvaluacion);
+
+  /**
    * Actualizar {@link PeticionEvaluacion}.
    *
    * @param peticionEvaluacion la entidad {@link PeticionEvaluacion} a actualizar.
    * @return la entidad {@link PeticionEvaluacion} persistida.
    */
   PeticionEvaluacion update(PeticionEvaluacion peticionEvaluacion);
+
+  /**
+   * Actualiza el estado de financiación de la {@link PeticionEvaluacion}. No se
+   * modifica si la {@link PeticionEvaluacion} no tiene financiación o si ya está
+   * en ese estado.
+   *
+   * @param id                 el id de la entidad {@link PeticionEvaluacion}.
+   * @param estadoFinanciacion el nuevo {@link EstadoFinanciacion}.
+   * @throws PeticionEvaluacionNotFoundException si no existe una petición de
+   *                                             evaluación con ese
+   *                                             identificador.
+   */
+  void updateEstadoFinanciacion(Long id, EstadoFinanciacion estadoFinanciacion);
 
   /**
    * Obtener todas las entidades {@link PeticionEvaluacion} paginadas y/o

@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.converter.PeticionEvaluacionConverter;
 import org.crue.hercules.sgi.eti.converter.PeticionEvaluacionUnidadVinculacionConverter;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.EstadoFinanciacionDto;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionEstadoFinanciacionInput;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionSolicitudCspInput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
@@ -18,6 +22,7 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
@@ -35,13 +40,18 @@ import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionUnidadVinculacionService;
 import org.crue.hercules.sgi.eti.service.TareaService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.security.oauth2.server.resource.authentication.SgiJwtAuthenticationConverter;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -50,8 +60,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -82,10 +94,15 @@ class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @MockBean
   private PeticionEvaluacionUnidadVinculacionConverter peticionEvaluacionUnidadVinculacionConverter;
 
+  @MockBean
+  private PeticionEvaluacionConverter peticionEvaluacionConverter;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
   private static final String MEMORIAS_CONTROLLER_BASE_PATH = "/memorias";
   private static final String PERSONA_CONTROLLER_BASE_PATH = "/persona";
+  private static final String PATH_SOLICITUD_CSP = PeticionEvaluacionController.PATH_SOLICITUD_CSP;
+  private static final String PATH_ESTADO_FINANCIACION = PeticionEvaluacionController.PATH_ESTADO_FINANCIACION;
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER", "ETI-PEV-V" })
@@ -941,6 +958,196 @@ class PeticionEvaluacionControllerTest extends BaseControllerTest {
         // then: Get a page one hundred PeticionEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+  }
+
+  @Test
+  void newPeticionEvaluacionFromSolicitudCsp_WithClient_Returns201() throws Exception {
+    // given: un input válido con las propiedades adicionales del DTO de CSP y un
+    // token de cliente de servicio
+    String inputJson = mapper.writeValueAsString(generarMockSolicitudCspInput()).replaceFirst("\\{",
+        "{\"id\": null, \"codigo\": null, \"activo\": null, \"externo\": null, \"tipoActividad\": null, ");
+    PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
+    BDDMockito.given(peticionEvaluacionConverter.convert(ArgumentMatchers.<PeticionEvaluacionSolicitudCspInput>any()))
+        .willReturn(peticionEvaluacion);
+    BDDMockito.given(peticionEvaluacionService.createFromSolicitudCsp(ArgumentMatchers.<PeticionEvaluacion>any()))
+        .willReturn(peticionEvaluacion);
+
+    // when: se crea la petición desde CSP
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_SOLICITUD_CSP)
+            .with(clientJwt()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(inputJson))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 201 con la petición creada
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("PeticionEvaluacion1"));
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  void newPeticionEvaluacionFromSolicitudCsp_WithoutTitulo_Returns400(List<I18nFieldValueDto> titulo)
+      throws Exception {
+    // given: un input sin título
+    PeticionEvaluacionSolicitudCspInput input = generarMockSolicitudCspInput();
+    input.setTitulo(titulo);
+
+    // when: se crea la petición desde CSP
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_SOLICITUD_CSP)
+            .with(clientJwt()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 400 con el error en el campo titulo y no crea nada
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.jsonPath("errors[0].field").value("titulo"));
+    BDDMockito.verify(peticionEvaluacionService, Mockito.never())
+        .createFromSolicitudCsp(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @Test
+  void newPeticionEvaluacionFromSolicitudCsp_WithoutPersonaRef_Returns400() throws Exception {
+    // given: un input sin personaRef
+    PeticionEvaluacionSolicitudCspInput input = generarMockSolicitudCspInput();
+    input.setPersonaRef(null);
+
+    // when: se crea la petición desde CSP
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_SOLICITUD_CSP)
+            .with(clientJwt()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 400 con el error en el campo personaRef y no crea nada
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.jsonPath("errors[0].field").value("personaRef"));
+    BDDMockito.verify(peticionEvaluacionService, Mockito.never())
+        .createFromSolicitudCsp(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "SCOPE_sgi-eti", "ETI-PEV-INV-C", "ETI-PEV-MOD-C" })
+  void newPeticionEvaluacionFromSolicitudCsp_WithUser_Returns403() throws Exception {
+    // given: un input válido y un usuario (no cliente de servicio)
+    PeticionEvaluacionSolicitudCspInput input = generarMockSolicitudCspInput();
+
+    // when: se crea la petición desde CSP
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_SOLICITUD_CSP)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 403 y no crea nada
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
+    BDDMockito.verify(peticionEvaluacionService, Mockito.never())
+        .createFromSolicitudCsp(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @Test
+  void updateEstadoFinanciacion_WithClient_Returns200() throws Exception {
+    // given: un nuevo estado de financiación y un token de cliente de servicio
+    PeticionEvaluacionEstadoFinanciacionInput input = new PeticionEvaluacionEstadoFinanciacionInput(
+        EstadoFinanciacionDto.CONCEDIDO);
+    BDDMockito.given(peticionEvaluacionConverter.convert(EstadoFinanciacionDto.CONCEDIDO))
+        .willReturn(EstadoFinanciacion.CONCEDIDO);
+
+    // when: se actualiza el estado de financiación
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_ESTADO_FINANCIACION, 1L)
+            .with(clientJwt()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 200 sin cuerpo y delega en el servicio con el estado
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().string(""));
+    BDDMockito.verify(peticionEvaluacionService).updateEstadoFinanciacion(1L, EstadoFinanciacion.CONCEDIDO);
+  }
+
+  @Test
+  void updateEstadoFinanciacion_WithoutEstado_Returns400() throws Exception {
+    // given: un input sin estado de financiación
+    PeticionEvaluacionEstadoFinanciacionInput input = new PeticionEvaluacionEstadoFinanciacionInput();
+
+    // when: se actualiza el estado de financiación
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_ESTADO_FINANCIACION, 1L)
+            .with(clientJwt()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 400 con el error en el campo estadoFinanciacion
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.jsonPath("errors[0].field").value("estadoFinanciacion"));
+    BDDMockito.verify(peticionEvaluacionService, Mockito.never())
+        .updateEstadoFinanciacion(ArgumentMatchers.anyLong(), ArgumentMatchers.any());
+  }
+
+  @Test
+  void updateEstadoFinanciacion_NotFound_Returns404() throws Exception {
+    // given: una petición de evaluación que no existe
+    PeticionEvaluacionEstadoFinanciacionInput input = new PeticionEvaluacionEstadoFinanciacionInput(
+        EstadoFinanciacionDto.CONCEDIDO);
+    BDDMockito.given(peticionEvaluacionConverter.convert(EstadoFinanciacionDto.CONCEDIDO))
+        .willReturn(EstadoFinanciacion.CONCEDIDO);
+    BDDMockito.willThrow(new PeticionEvaluacionNotFoundException(1L)).given(peticionEvaluacionService)
+        .updateEstadoFinanciacion(1L, EstadoFinanciacion.CONCEDIDO);
+
+    // when: se actualiza el estado de financiación
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_ESTADO_FINANCIACION, 1L)
+            .with(clientJwt()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 404
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "SCOPE_sgi-eti", "ETI-PEV-E" })
+  void updateEstadoFinanciacion_WithUser_Returns403() throws Exception {
+    // given: un nuevo estado de financiación y un usuario (no cliente de servicio)
+    PeticionEvaluacionEstadoFinanciacionInput input = new PeticionEvaluacionEstadoFinanciacionInput(
+        EstadoFinanciacionDto.CONCEDIDO);
+
+    // when: se actualiza el estado de financiación
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_ESTADO_FINANCIACION, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(input)))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: devuelve 403 y no actualiza nada
+        .andExpect(MockMvcResultMatchers.status().isForbidden());
+    BDDMockito.verify(peticionEvaluacionService, Mockito.never())
+        .updateEstadoFinanciacion(ArgumentMatchers.anyLong(), ArgumentMatchers.any());
+  }
+
+  /**
+   * Autenticación de un cliente de servicio con el scope de ETI.
+   *
+   * @return el post-procesador de la petición con el token del cliente.
+   */
+  private static JwtRequestPostProcessor clientJwt() {
+    return SecurityMockMvcRequestPostProcessors.jwt()
+        .jwt(jwt -> jwt.claim(SgiJwtAuthenticationConverter.CLIENT_ID, "csp-service"))
+        .authorities(new SimpleGrantedAuthority("SCOPE_sgi-eti"));
+  }
+
+  /**
+   * Crea un {@link PeticionEvaluacionSolicitudCspInput} válido.
+   *
+   * @return el input.
+   */
+  private PeticionEvaluacionSolicitudCspInput generarMockSolicitudCspInput() {
+    return PeticionEvaluacionSolicitudCspInput.builder()
+        .titulo(List.of(new I18nFieldValueDto(Language.ES, "PeticionEvaluacion1")))
+        .personaRef("user-001")
+        .existeFinanciacion(Boolean.TRUE)
+        .estadoFinanciacion(EstadoFinanciacionDto.SOLICITADO)
+        .solicitudConvocatoriaRef("1")
+        .checklistId(1L)
+        .build();
   }
 
   /**

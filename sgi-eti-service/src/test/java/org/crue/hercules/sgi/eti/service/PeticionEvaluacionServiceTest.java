@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.crue.hercules.sgi.eti.exceptions.rep.MicroserviceCallException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
@@ -37,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -320,6 +323,164 @@ class PeticionEvaluacionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  void create_WithoutFechaInicio_ThrowsIllegalArgumentException() {
+    // given: una petición nueva sin fecha de inicio
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacion(null, "PeticionEvaluacionNew");
+    peticionEvaluacionNew.setFechaInicio(null);
+
+    Assertions.assertThatThrownBy(
+        // when: se crea la petición
+        () -> peticionEvaluacionService.create(peticionEvaluacionNew))
+        // then: se lanza la excepción y no se guarda nada
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Fecha inicio de Petición Evaluación no puede ser nulo");
+    BDDMockito.then(peticionEvaluacionRepository).should(Mockito.never())
+        .save(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @Test
+  void createFromSolicitudCsp_ReturnsPeticionEvaluacion() {
+    // given: una petición desde CSP sin fecha de inicio y una petición previa en
+    // el año actual
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacionSolicitudCsp();
+    String anio = String.valueOf(
+        Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).get(ChronoField.YEAR));
+    PeticionEvaluacion peticionEvaluacionAnio = generarMockPeticionEvaluacion(5L, "PeticionEvaluacionAnio");
+    peticionEvaluacionAnio.setCodigo(anio + "/005");
+    BDDMockito.given(peticionEvaluacionRepository.findFirstByCodigoStartingWithOrderByCodigoDesc(anio))
+        .willReturn(peticionEvaluacionAnio);
+    mockSavePeticionEvaluacion();
+
+    // when: se crea la petición desde CSP
+    PeticionEvaluacion created = peticionEvaluacionService.createFromSolicitudCsp(peticionEvaluacionNew);
+
+    // then: se crea activa y con el siguiente código del año actual
+    Assertions.assertThat(created.getId()).isEqualTo(1L);
+    Assertions.assertThat(created.getCodigo()).isEqualTo(anio + "/006");
+    Assertions.assertThat(created.getActivo()).isTrue();
+    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getTitulo(), Language.ES))
+        .isEqualTo("PeticionEvaluacionCsp");
+  }
+
+  @Test
+  void createFromSolicitudCsp_WithoutFinanciacion_ReturnsPeticionEvaluacion() {
+    // given: una petición desde CSP sin financiación ni estado de financiación
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacionSolicitudCsp();
+    peticionEvaluacionNew.setExisteFinanciacion(Boolean.FALSE);
+    peticionEvaluacionNew.setEstadoFinanciacion(null);
+    mockSavePeticionEvaluacion();
+
+    // when: se crea la petición desde CSP
+    PeticionEvaluacion created = peticionEvaluacionService.createFromSolicitudCsp(peticionEvaluacionNew);
+
+    // then: se crea sin exigir el estado de financiación
+    Assertions.assertThat(created.getId()).isEqualTo(1L);
+    Assertions.assertThat(created.getEstadoFinanciacion()).isNull();
+  }
+
+  @Test
+  void createFromSolicitudCsp_WithDepartamentoEncontrado_CreatesUnidadVinculacion() {
+    // given: inicialización activa, el solicitante con departamento y la unidad en
+    // el SGO
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacionSolicitudCsp();
+    mockConfiguracion(Boolean.TRUE, "TIPO-DEP");
+    mockSavePeticionEvaluacion();
+    mockVinculacionDepartamento("DEP-1");
+    mockUnidadVinculacion("DEP-1", "TIPO-DEP", Boolean.TRUE);
+    mockSaveUnidadVinculacion();
+
+    // when: se crea la petición desde CSP
+    PeticionEvaluacion created = peticionEvaluacionService.createFromSolicitudCsp(peticionEvaluacionNew);
+
+    // then: se crea la unidad de vinculación del departamento para la petición
+    Assertions.assertThat(created.getId()).isEqualTo(1L);
+    BDDMockito.then(peticionEvaluacionUnidadVinculacionRepository).should()
+        .save(ArgumentMatchers.<PeticionEvaluacionUnidadVinculacion>argThat(
+            unidad -> unidad.getPeticionEvaluacionId().equals(1L)
+                && unidad.getUnidadVinculacionRef().equals("DEP-1")));
+  }
+
+  @Test
+  void createFromSolicitudCsp_WithFinanciacionAndEstadoNull_ThrowsIllegalArgumentException() {
+    // given: una petición desde CSP con financiación y sin estado de financiación
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacionSolicitudCsp();
+    peticionEvaluacionNew.setEstadoFinanciacion(null);
+
+    Assertions.assertThatThrownBy(
+        // when: se crea la petición desde CSP
+        () -> peticionEvaluacionService.createFromSolicitudCsp(peticionEvaluacionNew))
+        // then: se lanza la excepción y no se guarda nada
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Estado Financiación de Petición Evaluación no puede ser nulo");
+    BDDMockito.then(peticionEvaluacionRepository).should(Mockito.never())
+        .save(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @Test
+  void updateEstadoFinanciacion_WithEstadoDistinto_UpdatesEstadoFinanciacion() {
+    // given: una petición con financiación solicitada y tutor
+    PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
+    peticionEvaluacion.setExisteFinanciacion(Boolean.TRUE);
+    peticionEvaluacion.setEstadoFinanciacion(EstadoFinanciacion.SOLICITADO);
+    peticionEvaluacion.setTutorRef("tutor-001");
+    BDDMockito.given(peticionEvaluacionRepository.findById(1L)).willReturn(Optional.of(peticionEvaluacion));
+    mockSavePeticionEvaluacion();
+
+    // when: se actualiza el estado de financiación
+    peticionEvaluacionService.updateEstadoFinanciacion(1L, EstadoFinanciacion.CONCEDIDO);
+
+    // then: se guarda con el nuevo estado y el resto de campos intactos
+    BDDMockito.then(peticionEvaluacionRepository).should()
+        .save(ArgumentMatchers.<PeticionEvaluacion>argThat(
+            saved -> saved.getEstadoFinanciacion() == EstadoFinanciacion.CONCEDIDO
+                && "tutor-001".equals(saved.getTutorRef())
+                && "PeticionEvaluacion1".equals(I18nHelper.getValueForLanguage(saved.getTitulo(), Language.ES))));
+  }
+
+  @Test
+  void updateEstadoFinanciacion_WithoutFinanciacion_DoesNotSave() {
+    // given: una petición sin financiación
+    PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
+    BDDMockito.given(peticionEvaluacionRepository.findById(1L)).willReturn(Optional.of(peticionEvaluacion));
+
+    // when: se actualiza el estado de financiación
+    peticionEvaluacionService.updateEstadoFinanciacion(1L, EstadoFinanciacion.CONCEDIDO);
+
+    // then: no se modifica ni se guarda
+    Assertions.assertThat(peticionEvaluacion.getEstadoFinanciacion()).isNull();
+    BDDMockito.then(peticionEvaluacionRepository).should(Mockito.never())
+        .save(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @Test
+  void updateEstadoFinanciacion_WithMismoEstado_DoesNotSave() {
+    // given: una petición con financiación ya concedida
+    PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
+    peticionEvaluacion.setExisteFinanciacion(Boolean.TRUE);
+    peticionEvaluacion.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
+    BDDMockito.given(peticionEvaluacionRepository.findById(1L)).willReturn(Optional.of(peticionEvaluacion));
+
+    // when: se actualiza el estado de financiación al mismo estado
+    peticionEvaluacionService.updateEstadoFinanciacion(1L, EstadoFinanciacion.CONCEDIDO);
+
+    // then: no se guarda
+    BDDMockito.then(peticionEvaluacionRepository).should(Mockito.never())
+        .save(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @Test
+  void updateEstadoFinanciacion_NotFound_ThrowsPeticionEvaluacionNotFoundException() {
+    // given: una petición que no existe
+    BDDMockito.given(peticionEvaluacionRepository.findById(1L)).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: se actualiza el estado de financiación
+        () -> peticionEvaluacionService.updateEstadoFinanciacion(1L, EstadoFinanciacion.CONCEDIDO))
+        // then: se lanza la excepción de no encontrada
+        .isInstanceOf(PeticionEvaluacionNotFoundException.class);
+  }
+
+  @Test
   void update_ReturnsPeticionEvaluacion() {
     // given: Un nuevo peticionEvaluacion con el servicio actualizado
     PeticionEvaluacion peticionEvaluacionServicioActualizado = generarMockPeticionEvaluacion(1L,
@@ -583,6 +744,26 @@ class PeticionEvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    return peticionEvaluacion;
+  }
+
+  /**
+   * Función que devuelve una PeticionEvaluacion con los datos que envía CSP
+   *
+   * @return el objeto PeticionEvaluacion
+   */
+  private PeticionEvaluacion generarMockPeticionEvaluacionSolicitudCsp() {
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacionCsp"));
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setPersonaRef("user-00null");
+    peticionEvaluacion.setExisteFinanciacion(Boolean.TRUE);
+    peticionEvaluacion.setEstadoFinanciacion(EstadoFinanciacion.SOLICITADO);
+    peticionEvaluacion.setSolicitudConvocatoriaRef("1");
+    peticionEvaluacion.setChecklistId(1L);
 
     return peticionEvaluacion;
   }

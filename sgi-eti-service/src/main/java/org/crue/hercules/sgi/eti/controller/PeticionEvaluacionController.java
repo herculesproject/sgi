@@ -4,9 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.converter.PeticionEvaluacionConverter;
 import org.crue.hercules.sgi.eti.converter.PeticionEvaluacionUnidadVinculacionConverter;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionEstadoFinanciacionInput;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionSolicitudCspInput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionInput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionOutput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
@@ -57,6 +60,10 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class PeticionEvaluacionController {
 
+  /** Path del estado de financiación de una petición de evaluación */
+  public static final String PATH_ESTADO_FINANCIACION = "/{id}/estado-financiacion";
+  /** Path de creación de una petición de evaluación desde una solicitud de CSP */
+  public static final String PATH_SOLICITUD_CSP = "/solicitud-csp";
   /** Path de las unidades de vinculación de una petición de evaluación */
   public static final String PATH_UNIDADES_VINCULACION = "/{id}/unidades-vinculacion";
 
@@ -87,6 +94,9 @@ public class PeticionEvaluacionController {
   /** PeticionEvaluacionUnidadVinculacion converter */
   private final PeticionEvaluacionUnidadVinculacionConverter peticionEvaluacionUnidadVinculacionConverter;
 
+  /** PeticionEvaluacion converter */
+  private final PeticionEvaluacionConverter converter;
+
   /**
    * Instancia un nuevo PeticionEvaluacionController.
    * 
@@ -96,17 +106,20 @@ public class PeticionEvaluacionController {
    * @param tareaService                                 TareaService
    * @param peticionEvaluacionUnidadVinculacionService   PeticionEvaluacionUnidadVinculacionService
    * @param peticionEvaluacionUnidadVinculacionConverter PeticionEvaluacionUnidadVinculacionConverter
+   * @param converter                                    PeticionEvaluacionConverter
    */
   public PeticionEvaluacionController(PeticionEvaluacionService service, EquipoTrabajoService equipoTrabajoService,
       MemoriaService memoriaService, TareaService tareaService,
       PeticionEvaluacionUnidadVinculacionService peticionEvaluacionUnidadVinculacionService,
-      PeticionEvaluacionUnidadVinculacionConverter peticionEvaluacionUnidadVinculacionConverter) {
+      PeticionEvaluacionUnidadVinculacionConverter peticionEvaluacionUnidadVinculacionConverter,
+      PeticionEvaluacionConverter converter) {
     this.service = service;
     this.equipoTrabajoService = equipoTrabajoService;
     this.memoriaService = memoriaService;
     this.tareaService = tareaService;
     this.peticionEvaluacionUnidadVinculacionService = peticionEvaluacionUnidadVinculacionService;
     this.peticionEvaluacionUnidadVinculacionConverter = peticionEvaluacionUnidadVinculacionConverter;
+    this.converter = converter;
   }
 
   /**
@@ -520,6 +533,40 @@ public class PeticionEvaluacionController {
         peticionEvaluacionUnidadVinculacionService.findAllByPeticionEvaluacionId(id, query, paging));
     log.debug("findUnidadesVinculacion - response: {}", SgiLogUtils.page(page));
     return page;
+  }
+
+  /**
+   * Crea una nueva {@link PeticionEvaluacion} a partir de una solicitud de CSP.
+   *
+   * @param input {@link PeticionEvaluacionSolicitudCspInput} con los datos de la
+   *              {@link PeticionEvaluacion} que se quiere crear.
+   * @return {@link HttpStatus#CREATED} con la nueva {@link PeticionEvaluacion}
+   *         creada.
+   */
+  @PostMapping(PATH_SOLICITUD_CSP)
+  @PreAuthorize("isClient() and hasAuthority('SCOPE_sgi-eti')")
+  public ResponseEntity<PeticionEvaluacion> newPeticionEvaluacionFromSolicitudCsp(
+      @Valid @RequestBody PeticionEvaluacionSolicitudCspInput input) {
+    log.debug("newPeticionEvaluacionFromSolicitudCsp - data: {}", input);
+    PeticionEvaluacion created = service.createFromSolicitudCsp(converter.convert(input));
+    log.debug("newPeticionEvaluacionFromSolicitudCsp - id: {}", created.getId());
+    return new ResponseEntity<>(created, HttpStatus.CREATED);
+  }
+
+  /**
+   * Actualiza el estado de financiación de la {@link PeticionEvaluacion} con el
+   * id indicado.
+   *
+   * @param id    identificador de la {@link PeticionEvaluacion}.
+   * @param input {@link PeticionEvaluacionEstadoFinanciacionInput} con el nuevo
+   *              estado de financiación.
+   */
+  @PatchMapping(PATH_ESTADO_FINANCIACION)
+  @PreAuthorize("isClient() and hasAuthority('SCOPE_sgi-eti')")
+  public void updateEstadoFinanciacion(@PathVariable Long id,
+      @Valid @RequestBody PeticionEvaluacionEstadoFinanciacionInput input) {
+    log.debug("updateEstadoFinanciacion - id: {}, data: {}", id, input);
+    service.updateEstadoFinanciacion(id, converter.convert(input.getEstadoFinanciacion()));
   }
 
 }

@@ -50,10 +50,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService {
+  private static final String MSG_FIELD_FECHA_INICIO = "fechaInicio";
   private static final String MSG_FIELD_FUENTE_FINANCIACION = "fuenteFinanciacion";
+  private static final String MSG_FIELD_IMPORTE_FINANCIACION = "importeFinanciacion";
   private static final String MSG_FIELD_OTRO_VALOR_SOCIAL = "otroValorSocial";
   private static final String MSG_FIELD_TITULO = "titulo";
-  private static final String MSG_FIELD_IMPORTE_FINANCIACION = "importeFinanciacion";
 
   private final SgiConfigProperties sgiConfigProperties;
   private final PeticionEvaluacionRepository peticionEvaluacionRepository;
@@ -103,30 +104,8 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setActivo(Boolean.TRUE);
     }
 
-    String anioInicio;
-    if (peticionEvaluacion.getFechaInicio() != null) {
-      anioInicio = String.valueOf(peticionEvaluacion.getFechaInicio()
-          .atZone(sgiConfigProperties.getTimeZone().toZoneId()).get(ChronoField.YEAR));
-    } else {
-      // Si no existe fecha de inicio se utiliza el año de la fecha actual
-      // (la petición viene de CSP)
-      anioInicio = String
-          .valueOf(Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).get(ChronoField.YEAR));
-    }
-    PeticionEvaluacion peticionEvaluacionAnio = peticionEvaluacionRepository
-        .findFirstByCodigoStartingWithOrderByCodigoDesc(anioInicio);
-
-    Long numEvaluacion = 1L;
-    if (peticionEvaluacionAnio != null) {
-      numEvaluacion = Long.valueOf(peticionEvaluacionAnio.getCodigo().split("/")[1]);
-      numEvaluacion++;
-    }
-
-    StringBuilder codigoPeticionEvaluacion = new StringBuilder();
-
-    codigoPeticionEvaluacion.append(anioInicio).append("/").append(String.format("%03d", numEvaluacion));
-
-    peticionEvaluacion.setCodigo(codigoPeticionEvaluacion.toString());
+    AssertHelper.fieldNotNull(peticionEvaluacion.getFechaInicio(), PeticionEvaluacion.class, MSG_FIELD_FECHA_INICIO);
+    peticionEvaluacion.setCodigo(generateCode(peticionEvaluacion.getFechaInicio()));
 
     if (peticionEvaluacion.getExisteFinanciacion().booleanValue()) {
       AssertHelper.entityNotNull(peticionEvaluacion.getEstadoFinanciacion(), PeticionEvaluacion.class,
@@ -142,6 +121,27 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     PeticionEvaluacion saved = peticionEvaluacionRepository.save(peticionEvaluacion);
     initializeUnidadVinculacionFromDepartamento(saved);
 
+    return saved;
+  }
+
+  @Override
+  @Transactional
+  public PeticionEvaluacion createFromSolicitudCsp(PeticionEvaluacion peticionEvaluacion) {
+    log.debug("createFromSolicitudCsp - data: {}", peticionEvaluacion);
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    if (peticionEvaluacion.getExisteFinanciacion().booleanValue()) {
+      AssertHelper.entityNotNull(peticionEvaluacion.getEstadoFinanciacion(), PeticionEvaluacion.class,
+          EstadoFinanciacion.class);
+    }
+
+    // La petición creada desde CSP no tiene fecha de inicio: el código usa el año
+    // de alta
+    peticionEvaluacion.setCodigo(generateCode(Instant.now()));
+
+    PeticionEvaluacion saved = peticionEvaluacionRepository.save(peticionEvaluacion);
+    initializeUnidadVinculacionFromDepartamento(saved);
+    log.debug("createFromSolicitudCsp - id: {}", saved.getId());
     return saved;
   }
 
@@ -311,6 +311,25 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     }).orElseThrow(() -> new PeticionEvaluacionNotFoundException(peticionEvaluacionActualizar.getId()));
   }
 
+  @Override
+  @Transactional
+  public void updateEstadoFinanciacion(Long id, EstadoFinanciacion estadoFinanciacion) {
+    log.debug("updateEstadoFinanciacion - id: {}, estadoFinanciacion: {}", id, estadoFinanciacion);
+    PeticionEvaluacion peticionEvaluacion = peticionEvaluacionRepository.findById(id)
+        .orElseThrow(() -> new PeticionEvaluacionNotFoundException(id));
+
+    if (Boolean.FALSE.equals(peticionEvaluacion.getExisteFinanciacion())
+        || estadoFinanciacion == peticionEvaluacion.getEstadoFinanciacion()) {
+      log.debug(
+          "updateEstadoFinanciacion - sin cambios - id: {}, existeFinanciacion: {}, estadoFinanciacion: {}", id,
+          peticionEvaluacion.getExisteFinanciacion(), peticionEvaluacion.getEstadoFinanciacion());
+      return;
+    }
+
+    peticionEvaluacion.setEstadoFinanciacion(estadoFinanciacion);
+    peticionEvaluacionRepository.save(peticionEvaluacion);
+  }
+
   /**
    * Obtiene todas las entidades {@link PeticionEvaluacion} paginadas y filtadas.
    *
@@ -377,6 +396,28 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     log.debug(
         "isPeticionWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(String personaRef, Long idPeticionEvaluacion) - end");
     return returnValue.hasContent();
+  }
+
+  /**
+   * Genera el código de una {@link PeticionEvaluacion} con el formato
+   * {@code AAAA/NNN}, el año de la fecha de referencia y el siguiente número
+   * secuencial de ese año.
+   *
+   * @param referenceDate fecha de la que se toma el año del código.
+   * @return el código generado.
+   */
+  private String generateCode(Instant referenceDate) {
+    String year = String.valueOf(referenceDate
+        .atZone(sgiConfigProperties.getTimeZone().toZoneId()).get(ChronoField.YEAR));
+    PeticionEvaluacion lastPeticionEvaluacion = peticionEvaluacionRepository
+        .findFirstByCodigoStartingWithOrderByCodigoDesc(year);
+
+    long nextNumber = 1L;
+    if (lastPeticionEvaluacion != null) {
+      nextNumber = Long.parseLong(lastPeticionEvaluacion.getCodigo().split("/")[1]) + 1;
+    }
+
+    return String.format("%s/%03d", year, nextNumber);
   }
 
   /**

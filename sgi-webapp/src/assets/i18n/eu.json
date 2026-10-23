@@ -2943,6 +2943,7 @@
   "msg.csp.solicitud.documentos-requeridos": "Eskaeran ez dago jasota eskatutako dokumentazio guztia.",
   "msg.csp.solicitud.modelo-ejecucion.no-editable.documentos-hitos": "Eskaerak informazioa lotuta du Dokumentuak edo/eta Mugarriak ataletan. Exekuzio eredua aldatu ahal izateko, informazio hori ezabatu behar duzu.",
   "msg.csp.solicitud.modelo-ejecucion.no-editable.origen-convocatoria": "Exekuzio eredua deialdiari dagokiona da. Ezin da aldatu.",
+  "msg.csp.solicitud.peticion-evaluacion-etica.titulo-requerido": "Eskaerak izenburua izan behar du bere ebaluazio etikorako eskaera sortzeko, Autoebaluazio etikoak baiezko erantzunak dituelako.",
   "msg.csp.solicitud.solicitante-miembro-equipo": "Eskatzaileak taldeko kidea izan behar du.",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.categorias-exigidas": "Eskatutako kategoria profesionalak",
   "msg.csp.solicitud.solicitud-rrhh.requisitos.niveles-exigidos": "Eskatutako maila akademikoak",
