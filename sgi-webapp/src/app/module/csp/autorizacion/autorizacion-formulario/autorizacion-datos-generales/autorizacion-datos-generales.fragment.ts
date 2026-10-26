@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
-import { Estado, ESTADO_MAP } from '@core/models/csp/estado-autorizacion';
+import { Estado } from '@core/models/csp/estado-autorizacion';
 import { FormFragment } from '@core/services/action-service';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -10,7 +10,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, merge, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 export interface IAutorizacionDatosGeneralesData extends IAutorizacion {
@@ -29,11 +29,11 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private autorizacionService: AutorizacionService,
-    private personaService: PersonaService,
-    private empresaService: EmpresaService,
-    private estadoAutorizacionService: EstadoAutorizacionService,
-    private convocatoriaService: ConvocatoriaService,
+    private readonly autorizacionService: AutorizacionService,
+    private readonly personaService: PersonaService,
+    private readonly empresaService: EmpresaService,
+    private readonly estadoAutorizacionService: EstadoAutorizacionService,
+    private readonly convocatoriaService: ConvocatoriaService,
     public readonly isInvestigador: boolean,
     public readonly isVisor: boolean
   ) {
@@ -52,21 +52,19 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       datosConvocatoria: new FormControl([], I18nValidators.maxLength(250)),
       entidadParticipa: new FormControl(null, Validators.required),
       datosEntidad: new FormControl(null, Validators.maxLength(250)),
-      investigadorPrincipalProyecto: new FormControl(null, [Validators.required, Validators.maxLength(250)]),
-      datosIpProyecto: new FormControl(null),
+      investigadorPrincipalProyecto: new FormControl(null, [Validators.required]),
+      datosIpProyecto: new FormControl(null, Validators.maxLength(250)),
       horasDedicacion: new FormControl(null),
       observaciones: new FormControl([], I18nValidators.maxLength(2000))
     });
 
     this.subscriptions.push(form.controls.convocatoria.valueChanges.subscribe(
       (convocatoria) => {
-        if (this.autorizacionData?.estado?.estado === 'BORRADOR' || !this.isEdit()) {
-          if (convocatoria) {
-            form.controls.datosConvocatoria.disable();
-            form.controls.datosConvocatoria.setValue([]);
-          } else if (!this.isVisor) {
-            form.controls.datosConvocatoria.enable();
-          }
+        if (convocatoria) {
+          form.controls.datosConvocatoria.disable();
+          form.controls.datosConvocatoria.setValue([]);
+        } else if (this.isEditable(this.autorizacionData)) {
+          form.controls.datosConvocatoria.enable();
         }
       }
     ));
@@ -264,9 +262,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     const entidadParticipa = entidadParticipaControl.value;
     if (entidadParticipa) {
       datosEntidadControl.disable({ emitEvent: false });
-      if (this.isInvestigador) {
-        datosEntidadControl.setValue(null, { emitEvent: false });
-      }
+      datosEntidadControl.setValue(null, { emitEvent: false });
       entidadParticipaControl.setValidators(Validators.required);
     } else {
       entidadParticipaControl.clearValidators();
@@ -285,7 +281,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     entidadParticipaControl.updateValueAndValidity({ emitEvent: false });
     datosEntidadControl.updateValueAndValidity({ emitEvent: false });
 
-    this.entidadRequired = entidadParticipa;
+    this.entidadRequired = !datosEntidad;
   }
 
   private setConditionalValidatorsIP(form: FormGroup): void {
@@ -294,10 +290,8 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     const investigadorPrincipal = investigadorPrincipalControl.value;
     if (investigadorPrincipal) {
       datosInvestigadorPrincipalControl.disable({ emitEvent: false });
-      if (this.isInvestigador) {
-        datosInvestigadorPrincipalControl.setValue(null, { emitEvent: false });
-      }
-      datosInvestigadorPrincipalControl.setValidators(Validators.required);
+      datosInvestigadorPrincipalControl.setValue(null, { emitEvent: false });
+      investigadorPrincipalControl.setValidators(Validators.required);
     } else {
       investigadorPrincipalControl.clearValidators();
       datosInvestigadorPrincipalControl.enable({ emitEvent: false });
@@ -315,14 +309,12 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     investigadorPrincipalControl.updateValueAndValidity({ emitEvent: false });
     datosInvestigadorPrincipalControl.updateValueAndValidity({ emitEvent: false });
 
-    this.investigadorRequired = investigadorPrincipal;
+    this.investigadorRequired = !datosInvestigadorPrincipal;
 
   }
 
   private disableNotEditableFieldsEstado(formgroup: FormGroup, autorizacion: IAutorizacionDatosGeneralesData): void {
-    if (autorizacion?.estado?.estado
-      && (autorizacion?.estado?.estado !== Estado.BORRADOR && this.isInvestigador)
-      || (!this.isInvestigador && autorizacion?.estado?.estado === Estado.AUTORIZADA) || this.isVisor) {
+    if (!this.isEditable(autorizacion)) {
       formgroup.controls.tituloProyecto.disable();
       formgroup.controls.convocatoria.disable({ emitEvent: false });
       formgroup.controls.datosConvocatoria.disable({ emitEvent: false });
@@ -335,14 +327,27 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     } else {
       formgroup.controls.tituloProyecto.enable();
       formgroup.controls.convocatoria.enable({ emitEvent: false });
-      formgroup.controls.datosConvocatoria.enable({ emitEvent: false });
+
+      if (!formgroup.controls.convocatoria.value) {
+        formgroup.controls.datosConvocatoria.enable({ emitEvent: false });
+      }
+
       formgroup.controls.entidadParticipa.enable({ emitEvent: false });
-      formgroup.controls.datosEntidad.enable({ emitEvent: false });
+
+      if (!formgroup.controls.entidadParticipa.value) {
+        formgroup.controls.datosEntidad.enable({ emitEvent: false });
+      }
+
       formgroup.controls.investigadorPrincipalProyecto.enable({ emitEvent: false });
-      formgroup.controls.datosIpProyecto.enable({ emitEvent: false });
+
+      if (!formgroup.controls.investigadorPrincipalProyecto.value) {
+        formgroup.controls.datosIpProyecto.enable({ emitEvent: false });
+      }
+
       formgroup.controls.horasDedicacion.enable();
       formgroup.controls.observaciones.enable();
     }
+
     if (!this.isInvestigador) {
       formgroup.controls.datosEntidad.disable({ emitEvent: false });
     }
@@ -354,4 +359,17 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       this.refreshInitialState(true);
     });
   }
+
+  /**
+   * Indica si la autorización es editable según su estado y el perfil del usuario.
+   *
+   * @param autorizacion la autorización
+   * @returns true si los campos de la autorización se pueden editar
+   */
+  private isEditable(autorizacion: IAutorizacionDatosGeneralesData): boolean {
+    return !(autorizacion?.estado?.estado
+      && (autorizacion?.estado?.estado !== Estado.BORRADOR && this.isInvestigador)
+      || (!this.isInvestigador && autorizacion?.estado?.estado === Estado.AUTORIZADA) || this.isVisor);
+  }
+
 }

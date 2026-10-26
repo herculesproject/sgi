@@ -127,11 +127,12 @@ export class SelectPersonaComponent extends SelectDialogComponent<SearchPersonaM
     );
   }
 
-  private getDisplayValue(persona: IPersona): string {
-    const notFoundSelectedValue = !!persona && Object.keys(persona).length === 1 && !!persona.id;
-    setTimeout(() => this.setNotFoundSelectedValue(notFoundSelectedValue));
+  protected isNotFoundValue(persona: IPersona): boolean {
+    return !!persona && Object.keys(persona).length === 1 && !!persona.id;
+  }
 
-    if (notFoundSelectedValue) {
+  private getDisplayValue(persona: IPersona): string {
+    if (this.isNotFoundValue(persona)) {
       return this.getErrorMsg(persona.id);
     }
 

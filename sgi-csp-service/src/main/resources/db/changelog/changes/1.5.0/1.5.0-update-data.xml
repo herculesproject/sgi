@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet author="master" id="1.5.0-autorizacion">
+    <update tableName="autorizacion">
+      <column name="datos_entidad" value="NULL" />
+      <where>entidad_ref IS NOT NULL</where>
+    </update>
+    <update tableName="autorizacion">
+      <column name="datos_responsable" value="NULL" />
+      <where>responsable_ref IS NOT NULL</where>
+    </update>
+    <delete tableName="autorizacion_datos_convocatoria">
+      <where>autorizacion_id IN (SELECT a.id FROM ${schemaPrefix}autorizacion a WHERE a.convocatoria_id IS NOT NULL)</where>
+    </delete>
+  </changeSet>
+
+</databaseChangeLog>
