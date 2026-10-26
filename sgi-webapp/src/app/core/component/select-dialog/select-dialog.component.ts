@@ -69,7 +69,7 @@ export abstract class SelectDialogComponent<D, T> implements
     return this._displayInput;
   }
   // tslint:disable-next-line: variable-name
-  private _displayInput: ElementRef<HTMLInputElement>;;
+  private _displayInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') private readonly autocomplete!: MatAutocomplete;
 
   /** Unique id for this input. */
@@ -183,14 +183,20 @@ export abstract class SelectDialogComponent<D, T> implements
   // tslint:disable-next-line: variable-name
   private _displayWith: (option: T) => string = (option) => `${option}`;
 
-  get notFoundSelectedValue$(): Observable<boolean> {
-    return this._notFoundSelectedValue$.asObservable();
+  /**
+   * Whether the selected value is a reference that was not found.
+   */
+  get notFoundSelectedValue(): boolean {
+    return !this.empty && this.isNotFoundValue(this.value);
   }
-  protected setNotFoundSelectedValue(value: boolean) {
-    this._notFoundSelectedValue$.next(value);
+
+  /**
+   * Checks whether the value is a reference that was not found.
+   * Must be a pure function because this method is evaluated during change detection.
+   */
+  protected isNotFoundValue(value: T): boolean {
+    return false;
   }
-  // tslint:disable-next-line: variable-name
-  private _notFoundSelectedValue$ = new BehaviorSubject<boolean>(false);
 
   private onChange: (value: any) => void = () => { };
   private onTouched = () => { };
@@ -234,12 +240,11 @@ export abstract class SelectDialogComponent<D, T> implements
         takeUntil(this._destroy)
       ).subscribe(
         (value) => {
+          this._focused = !!value;
+
           if (!!value && !this.disabled) {
-            this._focused = !!value;
             this.stateChanges.next();
-          }
-          if (!!!value) {
-            this._focused = !!value;
+          } else if (!value) {
             if (!this.disabled && !this.dialogOpen) {
               this.onTouched();
               this.changeDetectorRef.markForCheck();

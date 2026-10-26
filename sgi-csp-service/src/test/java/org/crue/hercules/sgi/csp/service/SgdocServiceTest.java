@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
+import org.crue.hercules.sgi.csp.exceptions.rep.MicroserviceCallException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -70,7 +71,7 @@ class SgdocServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void uploadInforme_ThrowsNullPointerException() {
+  void uploadInforme_WithoutDocumento_ThrowsMicroserviceCallException() {
     String filename = "application.yml";
     final Resource docFile = new ClassPathResource("application.yml");
 
@@ -82,6 +83,7 @@ class SgdocServiceTest extends BaseServiceTest {
         .willReturn(expectedDocumento);
 
     Assertions.assertThatThrownBy(() -> sgdocService.uploadInforme(filename, docFile))
-        .isInstanceOf(NullPointerException.class);
+        .isInstanceOf(MicroserviceCallException.class)
+        .hasMessage("Ha ocurrido un problema llamando a un microservicio");
   }
 }

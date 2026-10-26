@@ -3,7 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MAT_FORM_FIELD, MatFormField, MatFormFieldControl } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SearchResult, SelectDialogComponent } from '@core/component/select-dialog/select-dialog.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SearchEmpresaModalComponent, SearchEmpresaModalData } from './dialog/search-empresa.component';
 
-const SGEMP_NOT_FOUND = marker("error.sgemp.not-found");
+const SGEMP_NOT_FOUND = marker('error.sgemp.not-found');
 
 @Component({
   selector: 'sgi-select-empresa',
@@ -97,11 +97,12 @@ export class SelectEmpresaComponent extends SelectDialogComponent<SearchEmpresaM
     );
   }
 
-  private getDisplayValue(empresa: IEmpresa): string {
-    const notFoundSelectedValue = !!empresa && Object.keys(empresa).length == 1 && !!empresa.id;
-    setTimeout(() => this.setNotFoundSelectedValue(notFoundSelectedValue));
+  protected isNotFoundValue(empresa: IEmpresa): boolean {
+    return !!empresa && Object.keys(empresa).length === 1 && !!empresa.id;
+  }
 
-    if (notFoundSelectedValue) {
+  private getDisplayValue(empresa: IEmpresa): string {
+    if (this.isNotFoundValue(empresa)) {
       return this.getErrorMsg(empresa.id);
     }
 
@@ -109,7 +110,7 @@ export class SelectEmpresaComponent extends SelectDialogComponent<SearchEmpresaM
   }
 
   private getErrorMsg(id: string): string {
-    return this.translate.instant(SGEMP_NOT_FOUND, { ids: id, ...MSG_PARAMS.CARDINALIRY.SINGULAR })
+    return this.translate.instant(SGEMP_NOT_FOUND, { ids: id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
 }

@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
@@ -11,6 +12,7 @@ import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
 import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.AlreadyInEstadoAutorizacionException;
 import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.AutorizacionNotUpdatableException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessAutorizacionException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacionDocumentoRef;
@@ -86,7 +88,9 @@ public class AutorizacionService {
   }
 
   /**
-   * Guarda la entidad {@link Autorizacion}.
+   * Guarda la entidad {@link Autorizacion}. Los datos introducidos manualmente
+   * de la convocatoria, la entidad y el responsable se descartan si su valor de
+   * referencia está informado.
    * 
    * @param autorizacion la entidad {@link Autorizacion} a guardar.
    * @return la entidad {@link Autorizacion} persistida.
@@ -105,6 +109,8 @@ public class AutorizacionService {
     // Asigna al usuario actual como solicitante de la autorizacion
     autorizacion.setSolicitanteRef(getUserPersonaRef());
 
+    clearDatosOverriddenByRef(autorizacion);
+
     // Crea la autorizacion
     repository.save(autorizacion);
 
@@ -120,11 +126,21 @@ public class AutorizacionService {
   }
 
   /**
-   * Actualiza los datos del {@link Autorizacion}.
+   * Actualiza los datos del {@link Autorizacion}. Los datos introducidos
+   * manualmente de la convocatoria, la entidad y el responsable se descartan si
+   * su valor de referencia está informado.
    *
    * @param autorizacionActualizar autorizacionActualizar {@link Autorizacion} con
    *                               los datos actualizados.
    * @return {@link Autorizacion} actualizado.
+   * @throws UserNotAuthorizedToAccessAutorizacionException si el usuario no
+   *                                                        tiene permiso para
+   *                                                        editar la
+   *                                                        autorización.
+   * @throws AutorizacionNotUpdatableException              si el estado de la
+   *                                                        autorización
+   *                                                        no permite
+   *                                                        modificarla.
    */
   @Transactional
   public Autorizacion update(Autorizacion autorizacionActualizar) {
@@ -138,6 +154,8 @@ public class AutorizacionService {
             .build());
 
     return repository.findById(autorizacionActualizar.getId()).map(data -> {
+      checkUserHasAuthorityEditAutorizacion(data);
+      checkEstadoEditable(data);
 
       data.setObservaciones(autorizacionActualizar.getObservaciones());
       data.setResponsableRef(autorizacionActualizar.getResponsableRef());
@@ -148,6 +166,8 @@ public class AutorizacionService {
       data.setDatosEntidad(autorizacionActualizar.getDatosEntidad());
       data.setDatosConvocatoria(autorizacionActualizar.getDatosConvocatoria());
       data.setConvocatoriaId(autorizacionActualizar.getConvocatoriaId());
+
+      clearDatosOverriddenByRef(data);
 
       Autorizacion returnValue = repository.save(data);
 
@@ -456,6 +476,49 @@ public class AutorizacionService {
         || (hasUserAuthorityDeleteInvestigador()
             && autorizacion.getSolicitanteRef().equals(getUserPersonaRef())))) {
       throw new UserNotAuthorizedToAccessAutorizacionException();
+    }
+  }
+
+  /**
+   * Comprueba si el estado de la autorización permite modificarla al usuario
+   * actual. Con permiso de edición de la unidad de gestión se puede modificar en
+   * cualquier estado salvo {@link Estado#AUTORIZADA} y sin él solo en
+   * {@link Estado#BORRADOR}.
+   *
+   * @param autorizacion la {@link Autorizacion}
+   *
+   * @throws AutorizacionNotUpdatableException si el estado no permite modificarla
+   */
+  private void checkEstadoEditable(Autorizacion autorizacion) {
+    Estado estado = autorizacion.getEstado().getEstado();
+    boolean editable = hasUserAuthorityEditUnidadGestion()
+        ? estado != Estado.AUTORIZADA
+        : estado == Estado.BORRADOR;
+
+    if (!editable) {
+      throw new AutorizacionNotUpdatableException();
+    }
+  }
+
+  /**
+   * Vacía los datos introducidos manualmente de la autorización cuyo valor de
+   * referencia está informado (los datos de la convocatoria si tiene
+   * convocatoria, los datos de la entidad si tiene entidad y los datos del
+   * responsable si tiene responsable).
+   *
+   * @param autorizacion la {@link Autorizacion}
+   */
+  private void clearDatosOverriddenByRef(Autorizacion autorizacion) {
+    if (autorizacion.getConvocatoriaId() != null) {
+      autorizacion.setDatosConvocatoria(new HashSet<>());
+    }
+
+    if (!ObjectUtils.isEmpty(autorizacion.getEntidadRef())) {
+      autorizacion.setDatosEntidad(null);
+    }
+
+    if (!ObjectUtils.isEmpty(autorizacion.getResponsableRef())) {
+      autorizacion.setDatosResponsable(null);
     }
   }
 

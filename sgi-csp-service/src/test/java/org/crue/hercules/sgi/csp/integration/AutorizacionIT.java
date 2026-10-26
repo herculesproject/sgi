@@ -51,7 +51,6 @@ class AutorizacionIT extends BaseIT {
   private EstadoAutorizacionRepository estadoAutorizacionRepository;
 
   private static final String DEFAULT_TITULO_PROYECTO = "proyecto 1";
-  private static final String DEFAULT_SOLICITANTE_REF = "00112233";
   private static final String DEFAULT_RESPONSABLE_REF = "27333555";
   private static final String DEFAULT_OBSERVACIONES = "autorizacion nueva";
   private static final int DEFAULT_HORAS_DEDICADAS = 24;
@@ -123,13 +122,9 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(created.getObservaciones(), Language.ES))
         .as("getObservaciones()")
         .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getObservaciones(), Language.ES));
-    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getDatosConvocatoria(), Language.ES))
-        .as("getDatosConvocatoria()")
-        .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getDatosConvocatoria(), Language.ES));
-    Assertions.assertThat(created.getDatosEntidad()).as("getDatosEntidad()")
-        .isEqualTo(toCreate.getDatosEntidad());
-    Assertions.assertThat(created.getDatosResponsable()).as("getDatosResponsable()")
-        .isEqualTo(toCreate.getDatosResponsable());
+    Assertions.assertThat(created.getDatosConvocatoria()).as("getDatosConvocatoria()").isEmpty();
+    Assertions.assertThat(created.getDatosEntidad()).as("getDatosEntidad()").isNull();
+    Assertions.assertThat(created.getDatosResponsable()).as("getDatosResponsable()").isNull();
     Assertions.assertThat(created.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(toCreate.getEntidadRef());
     Assertions.assertThat(created.getHorasDedicacion()).as("getHorasDedicacion()")
@@ -150,14 +145,15 @@ class AutorizacionIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/autorizacion.sql"
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void update_ReturnsAutorizacion() throws Exception {
     String roles = "CSP-AUT-INV-ER";
-    Long idAutorizacion = 1L;
+    Long idAutorizacion = 3L;
 
     List<I18nFieldValueDto> observacionesAutorizacion = new ArrayList<>();
     observacionesAutorizacion.add(new I18nFieldValueDto(Language.ES, "observaciones actualizadas"));
@@ -178,13 +174,9 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getObservaciones(), Language.ES))
         .as("getObservaciones()")
         .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getObservaciones(), Language.ES));
-    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getDatosConvocatoria(), Language.ES))
-        .as("getDatosConvocatoria()")
-        .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getDatosConvocatoria(), Language.ES));
-    Assertions.assertThat(updated.getDatosEntidad()).as("getDatosEntidad()")
-        .isEqualTo(toUpdate.getDatosEntidad());
-    Assertions.assertThat(updated.getDatosResponsable()).as("getDatosResponsable()")
-        .isEqualTo(toUpdate.getDatosResponsable());
+    Assertions.assertThat(updated.getDatosConvocatoria()).as("getDatosConvocatoria()").isEmpty();
+    Assertions.assertThat(updated.getDatosEntidad()).as("getDatosEntidad()").isNull();
+    Assertions.assertThat(updated.getDatosResponsable()).as("getDatosResponsable()").isNull();
     Assertions.assertThat(updated.getEntidadRef()).as("getEntidadRef()")
         .isEqualTo(toUpdate.getEntidadRef());
     Assertions.assertThat(updated.getHorasDedicacion()).as("getHorasDedicacion()")
@@ -192,11 +184,134 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(updated.getResponsableRef()).as("getResponsableRef()")
         .isEqualTo(toUpdate.getResponsableRef());
     Assertions.assertThat(updated.getSolicitanteRef()).as("getSolicitanteRef()")
-        .isEqualTo(DEFAULT_SOLICITANTE_REF);
+        .isEqualTo(USER_PERSONA_REF);
     Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getTituloProyecto(), Language.ES))
         .as("getTituloProyecto()")
         .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getTituloProyecto(), Language.ES));
 
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_WithoutRefs_ReturnsAutorizacionWithDatos() throws Exception {
+    // given: una autorización en borrador del usuario y unos datos sin
+    // convocatoria, entidad ni responsable y con sus datos manuales
+    String roles = "CSP-AUT-INV-ER";
+    Long idAutorizacion = 3L;
+    AutorizacionInput toUpdate = buildMockAutorizacion();
+    toUpdate.setConvocatoriaId(null);
+    toUpdate.setEntidadRef(null);
+    toUpdate.setResponsableRef(null);
+
+    // when: se actualiza la autorización
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, toUpdate, roles), AutorizacionOutput.class, idAutorizacion);
+
+    // then: se devuelven los datos manuales tal cual
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    AutorizacionOutput updated = response.getBody();
+    Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(idAutorizacion);
+    Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocatoriaId()").isNull();
+    Assertions.assertThat(updated.getEntidadRef()).as("getEntidadRef()").isNull();
+    Assertions.assertThat(updated.getResponsableRef()).as("getResponsableRef()").isNull();
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getDatosConvocatoria(), Language.ES))
+        .as("getDatosConvocatoria()")
+        .isEqualTo(DEFAULT_DATOS_CONVOCATORIA);
+    Assertions.assertThat(updated.getDatosEntidad()).as("getDatosEntidad()").isEqualTo(DEFAULT_DATOS_ENTIDAD);
+    Assertions.assertThat(updated.getDatosResponsable()).as("getDatosResponsable()")
+        .isEqualTo(DEFAULT_DATOS_RESPONSABLES);
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_InvestigadorNotBorrador_Returns400() throws Exception {
+    // given: una autorización presentada del usuario investigador
+    String roles = "CSP-AUT-INV-ER";
+    Long idAutorizacion = 5L;
+    AutorizacionInput toUpdate = buildMockAutorizacion();
+
+    // when: se actualiza la autorización
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, toUpdate, roles), AutorizacionOutput.class, idAutorizacion);
+
+    // then: se rechaza por el estado
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_GestorAutorizada_Returns400() throws Exception {
+    // given: una autorización autorizada y un gestor
+    String roles = "CSP-AUT-E";
+    Long idAutorizacion = 1L;
+    AutorizacionInput toUpdate = buildMockAutorizacion();
+
+    // when: se actualiza la autorización
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, toUpdate, roles), AutorizacionOutput.class, idAutorizacion);
+
+    // then: se rechaza por el estado
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void update_InvestigadorNotSolicitante_Returns403() throws Exception {
+    // given: una autorización de otro solicitante y un investigador
+    String roles = "CSP-AUT-INV-ER";
+    Long idAutorizacion = 2L;
+    AutorizacionInput toUpdate = buildMockAutorizacion();
+
+    // when: se actualiza la autorización
+    final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, toUpdate, roles), AutorizacionOutput.class, idAutorizacion);
+
+    // then: se rechaza por permiso
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -819,7 +934,7 @@ class AutorizacionIT extends BaseIT {
         .horasDedicacion(DEFAULT_HORAS_DEDICADAS)
         .observaciones(observacionesAutorizacion)
         .responsableRef(DEFAULT_RESPONSABLE_REF)
-        .tituloProyecto(datosConvocatoriaAutorizacion)
+        .tituloProyecto(tituloProyectoAutorizacion)
         .build();
   }
 

@@ -17,9 +17,7 @@ const AUTORIZACION_KEY = marker('csp.autorizacion');
 const AUTORIZACION_TITULO_PROYECTO_KEY = marker('csp.autorizacion.titulo-proyecto');
 const AUTORIZACION_DATOS_CONVOCATORIA_KEY = marker('csp.autorizacion.datos-convocatoria');
 const AUTORIZACION_DATOS_ENTIDAD_KEY = marker('csp.autorizacion.datos-entidad');
-const AUTORIZACION_INVESTIGADOR_PRINCIPAL_KEY = marker('csp.autorizacion.investigador-principal');
 const AUTORIZACION_DATOS_IP_PROYECTO_KEY = marker('csp.autorizacion.datos-investigador-principal');
-const AUTORIZACION_ENTIDAD_PARTICIPA_KEY = marker('csp.autorizacion.entidad-participa');
 const AUTORIZACION_ESTADO_KEY = marker('csp.autorizacion.estado');
 
 
@@ -45,12 +43,10 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
   msgParamDatosConvocatoriaEntity = {};
   msgParamDatosEntidadEntity = {};
   msgParamObservacionesEntity = {};
-  msgParamInvestigadorPrincipalEntity = {};
   msgParamDatosIpProyectoEntity = {};
   msgParamHorasDedicacionEntity = {};
   msgParamConvocatoriaEntity = {};
   msgParamEstadoEntity = {};
-  msgParamEntidadParticipaEntity = {};
 
   get TIPO_COLECTIVO() {
     return TipoColectivo;
@@ -128,11 +124,6 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
     ).subscribe((value) => this.msgParamDatosEntidadEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
 
     this.translate.get(
-      AUTORIZACION_INVESTIGADOR_PRINCIPAL_KEY,
-      MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamInvestigadorPrincipalEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
-    this.translate.get(
       AUTORIZACION_DATOS_IP_PROYECTO_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamDatosIpProyectoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
@@ -141,11 +132,5 @@ export class AutorizacionDatosGeneralesComponent extends FormFragmentComponent<I
       AUTORIZACION_ESTADO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEstadoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
-    this.translate.get(
-      AUTORIZACION_ENTIDAD_PARTICIPA_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEntidadParticipaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
-
   }
 }
