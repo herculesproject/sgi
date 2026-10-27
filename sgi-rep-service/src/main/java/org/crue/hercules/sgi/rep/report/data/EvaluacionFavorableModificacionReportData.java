@@ -38,9 +38,7 @@ public class EvaluacionFavorableModificacionReportData implements ReportData {
 
     // Valores retenidos por compatibilidad
     this.dataReport.put("fechaDictamen",
-        SgiReportHelper.formatDate(evaluacionObject.getConvocatoria().getFechaEvaluacion(),
-            String.format("dd '%s' MMMM '%s' yyyy", SgiReportHelper.getMessage("common.de"),
-                SgiReportHelper.getMessage("common.de"))));
+        SgiReportHelper.formatDateWithMonthName(evaluacionObject.getConvocatoria().getFechaEvaluacion()));
     this.dataReport.put("numeroActa", evaluacionObject.getConvocatoria().getCodigoActa());
     this.dataReport.put("referenciaMemoria", evaluacionObject.getMemoria().getNumReferencia());
 
@@ -48,31 +46,25 @@ public class EvaluacionFavorableModificacionReportData implements ReportData {
     this.dataReport.put("referenciaProyecto", evaluacionObject.getMemoria().getPeticionEvaluacion().getCodigo());
     this.dataReport.put("comite", evaluacionObject.getMemoria().getComite().getCodigo());
     this.dataReport.put("nombreInvestigacion", evaluacionObject.getMemoria().getComite().getNombreInvestigacion());
-    this.dataReport.put("del",
-        evaluacionObject.getMemoria().getComite().getGenero() == Genero.M
-            ? SgiReportHelper.getMessage("common.del")
-            : SgiReportHelper.getMessage("common.dela"));
-    this.dataReport.put("el",
-        evaluacionObject.getMemoria().getComite().getGenero() == Genero.M
-            ? SgiReportHelper.getMessage("common.el")
-            : SgiReportHelper.getMessage("common.la"));
+    this.dataReport.put("del", SgiReportHelper.getMessage(
+        evaluacionObject.getMemoria().getComite().getGenero() == Genero.M ? "common.del" : "common.dela"));
+    this.dataReport.put("el", SgiReportHelper.getMessage(
+        evaluacionObject.getMemoria().getComite().getGenero() == Genero.M ? "common.el" : "common.la"));
 
     switch (evaluacionObject.getMemoria().getPeticionEvaluacion().getTipoActividad().getTipo()) {
-      case PROYECTO_INVESTIGACION, PRACTICA_DOCENTE:
+      case PROYECTO_INVESTIGACION, PRACTICA_DOCENTE, PROYECTO_INVESTIGACION_DOCENCIA:
         this.dataReport.put("actividad",
             evaluacionObject.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre());
-        this.dataReport.put("fieldAlActividad",
+        this.dataReport.put("fieldAlActividad", SgiReportHelper.getMessage(
             evaluacionObject.getMemoria().getPeticionEvaluacion().getTipoActividad().getTipo()
-                .getGenero() == Genero.M ? SgiReportHelper.getMessage("common.al")
-                    : SgiReportHelper.getMessage("common.a.la"));
+                .getGenero() == Genero.M ? "common.al" : "common.a.la"));
         break;
       case INVESTIGACION_TUTELADA:
         this.dataReport.put("actividad",
             evaluacionObject.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre());
-        this.dataReport.put("fieldAlActividad",
+        this.dataReport.put("fieldAlActividad", SgiReportHelper.getMessage(
             evaluacionObject.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getTipo()
-                .getGenero() == Genero.M ? SgiReportHelper.getMessage("common.al")
-                    : SgiReportHelper.getMessage("common.a.la"));
+                .getGenero() == Genero.M ? "common.al" : "common.a.la"));
         break;
       default:
         break;
@@ -86,12 +78,11 @@ public class EvaluacionFavorableModificacionReportData implements ReportData {
     // Valores retenidos por compatibilidad
     this.dataReport.put("nombreInvestigador", value.getNombre() + " " + value.getApellidos());
     this.dataReport.put("fieldElInvestigador",
-        personaObject.getGenero() == Genero.M ? SgiReportHelper.getMessage("common.el")
-            : SgiReportHelper.getMessage("common.la"));
+        SgiReportHelper.getMessage(personaObject.getGenero() == Genero.M ? "common.el" : "common.la"));
     this.dataReport.put("fieldInvestigador",
-        personaObject.getGenero() == Genero.M
-            ? SgiReportHelper.getMessage("field.investigador.masculino")
-            : SgiReportHelper.getMessage("field.investigador.femenino"));
+        SgiReportHelper.getMessage(personaObject.getGenero() == Genero.M
+            ? "field.investigador.masculino"
+            : "field.investigador.femenino"));
   }
 
   public void setPresidente(PersonaDto value) {
@@ -100,12 +91,11 @@ public class EvaluacionFavorableModificacionReportData implements ReportData {
 
     // Valores retenidos por compatibilidad
     this.dataReport.put("fieldDelPresidente",
-        personaObject.getGenero() == Genero.M ? SgiReportHelper.getMessage("common.del")
-            : SgiReportHelper.getMessage("common.dela"));
+        SgiReportHelper.getMessage(personaObject.getGenero() == Genero.M ? "common.del" : "common.dela"));
     this.dataReport.put("fieldPresidente",
-        personaObject.getGenero() == Genero.M
-            ? SgiReportHelper.getMessage("field.presidente.masculino")
-            : SgiReportHelper.getMessage("field.presidente.femenino"));
+        SgiReportHelper.getMessage(personaObject.getGenero() == Genero.M
+            ? "field.presidente.masculino"
+            : "field.presidente.femenino"));
   }
 
   public void setSecretario(PersonaDto value) {
@@ -115,9 +105,9 @@ public class EvaluacionFavorableModificacionReportData implements ReportData {
     // Valores retenidos por compatibilidad
     this.dataReport.put("nombreSecretario", value.getNombre() + " " + value.getApellidos());
     this.dataReport.put("fieldSecretario",
-        personaObject.getGenero() == Genero.M
-            ? SgiReportHelper.getMessage("field.secretario.masculino")
-            : SgiReportHelper.getMessage("field.secretario.femenino"));
+        SgiReportHelper.getMessage(personaObject.getGenero() == Genero.M
+            ? "field.secretario.masculino"
+            : "field.secretario.femenino"));
   }
 
   public void setConvocatoriaUltimaEvaluacion(ConvocatoriaReunionDto value) {
@@ -125,9 +115,8 @@ public class EvaluacionFavorableModificacionReportData implements ReportData {
     this.dataReport.put("convocatoriaUltimaEvaluacion", convocatoriaObject);
 
     // Valores retenidos por compatibilidad
-    this.dataReport.put("fechaDictamenMemOriginal", SgiReportHelper.formatDate(convocatoriaObject.getFechaEvaluacion(),
-        String.format("dd '%s' MMMM '%s' yyyy", SgiReportHelper.getMessage("common.de"),
-            SgiReportHelper.getMessage("common.de"))));
+    this.dataReport.put("fechaDictamenMemOriginal",
+        SgiReportHelper.formatDateWithMonthName(convocatoriaObject.getFechaEvaluacion()));
     this.dataReport.put("numeroActaMemOriginal", convocatoriaObject.getCodigoActa());
   }
 
@@ -135,10 +124,7 @@ public class EvaluacionFavorableModificacionReportData implements ReportData {
     this.dataReport.put("fechaPrimerEnvioSecretaria", value);
 
     // Valores retenidos por compatibilidad
-    this.dataReport.put("fechaEnvioSecretaria",
-        SgiReportHelper.formatDate(value,
-            String.format("dd '%s' MMMM '%s' yyyy", SgiReportHelper.getMessage("common.de"),
-                SgiReportHelper.getMessage("common.de"))));
+    this.dataReport.put("fechaEnvioSecretaria", SgiReportHelper.formatDateWithMonthName(value));
   }
 
   public Map<String, Object> getData() {

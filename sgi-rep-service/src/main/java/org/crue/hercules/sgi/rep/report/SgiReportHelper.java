@@ -61,6 +61,18 @@ public class SgiReportHelper {
     return result;
   }
 
+  /**
+   * Formatea una fecha con el día, el nombre del mes y el año en el idioma del
+   * informe (p. ej. "05 de marzo de 2026").
+   *
+   * @param instant la fecha a formatear
+   * @return la fecha formateada o cadena vacía si es <code>null</code>
+   */
+  public static String formatDateWithMonthName(Instant instant) {
+    return formatDate(instant,
+        String.format("dd '%s' MMMM '%s' yyyy", getMessage("common.de"), getMessage("common.de")));
+  }
+
   public static String formatTime(LocalTime time, String pattern) {
     String result = "";
 

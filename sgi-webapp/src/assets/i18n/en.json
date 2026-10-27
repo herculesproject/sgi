@@ -2593,6 +2593,7 @@
   "eti.tipo-actividad.INVESTIGACION_TUTELADA": "Supervised research",
   "eti.tipo-actividad.PRACTICA_DOCENTE": "Teaching practice",
   "eti.tipo-actividad.PROYECTO_INVESTIGACION": "Research project",
+  "eti.tipo-actividad.PROYECTO_INVESTIGACION_DOCENCIA": "Research and teaching project",
   "eti.tipo-comentario.ACTA_EVALUADOR": "EVALUATOR_MINUTES",
   "eti.tipo-comentario.ACTA_GESTOR": "MANAGER_MINUTES",
   "eti.tipo-comentario.EVALUADOR": "EVALUATOR",
