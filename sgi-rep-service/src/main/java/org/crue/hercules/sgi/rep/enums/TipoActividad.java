@@ -8,7 +8,9 @@ public enum TipoActividad implements GenderType {
   /** Práctica docente */
   PRACTICA_DOCENTE(2L, Genero.F, "enum.tipo-actividad.PRACTICA_DOCENTE"),
   /** Investigación tutelada */
-  INVESTIGACION_TUTELADA(3L, Genero.F, "enum.tipo-actividad.INVESTIGACION_TUTELADA");
+  INVESTIGACION_TUTELADA(3L, Genero.F, "enum.tipo-actividad.INVESTIGACION_TUTELADA"),
+  /** Proyecto de investigación y docencia */
+  PROYECTO_INVESTIGACION_DOCENCIA(4L, Genero.M, "enum.tipo-actividad.PROYECTO_INVESTIGACION_DOCENCIA");
 
   private final Long id;
   private final Genero genero;

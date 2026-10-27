@@ -56,4 +56,12 @@
     </update>
   </changeSet>
 
+  <changeSet context="!test" author="master" id="1.5.0-tipo_actividad-proyecto-investigacion-docencia">
+    <insert tableName="tipo_actividad">
+      <column name="id" valueNumeric="4" />
+      <column name="nombre" value="Proyecto de investigación y docencia" />
+      <column name="activo" valueBoolean="false" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
