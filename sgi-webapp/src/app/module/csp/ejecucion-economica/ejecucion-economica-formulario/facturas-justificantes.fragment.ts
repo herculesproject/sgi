@@ -11,7 +11,6 @@ import { TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
-import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -21,6 +20,7 @@ import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@h
 import { TranslateService } from '@ngx-translate/core';
 import { from, Observable, of } from 'rxjs';
 import { combineAll, concatMap, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
+import { EjecucionEconomicaAnualidadesService } from '../ejecucion-economica-anualidades.service';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 import { DesgloseEconomicoFragment, IColumnDefinition, IDesgloseEconomicoExportData, IRowConfig, RowTreeDesglose } from './desglose-economico.fragment';
 
@@ -82,7 +82,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     protected relaciones: IRelacionEjecucionEconomicaWithResponsables[],
     protected readonly languageService: LanguageService,
     protected proyectoService: ProyectoService,
-    proyectoAnualidadService: ProyectoAnualidadService,
+    ejecucionEconomicaAnualidadesService: EjecucionEconomicaAnualidadesService,
     protected gastoProyectoService: GastoProyectoService,
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
@@ -90,7 +90,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     private readonly translate: TranslateService,
     protected readonly isInvestigador: boolean = false
   ) {
-    super(key, proyectoSge, relaciones, languageService, proyectoService, proyectoAnualidadService, configuracion);
+    super(key, proyectoSge, relaciones, languageService, proyectoService, ejecucionEconomicaAnualidadesService, configuracion);
     this.setComplete(true);
   }
 

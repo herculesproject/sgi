@@ -8,7 +8,6 @@ import { Module } from '@core/module';
 import { ActionService } from '@core/services/action-service';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
-import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoPeriodoJustificacionSeguimientoService } from '@core/services/csp/proyecto-periodo-justificacion-seguimiento/proyecto-periodo-justificacion-seguimiento.service';
@@ -26,6 +25,7 @@ import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
+import { EjecucionEconomicaAnualidadesService } from './ejecucion-economica-anualidades.service';
 import { EJECUCION_ECONOMICA_DATA_KEY } from './ejecucion-economica-data.resolver';
 import { ClasificacionGastosFragment } from './ejecucion-economica-formulario/clasificacion-gastos/clasificacion-gastos.fragment';
 import { DetalleOperacionesGastosFragment } from './ejecucion-economica-formulario/detalle-operaciones-gastos/detalle-operaciones-gastos.fragment';
@@ -101,7 +101,7 @@ export class EjecucionEconomicaActionService extends ActionService {
   constructor(
     route: ActivatedRoute,
     proyectoService: ProyectoService,
-    proyectoAnualidadService: ProyectoAnualidadService,
+    ejecucionEconomicaAnualidadesService: EjecucionEconomicaAnualidadesService,
     ejecucionEconomicaService: EjecucionEconomicaService,
     gastoProyectoService: GastoProyectoService,
     gastoService: GastoService,
@@ -141,7 +141,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
@@ -153,7 +153,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
@@ -165,7 +165,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
@@ -177,7 +177,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
@@ -189,7 +189,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
@@ -201,7 +201,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
@@ -213,7 +213,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       gastoProyectoService,
       cnfService,
       ejecucionEconomicaService,
@@ -230,7 +230,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       gastoProyectoService,
       cnfService,
       ejecucionEconomicaService,
@@ -247,7 +247,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       gastoProyectoService,
       cnfService,
       ejecucionEconomicaService,
@@ -264,6 +264,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.proyectoSge,
       ejecucionEconomicaService,
       proyectoService,
+      ejecucionEconomicaAnualidadesService,
       gastoProyectoService,
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
