@@ -25,19 +25,17 @@
           <mat-label>
             {{'csp.ejecucion-economica.clasificacion.fecha-gasto-desde' | translate}}
           </mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaDesde" formControlName="fechaDesde">
+          <input matInput [matDatepicker]="pickerFechaDesde" formControlName="fechaDesde">
           <mat-datepicker-toggle matSuffix [for]="pickerFechaDesde"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaDesde showSeconds="true" [defaultTime]="[0,0,0]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaDesde></mat-datepicker>
         </mat-form-field>
         <mat-form-field fxFlex>
           <mat-label>
             {{'csp.ejecucion-economica.clasificacion.fecha-gasto-hasta' | translate}}
           </mat-label>
-          <input matInput [ngxMatDatetimePicker]="pickerFechaHasta" formControlName="fechaHasta">
+          <input matInput [matDatepicker]="pickerFechaHasta" formControlName="fechaHasta">
           <mat-datepicker-toggle matSuffix [for]="pickerFechaHasta"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #pickerFechaHasta showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
+          <mat-datepicker #pickerFechaHasta></mat-datepicker>
         </mat-form-field>
       </div>
 

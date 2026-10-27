@@ -3,7 +3,6 @@ import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
-import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -13,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigCsp } from 'src/app/module/adm/config-csp/config-csp.component';
+import { EjecucionEconomicaAnualidadesService } from '../../ejecucion-economica-anualidades.service';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition, IRowConfig, RowTreeDesglose } from '../desglose-economico.fragment';
 import { FacturasJustificantesFragment, IDesglose } from '../facturas-justificantes.fragment';
@@ -25,7 +25,7 @@ export class PersonalContratadoFragment extends FacturasJustificantesFragment {
     relaciones: IRelacionEjecucionEconomicaWithResponsables[],
     protected readonly languageService: LanguageService,
     proyectoService: ProyectoService,
-    proyectoAnualidadService: ProyectoAnualidadService,
+    ejecucionEconomicaAnualidadesService: EjecucionEconomicaAnualidadesService,
     gastoProyectoService: GastoProyectoService,
     private readonly cnfService: ConfigService,
     private ejecucionEconomicaService: EjecucionEconomicaService,
@@ -41,7 +41,7 @@ export class PersonalContratadoFragment extends FacturasJustificantesFragment {
       relaciones,
       languageService,
       proyectoService,
-      proyectoAnualidadService,
+      ejecucionEconomicaAnualidadesService,
       gastoProyectoService,
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,

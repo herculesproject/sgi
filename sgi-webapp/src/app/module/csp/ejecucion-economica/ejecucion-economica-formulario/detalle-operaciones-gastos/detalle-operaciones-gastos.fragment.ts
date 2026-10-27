@@ -2,13 +2,13 @@ import { IConfiguracion } from '@core/models/csp/configuracion';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ConfigService } from '@core/services/cnf/config.service';
-import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigCsp } from 'src/app/module/adm/config-csp/config-csp.component';
+import { EjecucionEconomicaAnualidadesService } from '../../ejecucion-economica-anualidades.service';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition, IRowConfig } from '../desglose-economico.fragment';
 import { DetalleOperacionFragment } from '../detalle-operacion.fragment';
@@ -25,12 +25,12 @@ export class DetalleOperacionesGastosFragment extends DetalleOperacionFragment {
     relaciones: IRelacionEjecucionEconomicaWithResponsables[],
     protected readonly languageService: LanguageService,
     proyectoService: ProyectoService,
-    proyectoAnualidadService: ProyectoAnualidadService,
+    ejecucionEconomicaAnualidadesService: EjecucionEconomicaAnualidadesService,
     private readonly cnfService: ConfigService,
     private ejecucionEconomicaService: EjecucionEconomicaService,
     protected readonly config: IConfiguracion
   ) {
-    super(key, proyectoSge, relaciones, languageService, proyectoService, proyectoAnualidadService, config);
+    super(key, proyectoSge, relaciones, languageService, proyectoService, ejecucionEconomicaAnualidadesService, config);
   }
 
   protected onInitialize(): void {

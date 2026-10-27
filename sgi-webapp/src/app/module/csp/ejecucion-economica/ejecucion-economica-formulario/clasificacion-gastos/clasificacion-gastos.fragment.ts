@@ -2,7 +2,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { Language } from '@core/i18n/language';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
-import { CardinalidadRelacionSgiSge, IConfiguracion } from '@core/models/csp/configuracion';
+import { CardinalidadRelacionSgiSge, IConfiguracion, SgeFiltroAnualidades } from '@core/models/csp/configuracion';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
@@ -20,13 +20,15 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
-import { concatAll, concatMap, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
+import { concatMap, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
+import { EjecucionEconomicaAnualidadesService } from '../../ejecucion-economica-anualidades.service';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition } from '../desglose-economico.fragment';
 import { GastosClasficadosSgiEnum } from '../facturas-justificantes.fragment';
 
 const CONCEPTO_GASTO_SIN_CLASIFICAR = marker('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar');
 const PROYECTO_SIN_CLASIFICAR = marker('csp.proyecto.titulo.sin-clasificar');
+const MAX_CONCURRENT_REQUESTS = 5;
 
 export interface ClasificacionGasto extends IDatoEconomico {
   proyecto: IProyecto;
@@ -42,12 +44,13 @@ export interface ColumnDefinitionClasificacionGasto extends IColumnDefinition {
 }
 
 export class ClasificacionGastosFragment extends Fragment {
-  private proyectosMap = new Map<number, IProyecto>();
+  private readonly proyectosMap = new Map<number, IProyecto>();
+  private anualidades: string[];
   readonly gastos$ = new BehaviorSubject<ClasificacionGasto[]>([]);
   protected updatedGastosProyectos: Map<string, IGastoProyecto> = new Map();
 
-  private proyectoConceptoGastosMap = new Map<string, IProyectoConceptoGasto>();
-  private columnsLanguage: Map<Language, ColumnDefinitionClasificacionGasto[]> = new Map();
+  private readonly proyectoConceptoGastosMap = new Map<string, IProyectoConceptoGasto>();
+  private readonly columnsLanguage: Map<Language, ColumnDefinitionClasificacionGasto[]> = new Map();
 
   displayColumns: string[] = [];
   columns: ColumnDefinitionClasificacionGasto[] = [];
@@ -61,12 +64,13 @@ export class ClasificacionGastosFragment extends Fragment {
   constructor(
     key: number,
     readonly relaciones: IRelacionEjecucionEconomicaWithResponsables[],
-    private proyectoSge: IProyectoSge,
-    private ejecucionEconomicaService: EjecucionEconomicaService,
-    private proyectoService: ProyectoService,
-    private gastoProyectoService: GastoProyectoService,
-    private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
-    private proyectoConceptoGastoService: ProyectoConceptoGastoService,
+    private readonly proyectoSge: IProyectoSge,
+    private readonly ejecucionEconomicaService: EjecucionEconomicaService,
+    private readonly proyectoService: ProyectoService,
+    private readonly ejecucionEconomicaAnualidadesService: EjecucionEconomicaAnualidadesService,
+    private readonly gastoProyectoService: GastoProyectoService,
+    private readonly proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
+    private readonly proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private readonly config: IConfiguracion,
     private readonly translate: TranslateService,
     private readonly languageService: LanguageService
@@ -93,80 +97,100 @@ export class ClasificacionGastosFragment extends Fragment {
   }
 
   public searchGastos(fechaDesde: string, fechaHasta: string, gastosClasficadosSgiFilter: GastosClasficadosSgiEnum): void {
-    const gastosListado: ClasificacionGasto[] = [];
-    this.gastos$.next(gastosListado);
-    let gastos$: Observable<ClasificacionGasto[]>;
-    gastos$ = merge(
-      this.ejecucionEconomicaService.getViajesDietas(this.proyectoSge.id).pipe(
+    this.gastos$.next([]);
+    const fechaDevengoRange = { desde: fechaDesde, hasta: fechaHasta };
+
+    this.subscriptions.push(
+      this.fillProyectosMap().pipe(
+        switchMap(() => this.getAnualidades()),
+        switchMap(anualidades => this.getGastos(anualidades, fechaDevengoRange)),
+        mergeMap(gastos => from(gastos)),
+        mergeMap((gastoClasificar: ClasificacionGasto) => {
+          const options: SgiRestFindOptions = {
+            filter: new RSQLSgiRestFilter('gastoRef', SgiRestFilterOperator.EQUALS, gastoClasificar.id)
+          };
+          return this.gastoProyectoService.findAll(options).pipe(
+            switchMap(response => {
+              if (response.items.length) {
+                gastoClasificar.conceptoGasto = response.items[0].conceptoGasto;
+                if (!response.items[0].proyectoId) {
+                  return of(gastoClasificar);
+                }
+
+                return this.getProyecto(response.items[0].proyectoId).pipe(
+                  map(proyecto => {
+                    gastoClasificar.proyecto = proyecto;
+                    return gastoClasificar;
+                  })
+                );
+              }
+              return of(gastoClasificar);
+            }),
+            switchMap(datoEconomico => {
+              if (!!datoEconomico?.proyecto?.id || !!datoEconomico?.conceptoGasto?.id) {
+                datoEconomico.clasificadoAutomaticamente = false;
+                return of(datoEconomico);
+              }
+
+              return this.fillDatoEconomicoClasificacionWithElegibilidad(datoEconomico).pipe(
+                map(datoEconomicoWithElegibilidad => {
+                  datoEconomicoWithElegibilidad.clasificadoAutomaticamente = !!datoEconomicoWithElegibilidad.proyecto?.id;
+                  return datoEconomicoWithElegibilidad;
+                })
+              );
+            })
+          );
+        }, MAX_CONCURRENT_REQUESTS),
+        filter(gasto => this.desgloseMatchFilterGastosClasficadosSgi(gasto, gastosClasficadosSgiFilter)),
+        toArray()
+      ).subscribe(gastos => this.gastos$.next(gastos))
+    );
+  }
+
+  /**
+   * Recupera los gastos del SGE de los tipos facturas y gastos, viajes y dietas y personal contratado.
+   *
+   * @param anualidades las anualidades por las que se filtran los gastos
+   * @param fechaDevengoRange el rango de fechas de devengo por el que se filtran los gastos
+   * @returns los gastos de cada tipo a medida que se recuperan
+   */
+  private getGastos(anualidades: string[], fechaDevengoRange: { desde: string, hasta: string }): Observable<ClasificacionGasto[]> {
+    return merge(
+      this.ejecucionEconomicaService.getViajesDietas(this.proyectoSge.id, anualidades, true, null, fechaDevengoRange).pipe(
         map(gastos => gastos.map(gasto => {
           return { ...gasto, tipoOperacion: TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS } as ClasificacionGasto;
         }))
       ),
-      this.ejecucionEconomicaService.getFacturasGastos(this.proyectoSge.id).pipe(
+      this.ejecucionEconomicaService.getFacturasGastos(this.proyectoSge.id, anualidades, true, null, fechaDevengoRange).pipe(
         map(gastos => gastos.map(gasto => {
           return { ...gasto, tipoOperacion: TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS } as ClasificacionGasto;
         }))
       ),
-      this.ejecucionEconomicaService.getPersonalContratado(this.proyectoSge.id).pipe(
+      this.ejecucionEconomicaService.getPersonalContratado(this.proyectoSge.id, anualidades, true, null, fechaDevengoRange).pipe(
         map(gastos => gastos.map(gasto => {
           return { ...gasto, tipoOperacion: TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO } as ClasificacionGasto;
         }))
       )
     );
+  }
 
-    this.subscriptions.push(
-      this.fillProyectosMap().pipe(
-        switchMap(() => gastos$),
-        map(gastos => {
-          if (gastos.length === 0) {
-            return of(void 0);
-          }
-          return from(gastos).pipe(
-            concatMap((gastoClasificar: ClasificacionGasto) => {
-              const options: SgiRestFindOptions = {
-                filter: new RSQLSgiRestFilter('gastoRef', SgiRestFilterOperator.EQUALS, gastoClasificar.id)
-              };
-              return this.gastoProyectoService.findAll(options).pipe(
-                switchMap(response => {
-                  if (response.items.length) {
-                    gastoClasificar.conceptoGasto = response.items[0].conceptoGasto;
-                    if (!response.items[0].proyectoId) {
-                      return of(gastoClasificar);
-                    }
+  /**
+   * Recupera y cachea las anualidades con las que se invoca al SGE, solo si las anualidades son obligatorias.
+   *
+   * @returns las anualidades de los proyectos relacionados o una lista vacía si no son obligatorias
+   */
+  private getAnualidades(): Observable<string[]> {
+    if (this.config.sgeFiltroAnualidades !== SgeFiltroAnualidades.ANUALIDADES_OBLIGATORIAS) {
+      return of([]);
+    }
 
-                    return this.getProyecto(response.items[0].proyectoId).pipe(
-                      map(proyecto => {
-                        gastoClasificar.proyecto = proyecto;
-                        return gastoClasificar;
-                      })
-                    );
-                  }
-                  return of(gastoClasificar);
-                }),
-                switchMap(datoEconomico => {
-                  if (!!datoEconomico?.proyecto?.id || !!datoEconomico?.conceptoGasto?.id) {
-                    datoEconomico.clasificadoAutomaticamente = false;
-                    return of(datoEconomico);
-                  }
+    if (this.anualidades) {
+      return of(this.anualidades);
+    }
 
-                  return this.fillDatoEconomicoClasificacionWithElegibilidad(datoEconomico).pipe(
-                    map(datoEconomicoWithElegibilidad => {
-                      datoEconomicoWithElegibilidad.clasificadoAutomaticamente = !!datoEconomicoWithElegibilidad.proyecto?.id;
-                      return datoEconomicoWithElegibilidad;
-                    })
-                  );
-                })
-              );
-            })
-          );
-        }),
-        concatAll()
-      ).subscribe(gasto => {
-        if (gasto && this.desgloseMatchFilterGastosClasficadosSgi(gasto, gastosClasficadosSgiFilter)) {
-          gastosListado.push(gasto);
-          this.gastos$.next(gastosListado);
-        }
-      })
+    return this.ejecucionEconomicaAnualidadesService.getAnualidadesProyectos(this.relaciones, true).pipe(
+      map(ejecucionEconomicaAnualidades => this.ejecucionEconomicaAnualidadesService.getDefaultAnualidades(ejecucionEconomicaAnualidades)),
+      tap(anualidades => this.anualidades = anualidades)
     );
   }
 

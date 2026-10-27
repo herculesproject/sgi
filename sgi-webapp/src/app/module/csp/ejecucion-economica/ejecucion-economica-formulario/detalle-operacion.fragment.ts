@@ -1,10 +1,10 @@
 import { IConfiguracion } from '@core/models/csp/configuracion';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
-import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { Observable, of } from 'rxjs';
+import { EjecucionEconomicaAnualidadesService } from '../ejecucion-economica-anualidades.service';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 import { DesgloseEconomicoFragment, IColumnDefinition, IRowConfig, RowTreeDesglose } from './desglose-economico.fragment';
 
@@ -16,10 +16,10 @@ export abstract class DetalleOperacionFragment extends DesgloseEconomicoFragment
     protected relaciones: IRelacionEjecucionEconomicaWithResponsables[],
     protected languageService: LanguageService,
     proyectoService: ProyectoService,
-    proyectoAnualidadService: ProyectoAnualidadService,
+    ejecucionEconomicaAnualidadesService: EjecucionEconomicaAnualidadesService,
     protected readonly config: IConfiguracion
   ) {
-    super(key, proyectoSge, relaciones, languageService, proyectoService, proyectoAnualidadService, config);
+    super(key, proyectoSge, relaciones, languageService, proyectoService, ejecucionEconomicaAnualidadesService, config);
     this.setComplete(true);
   }
 

@@ -11,16 +11,16 @@ import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { EjecucionEconomicaService, TipoOperacion } from '@core/services/sge/ejecucion-economica.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { Observable, Subscription, forkJoin, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { DatoEconomicoDetalleClasificacionModalData, FacturasJustificantesClasificacionModal } from '../../modals/facturas-justificantes-clasificacion-modal/facturas-justificantes-clasificacion-modal.component';
 import { GastosClasficadosSgiEnum } from '../facturas-justificantes.fragment';
 import { ClasificacionGasto, ClasificacionGastosFragment } from './clasificacion-gastos.fragment';
-import { TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '@core/services/language.service';
 
 const MODAL_CLASIFICACION_TITLE_KEY = marker('title.csp.ejecucion-economica.clasificacion.detalle-gasto');
 const MSG_ACCEPT_CLASIFICACION = marker('csp.ejecucion-economica.clasificacion-gastos.aceptar');
@@ -32,7 +32,7 @@ const MSG_ACCEPT_CLASIFICACION = marker('csp.ejecucion-economica.clasificacion-g
 })
 export class ClasificacionGastosComponent extends FragmentComponent implements OnInit, OnDestroy {
   formPart: ClasificacionGastosFragment;
-  private subscriptions: Subscription[] = [];
+  private readonly subscriptions: Subscription[] = [];
 
   formGroup: FormGroup;
 
@@ -40,8 +40,8 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
 
   readonly dataSource = new MatTableDataSource<ClasificacionGasto>();
 
-  @ViewChild(MatPaginator, { static: true }) private paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) private sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   get GastosClasficadosSgiEnum() {
     return GastosClasficadosSgiEnum;
@@ -53,12 +53,12 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
 
   constructor(
     public actionService: EjecucionEconomicaActionService,
-    private matDialog: MatDialog,
-    private dialogService: DialogService,
-    private ejecucionEconomicaService: EjecucionEconomicaService,
-    private gastoProyectoService: GastoProyectoService,
-    private proyectoProyectoSgeService: ProyectoProyectoSgeService,
-    private readonly translate: TranslateService,
+    private readonly matDialog: MatDialog,
+    private readonly dialogService: DialogService,
+    private readonly ejecucionEconomicaService: EjecucionEconomicaService,
+    private readonly gastoProyectoService: GastoProyectoService,
+    private readonly proyectoProyectoSgeService: ProyectoProyectoSgeService,
+    translate: TranslateService,
     private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.CLASIFICACION_GASTOS, actionService, translate);
@@ -84,7 +84,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
           return gasto.partidaPresupuestaria;
         case 'codigoEconomico':
           return `${gasto.codigoEconomico?.id} ${gasto.codigoEconomico?.nombre ? '-' : ''} ${gasto.codigoEconomico?.nombre}`;
-        default:
+        default: {
           const gastoColumn = this.formPart.columns.find(column => column.id === property);
 
           let columnId: string;
@@ -104,15 +104,14 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
           }
 
           return columnId ? gasto.columnas[columnId] : gasto[property];
+        }
       }
     };
     this.dataSource.sort = this.sort;
     this.subscriptions.push(
       this.formPart.gastos$.subscribe(
         (data) => {
-          data.sort((a, b) => {
-            return b.anualidad.localeCompare(a.anualidad);
-          });
+          data.sort((a, b) => this.compareGastos(a, b));
 
           this.dataSource.data = data;
         })
@@ -120,8 +119,8 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
   }
 
   onSearch(): void {
-    const fechaDesde = LuxonUtils.toBackend(this.formGroup.controls.fechaDesde.value);
-    const fechaHasta = LuxonUtils.toBackend(this.formGroup.controls.fechaHasta.value);
+    const fechaDesde = LuxonUtils.toBackend(this.formGroup.controls.fechaDesde.value, true);
+    const fechaHasta = LuxonUtils.toBackend(this.formGroup.controls.fechaHasta.value, true);
     const gastosClasficadosSgi = this.formGroup.controls.gastosClasficadosSgi.value;
     this.formPart.searchGastos(fechaDesde, fechaHasta, gastosClasficadosSgi);
   }
@@ -148,7 +147,10 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
   showEditModal(element: ClasificacionGasto): void {
     this.subscriptions.push(
       forkJoin({
-        proyectosSgiIds: this.proyectoProyectoSgeService.findByProyectoSgeId(element.proyectoId).pipe(map(response => response.items.map(e => e.proyecto.id))),
+        proyectosSgiIds: this.proyectoProyectoSgeService.findByProyectoSgeId(element.proyectoId)
+          .pipe(
+            map(response => response.items.map(e => e.proyecto.id))
+          ),
         gastoDetalle: this.getGastoDetalle(element),
         gastoProyecto: this.getGastoProyecto(element.id)
       }).pipe(
@@ -181,18 +183,51 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
   }
 
   /**
-   * Recupera el gasto proyecto modificado en memoria si se ha modficado pero no se ha persistido el cambio y si no esta en memoria lo recupera
-   * 
+   * Recupera el gasto proyecto modificado en memoria si se ha modificado
+   * pero no se ha persistido el cambio y si no esta en memoria lo recupera
+   *
    * @param gastoRef Identificador del gasto
    * @returns el IGastoProyecto asociado al gastoRef
    */
   private getGastoProyecto(gastoRef: string): Observable<IGastoProyecto> {
-    let gastoProyecto = this.formPart.getGastoProyectoUpdated(gastoRef);
-    if (!!gastoProyecto) {
+    const gastoProyecto = this.formPart.getGastoProyectoUpdated(gastoRef);
+    if (gastoProyecto) {
       return of(gastoProyecto);
     }
 
     return this.gastoProyectoService.findByGastoRef(gastoRef);
+  }
+
+  /**
+   * Compara dos gastos según el orden del listado: anualidad (de más a menos reciente), proyecto,
+   * concepto de gasto, clasificación SGE, aplicación presupuestaria, código económico e identificador del gasto.
+   *
+   * @param a gasto a comparar
+   * @param b gasto con el que se compara
+   * @returns un número negativo, cero o positivo si a va antes, en la misma posición o después que b
+   */
+  private compareGastos(a: ClasificacionGasto, b: ClasificacionGasto): number {
+    return this.compareText(b.anualidad, a.anualidad)
+      || this.compareText(this.languageService.getFieldValue(a.proyecto?.titulo), this.languageService.getFieldValue(b.proyecto?.titulo))
+      || this.compareText(
+        this.languageService.getFieldValue(a.conceptoGasto?.nombre),
+        this.languageService.getFieldValue(b.conceptoGasto?.nombre)
+      )
+      || this.compareText(a.clasificacionSGE?.nombre, b.clasificacionSGE?.nombre)
+      || this.compareText(a.partidaPresupuestaria, b.partidaPresupuestaria)
+      || this.compareText(a.codigoEconomico?.id, b.codigoEconomico?.id)
+      || this.compareText(a.id, b.id);
+  }
+
+  /**
+   * Compara alfabéticamente dos textos, considerando los valores nulos como texto vacío.
+   *
+   * @param a texto a comparar
+   * @param b texto con el que se compara
+   * @returns un número negativo, cero o positivo si a va antes, en la misma posición o después que b
+   */
+  private compareText(a: string, b: string): number {
+    return (a ?? '').localeCompare(b ?? '');
   }
 
   private getGastoDetalle(gasto: ClasificacionGasto): Observable<IDatoEconomicoDetalle> {
@@ -223,5 +258,8 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
     });
   }
 
-  protected setupI18N(): void { }
+  protected setupI18N(): void {
+    // Este componente no tiene textos que requieran resolución i18n en tiempo de ejecución.
+  }
+
 }
