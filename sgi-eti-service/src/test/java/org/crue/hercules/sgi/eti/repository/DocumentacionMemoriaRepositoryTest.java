@@ -34,13 +34,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
-public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
+class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private DocumentacionMemoriaRepository repository;
 
   @Test
-  public void findByMemoriaIdAndMemoriaActivoTrue_ReturnsData() throws Exception {
+  void findByMemoriaIdAndMemoriaActivoTrue_ReturnsData() {
 
     // given: Datos existentes mmemoria activa y documentación.
 
@@ -121,8 +121,8 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
     fuenteFinanciacion.add(new PeticionEvaluacionFuenteFinanciacion(Language.ES, "Fuente financiación"));
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", titulo,
         tipoActividad, null, false, fuenteFinanciacion, null, null, Instant.now(), Instant.now(), resumen,
-        TipoValorSocial.ENSENIANZA_SUPERIOR, otroValorSocial, objetivos, disMetodologico, Boolean.FALSE,
-        "user-001", null, null, Boolean.TRUE);
+        TipoValorSocial.ENSENIANZA_SUPERIOR, otroValorSocial, objetivos, disMetodologico, new HashSet<>(),
+        Boolean.FALSE, "user-001", null, null, Boolean.TRUE);
   }
 
   /**
@@ -212,12 +212,14 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
   private TipoDocumento generarMockTipoDocumento(Formulario formulario) {
     Set<TipoDocumentoNombre> nombre = new HashSet<>();
     nombre.add(new TipoDocumentoNombre(Language.ES, "Seguimiento Anual"));
+
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(1L);
+    tipoDocumento.setActivo(Boolean.TRUE);
+    tipoDocumento.setAdicional(false);
     tipoDocumento.setCodigo("SA");
     tipoDocumento.setFormularioId(formulario.getId());
-    tipoDocumento.setAdicional(false);
-    tipoDocumento.setActivo(Boolean.TRUE);
+    tipoDocumento.setNombre(nombre);
 
     return tipoDocumento;
 

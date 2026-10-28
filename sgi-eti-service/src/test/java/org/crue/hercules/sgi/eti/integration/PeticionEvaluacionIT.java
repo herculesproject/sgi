@@ -12,8 +12,8 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
-import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.dto.EstadoFinanciacionDto;
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionEstadoFinanciacionInput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionSolicitudCspInput;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionUnidadVinculacionInput;
@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionIntroduccion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
@@ -152,6 +153,60 @@ class PeticionEvaluacionIT extends BaseIT {
   }
 
   @Test
+  void addPeticionEvaluacion_WithIntroduccion_PersistsIntroduccion() throws Exception {
+    // given: una petición nueva con Introducción
+    PeticionEvaluacion nuevoPeticionEvaluacion = generarMockPeticionEvaluacion(null, "titulo");
+    nuevoPeticionEvaluacion.setIntroduccion(generarMockIntroduccion("<p>Introduccion</p>"));
+
+    // when: se crea la petición
+    final ResponseEntity<PeticionEvaluacion> response = restTemplate.exchange(PETICION_EVALUACION_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, nuevoPeticionEvaluacion), PeticionEvaluacion.class);
+
+    // then: se devuelve y se persiste la Introducción
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(response.getBody().getIntroduccion(), Language.ES))
+        .isEqualTo("<p>Introduccion</p>");
+    final ResponseEntity<PeticionEvaluacion> responseGet = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        PeticionEvaluacion.class, response.getBody().getId());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseGet.getBody().getIntroduccion(), Language.ES))
+        .isEqualTo("<p>Introduccion</p>");
+  }
+
+  @Test
+  void addPeticionEvaluacion_WithIntroduccionTooLong_Returns400() throws Exception {
+    // given: una petición nueva con una Introducción que supera la longitud
+    // máxima
+    PeticionEvaluacion nuevoPeticionEvaluacion = generarMockPeticionEvaluacion(null, "titulo");
+    nuevoPeticionEvaluacion.setIntroduccion(
+        generarMockIntroduccion(StringUtils.repeat("X", PeticionEvaluacionIntroduccion.VALUE_LENGTH + 1)));
+
+    // when: se intenta crear la petición
+    final ResponseEntity<String> response = restTemplate.exchange(PETICION_EVALUACION_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, nuevoPeticionEvaluacion), String.class);
+
+    // then: se devuelve error de validación
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(response.getBody()).contains("urn:problem-type:validation");
+  }
+
+  @Test
+  @Sql("classpath:scripts/configuracion_introduccion_obligatoria.sql")
+  void addPeticionEvaluacion_WithVisibilityRequiredAndWithoutIntroduccion_Returns400() throws Exception {
+    // given: el campo Introducción obligatorio y una petición nueva sin
+    // Introducción
+    PeticionEvaluacion nuevoPeticionEvaluacion = generarMockPeticionEvaluacion(null, "titulo");
+
+    // when: se intenta crear la petición
+    final ResponseEntity<String> response = restTemplate.exchange(PETICION_EVALUACION_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, nuevoPeticionEvaluacion), String.class);
+
+    // then: se devuelve error de petición
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(response.getBody()).contains("urn:problem-type:illegal-argument");
+  }
+
+  @Test
   void removePeticionEvaluacion_Success() throws Exception {
 
     // when: Delete con id existente
@@ -194,6 +249,45 @@ class PeticionEvaluacionIT extends BaseIT {
     Assertions.assertThat(tipoActividad.getId()).isNotNull();
     Assertions.assertThat(tipoActividad.getTitulo()).isEqualTo(replacePeticionEvaluacion.getTitulo());
     Assertions.assertThat(tipoActividad.getActivo()).isEqualTo(replacePeticionEvaluacion.getActivo());
+  }
+
+  @Test
+  void replacePeticionEvaluacion_WithIntroduccion_PersistsIntroduccion() throws Exception {
+    // given: una petición existente y los datos a actualizar con Introducción
+    PeticionEvaluacion replacePeticionEvaluacion = generarMockPeticionEvaluacion(2L, "PeticionEvaluacion2");
+    replacePeticionEvaluacion.setIntroduccion(generarMockIntroduccion("<p>Introduccion</p>"));
+
+    // when: se actualiza la petición
+    final ResponseEntity<PeticionEvaluacion> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
+        buildRequest(null, replacePeticionEvaluacion), PeticionEvaluacion.class, 2L);
+
+    // then: se devuelve y se persiste la Introducción
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(response.getBody().getIntroduccion(), Language.ES))
+        .isEqualTo("<p>Introduccion</p>");
+    final ResponseEntity<PeticionEvaluacion> responseGet = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        PeticionEvaluacion.class, 2L);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseGet.getBody().getIntroduccion(), Language.ES))
+        .isEqualTo("<p>Introduccion</p>");
+  }
+
+  @Test
+  @Sql("classpath:scripts/configuracion_introduccion_obligatoria.sql")
+  void replacePeticionEvaluacion_WithVisibilityRequiredAndWithoutIntroduccion_Returns400() throws Exception {
+    // given: el campo Introducción obligatorio y los datos a actualizar sin
+    // Introducción
+    PeticionEvaluacion replacePeticionEvaluacion = generarMockPeticionEvaluacion(2L, "PeticionEvaluacion2");
+
+    // when: se intenta actualizar la petición
+    final ResponseEntity<String> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
+        buildRequest(null, replacePeticionEvaluacion), String.class, 2L);
+
+    // then: se devuelve error de petición
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(response.getBody()).contains("urn:problem-type:illegal-argument");
   }
 
   @Test
@@ -583,72 +677,6 @@ class PeticionEvaluacionIT extends BaseIT {
     return peticionEvaluacion;
   }
 
-  /**
-   * Función que devuelve un objeto EquipoTrabajo
-   * 
-   * @param id                 id del EquipoTrabajo
-   * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
-   * @return el objeto EquipoTrabajo
-   */
-  private EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
-
-    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
-    equipoTrabajo.setId(id);
-    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
-    equipoTrabajo.setPersonaRef("user-00" + (id == null ? 1 : id));
-
-    return equipoTrabajo;
-  }
-
-  /**
-   * Función que devuelve un objeto Tarea
-   * 
-   * @param id          id de la tarea
-   * @param descripcion descripcion de la tarea
-   * @return el objeto Tarea
-   */
-  private Tarea generarMockTarea(Long id, String descripcion) {
-    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
-    equipoTrabajo.setId(2L);
-
-    Memoria memoria = new Memoria();
-    memoria.setId(2L);
-
-    FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
-    formacionEspecifica.setId(1L);
-
-    TipoTarea tipoTarea = new TipoTarea();
-    tipoTarea.setId(1L);
-
-    Set<TareaNombre> nombre = new HashSet<>();
-    nombre.add(new TareaNombre(Language.ES, descripcion));
-    Set<TareaFormacion> formacion = new HashSet<>();
-    formacion.add(new TareaFormacion(Language.ES, "Formacion" + (id != null ? id : "")));
-    Set<TareaOrganismo> organismo = new HashSet<>();
-    organismo.add(new TareaOrganismo(Language.ES, "Organismo" + (id != null ? id : "")));
-
-    Tarea tarea = new Tarea();
-    tarea.setId(id);
-    tarea.setEquipoTrabajo(equipoTrabajo);
-    tarea.setMemoria(memoria);
-    tarea.setNombre(nombre);
-    tarea.setFormacion(formacion);
-    tarea.setFormacionEspecifica(formacionEspecifica);
-    tarea.setOrganismo(organismo);
-    tarea.setAnio(2020);
-    tarea.setTipoTarea(tipoTarea);
-
-    return tarea;
-  }
-
-  private <T> HttpEntity<T> buildRequestWithRoles(T entity, String... roles) throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", "bearer " + tokenBuilder.buildToken("user", roles));
-    return new HttpEntity<>(entity, headers);
-  }
-
   @Test
   @Sql("classpath:scripts/peticion_evaluacion_unidad_vinculacion.sql")
   void findUnidadesVinculacion_ReturnsPeticionEvaluacionUnidadVinculacionOutputList() throws Exception {
@@ -880,6 +908,84 @@ class PeticionEvaluacionIT extends BaseIT {
     // then: se devuelve solo la petición con memorias
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).extracting(PeticionEvaluacion::getId).containsExactly(2L);
+  }
+
+  /**
+   * Función que devuelve un objeto EquipoTrabajo
+   * 
+   * @param id                 id del EquipoTrabajo
+   * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
+   * @return el objeto EquipoTrabajo
+   */
+  private EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
+
+    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
+    equipoTrabajo.setId(id);
+    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
+    equipoTrabajo.setPersonaRef("user-00" + (id == null ? 1 : id));
+
+    return equipoTrabajo;
+  }
+
+  /**
+   * Función que devuelve un objeto Tarea
+   * 
+   * @param id          id de la tarea
+   * @param descripcion descripcion de la tarea
+   * @return el objeto Tarea
+   */
+  private Tarea generarMockTarea(Long id, String descripcion) {
+    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
+    equipoTrabajo.setId(2L);
+
+    Memoria memoria = new Memoria();
+    memoria.setId(2L);
+
+    FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
+    formacionEspecifica.setId(1L);
+
+    TipoTarea tipoTarea = new TipoTarea();
+    tipoTarea.setId(1L);
+
+    Set<TareaNombre> nombre = new HashSet<>();
+    nombre.add(new TareaNombre(Language.ES, descripcion));
+    Set<TareaFormacion> formacion = new HashSet<>();
+    formacion.add(new TareaFormacion(Language.ES, "Formacion" + (id != null ? id : "")));
+    Set<TareaOrganismo> organismo = new HashSet<>();
+    organismo.add(new TareaOrganismo(Language.ES, "Organismo" + (id != null ? id : "")));
+
+    Tarea tarea = new Tarea();
+    tarea.setId(id);
+    tarea.setEquipoTrabajo(equipoTrabajo);
+    tarea.setMemoria(memoria);
+    tarea.setNombre(nombre);
+    tarea.setFormacion(formacion);
+    tarea.setFormacionEspecifica(formacionEspecifica);
+    tarea.setOrganismo(organismo);
+    tarea.setAnio(2020);
+    tarea.setTipoTarea(tipoTarea);
+
+    return tarea;
+  }
+
+  private <T> HttpEntity<T> buildRequestWithRoles(T entity, String... roles) throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", "bearer " + tokenBuilder.buildToken("user", roles));
+    return new HttpEntity<>(entity, headers);
+  }
+
+  /**
+   * Devuelve la Introducción de una PeticionEvaluacion en español
+   *
+   * @param value el valor de la Introducción
+   * @return la Introducción
+   */
+  private Set<PeticionEvaluacionIntroduccion> generarMockIntroduccion(String value) {
+    Set<PeticionEvaluacionIntroduccion> introduccion = new HashSet<>();
+    introduccion.add(new PeticionEvaluacionIntroduccion(Language.ES, value));
+    return introduccion;
   }
 
 }

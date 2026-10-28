@@ -40,6 +40,8 @@ export interface IPeticionEvaluacion {
   objetivos: I18nFieldValue[];
   /** Diseño metodológico */
   disMetodologico: I18nFieldValue[];
+  /** Introducción */
+  introduccion: I18nFieldValue[];
   /** Tiene fondos propios */
   tieneFondosPropios: boolean;
   /** Referencia persona */

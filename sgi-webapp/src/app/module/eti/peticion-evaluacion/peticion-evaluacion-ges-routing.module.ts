@@ -7,6 +7,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { Module } from '@core/module';
 import { SgiRoutes } from '@core/route';
 import { SgiAuthGuard } from '@herculesproject/framework/auth';
+import { PeticionEvaluacionDataResolver, PETICION_EVALUACION_DATA_KEY } from './peticion-evaluacion-data.resolver';
 import { PeticionEvaluacionEditarComponent } from './peticion-evaluacion-editar/peticion-evaluacion-editar.component';
 import { EquipoInvestigadorListadoComponent } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.component';
 import { MemoriasListadoComponent } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.component';
@@ -15,11 +16,6 @@ import { PeticionEvaluacionTareasListadoComponent } from './peticion-evaluacion-
 import { PeticionEvaluacionUnidadesVinculacionComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-unidades-vinculacion/peticion-evaluacion-unidades-vinculacion.component';
 import { PeticionEvaluacionListadoGesComponent } from './peticion-evaluacion-listado-ges/peticion-evaluacion-listado-ges.component';
 import { PETICION_EVALUACION_ROUTE_NAMES } from './peticion-evaluacion-route-names';
-import {
-  PeticionEvaluacionUnidadesVinculacionEnabledResolver,
-  PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY
-} from './peticion-evaluacion-unidades-vinculacion-enabled.resolver';
-import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 
 const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
 
@@ -41,8 +37,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     resolve: {
-      peticionEvaluacion: PeticionEvaluacionResolver,
-      [PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY]: PeticionEvaluacionUnidadesVinculacionEnabledResolver
+      [PETICION_EVALUACION_DATA_KEY]: PeticionEvaluacionDataResolver
     },
     data: {
       title: PETICION_EVALUACION_KEY,

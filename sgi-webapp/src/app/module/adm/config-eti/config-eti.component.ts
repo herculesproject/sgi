@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
+import { FieldVisibility, FIELD_VISIBILITY_MAP } from '@core/models/eti/configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { UnidadVinculacionService } from '@core/services/sgo/unidad-vinculacion.service';
@@ -14,6 +15,7 @@ export enum ConfigEti {
   ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED = 'peticionEvaluacionUnidadesVinculacionEnabled',
   ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED = 'peticionEvaluacionInicializarUnidadVinculacionEnabled',
   ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF = 'tipoUnidadVinculacionDepartamentoRef',
+  ETI_PETICION_EVALUACION_INTRODUCCION_VISIBILITY = 'peticionEvaluacionIntroduccionVisibility',
   // Textos de ayuda de la solicitud de evaluación
   ETI_PETICION_EVALUACION_AYUDA_FECHA_INICIO_ENABLED = 'peticionEvaluacionAyudaFechaInicioEnabled',
   ETI_PETICION_EVALUACION_AYUDA_FECHA_INICIO = 'peticionEvaluacionAyudaFechaInicio',
@@ -21,6 +23,8 @@ export enum ConfigEti {
   ETI_PETICION_EVALUACION_AYUDA_RESUMEN = 'peticionEvaluacionAyudaResumen',
   ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED = 'peticionEvaluacionAyudaDisenioMetodologicoEnabled',
   ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO = 'peticionEvaluacionAyudaDisenioMetodologico',
+  ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION_ENABLED = 'peticionEvaluacionAyudaIntroduccionEnabled',
+  ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION = 'peticionEvaluacionAyudaIntroduccion',
   ETI_PETICION_EVALUACION_AYUDA_TAREAS_ENABLED = 'peticionEvaluacionAyudaTareasEnabled',
   ETI_PETICION_EVALUACION_AYUDA_TAREAS = 'peticionEvaluacionAyudaTareas',
   ETI_REP_ACTA_DOCX = 'rep-eti-acta-docx',
@@ -61,6 +65,7 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     [ConfigEti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED.description`) }],
     [ConfigEti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_INICIALIZAR_UNIDAD_VINCULACION_ENABLED.description`), disabled: true }],
     [ConfigEti.ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF`), options: this.getTiposUnidadVinculacion(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_TIPO_UNIDAD_VINCULACION_DEPARTAMENTO_REF.description`), disabled: true }],
+    [ConfigEti.ETI_PETICION_EVALUACION_INTRODUCCION_VISIBILITY, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_INTRODUCCION_VISIBILITY`), options: this.getFieldVisibilityValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_INTRODUCCION_VISIBILITY.description`) }],
     [ConfigEti.ETI_REP_ACTA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_ACTA_DOCX`), module: ConfigModule.CNF }],
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX`), module: ConfigModule.CNF }],
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX`), module: ConfigModule.CNF }],
@@ -82,6 +87,8 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_RESUMEN, { type: ConfigType.I18N_HTML, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_RESUMEN`), module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_RESUMEN.description`), disabled: true }],
     [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO_ENABLED.description`) }],
     [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO, { type: ConfigType.I18N_HTML, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO`), module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO.description`), disabled: true }],
+    [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION_ENABLED.description`), disabled: true }],
+    [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION, { type: ConfigType.I18N_HTML, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION`), module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION.description`), disabled: true }],
     [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_TAREAS_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_TAREAS_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_TAREAS_ENABLED.description`) }],
     [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_TAREAS, { type: ConfigType.I18N_HTML, label: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_TAREAS`), module: ConfigModule.ETI, description: marker(`adm.config.eti.ETI_PETICION_EVALUACION_AYUDA_TAREAS.description`), disabled: true }],
     // Límite exportación excel
@@ -120,6 +127,14 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
       [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_DISENIO_METODOLOGICO]
     ],
     [
+      ConfigEti.ETI_PETICION_EVALUACION_INTRODUCCION_VISIBILITY,
+      [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION_ENABLED]
+    ],
+    [
+      ConfigEti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION_ENABLED,
+      [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_INTRODUCCION]
+    ],
+    [
       ConfigEti.ETI_PETICION_EVALUACION_AYUDA_TAREAS_ENABLED,
       [ConfigEti.ETI_PETICION_EVALUACION_AYUDA_TAREAS]
     ],
@@ -141,7 +156,7 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     return this._unidadesGestion$;
   }
   // tslint:disable-next-line: variable-name
-  private _unidadesGestion$: Observable<IUnidadGestion[]>;
+  private readonly _unidadesGestion$: Observable<IUnidadGestion[]>;
 
   // Preserve original property order
   originalOrder = (a: KeyValue<ConfigEti, IConfigOptions>, b: KeyValue<ConfigEti, IConfigOptions>): number => {
@@ -177,7 +192,23 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
    * @param value valor persistido del parámetro.
    */
   onConfigValueChange(key: ConfigEti, value: string): void {
-    this.DEPENDENT_CONFIGS.get(key)?.forEach(dependent => this.setConfigDisabled(dependent, value !== 'true'));
+    this.DEPENDENT_CONFIGS.get(key)?.forEach(dependent => this.setConfigDisabled(dependent, !this.isConfigEnabled(key, value)));
+  }
+
+  /**
+   * Indica si el parámetro está habilitado según su valor: la visibilidad de un campo, si el campo está visible; el
+   * resto, si está activo.
+   *
+   * @param key clave del parámetro de configuración.
+   * @param value valor persistido del parámetro.
+   * @returns true si el parámetro está habilitado.
+   */
+  private isConfigEnabled(key: ConfigEti, value: string): boolean {
+    if (key === ConfigEti.ETI_PETICION_EVALUACION_INTRODUCCION_VISIBILITY) {
+      return value === FieldVisibility.OPTIONAL || value === FieldVisibility.REQUIRED;
+    }
+
+    return value === 'true';
   }
 
   /**
@@ -201,9 +232,21 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     );
   }
 
+  private getKeyValueListFromMap(enumLabelMap: Map<string, string>): Observable<KeyValue<string, string>[]> {
+    const keyValueList = Array.from(enumLabelMap.entries(), ([key, value]) => ({ key, value }));
+    return of(keyValueList);
+  }
+
+  private getFieldVisibilityValues(): Observable<KeyValue<string, string>[]> {
+    return this.getKeyValueListFromMap(FIELD_VISIBILITY_MAP);
+  }
+
   private getBooleanValues(): Observable<KeyValue<string, string>[]> {
     return of([{ key: 'true', value: marker('label.si') }, { key: 'false', value: marker('label.no') }]);
   }
 
-  protected setupI18N(): void { }
+  protected setupI18N(): void {
+    // Este componente no tiene textos que requieran resolución i18n en tiempo de ejecución.
+  }
+
 }

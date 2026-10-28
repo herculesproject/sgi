@@ -46,13 +46,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
-public class EvaluacionRepositoryTest extends BaseRepositoryTest {
+class EvaluacionRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private EvaluacionRepository repository;
 
   @Test
-  public void findAllActivasByConvocatoriaReunionId_WithPaging_ReturnsPage() throws Exception {
+  void findAllActivasByConvocatoriaReunionId_WithPaging_ReturnsPage() {
 
     // given: Datos existentes con convocatoriaReunionId = 1
 
@@ -109,7 +109,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  public void findAllActivasByConvocatoriaReunionId_WithPaging_ReturnsEmptyPage() throws Exception {
+  void findAllActivasByConvocatoriaReunionId_WithPaging_ReturnsEmptyPage() {
 
     // given: Sin datos existentes con convocatoriaReunionId = 2
 
@@ -166,7 +166,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  public void findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId_ReturnsList() throws Exception {
+  void findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId_ReturnsList() {
 
     // given: Datos existentes con convocatoriaReunionId = 1, tipoEvaluacionId= 1,
     // esRevMinima = true y activa.
@@ -213,13 +213,12 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
         tipoEvaluacion.getId(), Boolean.FALSE, c1.getId());
 
     // then: Se recuperan los datos correctamente
-    Assertions.assertThat(result.size()).isEqualTo(response.size());
+    Assertions.assertThat(result).hasSameSizeAs(response);
 
   }
 
   @Test
-  public void findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId_ReturnsEmptyList()
-      throws Exception {
+  void findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId_ReturnsEmptyList() {
 
     // given: Sin datos con convocatoriaReunionId = 1, tipoEvaluacionId= 1,
     // esRevMinima = true y activa.
@@ -265,12 +264,12 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
         tipoEvaluacion.getId(), Boolean.FALSE, c1.getId());
 
     // then: Se comprueba que no se recupera ningún registro
-    Assertions.assertThat(result.isEmpty()).isTrue();
+    Assertions.assertThat(result).isEmpty();
 
   }
 
   @Test
-  public void findFirstByMemoriaIdOrderByVersionDesc_ReturnsEvaluacion() throws Exception {
+  void findFirstByMemoriaIdOrderByVersionDesc_ReturnsEvaluacion() {
 
     // given: Datos con Memoria = 1 y Evaluacion activa.
 
@@ -315,7 +314,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  public void findFirstByMemoriaIdOrderByVersionDesc_ReturnsEmpty() throws Exception {
+  void findFirstByMemoriaIdOrderByVersionDesc_ReturnsEmpty() {
 
     // given: Datos con Memoria = 1 y Evaluacion activa.
 
@@ -499,7 +498,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", titulo,
         tipoActividad, tipoInvestigacionTutelada, false, fuenteFinanciacion, null, null, Instant.now(),
         Instant.now(), resumen, TipoValorSocial.ENSENIANZA_SUPERIOR, otroValorSocial, objetivos,
-        disMetodologico, Boolean.FALSE, "user-001", null, null, Boolean.TRUE);
+        disMetodologico, new HashSet<>(), Boolean.FALSE, "user-001", null, null, Boolean.TRUE);
   }
 
   /**

@@ -11,6 +11,7 @@ import { EtiSharedModule } from '../shared/eti-shared.module';
 import { PeticionEvaluacionListadoExportModalComponent } from './modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
 import { PeticionEvaluacionUnidadVinculacionModalComponent } from './modals/peticion-evaluacion-unidad-vinculacion-modal/peticion-evaluacion-unidad-vinculacion-modal.component';
 import { PeticionEvaluacionAsignacionTareasListadoExportService } from './peticion-evaluacion-asignacion-tareas-listado-export.service';
+import { PeticionEvaluacionDataResolver } from './peticion-evaluacion-data.resolver';
 import { PeticionEvaluacionEquipoInvestigadorListadoExportService } from './peticion-evaluacion-equipo-investigador-listado-export.service';
 import { PeticionEvaluacionUnidadesVinculacionComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-unidades-vinculacion/peticion-evaluacion-unidades-vinculacion.component';
 import { PeticionEvaluacionGeneralListadoExportService } from './peticion-evaluacion-general-listado-export.service';
@@ -19,8 +20,6 @@ import { PeticionEvaluacionListadoExportService } from './peticion-evaluacion-li
 import { PeticionEvaluacionListadoGesComponent } from './peticion-evaluacion-listado-ges/peticion-evaluacion-listado-ges.component';
 import { PeticionEvaluacionMemoriasListadoExportService } from './peticion-evaluacion-memorias-listado-export.service';
 import { PeticionEvaluacionUnidadVinculacionListadoExportService } from './peticion-evaluacion-unidad-vinculacion-listado-export.service';
-import { PeticionEvaluacionUnidadesVinculacionEnabledResolver } from './peticion-evaluacion-unidades-vinculacion-enabled.resolver';
-import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 
 @NgModule({
   declarations: [
@@ -48,8 +47,7 @@ import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
     PeticionEvaluacionGeneralListadoExportService,
     PeticionEvaluacionListadoExportService,
     PeticionEvaluacionMemoriasListadoExportService,
-    PeticionEvaluacionResolver,
-    PeticionEvaluacionUnidadesVinculacionEnabledResolver,
+    PeticionEvaluacionDataResolver,
     PeticionEvaluacionUnidadVinculacionListadoExportService
   ]
 })

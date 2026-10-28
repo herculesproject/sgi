@@ -64,4 +64,19 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="1.5.0-fix-configuracion-introduccion-defaults-null">
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_introduccion_visibility" value="HIDDEN" />
+      <where>peticion_evaluacion_introduccion_visibility IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_introduccion_enabled" valueBoolean="false" />
+      <where>peticion_evaluacion_ayuda_introduccion_enabled IS NULL</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="peticion_evaluacion_ayuda_introduccion" value="[]" />
+      <where>peticion_evaluacion_ayuda_introduccion IS NULL</where>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>

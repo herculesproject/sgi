@@ -16,11 +16,13 @@ import org.crue.hercules.sgi.eti.dto.sgp.VinculacionOutput;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.rep.MicroserviceCallException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
+import org.crue.hercules.sgi.eti.model.Configuracion.FieldVisibility;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionIntroduccion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
@@ -36,6 +38,8 @@ import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
@@ -339,6 +343,72 @@ class PeticionEvaluacionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  void create_WithVisibilityRequiredAndWithoutIntroduccion_ThrowsIllegalArgumentException() {
+    // given: el campo Introducción obligatorio y una petición sin Introducción
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacion(null, "PeticionEvaluacionNew");
+    mockConfiguracionIntroduccionVisibility(FieldVisibility.REQUIRED);
+
+    Assertions.assertThatThrownBy(
+        // when: se crea la petición
+        () -> peticionEvaluacionService.create(peticionEvaluacionNew))
+        // then: se lanza la excepción y no se guarda nada
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Introducción de Petición Evaluación no puede ser nulo");
+    BDDMockito.then(peticionEvaluacionRepository).should(Mockito.never())
+        .save(ArgumentMatchers.<PeticionEvaluacion>any());
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = FieldVisibility.class, names = { "HIDDEN", "OPTIONAL" })
+  void create_WithVisibilityNotRequiredAndWithoutIntroduccion_ReturnsPeticionEvaluacion(FieldVisibility visibility) {
+    // given: el campo Introducción oculto u opcional y una petición sin
+    // Introducción
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacion(null, "PeticionEvaluacionNew");
+    mockConfiguracionIntroduccionVisibility(visibility);
+    mockSavePeticionEvaluacion();
+
+    // when: se crea la petición
+    PeticionEvaluacion created = peticionEvaluacionService.create(peticionEvaluacionNew);
+
+    // then: se crea sin Introducción
+    Assertions.assertThat(created.getId()).isEqualTo(1L);
+    Assertions.assertThat(created.getIntroduccion()).isEmpty();
+  }
+
+  @Test
+  void create_WithVisibilityRequiredAndIntroduccion_ReturnsPeticionEvaluacion() {
+    // given: el campo Introducción obligatorio y una petición con Introducción
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacion(null, "PeticionEvaluacionNew");
+    peticionEvaluacionNew.setIntroduccion(generarMockIntroduccion("Introduccion"));
+    mockConfiguracionIntroduccionVisibility(FieldVisibility.REQUIRED);
+    mockSavePeticionEvaluacion();
+
+    // when: se crea la petición
+    PeticionEvaluacion created = peticionEvaluacionService.create(peticionEvaluacionNew);
+
+    // then: se crea con la Introducción
+    Assertions.assertThat(created.getId()).isEqualTo(1L);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getIntroduccion(), Language.ES))
+        .isEqualTo("Introduccion");
+  }
+
+  @Test
+  void createFromSolicitudCsp_WithVisibilityRequiredAndWithoutIntroduccion_ReturnsPeticionEvaluacion() {
+    // given: el campo Introducción obligatorio y una petición desde CSP sin
+    // Introducción
+    PeticionEvaluacion peticionEvaluacionNew = generarMockPeticionEvaluacionSolicitudCsp();
+    mockConfiguracionIntroduccionVisibility(FieldVisibility.REQUIRED);
+    mockSavePeticionEvaluacion();
+
+    // when: se crea la petición desde CSP
+    PeticionEvaluacion created = peticionEvaluacionService.createFromSolicitudCsp(peticionEvaluacionNew);
+
+    // then: se crea sin exigir la Introducción
+    Assertions.assertThat(created.getId()).isEqualTo(1L);
+    Assertions.assertThat(created.getIntroduccion()).isEmpty();
+  }
+
+  @Test
   void createFromSolicitudCsp_ReturnsPeticionEvaluacion() {
     // given: una petición desde CSP sin fecha de inicio y una petición previa en
     // el año actual
@@ -500,6 +570,42 @@ class PeticionEvaluacionServiceTest extends BaseServiceTest {
     Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluacionActualizado.getTitulo(), Language.ES))
         .isEqualTo("PeticionEvaluacion1 actualizada");
 
+  }
+
+  @Test
+  void update_WithIntroduccion_ReturnsPeticionEvaluacionWithIntroduccion() {
+    // given: una petición existente sin Introducción y los datos a actualizar con
+    // Introducción
+    PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
+    PeticionEvaluacion peticionEvaluacionActualizar = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
+    peticionEvaluacionActualizar.setIntroduccion(generarMockIntroduccion("Introduccion actualizada"));
+    mockConfiguracionIntroduccionVisibility(FieldVisibility.REQUIRED);
+    BDDMockito.given(peticionEvaluacionRepository.findById(1L)).willReturn(Optional.of(peticionEvaluacion));
+    BDDMockito.given(peticionEvaluacionRepository.save(ArgumentMatchers.<PeticionEvaluacion>any()))
+        .willAnswer(invocation -> invocation.getArgument(0, PeticionEvaluacion.class));
+
+    // when: se actualiza la petición
+    PeticionEvaluacion updated = peticionEvaluacionService.update(peticionEvaluacionActualizar);
+
+    // then: se guarda la Introducción recibida
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getIntroduccion(), Language.ES))
+        .isEqualTo("Introduccion actualizada");
+  }
+
+  @Test
+  void update_WithVisibilityRequiredAndWithoutIntroduccion_ThrowsIllegalArgumentException() {
+    // given: el campo Introducción obligatorio y una petición sin Introducción
+    PeticionEvaluacion peticionEvaluacionActualizar = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
+    mockConfiguracionIntroduccionVisibility(FieldVisibility.REQUIRED);
+
+    Assertions.assertThatThrownBy(
+        // when: se actualiza la petición
+        () -> peticionEvaluacionService.update(peticionEvaluacionActualizar))
+        // then: se lanza la excepción y no se guarda nada
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Introducción de Petición Evaluación no puede ser nulo");
+    BDDMockito.then(peticionEvaluacionRepository).should(Mockito.never())
+        .save(ArgumentMatchers.<PeticionEvaluacion>any());
   }
 
   @Test
@@ -779,6 +885,19 @@ class PeticionEvaluacionServiceTest extends BaseServiceTest {
     configuracion.setPeticionEvaluacionInicializarUnidadVinculacionEnabled(inicializacionEnabled);
     configuracion.setTipoUnidadVinculacionDepartamentoRef(tipoRef);
     BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+  }
+
+  private void mockConfiguracionIntroduccionVisibility(FieldVisibility visibility) {
+    Configuracion configuracion = new Configuracion();
+    configuracion.setId(1L);
+    configuracion.setPeticionEvaluacionIntroduccionVisibility(visibility);
+    BDDMockito.given(configuracionRepository.findFirstByOrderByIdAsc()).willReturn(Optional.of(configuracion));
+  }
+
+  private Set<PeticionEvaluacionIntroduccion> generarMockIntroduccion(String value) {
+    Set<PeticionEvaluacionIntroduccion> introduccion = new HashSet<>();
+    introduccion.add(new PeticionEvaluacionIntroduccion(Language.ES, value));
+    return introduccion;
   }
 
   private void mockSavePeticionEvaluacion() {

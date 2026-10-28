@@ -1,5 +1,5 @@
 <sgi-fragment title="{{'eti.peticion-evaluacion.tarea.asignacion' | translate}}">
-  <sgi-info-message *ngIf="ayudaTareas$ | async as ayuda" [html]="ayuda"></sgi-info-message>
+  <sgi-info-message *ngIf="ayudaTareas" [html]="ayudaTareas"></sgi-info-message>
   <div class="mat-elevation-z4">
     <table mat-table [dataSource]="datasource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
 

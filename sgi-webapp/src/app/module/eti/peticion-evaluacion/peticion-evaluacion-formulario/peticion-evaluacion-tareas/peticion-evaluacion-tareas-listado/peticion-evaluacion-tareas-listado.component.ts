@@ -19,8 +19,8 @@ import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionTareasModalComponent, PeticionEvaluacionTareasModalComponentData } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-tareas-listado.fragment';
@@ -52,7 +52,9 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
   msgParamEntity = {};
   textoDelete: string;
 
-  ayudaTareas$: Observable<string>;
+  get ayudaTareas(): string {
+    return this.languageService.getField(this.actionService.ayudas?.tareas)?.value ?? null;
+  }
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -73,10 +75,6 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
     this.displayedColumns = ['nombreCompleto', 'numReferencia', 'tarea',
       'formacionEspecifica', 'organismo', 'anio', 'acciones'];
-
-    this.ayudaTareas$ = combineLatest([this.actionService.ayudas$, this.languageService.languageChange$]).pipe(
-      map(([ayudas]) => this.languageService.getField(ayudas.tareas)?.value ?? null)
-    );
 
   }
 

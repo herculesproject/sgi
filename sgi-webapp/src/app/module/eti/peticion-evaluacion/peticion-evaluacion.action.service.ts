@@ -2,6 +2,7 @@ import { ComponentFactoryResolver, Injectable, Injector } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IChecklist } from '@core/models/eti/checklist';
+import { FieldVisibility } from '@core/models/eti/configuracion';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPeticionEvaluacionAyudas } from '@core/models/eti/peticion-evaluacion-ayudas';
@@ -12,7 +13,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
 import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
-import { ConfigService } from '@core/services/eti/config.service';
 import { ConfiguracionService } from '@core/services/eti/configuracion.service';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
@@ -33,14 +33,21 @@ import { FormlyConfig, FormlyFormBuilder } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of, throwError } from 'rxjs';
-import { concatMap, filter, map, mergeMap, shareReplay, switchMap, take, takeLast, tap } from 'rxjs/operators';
+import { concatMap, filter, map, mergeMap, switchMap, take, takeLast, tap } from 'rxjs/operators';
 import { MemoriaFormularioFragment } from '../memoria/memoria-formulario/memoria-formulario/memoria-formulario.fragment';
+import { PETICION_EVALUACION_DATA_KEY } from './peticion-evaluacion-data.resolver';
 import { EquipoInvestigadorListadoFragment } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.fragment';
 import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
 import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
 import { PeticionEvaluacionUnidadesVinculacionFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-unidades-vinculacion/peticion-evaluacion-unidades-vinculacion.fragment';
-import { PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY } from './peticion-evaluacion-unidades-vinculacion-enabled.resolver';
+
+export interface IPeticionEvaluacionData {
+  peticionEvaluacion: IPeticionEvaluacion;
+  isUnidadesVinculacionEnabled: boolean;
+  introduccionVisibility: FieldVisibility;
+  ayudas: IPeticionEvaluacionAyudas;
+}
 
 @Injectable()
 export class PeticionEvaluacionActionService extends ActionService {
@@ -54,9 +61,7 @@ export class PeticionEvaluacionActionService extends ActionService {
 
   public readonly: boolean;
 
-  /** Textos de ayuda de la solicitud de evaluación */
-  public readonly ayudas$: Observable<IPeticionEvaluacionAyudas>;
-
+  private readonly data: IPeticionEvaluacionData;
   private readonly peticionEvaluacion: IPeticionEvaluacion;
   private readonly datosGenerales: PeticionEvaluacionDatosGeneralesFragment;
   private readonly equipoInvestigadorListado: EquipoInvestigadorListadoFragment;
@@ -76,6 +81,16 @@ export class PeticionEvaluacionActionService extends ActionService {
 
   get isModuleInv(): boolean {
     return this.isInvestigador;
+  }
+
+  /** Textos de ayuda de la solicitud de evaluación */
+  get ayudas(): IPeticionEvaluacionAyudas {
+    return this.data?.ayudas;
+  }
+
+  /** Visibilidad del campo Introducción */
+  get introduccionVisibility(): FieldVisibility {
+    return this.data?.introduccionVisibility ?? FieldVisibility.HIDDEN;
   }
 
 
@@ -107,19 +122,18 @@ export class PeticionEvaluacionActionService extends ActionService {
     protected readonly router: Router,
     protected readonly languageService: LanguageService,
     protected readonly tipoDocumentoService: TipoDocumentoService,
-    protected readonly unidadVinculacionService: UnidadVinculacionService,
-    configService: ConfigService
+    protected readonly unidadVinculacionService: UnidadVinculacionService
   ) {
     super();
 
-    this.ayudas$ = configService.getPeticionEvaluacionAyudas().pipe(shareReplay(1));
+    this.data = route.snapshot.data[PETICION_EVALUACION_DATA_KEY];
 
     this.formlyFormBuilder = new FormlyFormBuilder(formlyConfig, componentFactoryResolver, injector);
 
     this.peticionEvaluacion = {} as IPeticionEvaluacion;
 
-    if (route.snapshot.data.peticionEvaluacion) {
-      this.peticionEvaluacion = route.snapshot.data.peticionEvaluacion;
+    if (this.data?.peticionEvaluacion) {
+      this.peticionEvaluacion = this.data.peticionEvaluacion;
       this.enableEdit();
       this.readonly = route.snapshot.data.readonly;
     }
@@ -143,7 +157,8 @@ export class PeticionEvaluacionActionService extends ActionService {
       this.checklist,
       this.personaService,
       this.configuracionService,
-      this.readonly
+      this.readonly,
+      this.introduccionVisibility
     );
     this.equipoInvestigadorListado = new EquipoInvestigadorListadoFragment(logger,
       this.peticionEvaluacion?.id, personaService, peticionEvaluacionService, sgiAuthService, datosAcademicosService, vinculacionService);
@@ -258,7 +273,7 @@ export class PeticionEvaluacionActionService extends ActionService {
   private isUnidadesVinculacionVisible(sgiAuthService: SgiAuthService): boolean {
     return !this.isInvestigador
       && !!this.peticionEvaluacion?.id
-      && !!this.route.snapshot.data[PETICION_EVALUACION_UNIDADES_VINCULACION_ENABLED_KEY]
+      && !!this.data?.isUnidadesVinculacionEnabled
       && sgiAuthService.hasAnyAuthorityForAnyUO(['ETI-PEV-V', 'ETI-PEV-E']);
   }
 

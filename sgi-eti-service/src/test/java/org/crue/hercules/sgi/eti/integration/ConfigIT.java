@@ -302,6 +302,149 @@ class ConfigIT extends BaseIT {
   }
 
   @Test
+  void get_WithParamIntroduccionVisibilityAndInvAuthority_Returns200() throws Exception {
+    // given: la configuración inicial y un usuario con solo autoridad de
+    // investigador
+
+    // when: se consulta la visibilidad del campo Introducción
+    final ResponseEntity<ConfigParamOutput> response = restTemplate.exchange(
+        CONFIG_CONTROLLER_BASE_PATH + PATH_NAME, HttpMethod.GET, buildRequest(null, "ETI-PEV-INV-C"),
+        ConfigParamOutput.class, "peticionEvaluacionIntroduccionVisibility");
+
+    // then: se devuelve la visibilidad por defecto
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getName()).isEqualTo("peticionEvaluacionIntroduccionVisibility");
+    Assertions.assertThat(response.getBody().getValue()).isEqualTo("HIDDEN");
+  }
+
+  @Test
+  void updateValue_WithIntroduccionVisibilityRequired_Returns200() throws Exception {
+    // given: la configuración inicial con el campo Introducción oculto
+
+    // when: se pone el campo Introducción como obligatorio
+    final ResponseEntity<ConfigParamOutput> response = updateValue("peticionEvaluacionIntroduccionVisibility",
+        "REQUIRED");
+
+    // then: se devuelve y se persiste la nueva visibilidad
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getValue()).isEqualTo("REQUIRED");
+    Assertions.assertThat(getValue("peticionEvaluacionIntroduccionVisibility")).isEqualTo("REQUIRED");
+  }
+
+  @Test
+  void updateValue_WithIntroduccionVisibilityDesconocida_Returns400() throws Exception {
+    // given: la configuración inicial con el campo Introducción oculto
+
+    // when: se intenta guardar una visibilidad desconocida
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + PATH_NAME,
+        HttpMethod.PATCH, buildRequest("FOO", "ADM-CNF-E"), String.class, "peticionEvaluacionIntroduccionVisibility");
+
+    // then: se devuelve error de petición y la visibilidad no cambia
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(response.getBody()).contains("urn:problem-type:bad-request")
+        .contains("peticionEvaluacionIntroduccionVisibility");
+    Assertions.assertThat(getValue("peticionEvaluacionIntroduccionVisibility")).isEqualTo("HIDDEN");
+  }
+
+  @Test
+  void updateValue_WithIntroduccionVisibilityWithoutBody_Returns400() throws Exception {
+    // given: la configuración inicial con el campo Introducción oculto
+
+    // when: se intenta guardar la visibilidad sin cuerpo
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + PATH_NAME,
+        HttpMethod.PATCH, buildRequest(null, "ADM-CNF-E"), String.class, "peticionEvaluacionIntroduccionVisibility");
+
+    // then: se devuelve error de petición y la visibilidad no cambia
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(response.getBody()).contains("urn:problem-type:bad-request")
+        .contains("peticionEvaluacionIntroduccionVisibility");
+    Assertions.assertThat(getValue("peticionEvaluacionIntroduccionVisibility")).isEqualTo("HIDDEN");
+  }
+
+  @Test
+  void updateValue_WithAyudaIntroduccionTexto_PersistsJsonValue() throws Exception {
+    // given: el campo Introducción visible y su ayuda habilitada
+    updateValue("peticionEvaluacionIntroduccionVisibility", "OPTIONAL");
+    updateValue("peticionEvaluacionAyudaIntroduccionEnabled", "true");
+
+    // when: se guarda el texto de ayuda de la Introducción
+    final ResponseEntity<ConfigParamOutput> response = updateValue("peticionEvaluacionAyudaIntroduccion",
+        TEXTO_AYUDA);
+
+    // then: se devuelve el texto y un investigador lo puede consultar
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getValue()).isEqualTo(TEXTO_AYUDA);
+    final ResponseEntity<ConfigParamOutput> responseInv = restTemplate.exchange(
+        CONFIG_CONTROLLER_BASE_PATH + PATH_NAME, HttpMethod.GET, buildRequest(null, "ETI-PEV-INV-ER"),
+        ConfigParamOutput.class, "peticionEvaluacionAyudaIntroduccion");
+    Assertions.assertThat(responseInv.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(responseInv.getBody().getValue()).isEqualTo(TEXTO_AYUDA);
+  }
+
+  @Test
+  void updateValue_WithAyudaIntroduccionFlagDisabled_ClearsTexto() throws Exception {
+    // given: el campo Introducción visible y su ayuda habilitada y con texto
+    updateValue("peticionEvaluacionIntroduccionVisibility", "OPTIONAL");
+    updateValue("peticionEvaluacionAyudaIntroduccionEnabled", "true");
+    updateValue("peticionEvaluacionAyudaIntroduccion", TEXTO_AYUDA);
+
+    // when: se deshabilita la ayuda
+    final ResponseEntity<ConfigParamOutput> response = updateValue("peticionEvaluacionAyudaIntroduccionEnabled",
+        "false");
+
+    // then: el texto queda vacío
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getValue()).isEqualTo("false");
+    Assertions.assertThat(getValue("peticionEvaluacionAyudaIntroduccion")).isEqualTo(EMPTY_LIST_VALUE);
+  }
+
+  @Test
+  void updateValue_WithIntroduccionHidden_DisablesAyudaIntroduccion() throws Exception {
+    // given: el campo Introducción visible y su ayuda habilitada y con texto
+    updateValue("peticionEvaluacionIntroduccionVisibility", "OPTIONAL");
+    updateValue("peticionEvaluacionAyudaIntroduccionEnabled", "true");
+    updateValue("peticionEvaluacionAyudaIntroduccion", TEXTO_AYUDA);
+
+    // when: se oculta el campo Introducción
+    final ResponseEntity<ConfigParamOutput> response = updateValue("peticionEvaluacionIntroduccionVisibility",
+        "HIDDEN");
+
+    // then: la ayuda queda deshabilitada y sin texto
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(getValue("peticionEvaluacionAyudaIntroduccionEnabled")).isEqualTo("false");
+    Assertions.assertThat(getValue("peticionEvaluacionAyudaIntroduccion")).isEqualTo(EMPTY_LIST_VALUE);
+  }
+
+  @Test
+  void updateValue_WithAyudaIntroduccionEnabledAndIntroduccionHidden_Returns400() throws Exception {
+    // given: la configuración inicial con el campo Introducción oculto
+
+    // when: se intenta habilitar la ayuda de la Introducción
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + PATH_NAME,
+        HttpMethod.PATCH, buildRequest("true", "ADM-CNF-E"), String.class,
+        "peticionEvaluacionAyudaIntroduccionEnabled");
+
+    // then: se devuelve error de petición y la ayuda sigue deshabilitada
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(getValue("peticionEvaluacionAyudaIntroduccionEnabled")).isEqualTo("false");
+  }
+
+  @Test
+  void updateValue_WithAyudaIntroduccionTextoAndFlagDisabled_Returns400() throws Exception {
+    // given: el campo Introducción visible y su ayuda deshabilitada
+    updateValue("peticionEvaluacionIntroduccionVisibility", "OPTIONAL");
+
+    // when: se intenta guardar el texto de ayuda
+    final ResponseEntity<String> response = restTemplate.exchange(CONFIG_CONTROLLER_BASE_PATH + PATH_NAME,
+        HttpMethod.PATCH, buildRequest(TEXTO_AYUDA, "ADM-CNF-E"), String.class,
+        "peticionEvaluacionAyudaIntroduccion");
+
+    // then: se devuelve error de petición y el texto no cambia
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assertions.assertThat(getValue("peticionEvaluacionAyudaIntroduccion")).isEqualTo(EMPTY_LIST_VALUE);
+  }
+
+  @Test
   void updateValue_WithoutAdminAuthority_Returns403() throws Exception {
     // given: un usuario de gestión sin autoridad de administración
 
