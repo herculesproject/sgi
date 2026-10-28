@@ -27,6 +27,7 @@
 - [ETI] Añadidos textos de ayuda configurables en los campos Fecha inicio, Resumen y Diseño metodológico y en el apartado Asignación de tareas de las Solicitudes de evaluación. ([#171](https://github.com/herculesproject/sgi/issues/171)).
 - Añadida la variable de configuración global *Habilitar alta de persona para perfil de investigación*, que permite habilitar el botón Solicitar alta de Persona en el buscador de personas del perfil de investigación. ([#169](https://github.com/herculesproject/sgi/issues/169)).
 - [ETI] Añadido el tipo de actividad *Proyecto de investigación y docencia* en las Solicitudes de evaluación, desactivado por defecto. ([#174](https://github.com/herculesproject/sgi/issues/174)).
+- [ETI] Añadido el campo Introducción en Datos generales de las Solicitudes de evaluación, configurable como oculto, opcional u obligatorio y con texto de ayuda configurable. ([#172](https://github.com/herculesproject/sgi/issues/172)).
 
 ### Changed
 

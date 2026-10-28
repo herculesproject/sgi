@@ -1,6 +1,6 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { IChecklist } from '@core/models/eti/checklist';
-import { IConfiguracion } from '@core/models/eti/configuracion';
+import { FieldVisibility, IConfiguracion } from '@core/models/eti/configuracion';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IPeticionEvaluacion, TipoValorSocial } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
@@ -18,7 +18,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeticionEvaluacion> {
 
   private peticionEvaluacion: IPeticionEvaluacion;
-  private checklist: IChecklist;
+  private readonly checklist: IChecklist;
   public readonly: boolean;
   public isTipoInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -30,16 +30,17 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   public duracionProyectoEvaluacion$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
     key: number,
-    private service: PeticionEvaluacionService,
+    private readonly service: PeticionEvaluacionService,
     sgiAuthService: SgiAuthService,
-    private checklistService: ChecklistService,
+    private readonly checklistService: ChecklistService,
     private readonly solicitudService: SolicitudService,
     checklist: IChecklist,
-    private personaService: PersonaService,
-    private configuracionService: ConfiguracionService,
+    private readonly personaService: PersonaService,
+    private readonly configuracionService: ConfiguracionService,
     readonly: boolean,
+    private readonly introduccionVisibility: FieldVisibility
   ) {
     super(key);
     this.peticionEvaluacion = {
@@ -69,6 +70,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       otroValorSocial: [{ value: [], disabled: this.readonly }],
       objetivosCientificos: [{ value: [], disabled: this.readonly }, [I18nValidators.required, I18nValidators.maxLength(4000)]],
       disenioMetodologico: [{ value: [], disabled: this.readonly }, [I18nValidators.required, I18nValidators.maxLength(4000)]],
+      introduccion: [{ value: [], disabled: this.readonly }, this.getIntroduccionValidators()],
       tieneFondosPropios: [{ value: '', disabled: this.readonly }],
       tutor: [{ value: null, disabled: this.readonly }]
     });
@@ -96,7 +98,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     return this.service.findById(key).pipe(
       switchMap((value: IPeticionEvaluacion) => {
         this.peticionEvaluacion = value;
-        this.isTipoInvestigacionTutelada$.next(this.peticionEvaluacion.tipoInvestigacionTutelada ? true : false);
+        this.isTipoInvestigacionTutelada$.next(!!this.peticionEvaluacion.tipoInvestigacionTutelada);
         this.solicitantePeticionEvaluacion$.next(value.solicitante);
         return of(value);
       }),
@@ -153,6 +155,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       otroValorSocial: value.otroValorSocial,
       objetivosCientificos: value.objetivos,
       disenioMetodologico: value.disMetodologico,
+      introduccion: value.introduccion,
       tutor: value.tutor
     };
   }
@@ -187,6 +190,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     }
     this.peticionEvaluacion.objetivos = form.objetivosCientificos;
     this.peticionEvaluacion.disMetodologico = form.disenioMetodologico;
+    this.peticionEvaluacion.introduccion = form.introduccion;
     if (this.isTipoInvestigacionTutelada$.value) {
       this.peticionEvaluacion.tipoInvestigacionTutelada = form.tipoInvestigacionTutelada;
       this.peticionEvaluacion.tutor = form.tutor;
@@ -261,6 +265,23 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     form.otroValorSocial.updateValueAndValidity();
   }
 
+  /**
+   * Obtiene los validadores del campo Introducción según su visibilidad. Con {@link FieldVisibility.HIDDEN} el
+   * control no se deshabilita, para que se envíe el valor guardado al actualizar, pero no se valida.
+   *
+   * @returns los validadores del campo Introducción.
+   */
+  private getIntroduccionValidators(): ValidatorFn[] {
+    switch (this.introduccionVisibility) {
+      case FieldVisibility.REQUIRED:
+        return [I18nValidators.required, I18nValidators.maxLength(8000)];
+      case FieldVisibility.OPTIONAL:
+        return [I18nValidators.maxLength(8000)];
+      default:
+        return [];
+    }
+  }
+
   private addTieneFondosPropiosValidations(value: string) {
     const form = this.getFormGroup().controls;
     if (!this.readonly) {
@@ -274,8 +295,8 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   }
 
   /**
- * Carga la variable de configuración duracionProyectoEvaluacion
- */
+   * Carga la variable de configuración duracionProyectoEvaluacion
+   */
   private loadDuracionProyectoEvaluacion() {
     this.subscriptions.push(this.configuracionService.getConfiguracion().subscribe(
       (configuracion: IConfiguracion) => {

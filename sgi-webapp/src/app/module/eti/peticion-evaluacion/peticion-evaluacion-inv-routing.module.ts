@@ -9,6 +9,7 @@ import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { PeticionEvaluacionCrearComponent } from './peticion-evaluacion-crear/peticion-evaluacion-crear.component';
+import { PeticionEvaluacionDataResolver, PETICION_EVALUACION_DATA_KEY } from './peticion-evaluacion-data.resolver';
 import { PeticionEvaluacionEditarComponent } from './peticion-evaluacion-editar/peticion-evaluacion-editar.component';
 import { EquipoInvestigadorListadoComponent } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.component';
 import { MemoriasListadoComponent } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.component';
@@ -16,7 +17,6 @@ import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion
 import { PeticionEvaluacionTareasListadoComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.component';
 import { PeticionEvaluacionListadoInvComponent } from './peticion-evaluacion-listado-inv/peticion-evaluacion-listado-inv.component';
 import { PETICION_EVALUACION_ROUTE_NAMES } from './peticion-evaluacion-route-names';
-import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 
 const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
 const MSG_NEW_TITLE = marker('title.new.entity');
@@ -39,6 +39,9 @@ const routes: SgiRoutes = [
     component: PeticionEvaluacionCrearComponent,
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
+    resolve: {
+      [PETICION_EVALUACION_DATA_KEY]: PeticionEvaluacionDataResolver
+    },
     data: {
       title: MSG_NEW_TITLE,
       titleParams: {
@@ -70,7 +73,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     resolve: {
-      peticionEvaluacion: PeticionEvaluacionResolver
+      [PETICION_EVALUACION_DATA_KEY]: PeticionEvaluacionDataResolver
     },
     data: {
       title: PETICION_EVALUACION_KEY,

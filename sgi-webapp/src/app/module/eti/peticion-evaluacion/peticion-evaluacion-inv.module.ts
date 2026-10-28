@@ -9,6 +9,7 @@ import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { EtiSharedModule } from '../shared/eti-shared.module';
 import { PeticionEvaluacionAsignacionTareasListadoExportService } from './peticion-evaluacion-asignacion-tareas-listado-export.service';
 import { PeticionEvaluacionCrearComponent } from './peticion-evaluacion-crear/peticion-evaluacion-crear.component';
+import { PeticionEvaluacionDataResolver } from './peticion-evaluacion-data.resolver';
 import { PeticionEvaluacionEditarComponent } from './peticion-evaluacion-editar/peticion-evaluacion-editar.component';
 import { PeticionEvaluacionEquipoInvestigadorListadoExportService } from './peticion-evaluacion-equipo-investigador-listado-export.service';
 import { EquipoInvestigadorCrearModalComponent } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-crear-modal/equipo-investigador-crear-modal.component';
@@ -23,7 +24,6 @@ import { PeticionEvaluacionListadoExportService } from './peticion-evaluacion-li
 import { PeticionEvaluacionListadoInvComponent } from './peticion-evaluacion-listado-inv/peticion-evaluacion-listado-inv.component';
 import { PeticionEvaluacionMemoriasListadoExportService } from './peticion-evaluacion-memorias-listado-export.service';
 import { PeticionEvaluacionUnidadVinculacionListadoExportService } from './peticion-evaluacion-unidad-vinculacion-listado-export.service';
-import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 
 @NgModule({
   declarations: [
@@ -50,7 +50,7 @@ import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
     EtiSharedModule
   ],
   providers: [
-    PeticionEvaluacionResolver,
+    PeticionEvaluacionDataResolver,
     PeticionEvaluacionListadoExportService,
     PeticionEvaluacionGeneralListadoExportService,
     PeticionEvaluacionAsignacionTareasListadoExportService,

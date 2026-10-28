@@ -5,8 +5,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { FieldVisibility } from '@core/models/eti/configuracion';
 import { ESTADO_FINANCIACION_MAP, IPeticionEvaluacion, TIPO_VALOR_SOCIAL_MAP } from '@core/models/eti/peticion-evaluacion';
-import { IPeticionEvaluacionAyudas } from '@core/models/eti/peticion-evaluacion-ayudas';
 import { ITipoActividad, TIPO_ACTIVIDAD_MAP } from '@core/models/eti/tipo-actividad';
 import { ITipoInvestigacionTutelada, TIPO_INVESTIGACION_TUTELADA_MAP } from '@core/models/eti/tipo-investigacion-tutelada';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -16,7 +16,7 @@ import { TipoInvestigacionTuteladaService } from '@core/services/eti/tipo-invest
 import { LanguageService } from '@core/services/language.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
@@ -31,6 +31,7 @@ const PETICION_EVALUACION_RESUMEN_KEY = marker('eti.peticion-evaluacion.resumen'
 const PETICION_EVALUACION_VALOR_SOCIAL_KEY = marker('eti.peticion-evaluacion.valor-social');
 const PETICION_EVALUACION_OBJETIVO_CIENTIFICO_KEY = marker('eti.peticion-evaluacion.objetivo-cientifico');
 const PETICION_EVALUACION_DISENIO_METODOLOGICO_KEY = marker('eti.peticion-evaluacion.disenio-metodologico');
+const PETICION_EVALUACION_INTRODUCCION_KEY = marker('eti.peticion-evaluacion.introduccion');
 const PETICION_EVALUACION_TIPO_ACTIVIDAD_KEY = marker('eti.peticion-evaluacion.tipo-actividad');
 const PETICION_EVALUACION_TIPO_INVESTIGACION_TUTELADA_KEY = marker('eti.peticion-evaluacion.tipo-investigacion-tutelada');
 const PETICION_EVALUACION_EXISTE_FINANCIACION_KEY = marker('eti.peticion-evaluacion.existe-financiacion');
@@ -58,10 +59,6 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   tipoInvestigacionTuteladas$: Observable<ITipoInvestigacionTutelada[]>;
   tipoActividades$: Observable<ITipoActividad[]>;
 
-  ayudaFechaInicio$: Observable<string>;
-  ayudaResumen$: Observable<string>;
-  ayudaDisenioMetodologico$: Observable<string>;
-
   isInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   peticionEvaluacionFragment: PeticionEvaluacionDatosGeneralesFragment;
 
@@ -72,6 +69,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   msgParamValorSocialEntity = {};
   msgParamObjetivoCientificoEntity = {};
   msgParamDisenioMetodologicoEntity = {};
+  msgParamIntroduccionEntity = {};
   msgParamTituloEntity = {};
   msgParamCodigoEntity = {};
   msgParamTipoActividadEntity = {};
@@ -90,6 +88,30 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
 
   get TIPO_VALOR_SOCIAL_MAP() {
     return TIPO_VALOR_SOCIAL_MAP;
+  }
+
+  get FieldVisibility(): typeof FieldVisibility {
+    return FieldVisibility;
+  }
+
+  get introduccionVisibility(): FieldVisibility {
+    return this.actionService.introduccionVisibility;
+  }
+
+  get ayudaFechaInicio(): string {
+    return this.getAyuda(this.actionService.ayudas?.fechaInicio);
+  }
+
+  get ayudaResumen(): string {
+    return this.getAyuda(this.actionService.ayudas?.resumen);
+  }
+
+  get ayudaDisenioMetodologico(): string {
+    return this.getAyuda(this.actionService.ayudas?.disenioMetodologico);
+  }
+
+  get ayudaIntroduccion(): string {
+    return this.getAyuda(this.actionService.ayudas?.introduccion);
   }
 
   get tipoColectivoTutor() {
@@ -144,10 +166,6 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
 
     this.tipoInvestigacionTuteladas$ = this.tipoInvestigacionTuteladaService.findAll().pipe(
       map(response => response.items));
-
-    this.ayudaFechaInicio$ = this.getAyuda(ayudas => ayudas.fechaInicio);
-    this.ayudaResumen$ = this.getAyuda(ayudas => ayudas.resumen);
-    this.ayudaDisenioMetodologico$ = this.getAyuda(ayudas => ayudas.disenioMetodologico);
   }
 
   ngOnInit(): void {
@@ -204,6 +222,11 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
       PETICION_EVALUACION_DISENIO_METODOLOGICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamDisenioMetodologicoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
+
+    this.suscripciones.push(this.translate.get(
+      PETICION_EVALUACION_INTRODUCCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamIntroduccionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
     this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_TIPO_ACTIVIDAD_KEY,
@@ -265,15 +288,13 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   }
 
   /**
-   * Obtiene el texto de una ayuda.
+   * Obtiene el texto de una ayuda en el idioma actual.
    *
-   * @param ayudaSelector función que obtiene la ayuda de los textos de ayuda de la solicitud de evaluación.
+   * @param ayuda texto de la ayuda en cada idioma.
    * @returns el texto de la ayuda o null si no se muestra.
    */
-  private getAyuda(ayudaSelector: (ayudas: IPeticionEvaluacionAyudas) => I18nFieldValue[]): Observable<string> {
-    return combineLatest([this.actionService.ayudas$, this.languageService.languageChange$]).pipe(
-      map(([ayudas]) => this.languageService.getField(ayudaSelector(ayudas))?.value ?? null)
-    );
+  private getAyuda(ayuda: I18nFieldValue[]): string {
+    return this.languageService.getField(ayuda)?.value ?? null;
   }
 
 }

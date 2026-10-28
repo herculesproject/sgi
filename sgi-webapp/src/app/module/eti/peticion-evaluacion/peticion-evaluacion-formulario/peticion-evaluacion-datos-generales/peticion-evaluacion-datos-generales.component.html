@@ -134,7 +134,7 @@
       <mat-form-field fxFlex="28%">
         <mat-label>{{'eti.peticion-evaluacion.fecha-inicio'| translate}}</mat-label>
         <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
-        <sgi-field-info-html matSuffix [html]="ayudaFechaInicio$ | async"></sgi-field-info-html>
+        <sgi-field-info-html matSuffix [html]="ayudaFechaInicio"></sgi-field-info-html>
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaInicio>
         </mat-datepicker>
@@ -190,7 +190,7 @@
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.resumen' | translate}}<span
           [class]="(formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.required) ? 'warn' : ''">
           *</span>
-        <sgi-field-info-html [html]="ayudaResumen$ | async"></sgi-field-info-html>
+        <sgi-field-info-html [html]="ayudaResumen"></sgi-field-info-html>
       </span>
       <sgi-i18n-ckeditor #resumen
         [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''"
@@ -229,11 +229,11 @@
       </span>
     </div>
     <!-- Diseño metodológico -->
-    <div fxLayout="column" fxFlex="99" fxLayoutGap="10px">
+    <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}<span
           [class]="(formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.required) ? 'warn' : ''">
           *</span>
-        <sgi-field-info-html [html]="ayudaDisenioMetodologico$ | async"></sgi-field-info-html>
+        <sgi-field-info-html [html]="ayudaDisenioMetodologico"></sgi-field-info-html>
       </span>
       <sgi-i18n-ckeditor #disenioMetodologico
         [class]="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors ? 'ck-editor-border-warn' : ''"
@@ -248,6 +248,29 @@
       <span class="ckeditor-error"
         *ngIf="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.maxlength">
         {{ 'error.maxlength.entity' | translate:msgParamDisenioMetodologicoEntity }}
+      </span>
+    </div>
+    <!-- Introducción -->
+    <div *ngIf="introduccionVisibility !== FieldVisibility.HIDDEN" fxLayout="column" fxFlex="100" fxLayoutGap="10px">
+      <span class="ckeditor-label">{{'eti.peticion-evaluacion.introduccion' | translate}}<span
+          *ngIf="introduccionVisibility === FieldVisibility.REQUIRED"
+          [class]="(formGroup.controls.introduccion.touched && formGroup.controls.introduccion.errors?.required) ? 'warn' : ''">
+          *</span>
+        <sgi-field-info-html [html]="ayudaIntroduccion"></sgi-field-info-html>
+      </span>
+      <sgi-i18n-ckeditor #introduccion
+        [class]="formGroup.controls.introduccion.touched && formGroup.controls.introduccion.errors ? 'ck-editor-border-warn' : ''"
+        formControlName="introduccion" [required]="introduccionVisibility === FieldVisibility.REQUIRED">
+      </sgi-i18n-ckeditor>
+      <span *ngIf="!formGroup.controls.introduccion.errors" class="ckeditor-hint">{{introduccion.editingValue?.length}}
+        / 8000</span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.introduccion.touched && formGroup.controls.introduccion.errors?.required">
+        {{'error.required.entity' | translate:msgParamIntroduccionEntity}}
+      </span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.introduccion.touched && formGroup.controls.introduccion.errors?.maxlength">
+        {{ 'error.maxlength.entity' | translate:msgParamIntroduccionEntity }}
       </span>
     </div>
   </form>

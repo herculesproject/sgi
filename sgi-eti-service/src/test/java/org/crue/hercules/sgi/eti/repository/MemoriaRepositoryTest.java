@@ -32,13 +32,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
-public class MemoriaRepositoryTest extends BaseRepositoryTest {
+class MemoriaRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private MemoriaRepository repository;
 
   @Test
-  public void findByIdAndActivoTrue_ReturnsData() throws Exception {
+  void findByIdAndActivoTrue_ReturnsData() {
 
     // given: Datos existentes para la memoria activa
 
@@ -64,7 +64,7 @@ public class MemoriaRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  public void findByComiteIdAndActivoTrueAndComiteActivoTrue_ReturnsData() throws Exception {
+  void findByComiteIdAndActivoTrueAndComiteActivoTrue_ReturnsData() {
 
     // given: Datos existentes para la memoria activa
 
@@ -162,7 +162,7 @@ public class MemoriaRepositoryTest extends BaseRepositoryTest {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", titulo,
         tipoActividad, tipoInvestigacionTutelada, false, fuenteFinanciacion, null, null, Instant.now(),
         Instant.now(), resumen, TipoValorSocial.ENSENIANZA_SUPERIOR, otroValorSocial, objetivos,
-        disMetodologico, Boolean.FALSE, "user-001", null, null, Boolean.TRUE);
+        disMetodologico, new HashSet<>(), Boolean.FALSE, "user-001", null, null, Boolean.TRUE);
   }
 
   /**

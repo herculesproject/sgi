@@ -6,9 +6,10 @@ import java.time.Instant;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
-import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionFuenteFinanciacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionIntroduccion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
@@ -68,6 +69,9 @@ public class PeticionEvaluacionWithIsEliminable implements Serializable {
   /** Diseño metodológico */
   private Collection<PeticionEvaluacionDisMetodologico> disMetodologico;
 
+  /** Introducción */
+  private Collection<PeticionEvaluacionIntroduccion> introduccion;
+
   /** Tiene fondos propios */
   private Boolean tieneFondosPropios;
 
@@ -92,6 +96,8 @@ public class PeticionEvaluacionWithIsEliminable implements Serializable {
     this.fechaFin = peticionEvaluacion.getFechaFin();
     this.fechaInicio = peticionEvaluacion.getFechaInicio();
     this.fuenteFinanciacion = peticionEvaluacion.getFuenteFinanciacion();
+    this.importeFinanciacion = peticionEvaluacion.getImporteFinanciacion();
+    this.introduccion = peticionEvaluacion.getIntroduccion();
     this.objetivos = peticionEvaluacion.getObjetivos();
     this.personaRef = peticionEvaluacion.getPersonaRef();
     this.resumen = peticionEvaluacion.getResumen();
@@ -101,6 +107,5 @@ public class PeticionEvaluacionWithIsEliminable implements Serializable {
     this.tipoInvestigacionTutelada = peticionEvaluacion.getTipoInvestigacionTutelada();
     this.titulo = peticionEvaluacion.getTitulo();
     this.valorSocial = peticionEvaluacion.getValorSocial();
-    this.importeFinanciacion = peticionEvaluacion.getImporteFinanciacion();
   }
 }

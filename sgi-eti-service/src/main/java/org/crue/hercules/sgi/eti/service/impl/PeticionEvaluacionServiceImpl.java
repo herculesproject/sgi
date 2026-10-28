@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.dto.sgo.UnidadVinculacionOutput;
 import org.crue.hercules.sgi.eti.dto.sgp.VinculacionOutput;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
+import org.crue.hercules.sgi.eti.model.Configuracion.FieldVisibility;
 import org.crue.hercules.sgi.eti.model.Configuracion.Param;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -53,6 +54,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
   private static final String MSG_FIELD_FECHA_INICIO = "fechaInicio";
   private static final String MSG_FIELD_FUENTE_FINANCIACION = "fuenteFinanciacion";
   private static final String MSG_FIELD_IMPORTE_FINANCIACION = "importeFinanciacion";
+  private static final String MSG_FIELD_INTRODUCCION = "introduccion";
   private static final String MSG_FIELD_OTRO_VALOR_SOCIAL = "otroValorSocial";
   private static final String MSG_FIELD_TITULO = "titulo";
 
@@ -117,6 +119,8 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       AssertHelper.i18nFieldNotNull(peticionEvaluacion.getOtroValorSocial(), PeticionEvaluacion.class,
           MSG_FIELD_OTRO_VALOR_SOCIAL);
     }
+
+    assertIntroduccionPresentIfRequired(peticionEvaluacion);
 
     PeticionEvaluacion saved = peticionEvaluacionRepository.save(peticionEvaluacion);
     initializeUnidadVinculacionFromDepartamento(saved);
@@ -284,26 +288,29 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
           MSG_FIELD_OTRO_VALOR_SOCIAL);
     }
 
+    assertIntroduccionPresentIfRequired(peticionEvaluacionActualizar);
+
     return peticionEvaluacionRepository.findById(peticionEvaluacionActualizar.getId()).map(peticionEvaluacion -> {
+      peticionEvaluacion.setActivo(peticionEvaluacionActualizar.getActivo());
       peticionEvaluacion.setCodigo(peticionEvaluacionActualizar.getCodigo());
       peticionEvaluacion.setDisMetodologico(peticionEvaluacionActualizar.getDisMetodologico());
+      peticionEvaluacion.setEstadoFinanciacion(peticionEvaluacionActualizar.getEstadoFinanciacion());
+      peticionEvaluacion.setExisteFinanciacion(peticionEvaluacionActualizar.getExisteFinanciacion());
       peticionEvaluacion.setFechaFin(peticionEvaluacionActualizar.getFechaFin());
       peticionEvaluacion.setFechaInicio(peticionEvaluacionActualizar.getFechaInicio());
       peticionEvaluacion.setFuenteFinanciacion(peticionEvaluacionActualizar.getFuenteFinanciacion());
+      peticionEvaluacion.setImporteFinanciacion(peticionEvaluacionActualizar.getImporteFinanciacion());
+      peticionEvaluacion.setIntroduccion(peticionEvaluacionActualizar.getIntroduccion());
       peticionEvaluacion.setObjetivos(peticionEvaluacionActualizar.getObjetivos());
+      peticionEvaluacion.setOtroValorSocial(peticionEvaluacionActualizar.getOtroValorSocial());
+      peticionEvaluacion.setPersonaRef(peticionEvaluacionActualizar.getPersonaRef());
       peticionEvaluacion.setResumen(peticionEvaluacionActualizar.getResumen());
       peticionEvaluacion.setTieneFondosPropios(peticionEvaluacionActualizar.getTieneFondosPropios());
       peticionEvaluacion.setTipoActividad(peticionEvaluacionActualizar.getTipoActividad());
       peticionEvaluacion.setTipoInvestigacionTutelada(peticionEvaluacionActualizar.getTipoInvestigacionTutelada());
       peticionEvaluacion.setTitulo(peticionEvaluacionActualizar.getTitulo());
-      peticionEvaluacion.setPersonaRef(peticionEvaluacionActualizar.getPersonaRef());
-      peticionEvaluacion.setValorSocial(peticionEvaluacionActualizar.getValorSocial());
-      peticionEvaluacion.setOtroValorSocial(peticionEvaluacionActualizar.getOtroValorSocial());
-      peticionEvaluacion.setActivo(peticionEvaluacionActualizar.getActivo());
-      peticionEvaluacion.setExisteFinanciacion(peticionEvaluacionActualizar.getExisteFinanciacion());
-      peticionEvaluacion.setEstadoFinanciacion(peticionEvaluacionActualizar.getEstadoFinanciacion());
-      peticionEvaluacion.setImporteFinanciacion(peticionEvaluacionActualizar.getImporteFinanciacion());
       peticionEvaluacion.setTutorRef(peticionEvaluacionActualizar.getTutorRef());
+      peticionEvaluacion.setValorSocial(peticionEvaluacionActualizar.getValorSocial());
 
       PeticionEvaluacion returnValue = peticionEvaluacionRepository.save(peticionEvaluacion);
       log.debug("update(PeticionEvaluacion peticionEvaluacionActualizar) - end");
@@ -396,6 +403,24 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     log.debug(
         "isPeticionWithPersonaRefCreadorPeticionEvaluacionOrResponsableMemoria(String personaRef, Long idPeticionEvaluacion) - end");
     return returnValue.hasContent();
+  }
+
+  /**
+   * Comprueba que la {@link PeticionEvaluacion} tiene
+   * {@link PeticionEvaluacion#introduccion} si el campo está configurado como
+   * obligatorio.
+   *
+   * @param peticionEvaluacion una {@link PeticionEvaluacion}.
+   * @throws IllegalArgumentException si el campo Introducción es obligatorio y
+   *                                  no tiene valor.
+   */
+  private void assertIntroduccionPresentIfRequired(PeticionEvaluacion peticionEvaluacion) {
+    Configuracion configuracion = configuracionRepository.findFirstByOrderByIdAsc().orElse(null);
+    if (configuracion != null
+        && configuracion.getPeticionEvaluacionIntroduccionVisibility() == FieldVisibility.REQUIRED) {
+      AssertHelper.i18nFieldNotNull(peticionEvaluacion.getIntroduccion(), PeticionEvaluacion.class,
+          MSG_FIELD_INTRODUCCION);
+    }
   }
 
   /**
