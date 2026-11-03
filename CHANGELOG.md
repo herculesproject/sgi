@@ -47,6 +47,7 @@
 - Corregido que con un valor seleccionado en los buscadores de personas o empresas, la página podía quedar sobrecargada y los desplegables de sugerencias de los buscadores tardaban en aparecer o no aparecían (detectado en las solicitudes de autorización de proyecto externo). ([#186](https://github.com/herculesproject/sgi/issues/186)).
 - [CSP] Corregida la pantalla de clasificación de gastos de ejecución económica, que no mostraba ningún gasto cuando las anualidades son obligatorias en la integración con el SGE y no aplicaba el filtro por fecha del gasto. ([#189](https://github.com/herculesproject/sgi/issues/189)).
 - [CSP] Corregido que en los apartados de ejecución económica el filtro de anualidades apareciese vacío cuando las anualidades no son obligatorias y alguno de los proyectos relacionados tiene una anualidad genérica en el presupuesto. ([#189](https://github.com/herculesproject/sgi/issues/189)).
+- [CSP] Corregido que la exportación de proyectos fallaba por permiso denegado a los usuarios con permisos de proyectos pero sin permisos de gestión del catálogo, cuando el proyecto tenía régimen de concurrencia o área temática. ([#193](https://github.com/herculesproject/sgi/issues/193)).
 
 ## 1.4.0 (2026-09-17)
 
