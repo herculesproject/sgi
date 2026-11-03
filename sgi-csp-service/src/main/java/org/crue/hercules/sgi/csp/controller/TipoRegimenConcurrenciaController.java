@@ -111,7 +111,7 @@ public class TipoRegimenConcurrenciaController {
    * @return {@link TipoRegimenConcurrencia} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TRCO-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-TRCO-E', 'CSP-PRO-V', 'CSP-PRO-E', 'CSP-PRO-C')")
   public TipoRegimenConcurrenciaOutput findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     TipoRegimenConcurrencia returnValue = service.findById(id);

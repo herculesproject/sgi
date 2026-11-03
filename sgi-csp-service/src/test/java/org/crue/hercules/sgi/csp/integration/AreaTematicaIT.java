@@ -13,6 +13,8 @@ import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -42,9 +44,16 @@ class AreaTematicaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-V", "CSP-CON-C",
         "CSP-CON-INV-V", "CSP-AREA-C", "CSP-AREA-E", "CSP-AREA-R")));
 
-    HttpEntity<AreaTematica> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
+  }
 
+  private HttpEntity<AreaTematica> buildRequestWithRoles(String... roles) throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", roles)));
+
+    return new HttpEntity<>(null, headers);
   }
 
   @Sql
@@ -147,6 +156,51 @@ class AreaTematicaIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getDescripcion(), Language.ES))
         .as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(areaTematica.getActivo()).as("getActivo()").isTrue();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/area_tematica.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @ParameterizedTest
+  @ValueSource(strings = { "CSP-PRO-V", "CSP-PRO-V_1", "CSP-PRO-E_1" })
+  void findById_WithAuthorityProyecto_ReturnsAreaTematica(String authority) throws Exception {
+    // given: AreaTematica existente y token solo con una autoridad de proyectos
+    Long id = 1L;
+
+    // when: findById
+    final ResponseEntity<AreaTematica> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequestWithRoles(authority),
+        AreaTematica.class, id);
+
+    // then: 200 OK con el AreaTematica solicitado
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getId()).as("getId()").isEqualTo(id);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(response.getBody().getNombre(), Language.ES))
+        .as("getNombre()").isEqualTo("Area Tematica 001");
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/area_tematica.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findById_WithoutAuthority_ReturnsForbidden() throws Exception {
+    // given: AreaTematica existente y token solo con CSP-PRO-INV-VR, sin ninguna
+    // autoridad admitida
+    Long id = 1L;
+
+    // when: findById
+    final ResponseEntity<AreaTematica> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequestWithRoles("CSP-PRO-INV-VR"),
+        AreaTematica.class, id);
+
+    // then: 403 Forbidden
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Sql

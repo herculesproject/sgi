@@ -9,6 +9,8 @@ import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -39,8 +41,16 @@ class TipoRegimenConcurrenciaIT extends BaseIT {
             tokenBuilder.buildToken("user", "AUTH", "CSP-TRCO-C", "CSP-TRCO-V", "CSP-TRCO-E", "CSP-TRCO-R",
                 "CSP-CON-C")));
 
-    HttpEntity<TipoRegimenConcurrencia> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
+  }
+
+  private HttpEntity<TipoRegimenConcurrencia> buildRequestWithRoles(String... roles) throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", roles)));
+
+    return new HttpEntity<>(null, headers);
   }
 
   @Sql
@@ -59,6 +69,52 @@ class TipoRegimenConcurrenciaIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_regimen_concurrencia.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @ParameterizedTest
+  @ValueSource(strings = { "CSP-PRO-V", "CSP-PRO-V_1", "CSP-PRO-E_1" })
+  void findById_WithAuthorityProyecto_ReturnsTipoRegimenConcurrencia(String authority) throws Exception {
+    // given: TipoRegimenConcurrencia existente y token solo con una autoridad de
+    // proyectos
+    Long id = 1L;
+
+    // when: findById
+    final ResponseEntity<TipoRegimenConcurrencia> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequestWithRoles(authority),
+        TipoRegimenConcurrencia.class, id);
+
+    // then: 200 OK con el TipoRegimenConcurrencia solicitado
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getId()).as("getId()").isEqualTo(id);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(response.getBody().getNombre(), Language.ES))
+        .as("getNombre()").isEqualTo("nombre-001");
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/tipo_regimen_concurrencia.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findById_WithoutAuthority_ReturnsForbidden() throws Exception {
+    // given: TipoRegimenConcurrencia existente y token solo con CSP-PRO-INV-VR, sin
+    // ninguna autoridad admitida
+    Long id = 1L;
+
+    // when: findById
+    final ResponseEntity<TipoRegimenConcurrencia> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequestWithRoles("CSP-PRO-INV-VR"),
+        TipoRegimenConcurrencia.class, id);
+
+    // then: 403 Forbidden
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Sql
