@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.integration;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
+import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
@@ -49,12 +51,18 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -63,6 +71,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -118,6 +127,12 @@ class ProyectoIT extends BaseIT {
   private static final String PATH_ANUALIDAD_INGRESOS = PATH_PARAMETER_ID + "/anualidad-ingresos";
   private static final String PATH_GASTOS_PROYECTO = PATH_PARAMETER_ID + "/gastos-proyecto";
   private static final String PATH_REQUERIMIENTOS_JUSTIFICACION = ProyectoController.PATH_REQUERIMIENTOS_JUSTIFICACION;
+
+  @MockBean
+  private SgiApiTpService sgiApiTpService;
+
+  @Autowired
+  private ProyectoRepository proyectoRepository;
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity, String... roles) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -253,6 +268,147 @@ class ProyectoIT extends BaseIT {
     Proyecto proyecto = response.getBody();
     Assertions.assertThat(proyecto.getId()).as("getId()").isEqualTo(idProyecto);
     Assertions.assertThat(proyecto.getActivo()).as("getActivo()").isTrue();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/estado_proyecto.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/modelo_tipo_fase.sql",
+    "classpath:scripts/proyecto_fase_aviso.sql",
+    "classpath:scripts/proyecto_fase.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/modelo_tipo_hito.sql",
+    "classpath:scripts/proyecto_hito.sql",
+    "classpath:scripts/proyecto_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void desactivar_WithAvisos_DisablesPendingTasks() throws Exception {
+    // given: el proyecto 1 tiene una fase con un aviso pendiente (tarea 33) y otro
+    // ya enviado (tarea 34), y un hito con un aviso pendiente (tarea 41)
+    Long idProyecto = 1L;
+    givenAvisoTasks();
+
+    // when: se desactiva el proyecto
+    final ResponseEntity<Proyecto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, "CSP-PRO-B"), Proyecto.class, idProyecto);
+
+    // then: el proyecto queda desactivado y solo se desactivan en TP las tareas de
+    // los avisos pendientes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getActivo()).as("getActivo()").isFalse();
+    BDDMockito.verify(sgiApiTpService).disableTask(33L);
+    BDDMockito.verify(sgiApiTpService).disableTask(41L);
+    BDDMockito.verify(sgiApiTpService, Mockito.never()).disableTask(34L);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/estado_proyecto.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/modelo_tipo_fase.sql",
+    "classpath:scripts/proyecto_fase_aviso.sql",
+    "classpath:scripts/proyecto_fase.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/modelo_tipo_hito.sql",
+    "classpath:scripts/proyecto_hito.sql",
+    "classpath:scripts/proyecto_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(statements = "UPDATE test.proyecto SET activo = false WHERE id = 1")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void reactivar_WithAvisos_EnablesPendingTasks() throws Exception {
+    // given: el proyecto 1 está desactivado y tiene una fase con un aviso
+    // pendiente (tarea 33) y otro ya enviado (tarea 34), y un hito con un aviso
+    // pendiente (tarea 41)
+    Long idProyecto = 1L;
+    givenAvisoTasks();
+
+    // when: se reactiva el proyecto
+    final ResponseEntity<Proyecto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, "CSP-PRO-R"), Proyecto.class, idProyecto);
+
+    // then: el proyecto queda activado y solo se activan en TP las tareas de los
+    // avisos pendientes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getActivo()).as("getActivo()").isTrue();
+    BDDMockito.verify(sgiApiTpService).enableTask(33L);
+    BDDMockito.verify(sgiApiTpService).enableTask(41L);
+    BDDMockito.verify(sgiApiTpService, Mockito.never()).enableTask(34L);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/estado_proyecto.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/modelo_tipo_fase.sql",
+    "classpath:scripts/proyecto_fase_aviso.sql",
+    "classpath:scripts/proyecto_fase.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/modelo_tipo_hito.sql",
+    "classpath:scripts/proyecto_hito.sql",
+    "classpath:scripts/proyecto_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void desactivar_WhenTpFails_RollsBackAndCompensates() throws Exception {
+    // given: el proyecto 1 tiene dos avisos pendientes (tareas 33 y 41) y TP falla
+    // al desactivar la tarea 41
+    Long idProyecto = 1L;
+    givenAvisoTasks();
+    BDDMockito.willThrow(new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE))
+        .given(sgiApiTpService).disableTask(41L);
+
+    // when: se desactiva el proyecto
+    final ResponseEntity<Proyecto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, "CSP-PRO-B"), Proyecto.class, idProyecto);
+
+    // then: la petición falla, el proyecto sigue activo y se compensa la tarea 33
+    // ya desactivada en TP volviendo a activarla
+    Assertions.assertThat(response.getStatusCode().is5xxServerError()).as("is5xxServerError()").isTrue();
+    Assertions.assertThat(proyectoRepository.findById(idProyecto).orElseThrow().getActivo())
+        .as("getActivo()").isTrue();
+    BDDMockito.verify(sgiApiTpService).disableTask(33L);
+    BDDMockito.verify(sgiApiTpService).enableTask(33L);
+  }
+
+  private void givenAvisoTasks() {
+    Instant future = Instant.now().plus(1, ChronoUnit.DAYS);
+    Instant past = Instant.now().minus(1, ChronoUnit.DAYS);
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(33L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(33L).instant(future).build());
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(34L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(34L).instant(past).build());
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(41L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(41L).instant(future).build());
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -405,6 +561,34 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getObservaciones(), Language.ES))
         .as("get(2).getObservaciones())")
         .isEqualTo("observaciones-proyecto-" + String.format("%03d", 1));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/modelo_unidad.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/proyecto.sql",
+    "classpath:scripts/estado_proyecto.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void findAllTodos_WithoutFilter_ReturnsAllProyectos() throws Exception {
+    // given: un usuario sin unidades de gestión en sus permisos y 5 proyectos
+    String[] roles = { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R", "CSP-PRO-INV-VR" };
+
+    // when: se buscan todos los proyectos sin filtro
+    final ResponseEntity<List<Proyecto>> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_TODOS,
+        HttpMethod.GET, buildRequest(null, null, roles), new ParameterizedTypeReference<List<Proyecto>>() {
+        });
+
+    // then: se devuelven todos los proyectos
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("5");
   }
 
   /*

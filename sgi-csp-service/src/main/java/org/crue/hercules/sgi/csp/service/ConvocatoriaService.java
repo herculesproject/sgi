@@ -42,7 +42,8 @@ public interface ConvocatoriaService {
   Convocatoria registrar(final Long id);
 
   /**
-   * Reactiva el {@link Convocatoria}.
+   * Reactiva el {@link Convocatoria} y activa las tareas programadas de los
+   * avisos de sus fases e hitos que siguen pendientes de envío.
    *
    * @param id Id del {@link Convocatoria}.
    * @return la entidad {@link Convocatoria} persistida.
@@ -50,7 +51,9 @@ public interface ConvocatoriaService {
   Convocatoria enable(Long id);
 
   /**
-   * Desactiva el {@link Convocatoria}.
+   * Desactiva el {@link Convocatoria} y desactiva las tareas programadas de los
+   * avisos de sus fases e hitos que siguen pendientes de envío, de forma que no
+   * se envían mientras la convocatoria esté desactivada.
    *
    * @param id Id del {@link Convocatoria}.
    * @return la entidad {@link Convocatoria} persistida.

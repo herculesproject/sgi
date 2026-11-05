@@ -153,6 +153,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications
 import org.crue.hercules.sgi.csp.service.ConfiguracionService;
 import org.crue.hercules.sgi.csp.service.ContextoProyectoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPartidaService;
+import org.crue.hercules.sgi.csp.service.ProyectoAvisoService;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
 import org.crue.hercules.sgi.csp.service.ProyectoEntidadConvocanteService;
@@ -239,6 +240,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   private final ModeloUnidadRepository modeloUnidadRepository;
   private final ProgramaRepository programaRepository;
   private final ProyectoAreaConocimientoRepository proyectoAreaConocimientoRepository;
+  private final ProyectoAvisoService proyectoAvisoService;
   private final ProyectoClasificacionRepository proyectoClasificacionRepository;
   private final ProyectoConceptoGastoCodigoEcService proyectoConceptoGastoCodigoEcService;
   private final ProyectoConceptoGastoService proyectoConceptoGastoService;
@@ -525,12 +527,6 @@ public class ProyectoServiceImpl implements ProyectoService {
     }).toList();
   }
 
-  /**
-   * Reactiva el {@link Proyecto}.
-   *
-   * @param id Id del {@link Proyecto}.
-   * @return la entidad {@link Proyecto} persistida.
-   */
   @Override
   @Transactional
   public Proyecto enable(Long id) {
@@ -554,17 +550,12 @@ public class ProyectoServiceImpl implements ProyectoService {
       proyecto.setActivo(true);
 
       Proyecto returnValue = repository.save(proyecto);
+      proyectoAvisoService.enablePendingAvisos(id);
       log.debug("enable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(id));
   }
 
-  /**
-   * Desactiva el {@link Proyecto}.
-   *
-   * @param id Id del {@link Proyecto}.
-   * @return la entidad {@link Proyecto} persistida.
-   */
   @Override
   @Transactional
   public Proyecto disable(Long id) {
@@ -588,6 +579,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       proyecto.setActivo(false);
 
       Proyecto returnValue = repository.save(proyecto);
+      proyectoAvisoService.disablePendingAvisos(id);
       log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(id));
