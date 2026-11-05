@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,6 +46,8 @@ public class SgiApiTaskController {
   public static final String PATH_CRON = PATH_SEPARATOR + "cron";
   public static final String PATH_INSTANT = PATH_SEPARATOR + "instant";
   public static final String PATH_SINGLE = PATH_SEPARATOR + "{id}";
+  public static final String PATH_ENABLE = PATH_SINGLE + PATH_SEPARATOR + "enable";
+  public static final String PATH_DISABLE = PATH_SINGLE + PATH_SEPARATOR + "disable";
 
   private BeanMethodTaskService beanMethodTaskService;
 
@@ -111,6 +114,33 @@ public class SgiApiTaskController {
     BeanMethodInstantTask returnValue = beanMethodTaskService.update(SgiApiTaskConverter.convert(id, instantTask));
     log.debug("updateSgiApiInstantTask(Long id, SgiApiInstantTaskInput instantTask) - end");
     return SgiApiTaskConverter.convert(returnValue);
+  }
+
+  /**
+   * Activa la tarea programada ({@link SgiApiCronTaskOutput} o
+   * {@link SgiApiInstantTaskOutput}) con el id indicado y la vuelve a planificar.
+   *
+   * @param id identificador de la tarea programada
+   * @return la tarea programada activada
+   */
+  @PatchMapping(PATH_ENABLE)
+  public Object enable(@PathVariable Long id) {
+    log.debug("enable - id: {}", id);
+    return SgiApiTaskConverter.convert(beanMethodTaskService.enable(id));
+  }
+
+  /**
+   * Desactiva la tarea programada ({@link SgiApiCronTaskOutput} o
+   * {@link SgiApiInstantTaskOutput}) con el id indicado y la quita de la
+   * planificación, de forma que no se ejecuta mientras siga desactivada.
+   *
+   * @param id identificador de la tarea programada
+   * @return la tarea programada desactivada
+   */
+  @PatchMapping(PATH_DISABLE)
+  public Object disable(@PathVariable Long id) {
+    log.debug("disable - id: {}", id);
+    return SgiApiTaskConverter.convert(beanMethodTaskService.disable(id));
   }
 
   /**

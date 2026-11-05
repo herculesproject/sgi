@@ -45,6 +45,7 @@ import org.crue.hercules.sgi.csp.repository.predicate.ConvocatoriaPredicateResol
 import org.crue.hercules.sgi.csp.repository.specification.AutorizacionSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaAvisoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaClonerService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
@@ -118,6 +119,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   private final ProyectoHelper proyectoHelper;
   private final SgiConfigProperties sgiConfigProperties;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ConvocatoriaAvisoService convocatoriaAvisoService;
 
   public ConvocatoriaServiceImpl(ConvocatoriaRepository repository,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
@@ -131,7 +133,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       ProgramaRepository programaRepository,
       ProyectoHelper proyectoHelper,
       SgiConfigProperties sgiConfigProperties,
-      ConvocatoriaAuthorityHelper authorityHelper) {
+      ConvocatoriaAuthorityHelper authorityHelper,
+      ConvocatoriaAvisoService convocatoriaAvisoService) {
     this.repository = repository;
     this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -148,6 +151,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     this.proyectoHelper = proyectoHelper;
     this.sgiConfigProperties = sgiConfigProperties;
     this.authorityHelper = authorityHelper;
+    this.convocatoriaAvisoService = convocatoriaAvisoService;
   }
 
   /**
@@ -251,12 +255,6 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     }).orElseThrow(() -> new ConvocatoriaNotFoundException(id));
   }
 
-  /**
-   * Reactiva el {@link Convocatoria}.
-   *
-   * @param id Id del {@link Convocatoria}.
-   * @return la entidad {@link Convocatoria} persistida.
-   */
   @Override
   @Transactional
   public Convocatoria enable(Long id) {
@@ -270,17 +268,12 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       }
       convocatoria.setActivo(Boolean.TRUE);
       Convocatoria returnValue = repository.save(convocatoria);
+      convocatoriaAvisoService.enablePendingAvisos(id);
       log.debug("enable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ConvocatoriaNotFoundException(id));
   }
 
-  /**
-   * Desactiva el {@link Convocatoria}.
-   *
-   * @param id Id del {@link Convocatoria}.
-   * @return la entidad {@link Convocatoria} persistida.
-   */
   @Override
   @Transactional
   public Convocatoria disable(Long id) {
@@ -312,6 +305,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
       convocatoria.setActivo(Boolean.FALSE);
       Convocatoria returnValue = repository.save(convocatoria);
+      convocatoriaAvisoService.disablePendingAvisos(id);
       log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new ConvocatoriaNotFoundException(id));

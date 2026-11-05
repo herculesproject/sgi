@@ -178,6 +178,8 @@ class ProyectoServiceTest extends BaseServiceTest {
   @Mock
   private ProyectoAreaConocimientoRepository proyectoAreaConocimientoRepository;
   @Mock
+  private ProyectoAvisoService proyectoAvisoService;
+  @Mock
   private ProyectoClasificacionRepository proyectoClasificacionRepository;
   @Mock
   private ProgramaRepository programaRepository;
@@ -251,6 +253,7 @@ class ProyectoServiceTest extends BaseServiceTest {
         modeloUnidadRepository,
         programaRepository,
         proyectoAreaConocimientoRepository,
+        proyectoAvisoService,
         proyectoClasificacionRepository,
         proyectoConceptoGastoCodigoEcService,
         proyectoConceptoGastoService,
@@ -990,6 +993,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(programaActualizado.getId()).as("getId()").isEqualTo(proyecto.getId());
     Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isTrue();
+    // and: se activan los avisos pendientes del proyecto
+    BDDMockito.verify(proyectoAvisoService).enablePendingAvisos(proyecto.getId());
   }
 
   @Test
@@ -1021,6 +1026,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(proyectoActualizada).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyectoActualizada.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(proyectoActualizada.getActivo()).as("getActivo()").isFalse();
+    // and: se desactivan los avisos pendientes del proyecto
+    BDDMockito.verify(proyectoAvisoService).disablePendingAvisos(proyecto.getId());
   }
 
   @Test

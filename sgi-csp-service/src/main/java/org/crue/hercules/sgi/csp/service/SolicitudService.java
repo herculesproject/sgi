@@ -147,6 +147,7 @@ public class SolicitudService {
   private final SolicitudProyectoObjetivosConverter solicitudProyectoObjetivosConverter;
   private final SolicitudProyectoResultadosPrevistosConverter solicitudProyectoResultadosPrevistosConverter;
   private final ProyectoHelper proyectoHelper;
+  private final SolicitudAvisoService solicitudAvisoService;
 
   /**
    * Guarda la entidad {@link Solicitud}.
@@ -391,7 +392,8 @@ public class SolicitudService {
   }
 
   /**
-   * Reactiva el {@link Solicitud}.
+   * Reactiva el {@link Solicitud} y activa las tareas programadas de los avisos
+   * de sus hitos que siguen pendientes de envío.
    *
    * @param id Id del {@link Solicitud}.
    * @return la entidad {@link Solicitud} persistida.
@@ -420,13 +422,16 @@ public class SolicitudService {
       solicitud.setActivo(true);
 
       Solicitud returnValue = repository.save(solicitud);
+      solicitudAvisoService.enablePendingAvisos(id);
       log.debug("enable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new SolicitudNotFoundException(id));
   }
 
   /**
-   * Desactiva la {@link Solicitud}.
+   * Desactiva la {@link Solicitud} y desactiva las tareas programadas de los
+   * avisos de sus hitos que siguen pendientes de envío, de forma que no se
+   * envían mientras la solicitud esté desactivada.
    *
    * @param id Id del {@link Solicitud}.
    * @return la entidad {@link Solicitud} persistida.
@@ -465,6 +470,7 @@ public class SolicitudService {
       solicitud.setActivo(false);
 
       Solicitud returnValue = repository.save(solicitud);
+      solicitudAvisoService.disablePendingAvisos(id);
       log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new SolicitudNotFoundException(id));

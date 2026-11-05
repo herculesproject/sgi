@@ -184,6 +184,8 @@ class SolicitudServiceTest extends BaseServiceTest {
 
   @Mock
   private ProyectoHelper proyectoHelper;
+  @Mock
+  private SolicitudAvisoService solicitudAvisoService;
 
   private SolicitudService service;
 
@@ -216,7 +218,8 @@ class SolicitudServiceTest extends BaseServiceTest {
         solicitudTituloConverter,
         solicitudProyectoObjetivosConverter,
         solicitudProyectoResultadosPrevistosConverter,
-        proyectoHelper);
+        proyectoHelper,
+        solicitudAvisoService);
   }
 
   @Test
@@ -542,6 +545,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(programaActualizado.getId()).as("getId()").isEqualTo(solicitud.getId());
     Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isTrue();
+    // and: se activan los avisos pendientes de la solicitud
+    BDDMockito.verify(solicitudAvisoService).enablePendingAvisos(solicitud.getId());
   }
 
   @Test
@@ -573,6 +578,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudActualizada.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(solicitudActualizada.getActivo()).as("getActivo()").isFalse();
+    // and: se desactivan los avisos pendientes de la solicitud
+    BDDMockito.verify(solicitudAvisoService).disablePendingAvisos(solicitud.getId());
   }
 
   @Test
@@ -586,7 +593,8 @@ class SolicitudServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(() -> service.disable(solicitudId)).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El usuario no es el creador de la Solicitud");
-
+    // and: no se desactivan los avisos
+    BDDMockito.verifyNoInteractions(solicitudAvisoService);
   }
 
   @Test

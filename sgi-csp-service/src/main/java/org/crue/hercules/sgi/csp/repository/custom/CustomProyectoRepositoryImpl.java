@@ -481,8 +481,9 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
     List<Predicate> listPredicatesCount = new ArrayList<>();
 
     // Where
-    if (specs != null) {
-      listPredicates.add(specs.toPredicate(root, cq, cb));
+    Predicate predicate = specs != null ? specs.toPredicate(root, cq, cb) : null;
+    if (predicate != null) {
+      listPredicates.add(predicate);
       listPredicatesCount.add(specs.toPredicate(rootCount, cq, cb));
     }
 

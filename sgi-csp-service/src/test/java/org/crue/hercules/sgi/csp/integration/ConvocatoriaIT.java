@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ import org.crue.hercules.sgi.csp.dto.RequisitoEquipoCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoEquipoNivelAcademicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPCategoriaProfesionalOutput;
 import org.crue.hercules.sgi.csp.dto.RequisitoIPNivelAcademicoOutput;
+import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
@@ -50,10 +52,16 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -63,6 +71,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -108,6 +117,12 @@ class ConvocatoriaIT extends BaseIT {
   private static final String PATH_CLONE = "/clone";
   private static final String PATH_FORMULARIO_SOLICITUD = "/formulariosolicitud";
   private static final String PATH_ENLACES = ConvocatoriaController.PATH_ENLACES;
+
+  @MockBean
+  private SgiApiTpService sgiApiTpService;
+
+  @Autowired
+  private ConvocatoriaRepository convocatoriaRepository;
 
   private HttpEntity<Convocatoria> buildRequest(HttpHeaders headers, Convocatoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -301,6 +316,132 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(convocatoria.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(convocatoria.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
 
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/convocatoria_fase_aviso.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/convocatoria_hito.sql",
+    "classpath:scripts/convocatoria_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void disable_WithAvisos_DisablesPendingTasks() throws Exception {
+    // given: la convocatoria 1 tiene una fase con un aviso pendiente (tarea 1) y
+    // otro ya enviado (tarea 2), y un hito con un aviso pendiente (tarea 3)
+    Long id = 1L;
+    givenAvisoTasks();
+
+    // when: se desactiva la convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: la convocatoria queda desactivada y solo se desactivan en TP las
+    // tareas de los avisos pendientes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
+    BDDMockito.verify(sgiApiTpService).disableTask(1L);
+    BDDMockito.verify(sgiApiTpService).disableTask(3L);
+    BDDMockito.verify(sgiApiTpService, Mockito.never()).disableTask(2L);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/convocatoria_fase_aviso.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/convocatoria_hito.sql",
+    "classpath:scripts/convocatoria_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(statements = "UPDATE test.convocatoria SET activo = false WHERE id = 1")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void enable_WithAvisos_EnablesPendingTasks() throws Exception {
+    // given: la convocatoria 1 está desactivada y tiene una fase con un aviso
+    // pendiente (tarea 1) y otro ya enviado (tarea 2), y un hito con un aviso
+    // pendiente (tarea 3)
+    Long id = 1L;
+    givenAvisoTasks();
+
+    // when: se reactiva la convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: la convocatoria queda activada y solo se activan en TP las tareas de
+    // los avisos pendientes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+    BDDMockito.verify(sgiApiTpService).enableTask(1L);
+    BDDMockito.verify(sgiApiTpService).enableTask(3L);
+    BDDMockito.verify(sgiApiTpService, Mockito.never()).enableTask(2L);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/tipo_fase.sql",
+    "classpath:scripts/convocatoria_fase.sql",
+    "classpath:scripts/convocatoria_fase_aviso.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/convocatoria_hito.sql",
+    "classpath:scripts/convocatoria_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void disable_WhenTpFails_RollsBackAndCompensates() throws Exception {
+    // given: la convocatoria 1 tiene dos avisos pendientes (tareas 1 y 3) y TP
+    // falla al desactivar la tarea 3
+    Long id = 1L;
+    givenAvisoTasks();
+    BDDMockito.willThrow(new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE))
+        .given(sgiApiTpService).disableTask(3L);
+
+    // when: se desactiva la convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), Convocatoria.class, id);
+
+    // then: la petición falla, la convocatoria sigue activa y se compensa la
+    // tarea 1 ya desactivada en TP volviendo a activarla
+    Assertions.assertThat(response.getStatusCode().is5xxServerError()).as("is5xxServerError()").isTrue();
+    Assertions.assertThat(convocatoriaRepository.findById(id).orElseThrow().getActivo())
+        .as("getActivo()").isTrue();
+    BDDMockito.verify(sgiApiTpService).disableTask(1L);
+    BDDMockito.verify(sgiApiTpService).enableTask(1L);
+  }
+
+  private void givenAvisoTasks() {
+    Instant future = Instant.now().plus(1, ChronoUnit.DAYS);
+    Instant past = Instant.now().minus(1, ChronoUnit.DAYS);
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(1L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(1L).instant(future).build());
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(2L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(2L).instant(past).build());
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(3L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(3L).instant(future).build());
   }
 
   @Sql

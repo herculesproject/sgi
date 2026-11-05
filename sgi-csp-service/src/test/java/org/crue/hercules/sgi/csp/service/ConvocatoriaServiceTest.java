@@ -99,6 +99,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
   private ProgramaRepository programaRepository;
   @Mock
   private ProyectoHelper proyectoHelper;
+  @Mock
+  private ConvocatoriaAvisoService convocatoriaAvisoService;
 
   private ConvocatoriaAuthorityHelper authorityHelper;
 
@@ -114,7 +116,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         modeloUnidadRepository, modeloTipoFinalidadRepository, tipoRegimenConcurrenciaRepository,
         tipoAmbitoGeograficoRepository, convocatoriaPeriodoSeguimientoCientificoRepository,
         configuracionSolicitudRepository, this.solicitudReposiotry, this.proyectoReposiotry, convocatoriaClonerService,
-        autorizacionRepository, programaRepository, proyectoHelper, sgiConfigProperties, authorityHelper);
+        autorizacionRepository, programaRepository, proyectoHelper, sgiConfigProperties, authorityHelper,
+        convocatoriaAvisoService);
   }
 
   @Test
@@ -1953,6 +1956,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         .isEqualTo(convocatoria.getAmbitoGeografico().getId());
     Assertions.assertThat(enabledData.getClasificacionCVN()).isEqualTo(convocatoria.getClasificacionCVN());
     Assertions.assertThat(enabledData.getActivo()).isEqualTo(Boolean.TRUE);
+    // and: se activan los avisos pendientes de la convocatoria
+    BDDMockito.verify(convocatoriaAvisoService).enablePendingAvisos(convocatoria.getId());
   }
 
   @Test
@@ -2013,6 +2018,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         .isEqualTo(convocatoria.getAmbitoGeografico().getId());
     Assertions.assertThat(disabledData.getClasificacionCVN()).isEqualTo(convocatoria.getClasificacionCVN());
     Assertions.assertThat(disabledData.getActivo()).isEqualTo(Boolean.FALSE);
+    // and: se desactivan los avisos pendientes de la convocatoria
+    BDDMockito.verify(convocatoriaAvisoService).disablePendingAvisos(convocatoria.getId());
   }
 
   @Test
@@ -2047,6 +2054,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // then:Exception is thrown
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "No se puede Eliminar Convocatoria. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+    // and: no se desactivan los avisos
+    BDDMockito.verifyNoInteractions(convocatoriaAvisoService);
   }
 
   @Test

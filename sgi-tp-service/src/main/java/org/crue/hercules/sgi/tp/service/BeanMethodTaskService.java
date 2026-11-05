@@ -174,10 +174,10 @@ public class BeanMethodTaskService {
       @CacheEvict(value = TASKS_CACHE_KEY, allEntries = true),
       @CacheEvict(value = CRON_TASKS_CACHE_KEY, allEntries = true),
       @CacheEvict(value = INSTANT_TASKS_CACHE_KEY, allEntries = true),
-      @CacheEvict(value = ENABLED_TASKS_CACHE_KEY, allEntries = true, condition = "#result!=null && #result.disabled==false"),
-      @CacheEvict(value = ENABLED_CRON_TASKS_CACHE_KEY, allEntries = true, condition = "#result!=null && #result.disabled==false"),
-      @CacheEvict(value = ENABLED_INSTANT_TASKS_CACHE_KEY, allEntries = true, condition = "#result!=null && #result.disabled==false"),
-      @CacheEvict(value = ENABLED_FUTURE_TASKS_CACHE_KEY, allEntries = true, condition = "#result!=null && #result.disabled==false") })
+      @CacheEvict(value = ENABLED_TASKS_CACHE_KEY, allEntries = true),
+      @CacheEvict(value = ENABLED_CRON_TASKS_CACHE_KEY, allEntries = true),
+      @CacheEvict(value = ENABLED_INSTANT_TASKS_CACHE_KEY, allEntries = true),
+      @CacheEvict(value = ENABLED_FUTURE_TASKS_CACHE_KEY, allEntries = true) })
 
   @Transactional
   public BeanMethodTask disable(Long id) {

@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import org.crue.hercules.sgi.csp.dto.SolicitudPalabraClaveOutput;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotalConceptoGasto;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoPresupuestoTotales;
 import org.crue.hercules.sgi.csp.dto.SolicitudProyectoResponsableEconomicoOutput;
+import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
@@ -39,11 +41,17 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -53,6 +61,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -102,6 +111,12 @@ class SolicitudIT extends BaseIT {
 
   private static final String[] DEFAULT_ROLES = { "AUTH", "CSP-SOL-C", "CSP-SOL-E", "CSP-SOL-V", "CSP-SOL-B",
       "CSP-SOL-R", "CSP-SOL-ETI-V" };
+
+  @MockBean
+  private SgiApiTpService sgiApiTpService;
+
+  @Autowired
+  private SolicitudRepository solicitudRepository;
 
   private HttpEntity<Object> buildRequest(HttpHeaders headers, Object entity, String... roles) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -217,6 +232,118 @@ class SolicitudIT extends BaseIT {
     Solicitud solicitud = response.getBody();
     Assertions.assertThat(solicitud.getId()).as("getId()").isEqualTo(idSolicitud);
     Assertions.assertThat(solicitud.getActivo()).as("getActivo()").isTrue();
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/solicitud.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/solicitud_hito.sql",
+    "classpath:scripts/solicitud_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void desactivar_WithAvisos_DisablesPendingTasks() throws Exception {
+    // given: la solicitud 1 tiene un hito con un aviso pendiente (tarea 1) y otro
+    // hito con un aviso ya enviado (tarea 2)
+    Long idSolicitud = 1L;
+    givenAvisoTasks();
+
+    // when: se desactiva la solicitud
+    final ResponseEntity<Solicitud> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, DEFAULT_ROLES), Solicitud.class, idSolicitud);
+
+    // then: la solicitud queda desactivada y solo se desactiva en TP la tarea del
+    // aviso pendiente
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getActivo()).as("getActivo()").isFalse();
+    BDDMockito.verify(sgiApiTpService).disableTask(1L);
+    BDDMockito.verify(sgiApiTpService, Mockito.never()).disableTask(2L);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/solicitud.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/solicitud_hito.sql",
+    "classpath:scripts/solicitud_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(statements = "UPDATE test.solicitud SET activo = false WHERE id = 1")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void reactivar_WithAvisos_EnablesPendingTasks() throws Exception {
+    // given: la solicitud 1 está desactivada y tiene un hito con un aviso
+    // pendiente (tarea 1) y otro hito con un aviso ya enviado (tarea 2)
+    Long idSolicitud = 1L;
+    givenAvisoTasks();
+
+    // when: se reactiva la solicitud
+    final ResponseEntity<Solicitud> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, "CSP-SOL-R"), Solicitud.class, idSolicitud);
+
+    // then: la solicitud queda activada y solo se activa en TP la tarea del aviso
+    // pendiente
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().getActivo()).as("getActivo()").isTrue();
+    BDDMockito.verify(sgiApiTpService).enableTask(1L);
+    BDDMockito.verify(sgiApiTpService, Mockito.never()).enableTask(2L);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/solicitud.sql",
+    "classpath:scripts/tipo_hito.sql",
+    "classpath:scripts/solicitud_hito.sql",
+    "classpath:scripts/solicitud_hito_aviso.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void desactivar_WhenTpFails_RollsBack() throws Exception {
+    // given: la solicitud 1 tiene un aviso pendiente (tarea 1) y TP falla al
+    // desactivarla
+    Long idSolicitud = 1L;
+    givenAvisoTasks();
+    BDDMockito.willThrow(new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE))
+        .given(sgiApiTpService).disableTask(1L);
+
+    // when: se desactiva la solicitud
+    final ResponseEntity<Solicitud> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null, DEFAULT_ROLES), Solicitud.class, idSolicitud);
+
+    // then: la petición falla y la solicitud sigue activa
+    Assertions.assertThat(response.getStatusCode().is5xxServerError()).as("is5xxServerError()").isTrue();
+    Assertions.assertThat(solicitudRepository.findById(idSolicitud).orElseThrow().getActivo())
+        .as("getActivo()").isTrue();
+  }
+
+  private void givenAvisoTasks() {
+    Instant future = Instant.now().plus(1, ChronoUnit.DAYS);
+    Instant past = Instant.now().minus(1, ChronoUnit.DAYS);
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(1L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(1L).instant(future).build());
+    BDDMockito.given(sgiApiTpService.findInstantTaskById(2L))
+        .willReturn(SgiApiInstantTaskOutput.builder().id(2L).instant(past).build());
   }
 
   @Sql

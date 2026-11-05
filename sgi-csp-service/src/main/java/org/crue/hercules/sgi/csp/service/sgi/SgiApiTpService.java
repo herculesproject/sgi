@@ -181,6 +181,39 @@ public class SgiApiTpService extends SgiApiBaseService {
     log.debug("updateSendEmailTask({}, {}, {}) - end", id, emailId, instant);
   }
 
+  /**
+   * Activa una tarea programada en el modulo TP para que vuelva a planificarse
+   *
+   * @param id Identificador de la tarea programada
+   */
+  public void enableTask(Long id) {
+    log.debug("enableTask - id: {}", id);
+
+    AssertHelper.idNotNull(id, SgiApiInstantTaskOutput.class);
+
+    String mergedURL = buildUri(ServiceType.TP, "/sgiapitasks/{id}/enable");
+    super.<SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(mergedURL, HttpMethod.PATCH,
+        new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
+        }, id);
+  }
+
+  /**
+   * Desactiva una tarea programada en el modulo TP para que no se ejecute
+   * mientras siga desactivada
+   *
+   * @param id Identificador de la tarea programada
+   */
+  public void disableTask(Long id) {
+    log.debug("disableTask - id: {}", id);
+
+    AssertHelper.idNotNull(id, SgiApiInstantTaskOutput.class);
+
+    String mergedURL = buildUri(ServiceType.TP, "/sgiapitasks/{id}/disable");
+    super.<SgiApiInstantTaskOutput>callEndpointWithCurrentUserAuthorization(mergedURL, HttpMethod.PATCH,
+        new ParameterizedTypeReference<SgiApiInstantTaskOutput>() {
+        }, id);
+  }
+
   private void validateTareaProgramada(ServiceType type, HttpMethod method, String url, String description,
       Instant instant) {
     AssertHelper.entityNotNull(type, SgiApiInstantTaskOutput.class, ServiceType.class);

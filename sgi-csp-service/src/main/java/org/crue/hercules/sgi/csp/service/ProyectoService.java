@@ -48,7 +48,8 @@ public interface ProyectoService {
   Proyecto initFechaInicio(Long id);
 
   /**
-   * Reactiva el {@link Proyecto}.
+   * Reactiva el {@link Proyecto} y activa las tareas programadas de los avisos
+   * de sus fases e hitos que siguen pendientes de envío.
    *
    * @param id Id del {@link Proyecto}.
    * @return la entidad {@link Proyecto} persistida.
@@ -56,7 +57,9 @@ public interface ProyectoService {
   Proyecto enable(Long id);
 
   /**
-   * Desactiva el {@link Proyecto}.
+   * Desactiva el {@link Proyecto} y desactiva las tareas programadas de los
+   * avisos de sus fases e hitos que siguen pendientes de envío, de forma que no
+   * se envían mientras el proyecto esté desactivado.
    *
    * @param id Id del {@link Proyecto}.
    * @return la entidad {@link Proyecto} persistida.

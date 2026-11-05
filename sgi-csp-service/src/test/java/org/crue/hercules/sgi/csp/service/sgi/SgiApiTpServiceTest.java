@@ -147,6 +147,32 @@ class SgiApiTpServiceTest extends BaseServiceTest {
         ArgumentMatchers.<Object>any());
   }
 
+  @Test
+  void enableTask_CallsTpEnableEndpoint() {
+    // when: se activa la tarea
+    this.sgiApiTaskService.enableTask(1L);
+
+    // then: se invoca el endpoint de activación de TP con PATCH
+    verify(this.restTemplate, times(1)).exchange(ArgumentMatchers.endsWith("/sgiapitasks/{id}/enable"),
+        ArgumentMatchers.eq(HttpMethod.PATCH),
+        ArgumentMatchers.<HttpEntity<Object>>any(),
+        ArgumentMatchers.<ParameterizedTypeReference<SgiApiInstantTaskOutput>>any(),
+        ArgumentMatchers.eq(1L));
+  }
+
+  @Test
+  void disableTask_CallsTpDisableEndpoint() {
+    // when: se desactiva la tarea
+    this.sgiApiTaskService.disableTask(1L);
+
+    // then: se invoca el endpoint de desactivación de TP con PATCH
+    verify(this.restTemplate, times(1)).exchange(ArgumentMatchers.endsWith("/sgiapitasks/{id}/disable"),
+        ArgumentMatchers.eq(HttpMethod.PATCH),
+        ArgumentMatchers.<HttpEntity<Object>>any(),
+        ArgumentMatchers.<ParameterizedTypeReference<SgiApiInstantTaskOutput>>any(),
+        ArgumentMatchers.eq(1L));
+  }
+
   private SgiApiInstantTaskOutput buildMockSgiApiInstantTaskOutput(Long id) {
     return SgiApiInstantTaskOutput.builder()
         .id(id)

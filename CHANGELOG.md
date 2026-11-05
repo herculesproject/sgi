@@ -48,6 +48,8 @@
 - [CSP] Corregida la pantalla de clasificación de gastos de ejecución económica, que no mostraba ningún gasto cuando las anualidades son obligatorias en la integración con el SGE y no aplicaba el filtro por fecha del gasto. ([#189](https://github.com/herculesproject/sgi/issues/189)).
 - [CSP] Corregido que en los apartados de ejecución económica el filtro de anualidades apareciese vacío cuando las anualidades no son obligatorias y alguno de los proyectos relacionados tiene una anualidad genérica en el presupuesto. ([#189](https://github.com/herculesproject/sgi/issues/189)).
 - [CSP] Corregido que la exportación de proyectos fallaba por permiso denegado a los usuarios con permisos de proyectos pero sin permisos de gestión del catálogo, cuando el proyecto tenía régimen de concurrencia o área temática. ([#193](https://github.com/herculesproject/sgi/issues/193)).
+- [CSP] Corregido que se enviaban los comunicados programados en los avisos de fases e hitos de convocatorias, solicitudes y proyectos borrados. Ahora no se envían mientras la entidad esté borrada y se vuelven a programar si se reactiva. ([#195](https://github.com/herculesproject/sgi/issues/195)).
+- [CSP] Corregido el error del listado de proyectos al mostrar todos los proyectos sin aplicar ningún filtro. ([#195](https://github.com/herculesproject/sgi/issues/195)).
 
 ## 1.4.0 (2026-09-17)
 
