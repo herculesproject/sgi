@@ -37,7 +37,9 @@
   // A set of name-value pairs that sets or overrides environment variables for the container.
   "containerEnv": {
     // Timezone
-    "TZ": "Europe/Madrid"
+    "TZ": "Europe/Madrid",
+    // Chrome binary used by Karma (installed in onCreate.sh)
+    "CHROME_BIN": "/usr/bin/google-chrome"
   },
   // A command to run when creating the container. This command is run after "initializeCommand" and before "updateContentCommand". 
   // If this is a single string, it will be run in a shell. If this is an array of strings, it will be run as a single command without shell. 

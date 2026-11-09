@@ -18,7 +18,11 @@
      cerrar la versión.
 -->
 
-<!-- *Todavía no se ha registrado ningún cambio para la próxima versión.* -->
+*Todavía no se ha registrado ningún cambio para la próxima versión.*
+
+## 1.5.0 (2026-11-09)
+
+**Notas de actualización:** [1.5.0](/docs/upgrade/1.5.0.md)
 
 ### Added
 
