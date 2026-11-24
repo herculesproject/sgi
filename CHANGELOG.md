@@ -18,7 +18,11 @@
      cerrar la versión.
 -->
 
-*Todavía no se ha registrado ningún cambio para la próxima versión.*
+<!-- *Todavía no se ha registrado ningún cambio para la próxima versión.* -->
+
+### Changed
+
+- La imagen de la webapp puede ejecutarse como usuario no root, lo que permite desplegarla en namespaces con PodSecurity *restricted*. En el resto de niveles de PodSecurity sigue funcionando igual.
 
 ## 1.5.0 (2026-11-09)
 
